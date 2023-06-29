@@ -9,7 +9,6 @@ const ProfilePage = () => {
   return (
     <Layout>
         <div className='flex flex-col items-center justify-center'>
-            <ProfileHeader />
             <ConnectSocials />
         </div>
     </Layout>
