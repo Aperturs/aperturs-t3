@@ -71,15 +71,18 @@ model GithubToken {
 }
 
 model LinkedInToken {
-  id                       Int       @id @default(autoincrement())
-  access_token             String    @unique
-  refresh_token            String?   @unique
-  user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId              String    @unique
-  expires_in               DateTime?
-  refresh_token_expires_in DateTime?
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
+    id        Int      @id @default(autoincrement())
+    profileImage String? 
+    vanityName      String?
+    profileId String?
+    access_token     String   @unique
+    refresh_token    String?   @unique
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int @unique
+    expires_in DateTime?
+    refresh_token_expires_in DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum SubscriptionType {
