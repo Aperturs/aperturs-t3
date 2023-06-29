@@ -17,7 +17,7 @@ const Login = () => {
         <div>
           <h1 className="text-white font-bold text-4xl font-sans">Aperturs</h1>
           <p className="text-white mt-1">
-            One Stop Social Meida Management Software
+            One Stop Social Media Management Software
           </p>
           <button
             type="submit"
