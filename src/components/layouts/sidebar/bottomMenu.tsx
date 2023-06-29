@@ -26,7 +26,7 @@ const bottomMenu = [
         className="rounded-full"
       />
       ),
-      url: "/inbox",
+      url: "/notifications",
     },
     {
       text: "Profile",
