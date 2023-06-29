@@ -9,9 +9,14 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.create({
-        data: {
-          clerkUserId: input.clerkId,
+      const user = await ctx.prisma.user.upsert({
+        where: { clerkUserId: input.clerkId},
+        create: {
+          clerkUserId:  input.clerkId
+          // Set other fields from evt.data if needed
+        },
+        update: {
+          // Update other fields from evt.data if needed
         },
       });
       return user;

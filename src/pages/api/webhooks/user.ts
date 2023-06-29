@@ -3,9 +3,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { env } from "~/env.mjs";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { router } from "@trpc/server";
 import { appRouter } from "~/server/api/root";
-import { Prisma } from "@prisma/client";
 import { prisma } from "~/server/db";
 import cronJobServer from "~/server/cronjob";
 
@@ -38,15 +36,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // if (req.method !== "POST") {
-  //   return res.status(405).json({ error: "Method not allowed" });
-  // }
+
   const payload = await req.body;
 
   const payloadString = JSON.stringify(payload);
   const headerPayload = req.headers;
-  console.log({ headerPayload }, "headerPayload");
-  console.log({ payload }, "payload");
   const svixId = headerPayload["svix-id"] as string;
   const svixIdTimeStamp = headerPayload["svix-timestamp"] as string;
   const svixSignature = headerPayload["svix-signature"] as string;
@@ -55,6 +49,7 @@ export default async function handler(
     console.log("svixIdTimeStamp", svixIdTimeStamp);
     console.log("svixSignature", svixSignature);
     return res.status(500).json({ message: "Error Happended" });
+
   }
   const svixHeaders = {
     "svix-id": svixId,
@@ -77,10 +72,13 @@ export default async function handler(
     clerkId: "",
   });
 
+
   const { id } = evt.data;
   // Handle the webhook
   const eventType: EventType = evt.type;
-  if (eventType === "user.created" || eventType === "user.updated") {
+  if (eventType === "user.created"
+  //  || eventType === "user.updated" (for now we dont need to check for updating, it for no reasons makes more prisma calls )
+   ) {
     const { email_addresses, primary_email_address_id } = evt.data;
     const emailObject = email_addresses?.find((email) => {
       return email.id === primary_email_address_id;
@@ -88,12 +86,11 @@ export default async function handler(
     if (!emailObject) {
       return res.status(500).json({ message: "no email found" });
     }
-    console.log("ding something");
     const user = await caller.user.createUser({
       clerkId: id,
+
     });
   }
-  console.log(`User ${id} was ${eventType}`);
   return res.status(200).json({ message: "ok" });
 }
 

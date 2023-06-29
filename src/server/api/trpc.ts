@@ -40,6 +40,7 @@ const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
   };
 };
 
+
 /**
  * This is the actual context you will use in your router. It will be used to process every request
  * that goes through your tRPC endpoint.
@@ -48,7 +49,8 @@ const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
  */
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
-
+  const session = getAuth(req);
+  const user = session.user
   // Get the session from the server using the getServerSession wrapper function
   // const session = await getServerAuthSession({ req, res });
 
@@ -56,6 +58,7 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     req,
     res,
   });
+
 };
 
 /**
@@ -73,6 +76,7 @@ import axios from "axios";
 import { AuthClient } from "twitter-api-sdk/dist/types";
 import cronJobServer from "../cronjob";
 import { getAuth } from "@clerk/nextjs/dist/server";
+
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -111,18 +115,20 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-/** Reusable middleware that enforces users are logged in before running the procedure. */
-// const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-//   if (!ctx.session || !ctx.session.user) {
-//     throw new TRPCError({ code: "UNAUTHORIZED" });
-//   }
-//   return next({
-//     ctx: {
-//       // infers the `session` as non-nullable
 
-//     },
-//   });
-// });
+/** Reusable middleware that enforces users are logged in before running the procedure. */
+const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
+  if (!ctx.clerkId) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      currentUser: ctx.clerkId,
+    },
+  });
+});
+
+export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
 
 /**
  * Protected (authenticated) procedure
