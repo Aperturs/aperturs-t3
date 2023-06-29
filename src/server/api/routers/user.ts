@@ -9,14 +9,9 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.upsert({
-        where: { clerkUserId: input.clerkId},
-        create: {
-          clerkUserId:  input.clerkId
-          // Set other fields from evt.data if needed
-        },
-        update: {
-          // Update other fields from evt.data if needed
+      const user = await ctx.prisma.user.create({
+        data: {
+          clerkUserId: input.clerkId,
         },
       });
       return user;
@@ -33,5 +28,18 @@ export const userRouter = createTRPCRouter({
         refresh_token_expires_in: z.string().optional(),
       })
     )
-    .mutation(({ ctx, input }) => {}),
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.linkedInToken.create({
+        data: {
+          profileImage: input.profileImage,
+          vanityName: input.vanityName,
+          profileId: input.profileId,
+          access_token: input.access_token,
+          refresh_token: input.refresh_token,
+          expires_in: input.expires_in,
+          refresh_token_expires_in: input.refresh_token_expires_in,
+          user: { connect: { clerkUserId: ctx.clerkId } },
+        },
+      });
+    }),
 });
