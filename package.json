@@ -35,7 +35,7 @@
     "superjson": "1.12.2",
     "svix": "^1.4.12",
     "twitter-api-sdk": "^1.2.1",
-    "twitter-api-v2": "^1.14.2",
+    "twitter-api-v2": "^1.15.0",
     "twitter-lite": "^1.1.0",
     "zod": "^3.21.4"
   },
