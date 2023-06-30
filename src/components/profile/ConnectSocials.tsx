@@ -67,23 +67,27 @@ const Socials = () => {
 
   return (
     <div className="grid grid-cols-3 py-4 gap-4">
-      <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
+      {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
         <FaFacebookSquare className="text-2xl " />
         <p>Facebook</p>
-      </button>
+      </button> */}
       <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2"
       onClick={()=>router.push('/socials/twitter')}
       >
         <AiOutlineTwitter className="text-2xl " />
         <p>Twitter</p>
       </button>
-      <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
+      {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
         <AiFillInstagram className="text-2xl " />
         <p>Insta</p>
-      </button>
+      </button> */}
       <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
+      </button>
+      <button className="btn hover:bg-[#AAFE2C] hover:text-black hover:border-0  gap-2">
+        <img src='/lens.svg' className="w-6 h-6"/>
+        <p>Lens </p>
       </button>
     </div>
   )
