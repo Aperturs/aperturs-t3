@@ -8,6 +8,7 @@ const server = z.object({
   DATABASE_URL: z.string().url(),
   NODE_ENV: z.enum(["development", "test", "production"]),
   WEBHOOK_SECRET: z.string().min(1),
+  TWITTER_CALLBACK_URL: z.string().url(),
 });
 
 /**
@@ -28,7 +29,7 @@ const processEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   NODE_ENV: process.env.NODE_ENV,
   WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
-
+  TWITTER_CALLBACK_URL: process.env.TWITTER_CALLBACK_URL,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

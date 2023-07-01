@@ -32,6 +32,8 @@ const ConnectSocials = () => {
 
 
 const AddSocial = () => {
+  
+
   return (
     <div>
       <label htmlFor="my-modal-3" className="btn-primary btn gap-2  h-full flex-col w-full px-6 text-white">

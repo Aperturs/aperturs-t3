@@ -1,5 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter, privateProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, privateProcedure, protectedProcedure, publicProcedure } from "../trpc";
+import { TwitterApi } from "twitter-api-v2";
+import { prisma } from "~/server/db";
+import { env } from "~/env.mjs";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -42,4 +45,52 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+    addTwitter: protectedProcedure
+    .input(
+      z.object({
+        clientId: z.string(),
+        clientSecret:z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      
+      const org = await ctx.prisma.twitterToken.create({
+        data: {
+            client_id: input.clientId,
+            client_secret:input.clientSecret,
+            clerkUserId: ctx.currentUser,
+        },
+      });
+      const twitterClient = new TwitterApi({
+        clientId: input.clientId,
+        clientSecret: input.clientSecret,
+      });
+
+        const {url,codeVerifier,state} = twitterClient.generateOAuth2AuthLink(
+        env.TWITTER_CALLBACK_URL,
+        {
+          scope: ["users.read", "users.write","offline.access"],
+          state: org.id.toString(),
+        }
+      );
+      if(codeVerifier){
+      await ctx.prisma.twitterToken.update({
+        where: {
+          id: org.id,
+        },
+        data: {
+          codeVerifier: codeVerifier,
+        }
+      })
+    }
+    console.log({
+      state,
+      callback: env.TWITTER_CALLBACK_URL,
+
+    })
+    return url;
+    }),
+    
+    
 });
