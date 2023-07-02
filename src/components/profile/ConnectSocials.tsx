@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoIosAddCircle } from "react-icons/io";
 import {FaFacebookSquare,FaLinkedinIn} from 'react-icons/fa'
 import {AiFillInstagram,AiOutlineTwitter,} from 'react-icons/ai'
 import { useRouter } from "next/router";
 import { Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
+import { api } from "~/utils/api";
 
 const ConnectSocials = () => {
+
+  api.user.fetchConnectedAccounts.useQuery()
+  const {data,isLoading,error} = api.user.fetchConnectedAccounts.useQuery()
+
+
   return (
     <Card className="h-[50vh] w-[95%] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}

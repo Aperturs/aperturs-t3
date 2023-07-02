@@ -79,4 +79,22 @@ export const userRouter = createTRPCRouter({
 
       return url;
     }),
+    fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
+    
+      const twitter = await ctx.prisma.twitterToken.findMany({where: {clerkUserId: ctx.currentUser}});
+      const linkedin = await ctx.prisma.linkedInToken.findMany({where: {clerkUserId: ctx.currentUser}});
+  
+      // TODO: define proper output types, instead of directly using Prisma types
+      const accounts = [
+        {
+          type: "twitter",
+          data: twitter
+        },
+        {
+          type: "linkedin",
+          data: linkedin
+        }
+      ];
+      return  accounts ;
+    }),
 });
