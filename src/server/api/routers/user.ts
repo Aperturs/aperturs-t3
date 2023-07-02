@@ -5,8 +5,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../trpc";
-import { TwitterApi } from "twitter-api-v2";
-import { prisma } from "~/server/db";
 import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
 
@@ -67,33 +65,6 @@ export const userRouter = createTRPCRouter({
           clerkUserId: ctx.currentUser,
         },
       });
-      //   const twitterClient = new TwitterApi({
-      //     clientId: input.clientId,
-      //     clientSecret: input.clientSecret,
-      //   });
-
-      //     const {url,codeVerifier,state} = twitterClient.generateOAuth2AuthLink(
-      //     env.TWITTER_CALLBACK_URL,
-      //     {
-      //       scope: ["users.read", "users.write","offline.access"],
-      //       state: org.id.toString(),
-      //     }
-      //   );
-      //   if(codeVerifier){
-      //   await ctx.prisma.twitterToken.update({
-      //     where: {
-      //       id: org.id,
-      //     },
-      //     data: {
-      //       codeVerifier: codeVerifier,
-      //     }
-      //   })
-      // }
-      // console.log({
-      //   state,
-      //   callback: env.TWITTER_CALLBACK_URL,
-
-      // })
       const authClient = new auth.OAuth2User({
         client_id: input.clientId,
         client_secret: input.clientSecret,

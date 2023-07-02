@@ -6,6 +6,7 @@ import { Layout,DraftPage } from '~/components'
 const DraftPost = () => {
 
   return (
+    
         <div className="relative flex">
         <DraftPage />
         </div>

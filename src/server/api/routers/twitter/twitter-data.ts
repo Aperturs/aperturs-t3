@@ -6,39 +6,68 @@ import { env } from "~/env.mjs";
 
 
 export const twitterOrgAuth = createTRPCRouter({
-  connectTwitterOrg: protectedProcedure
-    .input(
-      z.object({
-        clientId: z.string(),
-        clientSecret:z.string(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-
-      const twitterClient = new TwitterApi({
-        clientId: input.clientId,
-        clientSecret: input.clientSecret,
-      });
-
-      
-      const org = await ctx.prisma.twitterToken.create({
-        data: {
-            client_id: input.clientId,
-            client_secret:input.clientSecret,
-            clerkUserId: ctx.currentUser,
+  fetchConnectedAccounts:protectedProcedure.query(
+    async ({ ctx }) => {
+      const accounts = await ctx.prisma.twitterToken.findMany({
+        where:{
+          clerkUserId: ctx.currentUser
         },
-      });
-
-      const {url,codeVerifier,state} = twitterClient.generateOAuth2AuthLink(
-        env.TWITTER_CALLBACK_URL,
-        {
-          scope: ["users.read", "users.write","offline.access","tweets.read","tweets.write","dm.write","dm.read"],
-          state: org.id.toString(),
+        select:{
+          id:true,
+          access_token:true,
+          profileId:true,
+          profileImage:true,
+          userName:true,      
         }
-      );
+      })
+      return {accounts}
+    }),
+    getAccessToken: protectedProcedure.input(
+      z.object({
+        tokeenId: z.number(),
+      })
+    ).query(async ({ctx,input})=>{
+      
+      const token = await ctx.prisma.twitterToken.findUnique({
+        where: {
+          id: input.tokeenId,
+      }
+    })
+    // check for expiration
+    if(token){
+      if(token.expires_in && token.refresh_token && token.access_token){
+        if(token.expires_in < new Date()){
+    const bearerToken = Buffer.from(
+      `${token.client_id}:${token.client_secret}`
+    ).toString("base64");
 
-       
-    },),
+   const  response = await fetch("https://api.twitter.com/2/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${bearerToken}`,
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      refresh_token: token.refresh_token,
+    }),
+  })
+  const data = await response.json()
+  await ctx.prisma.twitterToken.update({
+    where:{
+      id:input.tokeenId
+    },
+    data:{
+      access_token:data.access_token,
+      expires_in:new Date(new Date().getTime() + data.expires_in * 1000),
+    }
+  })
+  return data.access_token
+      }else{
+        return token.access_token
+      }
+}
+}
+    })
 });
 
 
