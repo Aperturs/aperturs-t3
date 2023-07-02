@@ -79,22 +79,44 @@ export const userRouter = createTRPCRouter({
 
       return url;
     }),
-    fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
-    
-      const twitter = await ctx.prisma.twitterToken.findMany({where: {clerkUserId: ctx.currentUser}});
-      const linkedin = await ctx.prisma.linkedInToken.findMany({where: {clerkUserId: ctx.currentUser}});
-  
-      // TODO: define proper output types, instead of directly using Prisma types
-      const accounts = [
-        {
+  fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
+    const twitter = await ctx.prisma.twitterToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
+    const linkedin = await ctx.prisma.linkedInToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
+
+    // TODO: define proper output types, instead of directly using Prisma types
+    const accounts = [];
+
+    if (twitter.length > 0) {
+      for (const twitterAccount of twitter) {
+        accounts.push({
           type: "twitter",
-          data: twitter
-        },
-        {
+          data: {
+            id: twitterAccount.id,
+            username: twitterAccount.userName,
+            name: twitterAccount.profileId,
+            profileUrl: twitterAccount.profileImage,
+          },
+        });
+      }
+    }
+
+    if (linkedin.length > 0) {
+      for (const linkedinAccount of linkedin) {
+        accounts.push({
           type: "linkedin",
-          data: linkedin
-        }
-      ];
-      return  accounts ;
-    }),
+          data: {
+            id: linkedinAccount.id,
+            username: linkedinAccount.vanityName,
+            name: linkedinAccount.profileId,
+            profileUrl: linkedinAccount.profileImage,
+          },
+        });
+      }
+    }
+    return accounts;
+  }),
 });

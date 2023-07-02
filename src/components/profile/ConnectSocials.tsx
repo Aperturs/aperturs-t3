@@ -1,33 +1,56 @@
 import React, { useEffect } from "react";
 import { IoIosAddCircle } from "react-icons/io";
-import {FaFacebookSquare,FaLinkedinIn} from 'react-icons/fa'
-import {AiFillInstagram,AiOutlineTwitter,} from 'react-icons/ai'
+import { FaFacebookSquare, FaLinkedinIn } from "react-icons/fa";
+import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
 import { useRouter } from "next/router";
-import { Card, CardBody, CardFooter, CardHeader, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Typography,
+} from "@material-tailwind/react";
 import { api } from "~/utils/api";
 
+
+const SocialIcon = ({ type } : {type:string}) => {
+  if (type === 'twitter') {
+    return <AiOutlineTwitter className="text-2xl" />;
+  } else if (type === 'linkedin') {
+    return <FaLinkedinIn className="text-2xl" />;
+  } else {
+    return null; // Return null or a default icon for other types
+  }
+};
+
+
+
 const ConnectSocials = () => {
-
-  api.user.fetchConnectedAccounts.useQuery()
-  const {data,isLoading,error} = api.user.fetchConnectedAccounts.useQuery()
-
+  const { data, isLoading, error } = api.user.fetchConnectedAccounts.useQuery();
 
   return (
     <Card className="h-[50vh] w-[95%] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
       <div className="mt-4 flex flex-col">
-        <h2 className="text-3xl font-bold">
-          Connect your socials
-        </h2>
-        <div className="grid grid-cols-3 w-full">
-        <div className="mt-4 flex gap-4">
-          <AfterConnect 
-          name="Swaraj"
-          username="swaraj"
-          icon={<FaFacebookSquare />}
-          profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          />
-          <AddSocial />
+        <h2 className="text-3xl font-bold">Connect your socials</h2>
+        <div className="grid gap-4 grid-cols-4">
+          <div className="mt-4 flex gap-4">
+            {data &&
+              data.map((item) => (
+                <AfterConnect
+                  name={item.data.name || ''}
+                  username={item.data.username||''}
+                  icon={<SocialIcon type={item.type} />}
+                  profilePic={item.data.profileUrl || ''}
+                />
+              ))}
+            <AfterConnect
+              name="Swaraj"
+              username="swaraj"
+              icon={<FaFacebookSquare />}
+              profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
+            />
+            <AddSocial />
           </div>
         </div>
       </div>
@@ -35,16 +58,17 @@ const ConnectSocials = () => {
   );
 };
 
-
-
 const AddSocial = () => {
-  
-
   return (
     <div>
-      <label htmlFor="my-modal-3" className="btn-primary btn gap-2  h-full flex-col w-full px-6 text-white">
+      <label
+        htmlFor="my-modal-3"
+        className="btn-primary w-full btn h-full text-white"
+      >
+        <div className="flex justify-center gap-3 items-center h-full w-full whitespace-nowrap	">
         <IoIosAddCircle className="text-2xl" />
         Add Socials
+        </div>
       </label>
 
       <input type="checkbox" id="my-modal-3" className="modal-toggle" />
@@ -56,9 +80,7 @@ const AddSocial = () => {
           >
             ✕
           </label>
-          <h3 className="text-lg font-bold">
-            Add Socials to Aperturs
-          </h3>
+          <h3 className="text-lg font-bold">Add Socials to Aperturs</h3>
           <Socials />
         </div>
       </div>
@@ -66,21 +88,18 @@ const AddSocial = () => {
   );
 };
 
-
-
 const Socials = () => {
-
-  const router = useRouter()
-
+  const router = useRouter();
 
   return (
-    <div className="grid grid-cols-3 py-4 gap-4">
+    <div className="grid grid-cols-3 gap-4 py-4">
       {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
         <FaFacebookSquare className="text-2xl " />
         <p>Facebook</p>
       </button> */}
-      <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2"
-      onClick={()=>router.push('/socials/twitter')}
+      <button
+        className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
+        onClick={() => router.push("/socials/twitter")}
       >
         <AiOutlineTwitter className="text-2xl " />
         <p>Twitter</p>
@@ -89,17 +108,17 @@ const Socials = () => {
         <AiFillInstagram className="text-2xl " />
         <p>Insta</p>
       </button> */}
-      <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
+      <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
       </button>
-      <button className="btn hover:bg-[#AAFE2C] hover:text-black hover:border-0  gap-2">
-        <img src='/lens.svg' className="w-6 h-6"/>
+      <button className="btn gap-2 hover:border-0 hover:bg-[#AAFE2C]  hover:text-black">
+        <img src="/lens.svg" className="h-6 w-6" />
         <p>Lens </p>
       </button>
     </div>
-  )
-}
+  );
+};
 
 interface Iconnection {
   name: string;
@@ -108,29 +127,19 @@ interface Iconnection {
   profilePic?: string;
 }
 
-const AfterConnect = ({name,username,icon,profilePic}:Iconnection) => {
-  return(
-    <div className="shadow-md flex-col justify-center items-center rounded-lg px-10 py-6">
-      <div>
-        <img className="rounded-full h-20 w-20 object-cover"
-        src={profilePic}
-        />
-      </div>
-      <div className="flex flex-col w-full items-center my-2">
-        <h2 className="text-xl font-bold">{name}</h2>
+const AfterConnect = ({ name, username, icon, profilePic }: Iconnection) => {
+  return (
+    <div className="flex items-center w-full justify-center rounded-lg px-10 py-6 shadow-md">
+        <img className="h-10 w-10 rounded-full object-cover" src={profilePic} />
+      <div className="my-2 mx-2 flex w-full flex-col items-center">
+        <h2 className="text-md leading-3 font-bold">{name}</h2>
         <h3 className="text-gray-500">@{username}</h3>
       </div>
-      <div className="w-full flex justify-center text-black text-3xl">
-      {icon}
+      <div className="flex w-full justify-center text-3xl text-black">
+        {icon}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default ConnectSocials;
-
-
-
-
-
-
