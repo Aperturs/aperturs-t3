@@ -45,7 +45,7 @@ export const userRouter = createTRPCRouter({
           refresh_token: input.refresh_token,
           expires_in: input.expires_in,
           refresh_token_expires_in: input.refresh_token_expires_in,
-          user: { connect: { clerkUserId: ctx.clerkId } },
+          clerkUserId: ctx.clerkId,
         },
       });
     }),
@@ -79,19 +79,22 @@ export const userRouter = createTRPCRouter({
 
       return url;
     }),
-  fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
-    const twitter = await ctx.prisma.twitterToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
-    });
-    const linkedin = await ctx.prisma.linkedInToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
-    });
 
+  fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
+
+
+    const data = await ctx.prisma.user.findUnique({
+      where: { clerkUserId: ctx.currentUser },
+      select:{
+        linkedInTokens: true,
+        twitterTokens: true
+      }
+    })
     // TODO: define proper output types, instead of directly using Prisma types
     const accounts = [];
-
-    if (twitter.length > 0) {
-      for (const twitterAccount of twitter) {
+    if(data){
+    if (data.twitterTokens.length > 0) {
+      for (const twitterAccount of data.twitterTokens) {
         accounts.push({
           type: "twitter",
           data: {
@@ -104,8 +107,8 @@ export const userRouter = createTRPCRouter({
       }
     }
 
-    if (linkedin.length > 0) {
-      for (const linkedinAccount of linkedin) {
+    if (data.linkedInTokens.length > 0) {
+      for (const linkedinAccount of data.linkedInTokens) {
         accounts.push({
           type: "linkedin",
           data: {
@@ -118,5 +121,6 @@ export const userRouter = createTRPCRouter({
       }
     }
     return accounts;
+  }
   }),
 });

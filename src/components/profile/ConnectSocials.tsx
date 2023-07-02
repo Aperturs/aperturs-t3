@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { api } from "~/utils/api";
+import { onLinkedLnConnect } from "~/utils/connections";
 
 
 const SocialIcon = ({ type } : {type:string}) => {
@@ -108,7 +109,11 @@ const Socials = () => {
         <AiFillInstagram className="text-2xl " />
         <p>Insta</p>
       </button> */}
-      <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
+      <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
+      onClick={()=>{
+        onLinkedLnConnect()
+      }}
+      >
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
       </button>
