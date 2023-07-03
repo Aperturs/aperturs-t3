@@ -40,18 +40,19 @@ export default async function handler(
   const caller = appRouter.createCaller({
     prisma: prisma,
     cronJobServer: cronJobServer,
-    clerkId: session.userId,
+    currentUser: session.userId,
   });
-
-  await caller.user.addLinkedln({
-    access_token: data.access_token,
-    expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
-    profileId: user["id"],
-    profileImage: user["profilePicture"]["displayImage"],
-    vanityName: user["vanityName"],
-    refresh_token: data.refresh_token ?? undefined,
-    refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
-  });
+  console.log({ user });
+  if (user) {
+    await caller.user.addLinkedln({
+      access_token: data.access_token,
+      expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
+      profileId: user["id"],
+      profileImage: user["profilePicture"]["displayImage"],
+      refresh_token: data.refresh_token ?? undefined,
+      refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
+    });
+  }
 
   return res.redirect("/dashboard");
 }

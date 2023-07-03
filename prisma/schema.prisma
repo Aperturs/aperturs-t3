@@ -79,8 +79,7 @@ model GithubToken {
 
 model LinkedInToken {
     id        Int      @id @default(autoincrement())
-    profileImage String? 
-    vanityName      String?
+    profileImage String?
     profileId String?
     access_token     String   @unique
     refresh_token    String?   @unique

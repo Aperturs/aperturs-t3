@@ -8,6 +8,6 @@ export const twitterData = createTRPCRouter({
   getAccessToken: protectedProcedure.input(z.object({
         tokenId: z.number(),})).query(async ({ ctx, input }) => {
      const token = await getAccessToken(input.tokenId, ctx.prisma);
-     return { token };
+     return { token }; 
     }),
 });

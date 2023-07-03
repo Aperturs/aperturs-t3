@@ -1,10 +1,5 @@
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  privateProcedure,
-  protectedProcedure,
-  publicProcedure,
-} from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
 
@@ -23,7 +18,7 @@ export const userRouter = createTRPCRouter({
       });
       return user;
     }),
-  addLinkedln: privateProcedure
+  addLinkedln: protectedProcedure
     .input(
       z.object({
         profileImage: z.string(),
@@ -39,13 +34,13 @@ export const userRouter = createTRPCRouter({
       return await ctx.prisma.linkedInToken.create({
         data: {
           profileImage: input.profileImage,
-          vanityName: input.vanityName,
+
           profileId: input.profileId,
           access_token: input.access_token,
           refresh_token: input.refresh_token,
           expires_in: input.expires_in,
           refresh_token_expires_in: input.refresh_token_expires_in,
-          user: { connect: { clerkUserId: ctx.clerkId } },
+          user: { connect: { clerkUserId: ctx.currentUser } },
         },
       });
     }),
@@ -110,7 +105,7 @@ export const userRouter = createTRPCRouter({
           type: "linkedin",
           data: {
             id: linkedinAccount.id,
-            username: linkedinAccount.vanityName,
+
             name: linkedinAccount.profileId,
             profileUrl: linkedinAccount.profileImage,
           },

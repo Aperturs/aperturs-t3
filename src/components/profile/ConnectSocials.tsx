@@ -11,9 +11,10 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { api } from "~/utils/api";
+import { onLinkedLnConnect } from "~/utils/connections";
 
 
-const SocialIcon = ({ type } : {type:string}) => {
+const SocialIcon = ({ type }: { type: string }) => {
   if (type === 'twitter') {
     return <AiOutlineTwitter className="text-2xl" />;
   } else if (type === 'linkedin') {
@@ -39,7 +40,7 @@ const ConnectSocials = () => {
               data.map((item) => (
                 <AfterConnect
                   name={item.data.name || ''}
-                  username={item.data.username||''}
+                  username={item.data.username || ''}
                   icon={<SocialIcon type={item.type} />}
                   profilePic={item.data.profileUrl || ''}
                 />
@@ -66,8 +67,8 @@ const AddSocial = () => {
         className="btn-primary w-full btn h-full text-white"
       >
         <div className="flex justify-center gap-3 items-center h-full w-full whitespace-nowrap	">
-        <IoIosAddCircle className="text-2xl" />
-        Add Socials
+          <IoIosAddCircle className="text-2xl" />
+          Add Socials
         </div>
       </label>
 
@@ -108,7 +109,7 @@ const Socials = () => {
         <AiFillInstagram className="text-2xl " />
         <p>Insta</p>
       </button> */}
-      <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
+      <button onClick={() => onLinkedLnConnect()} className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
       </button>
@@ -130,7 +131,7 @@ interface Iconnection {
 const AfterConnect = ({ name, username, icon, profilePic }: Iconnection) => {
   return (
     <div className="flex items-center w-full justify-center rounded-lg px-10 py-6 shadow-md">
-        <img className="h-10 w-10 rounded-full object-cover" src={profilePic} />
+      <img className="h-10 w-10 rounded-full object-cover" src={profilePic} />
       <div className="my-2 mx-2 flex w-full flex-col items-center">
         <h2 className="text-md leading-3 font-bold">{name}</h2>
         <h3 className="text-gray-500">@{username}</h3>

@@ -33,13 +33,10 @@ const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
   const clerkId = sesh.userId;
   return {
     prisma,
-    // twitterClient: (token_or_authOptions: string | AuthClient) =>
-    //   new Client(token_or_authOptions),
     cronJobServer: cronJobServer,
-    clerkId,
+    currentUser: clerkId,
   };
 };
-
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -50,7 +47,7 @@ const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
 export const createTRPCContext = async (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
   const session = getAuth(req);
-  const user = session.user
+  const user = session.user;
   // Get the session from the server using the getServerSession wrapper function
   // const session = await getServerAuthSession({ req, res });
 
@@ -58,7 +55,6 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
     req,
     res,
   });
-
 };
 
 /**
@@ -76,7 +72,6 @@ import axios from "axios";
 import { AuthClient } from "twitter-api-sdk/dist/types";
 import cronJobServer from "../cronjob";
 import { getAuth } from "@clerk/nextjs/dist/server";
-
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -115,15 +110,14 @@ export const createTRPCRouter = t.router;
  */
 export const publicProcedure = t.procedure;
 
-
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.clerkId) {
+  if (!ctx.currentUser) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
-      currentUser: ctx.clerkId,
+      currentUser: ctx.currentUser,
     },
   });
 });
@@ -138,15 +132,5 @@ export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
  *
  * @see https://trpc.io/docs/procedures
  */
-
-const enforceUserIsAuth = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.clerkId) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
-  }
-  return next({
-    ctx: { clerkId: ctx.clerkId },
-  });
-});
-export const privateProcedure = t.procedure.use(enforceUserIsAuth);
 
 // export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
