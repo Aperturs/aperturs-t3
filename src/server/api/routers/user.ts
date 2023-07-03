@@ -34,7 +34,6 @@ export const userRouter = createTRPCRouter({
       return await ctx.prisma.linkedInToken.create({
         data: {
           profileImage: input.profileImage,
-
           profileId: input.profileId,
           access_token: input.access_token,
           refresh_token: input.refresh_token,

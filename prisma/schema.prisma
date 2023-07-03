@@ -53,15 +53,15 @@ model User {
 model TwitterToken {
   id            Int       @id @default(autoincrement())
   usesr         User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId   String
+  clerkUserId   String    
   client_id     String
   client_secret String
   access_token  String?   @unique
   refresh_token String?   @unique
   expires_in    DateTime?
   profileImage  String?
-  userName      String?
-  profileId     String?
+  userName      String?   
+  profileId     String?  @unique
 }
 
 model GithubToken {
@@ -81,8 +81,8 @@ model LinkedInToken {
   profileImage             String?
   vanityName               String?
   profileId                String?
-  access_token             String    @unique 
-  refresh_token            String?   @unique
+  access_token             String    @db.Text 
+  refresh_token            String?   @db.Text
   user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId              String    @unique
   expires_in               DateTime?
@@ -100,7 +100,7 @@ model Subscription {
   user           User             @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId    String           @unique
   customerUserId String
-  transaction    Transaction      @relation(fields: [transactionId], references: [id])
+  transaction    Transaction      @relation(fields: [transactionId], references: [clerkUserId])
   transactionId  String
   type           SubscriptionType
 

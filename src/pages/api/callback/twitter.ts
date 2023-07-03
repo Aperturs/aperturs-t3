@@ -31,6 +31,7 @@ export default async function handler(
     clientSecret: org.client_secret,
   });
   const codeAuth = code as string;
+
   const authClient = new auth.OAuth2User({
     client_id: org.client_id,
     client_secret: org.client_secret,
@@ -83,8 +84,14 @@ export default async function handler(
               userName: userObject.username,
               profileImage: userObject.profile_image_url,
             },
+          }).catch(async (e) => {
+            await prisma.twitterToken.delete({
+              where: {
+                id: parseInt(state as string),
+              },
+            })
           });
-        }
+        } 
       }
     });
   });

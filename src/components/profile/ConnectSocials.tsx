@@ -12,7 +12,6 @@ import {
 } from "@material-tailwind/react";
 import { api } from "~/utils/api";
 import { onLinkedLnConnect } from "~/utils/connections";
-import { onLinkedLnConnect } from "~/utils/connections";
 
 
 const SocialIcon = ({ type }: { type: string }) => {
@@ -29,7 +28,6 @@ const SocialIcon = ({ type }: { type: string }) => {
 
 const ConnectSocials = () => {
   const { data, isLoading, error } = api.user.fetchConnectedAccounts.useQuery();
-
   return (
     <Card className="h-[50vh] w-[95%] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
@@ -110,7 +108,6 @@ const Socials = () => {
         <AiFillInstagram className="text-2xl " />
         <p>Insta</p>
       </button> */}
-      <button onClick={() => onLinkedLnConnect()} className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
         <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
           onClick={() => {
             onLinkedLnConnect()
