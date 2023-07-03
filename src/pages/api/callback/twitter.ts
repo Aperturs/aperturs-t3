@@ -32,13 +32,6 @@ export default async function handler(
   });
   const codeAuth = code as string;
 
-  const authClient = new auth.OAuth2User({
-    client_id: org.client_id,
-    client_secret: org.client_secret,
-    callback: env.TWITTER_CALLBACK_URL,
-    scopes: ["users.read", "tweet.read", "offline.access"],
-  });
-
   const bearerToken = Buffer.from(
     `${org.client_id}:${org.client_secret}`
   ).toString("base64");
@@ -64,38 +57,36 @@ export default async function handler(
       ) {
         const client = new Client(response.access_token);
         const { data: userObject } = await client.users.findMyUser({
-          "user.fields": ["profile_image_url", "username", "id"],
+          "user.fields": ["id"],
         });
         console.log(userObject, "userObject");
-
         if (userObject) {
-          console.log(response.expires_in, "response.expires_in")
-          await prisma.twitterToken.update({
-            where: {
-              id: parseInt(state as string),
-            },
-            data: {
-              access_token: response.access_token,
-              refresh_token: response.refresh_token,
-              expires_in: new Date(
-                new Date().getTime() + response.expires_in * 1000
-              ),
-              profileId: userObject.id,
-              userName: userObject.username,
-              profileImage: userObject.profile_image_url,
-            },
-          }).catch(async (e) => {
-            await prisma.twitterToken.delete({
+          console.log(response.expires_in, "response.expires_in");
+          await prisma.twitterToken
+            .update({
               where: {
                 id: parseInt(state as string),
               },
+              data: {
+                access_token: response.access_token,
+                refresh_token: response.refresh_token,
+                expires_in: new Date(
+                  new Date().getTime() + response.expires_in * 1000
+                ),
+                profileId: userObject.id,
+              },
             })
-          });
-        } 
+            .catch(async (e) => {
+              await prisma.twitterToken.delete({
+                where: {
+                  id: parseInt(state as string),
+                },
+              });
+            });
+        }
       }
     });
   });
-
 
   res.redirect("/settings");
 }

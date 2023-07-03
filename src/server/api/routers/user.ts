@@ -2,6 +2,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
+import { getTwitterAccountDetails } from "../helpers/twitter";
+import { getLinkedinAccountDetails } from "../helpers/linkedln";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -21,8 +23,6 @@ export const userRouter = createTRPCRouter({
   addLinkedln: protectedProcedure
     .input(
       z.object({
-        profileImage: z.string(),
-
         profileId: z.string(),
         access_token: z.string(),
         refresh_token: z.string().optional(),
@@ -33,7 +33,6 @@ export const userRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.linkedInToken.create({
         data: {
-          profileImage: input.profileImage,
           profileId: input.profileId,
           access_token: input.access_token,
           refresh_token: input.refresh_token,
@@ -84,30 +83,25 @@ export const userRouter = createTRPCRouter({
 
     // TODO: define proper output types, instead of directly using Prisma types
     const accounts = [];
-
+    const twitterDetails = await getTwitterAccountDetails(twitter);
     if (twitter.length > 0) {
-      for (const twitterAccount of twitter) {
+      for (const twitterDetail of twitterDetails) {
         accounts.push({
           type: "twitter",
           data: {
-            id: twitterAccount.id,
-            username: twitterAccount.userName,
-            name: twitterAccount.profileId,
-            profileUrl: twitterAccount.profileImage,
+            ...twitterDetail,
           },
         });
       }
     }
+    const linkedinDetails = await getLinkedinAccountDetails(linkedin);
 
     if (linkedin.length > 0) {
-      for (const linkedinAccount of linkedin) {
+      for (const linkedinDetail of linkedinDetails) {
         accounts.push({
           type: "linkedin",
           data: {
-            id: linkedinAccount.id,
-
-            name: linkedinAccount.profileId,
-            profileUrl: linkedinAccount.profileImage,
+            ...linkedinDetail,
           },
         });
       }

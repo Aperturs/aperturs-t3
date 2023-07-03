@@ -59,8 +59,6 @@ model TwitterToken {
   access_token  String?   @unique
   refresh_token String?   @unique
   expires_in    DateTime?
-  profileImage  String?
-  userName      String?   
   profileId     String?  @unique
 }
 
@@ -78,8 +76,6 @@ model GithubToken {
 
 model LinkedInToken {
   id                       Int       @id @default(autoincrement())
-  profileImage             String?
-  vanityName               String?
   profileId                String?
   access_token             String    @db.Text 
   refresh_token            String?   @db.Text

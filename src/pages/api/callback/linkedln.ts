@@ -48,7 +48,6 @@ export default async function handler(
       access_token: data.access_token,
       expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
       profileId: user["id"],
-      profileImage: user["profilePicture"]["displayImage"],
       refresh_token: data.refresh_token ?? undefined,
       refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
     });
