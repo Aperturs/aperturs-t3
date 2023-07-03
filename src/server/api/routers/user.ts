@@ -74,6 +74,7 @@ export const userRouter = createTRPCRouter({
 
       return url;
     }),
+
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const twitter = await ctx.prisma.twitterToken.findMany({
       where: { clerkUserId: ctx.currentUser },

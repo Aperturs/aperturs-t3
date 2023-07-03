@@ -31,8 +31,8 @@ function ApiBox() {
   const {  data,mutateAsync,error,isLoading } = api.user.addTwitter.useMutation()
 
   console.log(error,'error')
-  const [clientID, setClientID] = React.useState("");
-  const [clientSecret, setClientSecret] = React.useState("");
+  const [clientID, setClientID] = React.useState("UE05dTJ3ZjhjTnFESUQ5aTBIcFo6MTpjaQ");
+  const [clientSecret, setClientSecret] = React.useState("NzEjJmLCdQud4JjTSw2QaLjFv6zXKQWtg51hrbrvgGgj6lezfs");
 
   const connectHandler = async () => {
 

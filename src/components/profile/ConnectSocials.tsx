@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { api } from "~/utils/api";
 import { onLinkedLnConnect } from "~/utils/connections";
+import { onLinkedLnConnect } from "~/utils/connections";
 
 
 const SocialIcon = ({ type }: { type: string }) => {
@@ -110,13 +111,18 @@ const Socials = () => {
         <p>Insta</p>
       </button> */}
       <button onClick={() => onLinkedLnConnect()} className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
-        <FaLinkedinIn className="text-2xl " />
-        <p>Linkedin</p>
-      </button>
-      <button className="btn gap-2 hover:border-0 hover:bg-[#AAFE2C]  hover:text-black">
-        <img src="/lens.svg" className="h-6 w-6" />
-        <p>Lens </p>
-      </button>
+        <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
+          onClick={() => {
+            onLinkedLnConnect()
+          }}
+        >
+          <FaLinkedinIn className="text-2xl " />
+          <p>Linkedin</p>
+        </button>
+        <button className="btn gap-2 hover:border-0 hover:bg-[#AAFE2C]  hover:text-black">
+          <img src="/lens.svg" className="h-6 w-6" />
+          <p>Lens </p>
+        </button>
     </div>
   );
 };
