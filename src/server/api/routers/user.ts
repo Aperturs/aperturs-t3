@@ -22,7 +22,7 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         profileImage: z.string(),
-        vanityName: z.string(),
+
         profileId: z.string(),
         access_token: z.string(),
         refresh_token: z.string().optional(),
