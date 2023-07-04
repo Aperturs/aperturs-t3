@@ -69,10 +69,9 @@ export default async function handler(
   const caller = appRouter.createCaller({
     prisma: prisma,
     cronJobServer: cronJobServer,
-    clerkId: "",
+    currentUser: "",
   });
-
-
+  
   const { id } = evt.data;
   // Handle the webhook
   const eventType: EventType = evt.type;

@@ -51,19 +51,16 @@ model User {
 }
 
 model TwitterToken {
-  id            Int    @id @default(autoincrement())
-  usesr         User   @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId   String 
+  id            Int       @id @default(autoincrement())
+  usesr         User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  clerkUserId   String    
   client_id     String
   client_secret String
-  access_token  String? @unique
-  refresh_token String? @unique
+  access_token  String?   @unique
+  refresh_token String?   @unique
   expires_in    DateTime?
-  profileImage String? 
-  userName      String?
-  profileId String?
+  profileId     String?  @unique
 }
-
 
 model GithubToken {
   id                       Int       @id @default(autoincrement())
@@ -71,6 +68,8 @@ model GithubToken {
   refresh_token            String?   @unique
   user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId              String    @unique
+  profileId                String?   @unique
+  
   expires_in               DateTime?
   refresh_token_expires_in DateTime?
   createdAt                DateTime  @default(now())
@@ -78,18 +77,16 @@ model GithubToken {
 }
 
 model LinkedInToken {
-    id        Int      @id @default(autoincrement())
-    profileImage String? 
-    vanityName      String?
-    profileId String?
-    access_token     String   @unique
-    refresh_token    String?   @unique
-    user      User     @relation(fields: [userId], references: [id])
-    userId    Int @unique
-    expires_in DateTime?
-    refresh_token_expires_in DateTime?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id                       Int       @id @default(autoincrement())
+  profileId                String?
+  access_token             String    @db.Text 
+  refresh_token            String?   @db.Text
+  user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  clerkUserId              String    @unique
+  expires_in               DateTime?
+  refresh_token_expires_in DateTime?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 }
 
 enum SubscriptionType {
@@ -101,7 +98,7 @@ model Subscription {
   user           User             @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId    String           @unique
   customerUserId String
-  transaction    Transaction      @relation(fields: [transactionId], references: [id])
+  transaction    Transaction      @relation(fields: [transactionId], references: [clerkUserId])
   transactionId  String
   type           SubscriptionType
 

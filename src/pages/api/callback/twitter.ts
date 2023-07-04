@@ -12,34 +12,32 @@ export default async function handler(
   const { state, code, codeVerifier } = req.query;
   console.log("state", state);
   console.log("code", code);
+  // const org = await prisma.twitterToken.findUnique({
+  //   where: {
+  //     id: parseInt(state as string),
+  //   },
+  //   select: {
+  //     client_id: true,
+  //     client_secret: true,
+  //   },
+  // });
 
-  const org = await prisma.twitterToken.findUnique({
-    where: {
-      id: parseInt(state as string),
-    },
-    select: {
-      client_id: true,
-      client_secret: true,
-    },
-  });
-
-  if (!org || !state || !code) {
+  if ( !state || !code) {
     return res.status(400).send("You denied the app or your session expired!");
   }
+  const State = state as string;
+  const [clientId, clientSecret] = State.split("-");
+  const formattedClientId = clientId ? clientId.trim() : "";
+  const formattedClientSecret = clientSecret ? clientSecret.trim() : "";
+  const {userId } =  getAuth(req);
   const client = new TwitterApi({
-    clientId: org.client_id,
-    clientSecret: org.client_secret,
+    clientId: formattedClientId,
+    clientSecret: formattedClientSecret,
   });
   const codeAuth = code as string;
-  const authClient = new auth.OAuth2User({
-    client_id: org.client_id,
-    client_secret: org.client_secret,
-    callback: env.TWITTER_CALLBACK_URL,
-    scopes: ["users.read", "tweet.read", "offline.access"],
-  });
 
   const bearerToken = Buffer.from(
-    `${org.client_id}:${org.client_secret}`
+    `${formattedClientId}:${formattedClientSecret}`
   ).toString("base64");
 
   fetch("https://api.twitter.com/2/oauth2/token", {
@@ -63,32 +61,46 @@ export default async function handler(
       ) {
         const client = new Client(response.access_token);
         const { data: userObject } = await client.users.findMyUser({
-          "user.fields": ["profile_image_url", "username", "id"],
+          "user.fields": ["id"],
         });
         console.log(userObject, "userObject");
-
+        if(userId){
         if (userObject) {
-          console.log(response.expires_in, "response.expires_in")
-          await prisma.twitterToken.update({
-            where: {
-              id: parseInt(state as string),
-            },
-            data: {
+          console.log(response.expires_in, "response.expires_in");
+          await prisma.twitterToken.create({
+            data:{
               access_token: response.access_token,
               refresh_token: response.refresh_token,
               expires_in: new Date(
-                new Date().getTime() + response.expires_in * 1000
-              ),
+                        new Date().getTime() + response.expires_in * 1000
+                      ),
               profileId: userObject.id,
-              userName: userObject.username,
-              profileImage: userObject.profile_image_url,
-            },
-          });
+              client_id: formattedClientId,
+              client_secret: formattedClientSecret,
+              clerkUserId: userId,
+            }
+          })
+          // await prisma.twitterToken
+          //   .update({
+          //     where: {
+          //       id: parseInt(state as string),
+          //     },
+          //     data: {
+          //       access_token: response.access_token,
+          //       refresh_token: response.refresh_token,
+          //       expires_in: new Date(
+          //         new Date().getTime() + response.expires_in * 1000
+          //       ),
+          //       profileId: userObject.id,
+          //     },
+          //   })
+          // 
+          //   });
         }
+      }
       }
     });
   });
-
 
   res.redirect("/settings");
 }
