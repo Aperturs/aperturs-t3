@@ -7,7 +7,7 @@ import { getAccessToken } from "../../helpers";
 export const twitterData = createTRPCRouter({
   getAccessToken: protectedProcedure.input(z.object({
         tokenId: z.number(),})).query(async ({ ctx, input }) => {
-     const token = await getAccessToken(input.tokenId, ctx.prisma);
+     const token = await getAccessToken(input.tokenId);
      return { token }; 
     }),
 });

@@ -6,6 +6,10 @@ import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { input } from "@material-tailwind/react";
 
+
+
+
+
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
     .input(
@@ -52,13 +56,15 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const org = await ctx.prisma.twitterToken.create({
-        data: {
-          client_id: input.clientId,
-          client_secret: input.clientSecret,
-          clerkUserId: ctx.currentUser,
-        },
-      });
+      
+      // const org = await ctx.prisma.twitterToken.create({
+      //   data: {
+      //     client_id: input.clientId,
+      //     client_secret: input.clientSecret,
+      //     clerkUserId: ctx.currentUser,
+      //   },
+      // });
+      
       const authClient = new auth.OAuth2User({
         client_id: input.clientId,
         client_secret: input.clientSecret,
@@ -66,7 +72,8 @@ export const userRouter = createTRPCRouter({
         scopes: ["users.read", "tweet.read", "offline.access"],
       });
       const url = authClient.generateAuthURL({
-        state: org.id.toString(),
+        state: `${input.clientId}-${input.clientSecret}`,
+        // state: org.id.toString(),
         code_challenge_method: "plain",
         code_challenge: "challenge",
       });
