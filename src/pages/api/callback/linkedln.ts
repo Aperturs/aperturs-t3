@@ -1,5 +1,6 @@
 import { getAuth } from "@clerk/nextjs/dist/server";
 import { NextApiRequest, NextApiResponse } from "next";
+import { env } from "~/env.mjs";
 import { appRouter } from "~/server/api/root";
 import cronJobServer from "~/server/cronjob";
 import { prisma } from "~/server/db";
@@ -14,11 +15,11 @@ export default async function handler(
     "https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=" +
       code +
       "&redirect_uri=" +
-      encodeURIComponent(process.env.NEXT_PUBLIC_LINKEDIN_REDIRECT_URL!) +
+      encodeURIComponent(env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL) +
       "&client_id=" +
-      process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID +
+      env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID +
       "&client_secret=" +
-      process.env.LINKEDIN_CLIENT_SECRET,
+      env.LINKEDIN_CLIENT_SECRET,
     {
       method: "POST",
       headers: {

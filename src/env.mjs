@@ -9,6 +9,14 @@ const server = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
   WEBHOOK_SECRET: z.string().min(1),
   TWITTER_CALLBACK_URL: z.string().url(),
+  NEXT_PUBLIC_GITHUB_CALLBACK_URL: z.string().url(),
+  GITHUB_CLIENT_SECRET: z.string().min(1),
+  NEXT_PUBLIC_GITHUB_CLIENT_ID: z.string().min(1),
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+  NEXT_PUBLIC_LINKEDIN_CLIENT_ID: z.string().min(1),
+  NEXT_PUBLIC_LINKEDIN_CALLBACK_URL: z.string().url(),
+  LINKEDIN_CLIENT_SECRET: z.string().min(1),
+  CLERK_SECRET_KEY: z.string().min(1),
 });
 
 /**
@@ -17,6 +25,11 @@ const server = z.object({
  */
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
+  NEXT_PUBLIC_GITHUB_CLIENT_ID: z.string().min(1),
+  NEXT_PUBLIC_LINKEDIN_CLIENT_ID: z.string().min(1),
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+  NEXT_PUBLIC_LINKEDIN_CALLBACK_URL: z.string().url(),
+  NEXT_PUBLIC_GITHUB_CALLBACK_URL: z.string().url(),
 });
 
 /**
@@ -30,6 +43,18 @@ const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
   WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
   TWITTER_CALLBACK_URL: process.env.TWITTER_CALLBACK_URL,
+  NEXT_PUBLIC_GITHUB_CALLBACK_URL: process.env.NEXT_PUBLIC_GITHUB_CALLBACK_URL,
+  GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+  NEXT_PUBLIC_GITHUB_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+
+  NEXT_PUBLIC_LINKEDIN_CLIENT_ID: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID,
+  LINKEDIN_CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
+  CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+  NEXT_PUBLIC_LINKEDIN_CALLBACK_URL:
+    process.env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL,
+
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

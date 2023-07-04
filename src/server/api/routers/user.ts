@@ -4,6 +4,7 @@ import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
 import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
+import { input } from "@material-tailwind/react";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -71,6 +72,25 @@ export const userRouter = createTRPCRouter({
       });
 
       return url;
+    }),
+
+  addGithub: protectedProcedure
+    .input(
+      z.object({
+        access_token: z.string(),
+        profileId: z.string(),
+        expires_in: z.date().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.githubToken.create({
+        data: {
+          user: { connect: { clerkUserId: ctx.currentUser } },
+          access_token: input.access_token,
+          expires_in: input.expires_in,
+          profileId: input.profileId,
+        },
+      });
     }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
