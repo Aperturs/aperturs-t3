@@ -27,7 +27,9 @@ const SocialIcon = ({ type }: { type: string }) => {
 
 
 const ConnectSocials = () => {
-  const { data, isLoading, error } = api.user.fetchConnectedAccounts.useQuery();
+
+  const {data} = api.user.fetchConnectedAccounts.useQuery()
+  
   return (
     <Card className="h-[50vh] w-[95%] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
@@ -38,10 +40,10 @@ const ConnectSocials = () => {
             {data &&
               data.map((item) => (
                 <AfterConnect
-                  name={item.data.name || ''}
+                  name={item.data.full_name || ''}
                   username={item.data.username || ''}
                   icon={<SocialIcon type={item.type} />}
-                  profilePic={item.data.profileUrl || ''}
+                  profilePic={item.data.profile_image_url || ''}
                 />
               ))}
             <AfterConnect
@@ -136,8 +138,7 @@ const AfterConnect = ({ name, username, icon, profilePic }: Iconnection) => {
     <div className="flex items-center w-full justify-center rounded-lg px-10 py-6 shadow-md">
       <img className="h-10 w-10 rounded-full object-cover" src={profilePic} />
       <div className="my-2 mx-2 flex w-full flex-col items-center">
-        <h2 className="text-md leading-3 font-bold">{name}</h2>
-        <h3 className="text-gray-500">@{username}</h3>
+        <h2 className="text-sm whitespace-nowrap leading-3 ">{name}</h2>
       </div>
       <div className="flex w-full justify-center text-3xl text-black">
         {icon}
