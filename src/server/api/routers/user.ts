@@ -116,23 +116,29 @@ export const userRouter = createTRPCRouter({
         accounts.push({
           type: "twitter",
           data: {
-            ...twitterDetail,
+            tokenId: twitterDetail.tokenId,
+            name: twitterDetail.full_name,
+            profile_image_url: twitterDetail.profile_image_url,
+            profileId: twitterDetail.profileId,
           },
         });
       }
     }
-    const linkedinDetails = await getLinkedinAccountDetails(linkedin);
+    //  const linkedinDetails = await getLinkedinAccountDetails(linkedin);
 
-    if (linkedin.length > 0) {
-      for (const linkedinDetail of linkedinDetails) {
-        accounts.push({
-          type: "linkedin",
-          data: {
-            ...linkedinDetail,
-          },
-        });
-      }
-    }
+    // if (linkedin.length > 0) {
+    //   for (const linkedinDetail of linkedinDetails) {
+    //     accounts.push({
+    //       type: "linkedin",
+    //       data: {
+    //         tokenId: linkedinDetail.tokenId,
+    //         name: linkedinDetail.full_name,
+    //         profile_image_url: linkedinDetail.profile_image_url,
+    //         profileId: linkedinDetail.profileId,
+    //       },
+    //     });
+    //   }
+    // }
     return accounts;
   }),
 });

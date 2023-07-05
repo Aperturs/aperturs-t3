@@ -100,6 +100,8 @@ export default async function handler(
       }
       }
     });
+  }).catch((err) => {
+    console.log(err, "err");
   });
 
   res.redirect("/settings");
