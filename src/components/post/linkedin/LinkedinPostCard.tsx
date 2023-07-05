@@ -1,6 +1,6 @@
 'use client'
 
-import { Avatar } from '@material-tailwind/react'
+import { Avatar, Switch } from '@material-tailwind/react'
 import React, { useContext, useEffect, useState } from 'react'
 import LinkedInPostCreation from './textarea'
 import { PostContext } from '../postWrapper';
@@ -23,12 +23,9 @@ function convertTweetsToPlaintext(tweets: Tweet[]): string {
   return plaintext;
 }
 
-
-
-
 function LinkedinPostCard() {
 
-  const {setLinkedinPost,linkedinPost,sync,tweets } = useContext(PostContext)
+  const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
 
 
   useEffect(() => {
@@ -60,6 +57,12 @@ function LinkedinPostCard() {
         onContentChange={setLinkedinPost}
         sync={sync}
         />
+        <Switch
+          label="Sync with Twitter"
+          color="blue"
+          defaultChecked={sync}
+          onChange={(e)=>setSync(e.target.checked)}
+          />
         <div>
         </div>
 
