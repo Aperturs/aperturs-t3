@@ -75,7 +75,7 @@ export default function SideBar() {
   }, []);
 
   return (
-    <Card className="lg:sticky lg:left-4 mt-2 lg:min-h-[calc(100vh-2rem)] lg:max-w-[18rem] w-full bg-neutral p-4 shadow-xl shadow-blue-gray-900/5">
+    <Card className=" lg:left-4 mt-2 lg:h-[calc(100vh-2rem)] lg:fixed lg:max-w-[18rem] w-full overflow-scroll bg-neutral p-4  shadow-xl shadow-blue-gray-900/5">
       <div className="mb-2 flex items-center gap-4 p-4">
         <img src="/logo.svg" alt="brand" className="h-8 w-8" />
         <Typography variant="h5" color="blue-gray">
@@ -115,7 +115,7 @@ export default function SideBar() {
           </motion.div>
         )}
       </AnimatePresence>
-      <UpgradeAlert />
+      {/* <UpgradeAlert /> */}
     </Card>
   );
 }

@@ -3,6 +3,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import { FaFacebookSquare, FaLinkedinIn } from "react-icons/fa";
 import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
 import { useRouter } from "next/router";
+
 import {
   Card,
   CardBody,
@@ -28,15 +29,20 @@ const SocialIcon = ({ type }: { type: string }) => {
 
 const ConnectSocials = () => {
 
-  const {data} = api.user.fetchConnectedAccounts.useQuery()
+  const {data,isLoading,isFetching} = api.user.fetchConnectedAccounts.useQuery()
+
+  useEffect(() => {
+    console.log(isLoading,'isLoading')
+    console.log(isFetching,'isFetching')
+  },[])
+
   
   return (
     <Card className="h-[50vh] w-[95%] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
       <div className="mt-4 flex flex-col">
-        <h2 className="text-3xl font-bold">Connect your socials</h2>
-        <div className="grid gap-4 grid-cols-4">
-          <div className="mt-4 flex gap-4">
+        <h2 className="md:text-3xl text-xl mb-3 font-bold">Connect your socials</h2>
+        <div className="grid gap-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 2xl:grid-cols-4">
             {data &&
               data.map((item) => (
                 <AfterConnect
@@ -51,7 +57,6 @@ const ConnectSocials = () => {
               profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
             />
             <AddSocial />
-          </div>
         </div>
       </div>
     </Card>
@@ -133,7 +138,7 @@ interface Iconnection {
 const AfterConnect = ({ name, icon, profilePic }: Iconnection) => {
   return (
     <div className="flex items-center w-full justify-center rounded-lg px-10 py-6 shadow-md">
-      <img className="h-10 w-10 rounded-full object-cover" src={profilePic} />
+      <img className="h-10 w-10 mx-2 rounded-full object-cover" src={profilePic} />
       <div className="my-2 mx-2 flex w-full flex-col items-center">
         <h2 className="text-sm whitespace-nowrap leading-3 ">{name}</h2>
       </div>
