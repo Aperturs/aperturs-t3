@@ -22,16 +22,22 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
+    const textarea = textareaRef.current;
+
+  if (textarea) {
+    textarea.style.height = 'auto'; // Reset the height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Adjust the height based on the content
+  }
     setCount(280 - event.target.value.length);
     onChange(id, newText);
   };
 
   return (
-    <div className=" border-l-2 h-full border-blue-gray-500 pl-3">
+    <div className=" border-l-2  border-blue-gray-500 pl-3">
       {/* <Avatar src="/user.png" size="md" className="border-2 border-white" /> */}
       <textarea
         ref={textareaRef}
-        className="block w-full min-h-[100px] resize-none  bg-transparent focus:outline-none"
+        className="block w-full min-h-[100px] max-h-[300px] h-full resize-none overflow-y-auto  bg-transparent focus:outline-none"
         value={text}
         onChange={handleChange}
         placeholder="What's happening?"

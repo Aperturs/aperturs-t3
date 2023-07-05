@@ -54,7 +54,7 @@ const handleAddTweet = (id:number) => {
   };
 
   return (
-    <Card className=" p-4">
+    <Card className="p-4">
       <div>
         {tweets.map((tweet) => (
           <SingleTweet
