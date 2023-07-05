@@ -3,7 +3,7 @@
 import { Avatar } from '@material-tailwind/react'
 import React, { useContext, useEffect, useState } from 'react'
 import LinkedInPostCreation from './textarea'
-import { PostContext } from '../postview';
+import { PostContext } from '../postWrapper';
 
 type Tweet = {
   id: number;

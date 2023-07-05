@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import SingleTweet from "./singleTweet";
 import { Card } from "@material-tailwind/react";
-import { PostContext } from "../postview";
+import { PostContext } from "../postWrapper";
 
 type Tweet = {
   id: number;

@@ -20,8 +20,9 @@ import TweetPost from "../tweets/tweetsPost";
 export default function SocialTabs() {
 
   return (
-    <Tabs value="twitter">
-      <TabsHeader>
+    <div className="w-full">
+    <Tabs  value="twitter" >
+      <TabsHeader className="w-52">
          <Tab  value="twitter">
             <div className="flex items-center gap-2">
                 <AiOutlineTwitter />
@@ -45,5 +46,6 @@ export default function SocialTabs() {
           </TabPanel>
       </TabsBody>
     </Tabs>
+    </div>
   );
 }
