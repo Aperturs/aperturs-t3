@@ -17,7 +17,7 @@ import QuestionCard from "./projects/project/context/questionCard";
 import DraftCard from "./drafts/darfCard";
 import CommitSettings from "./projects/project/settings/commitSettings";
 import CommitDescriptionSettingsCard from "./projects/project/settings/commitInfo";
-import PostView from "./post/postview";
+import PostView from "./post/postWrapper";
 import TweetPost from "./post/tweets/tweetsPost";
 
 export {CreateButton,TweetEntry,Layout,SideBar,SocialTabs,GithubCard,NewRepoFormModal,ProjectLayout,CommitsTable,

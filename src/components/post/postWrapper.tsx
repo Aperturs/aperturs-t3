@@ -3,6 +3,7 @@ import SocialTabs from "./tabs/socialtabs";
 import Picker from "../custom/datepicker/picker";
 import { Switch } from "@material-tailwind/react";
 import { toast } from "react-hot-toast";
+import SideBar from "./sidebar/sidebar";
 
 type Tweet = {
   id: number;
@@ -34,7 +35,7 @@ function PostView() {
     // { id: 0, content: "Hello World" },
     // { id: 1, content: "Hello React" },
   ]);
-  const [sync, setSync] = useState(true);
+  const [sync, setSync] = useState(false);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date().getTime());
 
@@ -64,38 +65,19 @@ function PostView() {
         setTime,
       }}
     >
-      <div className="flex flex-col justify-center">
-        <div className="flex justify-between items-center">
-        <Switch
-          label="Auto Sync"
-          color="blue"
-          defaultChecked={sync}
-          onChange={(e)=>setSync(e.target.checked)}
-          />
-        <div className="flex justify-end gap-1 my-4">
-          <Picker />
-          <SimpleButton text="Save" onClick={()=>{}} />
-          <SimpleButton text="Schedule" onClick={()=>{}} />
-          <SimpleButton text="Add to Queue" onClick={()=>{}} />
-          <SimpleButton text="Publish Now" onClick={handlePublish} />
-        </div>
-        </div>
+      <div className="flex  gap-5 justify-center">
         <SocialTabs />
+        <div className="lg:max-w-[18rem] mt-[-6rem] w-full">
+        <SideBar />
+        </div>
       </div>
     </PostContext.Provider>
   );
 }
 
-interface SimpleButtonProps{
-  text:string,
-  onClick:()=>void
-}
 
 
-const SimpleButton = ({text,onClick}:SimpleButtonProps) => {
-  return (
-    <button className="btn btn-primary text-white px-4" onClick={onClick}>{text}</button>
-  )
-}
+
+
 
 export default PostView;

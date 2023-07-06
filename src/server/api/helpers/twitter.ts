@@ -7,6 +7,7 @@ export interface TwitterAccountDetails
   full_name: string;
   username?: string;
   profile_image_url?: string;
+  tokenId: number;
 }
 
 export const getAccessToken = async (tokenId: number) => {
@@ -58,10 +59,10 @@ export const getTwitterAccountDetails = async (
     const { data: userObject } = await client.users.findMyUser({
       "user.fields": ["username", "profile_image_url", "name"],
     });
+    console.log(twitterDetails, "twitterDetails")
     if (userObject && userObject.username && userObject.profile_image_url) {
       twitterDetails.push({
-        access_token: properAccessToken,
-        refresh_token: twitterToken.refresh_token,
+        tokenId: twitterToken.id,
         profileId: twitterToken.profileId,
         full_name: userObject.name,
         profile_image_url: userObject.profile_image_url,

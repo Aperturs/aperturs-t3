@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import {
   Button,
   Dialog,
@@ -12,6 +12,7 @@ import CalendarComponent from "./calender";
 import { format } from "date-fns";
 import TimePicker from "./timepicker";
 import { toast } from "react-hot-toast";
+import { PostContext } from "~/components/post/postWrapper";
 
 function formatDate(date: Date): string {
   return format(date, "dd MMMM yyyy");
@@ -29,17 +30,19 @@ function formatTime(hours?: number, minutes?: number): string {
 
 
 export default function Picker() {
+  const {date,setDate,} = useContext(PostContext)
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date>(new Date());
+  // const [date, setDate] = useState<Date>(new Date());
   const [minutes, setminutes] = useState<number>(0);
   const [hours, sethours] = useState<number>(0);
   const formattedTime = formatTime(hours, minutes);
-
+  console.log("mounting")
 
   function handleIsPastTime(date: Date ,hours: number,minutes: number): boolean {
     // if (!date || !hours || !minutes) {
     //   return true; // Return true if any of the inputs are undefined
     // }
+
 
     const now = new Date();
     const scheduledTime = new Date(date);
@@ -81,10 +84,12 @@ export default function Picker() {
     handleOpen();
   };
 
+
+
   return (
     <Fragment>
-      <span className="btn  btn-primary mx-2 py-2 px-8 bg-primary text-white" onClick={handleOpen}>{date ? formatDate(date) : "Pick Date"}</span>
-      <Dialog open={open} handler={handleOpen} size={`xl`}>
+      <span className="btn  btn-primary  py-2 px-8 bg-primary text-white" onClick={handleOpen}>{date ? formatDate(date) : "Pick Date"}</span>
+      <Dialog open={open} handler={handleOpen} className="w-auto">
         <DialogHeader className="sm:text-sm text-xs">
           Scheduled for {date ? formatDate(date) : ""} at {formattedTime}
         </DialogHeader>

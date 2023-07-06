@@ -15,10 +15,7 @@ export default UserProfilePage;
 UserProfilePage.getLayout = function getLayout(page: ReactElement) {
     return (
       <Layout> 
-  
         {page}
-  
-        
       </Layout>
     )
   }

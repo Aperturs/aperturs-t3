@@ -4,6 +4,7 @@ export interface TwitterAccountDetails
   full_name: string;
   username?: string;
   profile_image_url?: string;
+  tokenId: number;
 }
 export const getLinkedinAccountDetails = async (
   linkedinTokens: LinkedInToken[]
@@ -25,6 +26,7 @@ export const getLinkedinAccountDetails = async (
     ).json();
 
     linkedinDetails.push({
+      tokenId: linkedinToken.id,
       access_token: linkedinToken.access_token,
       refresh_token: linkedinToken.refresh_token,
       profileId: linkedinToken.profileId,
