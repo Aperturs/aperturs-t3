@@ -124,21 +124,21 @@ export const userRouter = createTRPCRouter({
         });
       }
     }
-    //  const linkedinDetails = await getLinkedinAccountDetails(linkedin);
+     const linkedinDetails = await getLinkedinAccountDetails(linkedin);
 
-    // if (linkedin.length > 0) {
-    //   for (const linkedinDetail of linkedinDetails) {
-    //     accounts.push({
-    //       type: "linkedin",
-    //       data: {
-    //         tokenId: linkedinDetail.tokenId,
-    //         name: linkedinDetail.full_name,
-    //         profile_image_url: linkedinDetail.profile_image_url,
-    //         profileId: linkedinDetail.profileId,
-    //       },
-    //     });
-    //   }
-    // }
+    if (linkedin.length > 0) {
+      for (const linkedinDetail of linkedinDetails) {
+        accounts.push({
+          type: "linkedin",
+          data: {
+            tokenId: linkedinDetail.tokenId,
+            name: linkedinDetail.full_name,
+            profile_image_url: linkedinDetail.profile_image_url,
+            profileId: linkedinDetail.profileId,
+          },
+        });
+      }
+    }
     return accounts;
   }),
 });

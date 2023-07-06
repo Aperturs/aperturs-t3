@@ -45,7 +45,6 @@ function LinkedinPostCard() {
             size="lg"
             color="blue"
             className="mb-4"
-
           />
             <div>
               <div className="text-lg font-bold">John Doe</div>
@@ -65,7 +64,6 @@ function LinkedinPostCard() {
           />
         <div>
         </div>
-
       </div>
   )
 }

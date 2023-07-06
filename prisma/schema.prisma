@@ -82,7 +82,7 @@ model LinkedInToken {
   access_token             String    @db.Text 
   refresh_token            String?   @db.Text
   user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId              String    @unique
+  clerkUserId              String    
   expires_in               DateTime?
   refresh_token_expires_in DateTime?
   createdAt                DateTime  @default(now())

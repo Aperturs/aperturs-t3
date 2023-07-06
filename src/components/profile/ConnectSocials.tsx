@@ -36,7 +36,6 @@ const ConnectSocials = () => {
     console.log(isFetching,'isFetching')
   },[])
 
-  
   return (
     <Card className="h-[50vh] w-[95%] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
@@ -44,11 +43,12 @@ const ConnectSocials = () => {
         <h2 className="md:text-3xl text-xl mb-3 font-bold">Connect your socials</h2>
         <div className="grid gap-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 2xl:grid-cols-4">
             {data &&
-              data.map((item) => (
+              data.map((item,key) => (
                 <AfterConnect
-                  name={item.data.name || ''}
+                  key={key}
+                  name={item.data.name}
                   icon={<SocialIcon type={item.type} />}
-                  profilePic={item.data.profile_image_url || ''}
+                  profilePic={item.data.profile_image_url || '/user.png'}
                 />
               ))}
             <AfterConnect
