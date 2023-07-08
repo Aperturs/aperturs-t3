@@ -1,7 +1,7 @@
 import { getAuth } from "@clerk/nextjs/dist/server";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Client, auth } from "twitter-api-sdk";
-import { TwitterApi } from "twitter-api-v2";
+import { TwitterApi, TwitterApiError } from "twitter-api-v2";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -65,8 +65,9 @@ export default async function handler(
         });
         console.log(userObject, "userObject");
         if(userId){
+          console.log("I have user")
         if (userObject) {
-          console.log(response.expires_in, "response.expires_in");
+          //console.log(response.expires_in, "response.expires_in");
           await prisma.twitterToken.create({
             data:{
               access_token: response.access_token,
@@ -79,7 +80,7 @@ export default async function handler(
               client_secret: formattedClientSecret,
               clerkUserId: userId,
             }
-          })
+          }).finally(()=>{console.log("working")})
           // await prisma.twitterToken
           //   .update({
           //     where: {
@@ -97,10 +98,13 @@ export default async function handler(
           // 
           //   });
         }
+      }else{
+        console.log("I dont have user")
       }
       }
     });
-  }).catch((err) => {
+  }).catch((err:TwitterApiError) => {
+    console.log("I am having error")
     console.log(err, "err");
   });
 

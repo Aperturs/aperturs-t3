@@ -36,7 +36,7 @@ const ConnectedAccount = ({ name, icon, profilePic, id }: Iconnection) => {
           {icon}
         </div>
       </div>
-      <p className="text-center  text-sm">{name}</p>
+      <p className="text-center  break-words text-base font-light leading-5 ">{name}</p>
     </div>
   );
 };

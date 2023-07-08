@@ -13,7 +13,7 @@ const SocialIcon = ({ type }: { type: string }) => {
   if (type === 'twitter') {
     return <AiOutlineTwitter className="" />;
   } else if (type === 'linkedin') {
-    return <FaLinkedinIn className="text-2xl" />;
+    return <FaLinkedinIn className="" />;
   } else {
     return null; // Return null or a default icon for other types
   }
@@ -48,7 +48,7 @@ const SideBar = () => {
         <h2 className="text-xl">Schedule Post</h2>
         <div className="flex w-full flex-grow gap-1">
           <Picker />
-          <SimpleButton text="Schedule Post" onClick={() => {}} />
+          <SimpleButton text="Schedule" onClick={() => {}} />
         </div>
         <SimpleButton text="Publish Now" onClick={handlePublish} />
         <SimpleButton text="Save" onClick={() => {}} />
@@ -56,18 +56,17 @@ const SideBar = () => {
         <span className="text-xl my-2">
           Publish Post
         </span>
-        <div className="grid grid-cols-3 ">
-          {/* {data?.map((item) => (
+        <div className="grid grid-cols-3 place-items-start">
+          {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
               icon={<SocialIcon type={item.type} />}
-              profilePic={item.data.profile_image_url}
+              profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))} */}
-          <ConnectedAccount
-              
+          ))}
+          <ConnectedAccount  
               name="Swaraj Bachu"
               icon={<SocialIcon type={"twitter"} />}
               profilePic="/user.png"
