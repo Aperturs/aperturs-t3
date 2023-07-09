@@ -69,7 +69,7 @@ export const userRouter = createTRPCRouter({
         client_id: input.clientId,
         client_secret: input.clientSecret,
         callback: env.TWITTER_CALLBACK_URL,
-        scopes: ["users.read", "tweet.read", "offline.access"],
+        scopes: ["users.read", "tweet.read", "offline.access","tweet.write","follows.read","follows.write","like.write","list.read","list.write","bookmark.read","bookmark.write",],
       });
       const url = authClient.generateAuthURL({
         state: `${input.clientId}-${input.clientSecret}`,

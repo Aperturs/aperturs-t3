@@ -1,7 +1,6 @@
 import { getAuth } from "@clerk/nextjs/dist/server";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Client, auth } from "twitter-api-sdk";
-import { TwitterApi, TwitterApiError } from "twitter-api-v2";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -30,14 +29,14 @@ export default async function handler(
   const formattedClientId = clientId ? clientId.trim() : "";
   const formattedClientSecret = clientSecret ? clientSecret.trim() : "";
   const {userId } =  getAuth(req);
-  const client = new TwitterApi({
-    clientId: formattedClientId,
-    clientSecret: formattedClientSecret,
-  });
+
   const codeAuth = code as string;
 
+  const secret = 'nuzYTKTPXVF6L61uQo3MYCqgWhGtKa2zfjRWgNU5Yh7wg'
+  const id = 'UE05dTJ3ZjhjTnFESUQ5aTBIcFo6MTpjaQ'
+
   const bearerToken = Buffer.from(
-    `${formattedClientId}:${formattedClientSecret}`
+    `${id}:${secret}`
   ).toString("base64");
 
   fetch("https://api.twitter.com/2/oauth2/token", {
@@ -103,7 +102,7 @@ export default async function handler(
       }
       }
     });
-  }).catch((err:TwitterApiError) => {
+  }).catch((err) => {
     console.log("I am having error")
     console.log(err, "err");
   });
