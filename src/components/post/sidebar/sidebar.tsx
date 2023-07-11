@@ -9,6 +9,7 @@ import ConnectedAccount from "./connections";
 import { useStore } from "~/store/post-store";
 import { shallow } from "zustand/shallow";
 import { SocialType } from "~/types/post-types";
+import Publish from "./publish";
 
 
 const SocialIcon = ({ type }: { type: string }) => {
@@ -25,22 +26,7 @@ const SideBar = () => {
 
   console.log("mounting sidebar")
   // const { tweets, linkedinPost } = useContext(PostContext);
-  const { tweets, linkedinPost } = useStore(state =>({
-    tweets: state.tweets,
-    linkedinPost: state.linkedinPost
-  }),shallow)
-
-  const handlePublish = () => {
-    console.log("tweets", tweets);
-    console.log("linkedinPost", linkedinPost);
-    let tweetss = "";
-    for (let i = 0; i < tweets.length; i++) {
-      let tweetid = tweets[i]?.id;
-      let tweettext = tweets[i]?.text;
-      tweetss += `id: ${tweetid} text: ${tweettext} \n`;
-    }
-    toast(`tweets: ${tweetss} \n linkedinPost: ${linkedinPost}`);
-  };
+ 
 
   // const {data} = api.user.fetchConnectedAccounts.useQuery()
 
@@ -54,13 +40,7 @@ const SideBar = () => {
           /> */}
       <div className="my-4 flex flex-grow flex-col justify-end gap-1">
         <h2 className="text-xl">Schedule Post</h2>
-        <div className="flex gap-1">
-          <Picker />
-          <SimpleButton text="Schedule" onClick={() => {}} />
-        </div>
-        <SimpleButton text="Publish Now" onClick={handlePublish} />
-        <SimpleButton text="Save" onClick={() => {}} />
-        <SimpleButton text="Add to Queue" onClick={() => {}} />
+        <Publish/>
         <span className="text-xl my-2">
           Publish Post
         </span>
@@ -88,21 +68,8 @@ const SideBar = () => {
 };
 
 
-interface SimpleButtonProps {
-  text: string;
-  onClick: () => void;
-}
 
-const SimpleButton = ({ text, onClick }: SimpleButtonProps) => {
-  return (
-    <button
-      className="btn-outline w-auto btn-primary btn px-4 text-sm capitalize text-white "
-      onClick={onClick}
-    >
-      {text}
-    </button>
-  );
-};
+
 
 
 
