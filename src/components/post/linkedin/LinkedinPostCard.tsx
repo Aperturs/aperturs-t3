@@ -3,14 +3,12 @@
 import { Avatar, Switch } from '@material-tailwind/react'
 import React, { useContext, useEffect, useState } from 'react'
 import LinkedInPostCreation from './textarea'
-import { PostContext } from '../postWrapper';
+// import { PostContext } from '../postWrapper';
 import { useStore } from '~/store/post-store';
 import { shallow } from 'zustand/shallow';
+import { Tweet } from '~/types/post-types';
 
-type Tweet = {
-  id: number;
-  text: string;
-};
+
 
 function convertTweetsToPlaintext(tweets: Tweet[]): string {
   let plaintext = "";

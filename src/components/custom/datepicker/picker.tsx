@@ -79,7 +79,7 @@ export default function Picker() {
   return (
     <Fragment>
       <span
-        className="btn-primary  btn  bg-primary px-8 py-2 text-white"
+        className="btn-primary w-auto btn  bg-primary px-8 py-2 text-white"
         onClick={handleOpen}
       >
         {date ? formatDate(date) : "Pick Date"}

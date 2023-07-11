@@ -13,12 +13,13 @@ import {
 } from "@material-tailwind/react";
 import { api } from "~/utils/api";
 import { onLinkedLnConnect } from "~/utils/connections";
+import { SocialType } from "~/types/post-types";
 
 
 const SocialIcon = ({ type }: { type: string }) => {
-  if (type === 'twitter') {
+  if (type === SocialType.Twitter) {
     return <AiOutlineTwitter className="text-2xl" />;
-  } else if (type === 'linkedin') {
+  } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className="text-2xl" />;
   } else {
     return null; // Return null or a default icon for other types

@@ -1,7 +1,6 @@
 import { Avatar, Switch, Tooltip } from "@material-tailwind/react";
 import React, { useContext } from "react";
 import Picker from "~/components/custom/datepicker/picker";
-import { PostContext } from "../postWrapper";
 import toast from "react-hot-toast";
 import { api } from "~/utils/api";
 import { AiOutlineTwitter } from "react-icons/ai";
@@ -9,12 +8,13 @@ import { FaLinkedinIn } from "react-icons/fa";
 import ConnectedAccount from "./connections";
 import { useStore } from "~/store/post-store";
 import { shallow } from "zustand/shallow";
+import { SocialType } from "~/types/post-types";
 
 
 const SocialIcon = ({ type }: { type: string }) => {
-  if (type === 'twitter') {
+  if (type === SocialType.Twitter) {
     return <AiOutlineTwitter className="" />;
-  } else if (type === 'linkedin') {
+  } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className="" />;
   } else {
     return null; // Return null or a default icon for other types
@@ -54,7 +54,7 @@ const SideBar = () => {
           /> */}
       <div className="my-4 flex flex-grow flex-col justify-end gap-1">
         <h2 className="text-xl">Schedule Post</h2>
-        <div className="flex w-full flex-grow gap-1">
+        <div className="flex gap-1">
           <Picker />
           <SimpleButton text="Schedule" onClick={() => {}} />
         </div>
@@ -96,7 +96,7 @@ interface SimpleButtonProps {
 const SimpleButton = ({ text, onClick }: SimpleButtonProps) => {
   return (
     <button
-      className="btn-outline btn-primary btn px-4 text-sm capitalize text-white "
+      className="btn-outline w-auto btn-primary btn px-4 text-sm capitalize text-white "
       onClick={onClick}
     >
       {text}

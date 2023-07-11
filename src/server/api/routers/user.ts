@@ -4,10 +4,7 @@ import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
 import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
-import { input } from "@material-tailwind/react";
-
-
-
+import { SocialType } from "~/types/post-types";
 
 
 export const userRouter = createTRPCRouter({
@@ -115,7 +112,7 @@ export const userRouter = createTRPCRouter({
     if (twitter.length > 0) {
       for (const twitterDetail of twitterDetails) {
         accounts.push({
-          type: "twitter",
+          type: SocialType.Twitter,
           data: {
             tokenId: twitterDetail.tokenId,
             name: twitterDetail.full_name,
@@ -130,7 +127,7 @@ export const userRouter = createTRPCRouter({
     if (linkedin.length > 0) {
       for (const linkedinDetail of linkedinDetails) {
         accounts.push({
-          type: "linkedin",
+          type: SocialType.Linkedin,
           data: {
             tokenId: linkedinDetail.tokenId,
             name: linkedinDetail.full_name,

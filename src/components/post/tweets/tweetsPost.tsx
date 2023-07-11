@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import SingleTweet from "./singleTweet";
 import { Card } from "@material-tailwind/react";
-import { PostContext } from "../postWrapper";
 import { useStore } from "~/store/post-store";
 import { shallow } from 'zustand/shallow'
 
