@@ -1,5 +1,4 @@
 import { SignIn } from "@clerk/nextjs";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -7,7 +6,6 @@ const Login = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const router = useRouter();
-  const { data: session } = useSession();
 
  
 

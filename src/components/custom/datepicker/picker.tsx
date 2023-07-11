@@ -1,5 +1,3 @@
-"use client";
-
 import { Fragment, useContext, useState } from "react";
 import {
   Button,
@@ -11,104 +9,94 @@ import {
 import CalendarComponent from "./calender";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
-import { PostContext } from "~/components/post/postWrapper";
-import { TimePicker } from "react-time-picker-typescript";
-import "react-time-picker-typescript/dist/style.css";
-
+import { useStore } from "~/store/post-store";
+import { shallow } from "zustand/shallow";
 
 function formatDate(date: Date): string {
   return format(date, "dd MMMM yyyy");
 }
-function formatTime(hours?: number, minutes?: number): string {
-  if (hours === undefined || minutes === undefined) {
-    return "00:00";
-  }
-
-  const formattedHours = hours.toString().padStart(2, "0");
-  const formattedMinutes = minutes.toString().padStart(2, "0");
-
-  return `${formattedHours}:${formattedMinutes}`;
-}
 
 
 export default function Picker() {
-  const {date,setDate,} = useContext(PostContext)
+  // const { date, setDate } = useContext(PostContext);
+  const date = useStore(state => state.date);
+  const setDate = useStore(state => state.setDate);
+  const time = useStore(state => state.time);
+  const setTime = useStore(state => state.setTime);
+
   const [open, setOpen] = useState(false);
-  // const [date, setDate] = useState<Date>(new Date());
-  const [minutes, setminutes] = useState<number>(0);
-  const [hours, sethours] = useState<number>(0);
-  const formattedTime = formatTime(hours, minutes);
-  console.log("mounting")
-  const [value, setValue] = useState('10:00');
+  console.log("mounting");
 
-   const onChange = (timeValue:any) => {
-      setValue(timeValue);
-   }
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTime(event.target.value);
+  }
+  
 
-  function handleIsPastTime(date: Date ,hours: number,minutes: number): boolean {
-    // if (!date || !hours || !minutes) {
-    //   return true; // Return true if any of the inputs are undefined
-    // }
-
-
+  function handleIsPastTime(date: Date, value: string): boolean {
+    if (!date || !value) {
+      return true; // Return true if any of the inputs are undefined
+    }
     const now = new Date();
     const scheduledTime = new Date(date);
-    scheduledTime.setHours(hours, minutes, 0);
-
-    // Calculate the time 10 minutes from now
-    const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
-
+    const [hours, minutes] = value.split(":");
+    scheduledTime.setHours(Number(hours), Number(minutes), 0);
+  
+    // Calculate the time 20 minutes from now
+    const tenMinutesFromNow = new Date(now.getTime() + 20 * 60000);
+  
     if (scheduledTime < tenMinutesFromNow) {
       // If the scheduled time is less than present time + 10 minutes
-      // Update hours, minutes, and date to 10 minutes from now
+      // Update the date to 10 minutes from now
       const newScheduledTime = new Date(tenMinutesFromNow);
-      const newHours = newScheduledTime.getHours();
-      const newMinutes = newScheduledTime.getMinutes();
-
-      setDate(newScheduledTime);
-      sethours(newHours);
-      setminutes(newMinutes);
-
+      setDate(newScheduledTime); 
+      const hours = newScheduledTime.getHours();
+      const minutes = newScheduledTime.getMinutes();
+      setTime(`${hours}:${minutes}`);
+      toast(`date updated to ${formatDate(newScheduledTime)} at ${time}`)
       return false;
     }
-
+  
     return true;
   }
+  
 
   const handleOpen = () => {
-    if(open) {
-    if (!handleIsPastTime(date, hours, minutes)) {
-      toast.error("Please select a time at least 10 minutes from now");
+    if (open) {
+      if(date) {
+      if (!handleIsPastTime(date, time)) {
+        toast.error("Please select a time at least 20 minutes from now");
+      }
     }
     }
     setOpen(!open);
   };
 
   const handleConfirm = () => {
-    console.log(
-      `scheduled for ${formatDate(date || new Date())} at ${formatTime}`
-    );
+    console.log(`scheduled for ${formatDate(date || new Date())} at ${time}`);
     handleOpen();
   };
 
-
-
   return (
     <Fragment>
-      <span className="btn  btn-primary  py-2 px-8 bg-primary text-white" onClick={handleOpen}>{date ? formatDate(date) : "Pick Date"}</span>
+      <span
+        className="btn-primary  btn  bg-primary px-8 py-2 text-white"
+        onClick={handleOpen}
+      >
+        {date ? formatDate(date) : "Pick Date"}
+      </span>
       <Dialog open={open} handler={handleOpen} className="w-auto">
-        <DialogHeader className="sm:text-sm text-xs">
-          Scheduled for {date ? formatDate(date) : ""} at {formattedTime}
+        <DialogHeader className="text-xs sm:text-sm">
+          Scheduled for {date ? formatDate(date) : ""} at {time}
         </DialogHeader>
         <DialogBody divider>
           <CalendarComponent handleDate={setDate} />
-          <TimePicker onChange={onChange} value={value} />
-
-          {/* <TimePicker
-            Date={date || new Date()}
-            onMinuteChange={setminutes}
-            onHourChange={sethours}
-          /> */}
+          <input
+            type="time"
+            value={time}
+            onChange={onChange}
+            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 time-input"
+            required
+          />
         </DialogBody>
         <DialogFooter>
           <Button

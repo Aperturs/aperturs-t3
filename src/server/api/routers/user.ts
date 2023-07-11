@@ -109,6 +109,7 @@ export const userRouter = createTRPCRouter({
     });
 
     // TODO: define proper output types, instead of directly using Prisma types
+    try{
     const accounts = [];
     const twitterDetails = await getTwitterAccountDetails(twitter);
     if (twitter.length > 0) {
@@ -139,6 +140,10 @@ export const userRouter = createTRPCRouter({
         });
       }
     }
+  
     return accounts;
+  }catch(error){
+    console.log(error)
+  }
   }),
 });

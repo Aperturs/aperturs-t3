@@ -10,13 +10,13 @@ type State = {
   linkedinPost: string;
   tweets: Tweet[];
   sync: boolean;
-  date: Date;
-  time: number;
+  date: Date | null;
+  time: string;
   setLinkedinPost: (content: string) => void;
   setTweets: (tweet: Tweet[]) => void;
   setSync: (sync: boolean) => void;
   setDate: (date: Date) => void;
-  setTime: (time: number) => void;
+  setTime: (time: string) => void;
 };
 
 export const useStore = create<State>(set => ({
@@ -28,8 +28,8 @@ export const useStore = create<State>(set => ({
     }
   ],
   sync: false,
-  date: new Date(),
-  time: new Date().getTime(),
+  date: null,
+  time: '00:00',
   setLinkedinPost: (content) => set((state) => ({ ...state, linkedinPost: content })),
   setTweets: (tweets) => set((state) => ({ ...state, tweets: tweets })),
   setSync: (sync) => set((state) => ({ ...state, sync: sync })),
