@@ -7,6 +7,8 @@ import { api } from "~/utils/api";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import ConnectedAccount from "./connections";
+import { useStore } from "~/store/post-store";
+import { shallow } from "zustand/shallow";
 
 
 const SocialIcon = ({ type }: { type: string }) => {
@@ -20,7 +22,13 @@ const SocialIcon = ({ type }: { type: string }) => {
 };
 
 const SideBar = () => {
-  const { tweets, linkedinPost } = useContext(PostContext);
+
+  console.log("mounting sidebar")
+  // const { tweets, linkedinPost } = useContext(PostContext);
+  const { tweets, linkedinPost } = useStore(state =>({
+    tweets: state.tweets,
+    linkedinPost: state.linkedinPost
+  }),shallow)
 
   const handlePublish = () => {
     console.log("tweets", tweets);
@@ -34,7 +42,7 @@ const SideBar = () => {
     toast(`tweets: ${tweetss} \n linkedinPost: ${linkedinPost}`);
   };
 
-  const {data} = api.user.fetchConnectedAccounts.useQuery()
+  // const {data} = api.user.fetchConnectedAccounts.useQuery()
 
   return (
     <div className="z-20 w-full px-8 rounded-lg bg-white p-4 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
@@ -57,7 +65,7 @@ const SideBar = () => {
           Publish Post
         </span>
         <div className="grid grid-cols-3 place-items-start">
-          {data?.map((item) => (
+          {/* {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
@@ -65,7 +73,7 @@ const SideBar = () => {
               profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))}
+          ))} */}
           <ConnectedAccount  
               name="Swaraj Bachu"
               icon={<SocialIcon type={"twitter"} />}

@@ -12,7 +12,6 @@
   "dependencies": {
     "@clerk/nextjs": "^4.16.4",
     "@material-tailwind/react": "^2.0.3",
-    "@next-auth/prisma-adapter": "^1.0.5",
     "@prisma/client": "^4.11.0",
     "@tanstack/react-query": "^4.29.19",
     "@trpc/client": "^10.18.0",
@@ -26,18 +25,17 @@
     "date-fns": "^2.30.0",
     "micro": "^10.0.1",
     "next": "^13.2.4",
-    "next-auth": "4.20.1",
     "react": "18.2.0",
     "react-calendar": "^4.3.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.9.0",
+    "react-time-picker-typescript": "^1.2.3",
     "superjson": "1.12.2",
     "svix": "^1.4.12",
     "twitter-api-sdk": "^1.2.1",
-    "twitter-api-v2": "^1.15.0",
-    "twitter-lite": "^1.1.0",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

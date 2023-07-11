@@ -10,9 +10,11 @@ import {
 } from "@material-tailwind/react";
 import CalendarComponent from "./calender";
 import { format } from "date-fns";
-import TimePicker from "./timepicker";
 import { toast } from "react-hot-toast";
 import { PostContext } from "~/components/post/postWrapper";
+import { TimePicker } from "react-time-picker-typescript";
+import "react-time-picker-typescript/dist/style.css";
+
 
 function formatDate(date: Date): string {
   return format(date, "dd MMMM yyyy");
@@ -37,6 +39,11 @@ export default function Picker() {
   const [hours, sethours] = useState<number>(0);
   const formattedTime = formatTime(hours, minutes);
   console.log("mounting")
+  const [value, setValue] = useState('10:00');
+
+   const onChange = (timeValue:any) => {
+      setValue(timeValue);
+   }
 
   function handleIsPastTime(date: Date ,hours: number,minutes: number): boolean {
     // if (!date || !hours || !minutes) {
@@ -95,11 +102,13 @@ export default function Picker() {
         </DialogHeader>
         <DialogBody divider>
           <CalendarComponent handleDate={setDate} />
-          <TimePicker
+          <TimePicker onChange={onChange} value={value} />
+
+          {/* <TimePicker
             Date={date || new Date()}
             onMinuteChange={setminutes}
             onHourChange={sethours}
-          />
+          /> */}
         </DialogBody>
         <DialogFooter>
           <Button

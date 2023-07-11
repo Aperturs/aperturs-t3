@@ -1,5 +1,6 @@
 'use client'
 
+import { Select,Option } from '@material-tailwind/react';
 import React, { FC,useState } from 'react';
 
 type time ={
@@ -41,20 +42,23 @@ const TimePicker: React.FC<TimePickerProps> = ({Date,onHourChange,onMinuteChange
 
   return (
     <div className="flex items-center space-x-4">
-      <select
-        value={selectedHour}
-        onChange={(e) => {
-          setSelectedHour(e.target.value)
-          onHourChange(parseInt(e.target.value))
-        }}
-        className="w-auto py-2 pl-3 pr-6 text-sm rounded-lg bg-white text-gray-900 shadow-md focus:outline-none focus:ring-2 focus:ring-primary"
+      <Select
+        // value={selectedHour}
+        variant="outlined" label="Select Hour"
+        // onChange={(e) => {
+        //   if(e){
+        //   setSelectedHour(e.target || 0)
+        //   onHourChange(parseInt(e.target.value))
+        //   }
+        // }}
+        className=""
       >
         {hours.map((hour, index) => (
-          <option key={index} value={hour}>
+          <Option key={index} value={hour}>
             {hour}
-          </option>
+          </Option>
         ))}
-      </select>
+      </Select>
       <select
         value={selectedMinute}
         onChange={(e) => {setSelectedMinute(e.target.value)

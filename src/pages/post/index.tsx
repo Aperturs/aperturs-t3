@@ -4,7 +4,7 @@ import { Layout, PostView } from '~/components'
 export default function Post() {
   return (
           <div className="container mx-auto p-4">
-      <PostView />
+      <PostView value='testing t2 2' id={1}/>
     </div>
   )
 }
