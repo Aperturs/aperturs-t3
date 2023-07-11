@@ -29,7 +29,7 @@ const initialState: StateValues = {
   sync: false,
   date: null,
   time: '00:00',
-  selectedSocials: null
+  selectedSocials: []
 };
 
 export const useStore = create<State>((set) => ({

@@ -15,9 +15,7 @@ function convertTweetsToPlaintext(tweets: Tweet[]): string {
 
   for (let i = 0; i < tweets.length; i++) {
     const tweet = tweets[i];
-
       plaintext += tweet?.text + "\n\n";
-    
   }
 
   return plaintext;
@@ -43,7 +41,6 @@ function LinkedinPostCard() {
       setLinkedinPost(newLinkedinContent);
     }
   }, [sync, tweets, setLinkedinPost]);
-
 
   return (
       <div className="bg-white rounded-lg w-full shadow-md p-4">

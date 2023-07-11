@@ -1,5 +1,4 @@
 import { SignUp } from "@clerk/nextjs";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 
@@ -7,7 +6,6 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { data: session } = useSession();
 
   return (
     <div className="h-screen md:flex">
