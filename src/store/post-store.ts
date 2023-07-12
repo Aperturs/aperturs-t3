@@ -8,7 +8,7 @@ type StateValues = {
   sync: boolean;
   date: Date | null;
   time: string;
-  selectedSocials: SelectedSocial[] | null;
+  selectedSocials: SelectedSocial[];
 };
 
 type StateSetters = {

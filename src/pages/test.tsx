@@ -4,16 +4,16 @@ import { api } from '~/utils/api'
 
 function Test() {
 
-    const {mutateAsync:createpost,data,isLoading} = api.twitter.postSingleTweet.useMutation()
+    const {mutateAsync:createpost,data,isLoading} = api.twitter.postTweet.useMutation()
   return (
     <div>
      Let's make all the test here
 
      <button 
      onClick={() => {
-        createpost({id:56,text:'Hello World to twitter again'}).then(()=>{
-            toast.success("posted")
-        })
+        // createpost({id:57,text:'Hello World to twitter again'}).then(()=>{
+        //     toast.success("posted")
+        // })
      }}
      >
          Click me to post "Hello World"

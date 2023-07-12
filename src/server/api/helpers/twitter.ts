@@ -16,11 +16,12 @@ export const getAccessToken = async (tokenId: number) => {
   });
   if (token) {
     if (token.expires_in && token.refresh_token && token.access_token) {
+      console.log(token.expires_in, "token.expires_in")
       if (token.expires_in < new Date()) {
+        console.log('trying to fetch access token')
         const bearerToken = Buffer.from(
           `${token.client_id}:${token.client_secret}`
         ).toString("base64");
-
         const response = await fetch("https://api.twitter.com/2/oauth2/token", {
           method: "POST",
           headers: {
@@ -32,6 +33,8 @@ export const getAccessToken = async (tokenId: number) => {
           }),
         });
         const data = await response.json();
+        console.log(data, "data")
+        if(data){
         await prisma.twitterToken.update({
           where: {
             id: tokenId,
@@ -41,6 +44,7 @@ export const getAccessToken = async (tokenId: number) => {
             expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
           },
         });
+      }
         return data.access_token;
       } else {
         return token.access_token;

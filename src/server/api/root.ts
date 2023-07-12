@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/user";
-import { twitterData } from "./routers/twitter/twitter-data";
+import { twitterData } from "./routers/twitter/twitter";
 
 /**
  * This is the primary router for your server.
