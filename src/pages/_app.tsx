@@ -1,11 +1,7 @@
 import { AppProps, type AppType } from "next/app";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Analytics } from '@vercel/analytics/react';
-
-
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
@@ -24,7 +20,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
 
-const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { session, ...pageProps },}:AppPropsWithLayout) => {
+const MyApp: AppType<{  }> = ({Component,pageProps: { session, ...pageProps },}:AppPropsWithLayout) => {
 
   const getLayout = Component.getLayout ?? ((page) => page)
   const [loading, setLoading] = useState(false);
@@ -53,7 +49,6 @@ const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { ses
   }    
 
   return (
-    <SessionProvider session={session}>
       <ClerkProvider {...pageProps}>
       <ThemeProvider>
         <Toaster position="top-left" reverseOrder={false} />
@@ -64,7 +59,6 @@ const MyApp: AppType<{ session: Session | null }> = ({Component,pageProps: { ses
        <Analytics />
       </ThemeProvider>
       </ClerkProvider>
-    </SessionProvider>
   );
 };
 

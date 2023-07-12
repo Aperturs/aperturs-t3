@@ -3,21 +3,19 @@
 import { Avatar, Switch } from '@material-tailwind/react'
 import React, { useContext, useEffect, useState } from 'react'
 import LinkedInPostCreation from './textarea'
-import { PostContext } from '../postWrapper';
+// import { PostContext } from '../postWrapper';
+import { useStore } from '~/store/post-store';
+import { shallow } from 'zustand/shallow';
+import { Tweet } from '~/types/post-types';
 
-type Tweet = {
-  id: number;
-  text: string;
-};
+
 
 function convertTweetsToPlaintext(tweets: Tweet[]): string {
   let plaintext = "";
 
   for (let i = 0; i < tweets.length; i++) {
     const tweet = tweets[i];
-
       plaintext += tweet?.text + "\n\n";
-    
   }
 
   return plaintext;
@@ -25,7 +23,15 @@ function convertTweetsToPlaintext(tweets: Tweet[]): string {
 
 function LinkedinPostCard() {
 
-  const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
+  // const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
+
+  const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useStore(state =>({
+    setLinkedinPost: state.setLinkedinPost,
+    linkedinPost: state.linkedinPost,
+    sync: state.sync,
+    tweets: state.tweets,
+    setSync: state.setSync
+  }),shallow)
 
 
   useEffect(() => {
@@ -35,7 +41,6 @@ function LinkedinPostCard() {
       setLinkedinPost(newLinkedinContent);
     }
   }, [sync, tweets, setLinkedinPost]);
-
 
   return (
       <div className="bg-white rounded-lg w-full shadow-md p-4">

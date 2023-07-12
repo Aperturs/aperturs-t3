@@ -1,7 +1,6 @@
 import { getAuth } from "@clerk/nextjs/dist/server";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Client, auth } from "twitter-api-sdk";
-import { TwitterApi } from "twitter-api-v2";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -30,14 +29,14 @@ export default async function handler(
   const formattedClientId = clientId ? clientId.trim() : "";
   const formattedClientSecret = clientSecret ? clientSecret.trim() : "";
   const {userId } =  getAuth(req);
-  const client = new TwitterApi({
-    clientId: formattedClientId,
-    clientSecret: formattedClientSecret,
-  });
+
   const codeAuth = code as string;
 
+  const secret = 'nuzYTKTPXVF6L61uQo3MYCqgWhGtKa2zfjRWgNU5Yh7wg'
+  const id = 'UE05dTJ3ZjhjTnFESUQ5aTBIcFo6MTpjaQ'
+
   const bearerToken = Buffer.from(
-    `${formattedClientId}:${formattedClientSecret}`
+    `${id}:${secret}`
   ).toString("base64");
 
   fetch("https://api.twitter.com/2/oauth2/token", {
@@ -65,8 +64,9 @@ export default async function handler(
         });
         console.log(userObject, "userObject");
         if(userId){
+          console.log("I have user")
         if (userObject) {
-          console.log(response.expires_in, "response.expires_in");
+          //console.log(response.expires_in, "response.expires_in");
           await prisma.twitterToken.create({
             data:{
               access_token: response.access_token,
@@ -79,7 +79,7 @@ export default async function handler(
               client_secret: formattedClientSecret,
               clerkUserId: userId,
             }
-          })
+          }).finally(()=>{console.log("working")})
           // await prisma.twitterToken
           //   .update({
           //     where: {
@@ -97,10 +97,13 @@ export default async function handler(
           // 
           //   });
         }
+      }else{
+        console.log("I dont have user")
       }
       }
     });
   }).catch((err) => {
+    console.log("I am having error")
     console.log(err, "err");
   });
 

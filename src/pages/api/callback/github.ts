@@ -4,7 +4,7 @@ import { env } from "~/env.mjs";
 import { appRouter } from "~/server/api/root";
 import cronJobServer from "~/server/cronjob";
 import { prisma } from "~/server/db";
-import { GithubUser } from "~/types";
+import { GithubUser } from "~/types/types";
 
 export default async function handler(
   req: NextApiRequest,

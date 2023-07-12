@@ -4,10 +4,7 @@ import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
 import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
-import { input } from "@material-tailwind/react";
-
-
-
+import { SocialType } from "~/types/post-types";
 
 
 export const userRouter = createTRPCRouter({
@@ -69,7 +66,7 @@ export const userRouter = createTRPCRouter({
         client_id: input.clientId,
         client_secret: input.clientSecret,
         callback: env.TWITTER_CALLBACK_URL,
-        scopes: ["users.read", "tweet.read", "offline.access"],
+        scopes: ["users.read", "tweet.read", "offline.access","tweet.write","follows.read","follows.write","like.write","list.read","list.write","bookmark.read","bookmark.write",],
       });
       const url = authClient.generateAuthURL({
         state: `${input.clientId}-${input.clientSecret}`,
@@ -109,12 +106,13 @@ export const userRouter = createTRPCRouter({
     });
 
     // TODO: define proper output types, instead of directly using Prisma types
+    try{
     const accounts = [];
     const twitterDetails = await getTwitterAccountDetails(twitter);
     if (twitter.length > 0) {
       for (const twitterDetail of twitterDetails) {
         accounts.push({
-          type: "twitter",
+          type: SocialType.Twitter,
           data: {
             tokenId: twitterDetail.tokenId,
             name: twitterDetail.full_name,
@@ -129,7 +127,7 @@ export const userRouter = createTRPCRouter({
     if (linkedin.length > 0) {
       for (const linkedinDetail of linkedinDetails) {
         accounts.push({
-          type: "linkedin",
+          type: SocialType.Linkedin,
           data: {
             tokenId: linkedinDetail.tokenId,
             name: linkedinDetail.full_name,
@@ -139,6 +137,10 @@ export const userRouter = createTRPCRouter({
         });
       }
     }
+  
     return accounts;
+  }catch(error){
+    console.log(error)
+  }
   }),
 });

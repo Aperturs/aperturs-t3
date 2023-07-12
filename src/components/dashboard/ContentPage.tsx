@@ -1,6 +1,5 @@
 import React from "react";
 import { CreateButton } from "~/components";
-import { signIn, useSession as useNextAuthSession } from "next-auth/react";
 import { useSession } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 import { toast } from "react-hot-toast";
@@ -10,7 +9,6 @@ const ContentPage = () => {
   const [clientId, setClientId] = React.useState("");
   const [bearerToken, setbearerToken] = React.useState("");
   const { session } = useSession();
-  const { data } = useNextAuthSession();
 
   return (
     <div>

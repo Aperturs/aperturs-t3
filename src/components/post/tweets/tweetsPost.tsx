@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import SingleTweet from "./singleTweet";
 import { Card } from "@material-tailwind/react";
-import { PostContext } from "../postWrapper";
+import { useStore } from "~/store/post-store";
+import { shallow } from 'zustand/shallow'
 
 type Tweet = {
   id: number;
@@ -10,7 +11,14 @@ type Tweet = {
 
 const TweetPost: React.FC = () => {
 
-  const {tweets,setTweets} = useContext(PostContext)
+// const {tweets,setTweets} = useContext(PostContext)
+// const tweets = useStore(state => state.tweets);
+// const setTweets = useStore(state => state.setTweets);
+
+const { tweets, setTweets } = useStore(state => ({
+  tweets: state.tweets,
+  setTweets: state.setTweets
+}), shallow);
 
 const handleAddTweet = (id:number) => {
   const index = tweets.findIndex((tweet) => tweet.id === id);
@@ -31,11 +39,6 @@ const handleAddTweet = (id:number) => {
   
   setTweets(updatedTweets);
 };
-
-  
-  
-  
-
   const handleRemoveTweet = (id: number) => {
     if(id==0) return
     const updatedTweets = tweets.filter((tweet) => tweet.id !== id);
