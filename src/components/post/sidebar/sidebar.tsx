@@ -12,15 +12,7 @@ import { SocialType } from "~/types/post-types";
 import Publish from "./publish";
 
 
-const SocialIcon = ({ type }: { type: string }) => {
-  if (type === SocialType.Twitter) {
-    return <AiOutlineTwitter className="" />;
-  } else if (type === SocialType.Linkedin) {
-    return <FaLinkedinIn className="" />;
-  } else {
-    return null; // Return null or a default icon for other types
-  }
-};
+
 
 const SideBar = () => {
 
@@ -28,7 +20,7 @@ const SideBar = () => {
   // const { tweets, linkedinPost } = useContext(PostContext);
  
 
-  // const {data} = api.user.fetchConnectedAccounts.useQuery()
+  const {data} = api.user.fetchConnectedAccounts.useQuery()
 
   return (
     <div className="z-20 w-full px-8 rounded-lg bg-white p-4 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
@@ -40,18 +32,18 @@ const SideBar = () => {
           Publish Post
         </span>
         <div className="grid grid-cols-3 place-items-start">
-          {/* {data?.map((item) => (
+          {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
-              icon={<SocialIcon type={item.type} />}
+              type={item.type}
               profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))} */}
+          ))}
           <ConnectedAccount  
               name="Swaraj Bachu"
-              icon={<SocialIcon type={"twitter"} />}
+              type={SocialType.Twitter}
               profilePic="/user.png"
               id={2}
             />

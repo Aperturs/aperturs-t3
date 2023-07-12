@@ -1,16 +1,29 @@
 import { Avatar, Tooltip } from "@material-tailwind/react";
 import { useState } from "react";
+import { AiOutlineTwitter } from "react-icons/ai";
+import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
+import { SocialType } from "~/types/post-types";
 
 interface Iconnection {
   name: string;
-  icon: React.ReactNode;
+  type: SocialType;
   profilePic?: string;
   id: number;
 }
 
-const ConnectedAccount = ({ name, icon, profilePic, id }: Iconnection) => {
+const SocialIcon = ({ type }: { type: string }) => {
+  if (type === SocialType.Twitter) {
+    return <AiOutlineTwitter className="" />;
+  } else if (type === SocialType.Linkedin) {
+    return <FaLinkedinIn className="" />;
+  } else {
+    return null; // Return null or a default icon for other types
+  }
+};
+
+const ConnectedAccount = ({ name, type, profilePic, id }: Iconnection) => {
   // const [selected, setSelected] = useState([{ type: "twitter", id: 0 }]);
   const {setSelectedSocials,selectedSocial} = useStore(state => ({
     setSelectedSocials: state.setSelectedSocials,
@@ -24,7 +37,7 @@ const ConnectedAccount = ({ name, icon, profilePic, id }: Iconnection) => {
     if (isSelected) {
       setSelectedSocials(selectedSocial.filter((item) => item.id !== id));
     } else {
-      setSelectedSocials([...selectedSocial, { type: "twitter", id }]);
+      setSelectedSocials([...selectedSocial, { type: type, id }]);
     }
   }
   };
@@ -41,7 +54,7 @@ const ConnectedAccount = ({ name, icon, profilePic, id }: Iconnection) => {
           className="p-0.5"
         />
         <div className="buttom-0 absolute bottom-0 left-[-15px] flex h-8 w-8 items-center justify-center rounded-full bg-neutral shadow-md ">
-          {icon}
+         <SocialIcon type={type}/>
         </div>
       </div>
       <p className="text-center  break-words text-base font-light leading-5 ">{name}</p>

@@ -22,7 +22,7 @@ postToLinkedin: protectedProcedure.input(
             profileId: true,
         }
     })
-    console.log(accessToken?.access_token,"accessToken")
+    console.log(accessToken?.access_token,"accessToken linkedin")
     const profileId = accessToken?.profileId
     try{
     const data = {
