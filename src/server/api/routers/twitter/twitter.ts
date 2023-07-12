@@ -63,5 +63,5 @@ export const twitterData = createTRPCRouter({
     }
       
 
-  } )
+  })
 });
