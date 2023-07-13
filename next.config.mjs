@@ -17,6 +17,7 @@ const config = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  transpilePackages: ['@lens-protocol'],
   async redirects() {
     return [
       {

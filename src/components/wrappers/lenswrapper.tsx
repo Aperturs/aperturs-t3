@@ -40,7 +40,7 @@ export default function Lenswrapper({
   return (
     <WagmiConfig config={config}>
     <LensProvider config={lensConfig}>
-      <body>{children}</body>
+      {children}
     </LensProvider>
   </WagmiConfig>
   )

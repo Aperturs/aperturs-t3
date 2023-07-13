@@ -19,9 +19,10 @@ import CommitSettings from "./projects/project/settings/commitSettings";
 import CommitDescriptionSettingsCard from "./projects/project/settings/commitInfo";
 import PostView from "./post/postWrapper";
 import TweetPost from "./post/tweets/tweetsPost";
+import { LensLoginButton } from "./lens/lens-login";
 
-export {CreateButton,TweetEntry,Layout,SideBar,SocialTabs,GithubCard,NewRepoFormModal,ProjectLayout,CommitsTable,
+export {
+     CreateButton,TweetEntry,Layout,SideBar,SocialTabs,GithubCard,NewRepoFormModal,ProjectLayout,CommitsTable,
      ProfileHeader,ConnectSocials,DraftPage,ContentPage,LinkedinPostCard,DraftCard,
-     QuestionCard,CommitSettings,CommitDescriptionSettingsCard,PostView,TweetPost
-
+     QuestionCard,CommitSettings,CommitDescriptionSettingsCard,PostView,TweetPost,LensLoginButton
 };
