@@ -1,18 +1,24 @@
 
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Layout,ConnectSocials } from '~/components'
 
-const ProfilePage = () => {
-
-
+const SocialsPage = () => {
 
   return (
-    <Layout>
         <div className='flex flex-col items-center justify-center'>
             <ConnectSocials />
         </div>
+  )
+}
+
+SocialsPage.getLayout = function getLayout(page: ReactElement) {
+  return (
+    <Layout>
+      {page}
     </Layout>
   )
 }
 
-export default ProfilePage
+
+
+export default SocialsPage

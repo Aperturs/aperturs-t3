@@ -41,9 +41,9 @@ const bottomMenu = [
     url: "/profile",
   },
   {
-    text: "Settings",
+    text: "Socials",
     icon: <Cog6ToothIcon className="h-5 w-5" />,
-    url: "/settings",
+    url: "/socials",
   },
 ];
 

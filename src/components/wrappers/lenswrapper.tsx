@@ -1,10 +1,8 @@
-import React from 'react'
-
 import { polygonMumbai, polygon } from "wagmi/chains";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { LensProvider, LensConfig, production } from "@lens-protocol/react-web";
+import { LensProvider, LensConfig, production, appId } from "@lens-protocol/react-web";
 import { bindings as wagmiBindings } from "@lens-protocol/wagmi";
 
 
@@ -26,8 +24,9 @@ const { publicClient, webSocketPublicClient } = configureChains(
     ],
   });
   
-
   const lensConfig: LensConfig = {
+    appId: appId("aperturs"),
+    sources: [appId("aperturs")],
     bindings: wagmiBindings(),
     environment: production,
   };
