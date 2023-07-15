@@ -11,10 +11,6 @@ export const getLinkedinAccountDetails = async (
   linkedinTokens: LinkedInToken[]
 ) => {
   const linkedinDetails: TwitterAccountDetails[] = [];
-  console.log(
-    { linkedinTokens },
-    "linkedinTokenslinkedinTokenslinkedinTokens"
-  );
   for (const linkedinToken of linkedinTokens) {
     const userObject = await (
       await fetch("https://api.linkedin.com/v2/me", {

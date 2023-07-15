@@ -13,7 +13,7 @@ const Signup = () => {
         <div>
           <h1 className="font-sans text-4xl font-bold text-white">Aperturs</h1>
           <p className="mt-1 text-white">
-            One Stop Social Meida Management Software
+            One Stop Social Media Management Software
           </p>
           <button
             type="submit"
@@ -31,7 +31,7 @@ const Signup = () => {
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
       </div>
       <div className="flex items-center justify-center bg-white py-10 md:w-1/2">
-        <SignUp path="/signup" signInUrl={"/login"} afterSignUpUrl={"/dashboard"} />
+        <SignUp path="/signup" signInUrl={"/login"} afterSignUpUrl={"/onboarding"} />
       </div>
     </div>
   );

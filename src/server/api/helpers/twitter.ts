@@ -18,10 +18,12 @@ export const getAccessToken = async (tokenId: number) => {
     if (token.expires_in && token.refresh_token && token.access_token) {
       console.log(token.expires_in, "token.expires_in");
       if (token.expires_in < new Date()) {
-        console.log("trying to fetch access token");
+        console.log('trying to fetch access token')
+
         const bearerToken = Buffer.from(
           `${token.client_id}:${token.client_secret}`
         ).toString("base64");
+        
         const response = await fetch("https://api.twitter.com/2/oauth2/token", {
           method: "POST",
           headers: {

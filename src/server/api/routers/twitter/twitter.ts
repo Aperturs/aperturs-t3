@@ -23,6 +23,7 @@ export const twitterData = createTRPCRouter({
     console.log("accessToken",accessToken)
 
     const client = new Client(accessToken)
+
     try{
       if (input.tweets[0] && input.tweets.length > 0) {
         // Post the first tweet
