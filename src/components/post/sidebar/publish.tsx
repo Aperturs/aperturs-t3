@@ -6,8 +6,8 @@ import { shallow } from 'zustand/shallow';
 import toast from 'react-hot-toast';
 import { type SelectedSocial, SocialType, type Tweet } from '~/types/post-types';
 import { api } from '~/utils/api';
-import { ContentFocus, useActiveProfile } from '@lens-protocol/react-web';
-import { useLensPost } from './postLens';
+import PostWeb from './lens/postLens';
+
 
 function Publish() {
     const { tweets, linkedinPost,selectedSocials } = useStore(state =>({
@@ -39,18 +39,6 @@ function Publish() {
                 toast.success("Posted to Linkedin");
               }
               break;
-            case `${SocialType.Lens}`:
-              if(item.lensProfile){
-                console.log("lens trying")
-                try{
-                  console.log("trying to post to lens")
-              const { createPost:lensCreatePost, isPosting:lensPosting } = useLensPost(item.lensProfile);
-              await lensCreatePost(linkedinPost);
-                }catch(e){
-                  console.log(e)
-                }
-              }
-              break;
             default:
               console.log('Unsupported social media type');
           }
@@ -71,6 +59,7 @@ function Publish() {
         console.log("onClick event is triggered");
       handlePublish(tweets,linkedinPost)
       }} />
+      <PostWeb content={linkedinPost}/>
     <SimpleButton  text="Save" onClick={() => {}} />
     <SimpleButton text="Add to Queue" onClick={() => {}} />
     </div>

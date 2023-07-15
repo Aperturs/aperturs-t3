@@ -41,6 +41,7 @@ const SideBar = () => {
               id={item.data.tokenId}
             />
           ))} */}
+
           <ConnectedAccount
             name="Swaraj Bachu"
             type={SocialType.Twitter}
@@ -49,12 +50,10 @@ const SideBar = () => {
           />
           {profile && (
             <ConnectedAccount
-            
               id={0}
               name={lensProfile.name}
               type={SocialType.Lens}
               profilePic={lensProfile.imageUrl}
-              profile={profile}
             />
           )}
         </div>

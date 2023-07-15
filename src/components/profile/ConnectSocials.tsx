@@ -29,7 +29,7 @@ const SocialIcon = ({ type }: { type: string }) => {
 
 const ConnectSocials = () => {
   const {data,isLoading,isFetching} = api.user.fetchConnectedAccounts.useQuery()
-  const { profile:lensProfile, loading:lensLoading, error:lensError } = useLensProfile();
+  const { profile:lensProfile, loading:lensLoading, error:lensError,LensData:profile } = useLensProfile();
 
 
   return (
@@ -54,8 +54,7 @@ const ConnectSocials = () => {
             icon={<FaFacebookSquare />}
             profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
           />
-          { 
-            lensLoading ? <div>Loading...</div> :
+          { profile && 
             <AfterConnect
               name={lensProfile.name}
               icon={<img src="/lens.svg" className="h-6 w-6" />}
@@ -128,7 +127,9 @@ const Socials = () => {
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
       </button>
-      <button className="btn gap-2 hover:border-0 hover:bg-[#AAFE2C]  hover:text-black">
+      <button className="btn gap-2 hover:border-0 hover:bg-[#AAFE2C]  hover:text-black"
+      onClick={() => router.push("/socials/lens")}
+      >
         <img src="/lens.svg" className="h-6 w-6" />
         <p>Lens </p>
       </button>

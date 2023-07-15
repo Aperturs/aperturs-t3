@@ -1,4 +1,3 @@
-import { ProfileOwnedByMe } from "@lens-protocol/react-web";
 import { Avatar } from "@material-tailwind/react";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
@@ -11,7 +10,6 @@ interface IConnection {
   type: SocialType;
   profilePic?: string;
   id: number;
-  profile?: ProfileOwnedByMe;
 }
 
 const SocialIcon = ({ type }: { type: string }) => {
@@ -27,7 +25,7 @@ const SocialIcon = ({ type }: { type: string }) => {
   }
 };
 
-const ConnectedAccount = ({ name, type, profilePic, id,profile }: IConnection) => {
+const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
   // const [selected, setSelected] = useState([{ type: "twitter", id: 0 }]);
   const {setSelectedSocials,selectedSocial} = useStore(state => ({
     setSelectedSocials: state.setSelectedSocials,
@@ -41,7 +39,7 @@ const ConnectedAccount = ({ name, type, profilePic, id,profile }: IConnection) =
     if (isSelected) {
       setSelectedSocials(selectedSocial.filter((item) => item.id !== id));
     } else {
-      setSelectedSocials([...selectedSocial, { type: type, id,lensProfile:profile}]);
+      setSelectedSocials([...selectedSocial, { type: type, id,}]);
     }
   }
   };
