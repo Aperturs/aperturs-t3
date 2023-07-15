@@ -44,7 +44,7 @@ function LinkedinPostCard() {
 
   return (
       <div className="bg-white rounded-lg w-full shadow-md p-4">
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <Avatar
             src={"/user.png"||"https://i.pinimg.com/originals/90/a7/f6/90a7f67864acea71fb5ffed6aa6298cb.jpg"}
             size="lg"
@@ -55,7 +55,7 @@ function LinkedinPostCard() {
               <div className="text-lg font-bold">John Doe</div>
               <div className="text-sm text-gray-500">@John</div>
             </div>
-        </div>
+        </div> */}
         <LinkedInPostCreation 
         content={linkedinPost}
         onContentChange={setLinkedinPost}
