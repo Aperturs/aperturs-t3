@@ -33,7 +33,7 @@ const ConnectSocials = () => {
 
 
   return (
-    <Card className="h-[50vh] w-[95%] rounded-xl p-6">
+    <Card className="h-[50vh] rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
       <div className="mt-4 flex flex-col">
         <h2 className="mb-3 text-xl font-bold md:text-3xl">
