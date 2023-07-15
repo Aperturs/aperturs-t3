@@ -16,7 +16,7 @@ export const getAccessToken = async (tokenId: number) => {
   });
   if (token) {
     if (token.expires_in && token.refresh_token && token.access_token) {
-      console.log(token.expires_in, "token.expires_in")
+      console.log(token.expires_in, "token.expires_in");
       if (token.expires_in < new Date()) {
         console.log('trying to fetch access token')
 
@@ -35,18 +35,21 @@ export const getAccessToken = async (tokenId: number) => {
           }),
         });
         const data = await response.json();
-        console.log(data, "data")
-        if(data){
-        await prisma.twitterToken.update({
-          where: {
-            id: tokenId,
-          },
-          data: {
-            access_token: data.access_token,
-            expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
-          },
-        });
-      }
+        console.log(data, "data");
+        if (data) {
+          await prisma.twitterToken.update({
+            where: {
+              id: tokenId,
+            },
+            data: {
+              access_token: data.access_token,
+              refresh_token: data.refresh_token,
+              expires_in: new Date(
+                new Date().getTime() + data.expires_in * 1000
+              ),
+            },
+          });
+        }
         return data.access_token;
       } else {
         return token.access_token;
@@ -65,7 +68,7 @@ export const getTwitterAccountDetails = async (
     const { data: userObject } = await client.users.findMyUser({
       "user.fields": ["username", "profile_image_url", "name"],
     });
-    console.log(twitterDetails, "twitterDetails")
+    console.log(twitterDetails, "twitterDetails");
     if (userObject && userObject.username && userObject.profile_image_url) {
       twitterDetails.push({
         tokenId: twitterToken.id,

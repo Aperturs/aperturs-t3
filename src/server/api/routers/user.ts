@@ -6,7 +6,6 @@ import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { SocialType } from "~/types/post-types";
 
-
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
     .input(
@@ -53,7 +52,6 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      
       // const org = await ctx.prisma.twitterToken.create({
       //   data: {
       //     client_id: input.clientId,
@@ -61,12 +59,24 @@ export const userRouter = createTRPCRouter({
       //     clerkUserId: ctx.currentUser,
       //   },
       // });
-      
+
       const authClient = new auth.OAuth2User({
         client_id: input.clientId,
         client_secret: input.clientSecret,
         callback: env.TWITTER_CALLBACK_URL,
-        scopes: ["users.read", "tweet.read", "offline.access","tweet.write","follows.read","follows.write","like.write","list.read","list.write","bookmark.read","bookmark.write",],
+        scopes: [
+          "users.read",
+          "tweet.read",
+          "offline.access",
+          "tweet.write",
+          "follows.read",
+          "follows.write",
+          "like.write",
+          "list.read",
+          "list.write",
+          "bookmark.read",
+          "bookmark.write",
+        ],
       });
       const url = authClient.generateAuthURL({
         state: `${input.clientId}-${input.clientSecret}`,
@@ -106,41 +116,41 @@ export const userRouter = createTRPCRouter({
     });
 
     // TODO: define proper output types, instead of directly using Prisma types
-    try{
-    const accounts = [];
-    const twitterDetails = await getTwitterAccountDetails(twitter);
-    if (twitter.length > 0) {
-      for (const twitterDetail of twitterDetails) {
-        accounts.push({
-          type: SocialType.Twitter,
-          data: {
-            tokenId: twitterDetail.tokenId,
-            name: twitterDetail.full_name,
-            profile_image_url: twitterDetail.profile_image_url,
-            profileId: twitterDetail.profileId,
-          },
-        });
+    try {
+      const accounts = [];
+      const twitterDetails = await getTwitterAccountDetails(twitter);
+      if (twitter.length > 0) {
+        for (const twitterDetail of twitterDetails) {
+          accounts.push({
+            type: SocialType.Twitter,
+            data: {
+              tokenId: twitterDetail.tokenId,
+              name: twitterDetail.full_name,
+              profile_image_url: twitterDetail.profile_image_url,
+              profileId: twitterDetail.profileId,
+            },
+          });
+        }
       }
-    }
-     const linkedinDetails = await getLinkedinAccountDetails(linkedin);
+      const linkedinDetails = await getLinkedinAccountDetails(linkedin);
 
-    if (linkedin.length > 0) {
-      for (const linkedinDetail of linkedinDetails) {
-        accounts.push({
-          type: SocialType.Linkedin,
-          data: {
-            tokenId: linkedinDetail.tokenId,
-            name: linkedinDetail.full_name,
-            profile_image_url: linkedinDetail.profile_image_url,
-            profileId: linkedinDetail.profileId,
-          },
-        });
+      if (linkedin.length > 0) {
+        for (const linkedinDetail of linkedinDetails) {
+          accounts.push({
+            type: SocialType.Linkedin,
+            data: {
+              tokenId: linkedinDetail.tokenId,
+              name: linkedinDetail.full_name,
+              profile_image_url: linkedinDetail.profile_image_url,
+              profileId: linkedinDetail.profileId,
+            },
+          });
+        }
       }
+
+      return accounts;
+    } catch (error) {
+      console.log(error);
     }
-  
-    return accounts;
-  }catch(error){
-    console.log(error)
-  }
   }),
 });
