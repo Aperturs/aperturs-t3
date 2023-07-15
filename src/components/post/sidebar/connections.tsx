@@ -1,16 +1,17 @@
-import { Avatar, Tooltip } from "@material-tailwind/react";
-import { useState } from "react";
+import { ProfileOwnedByMe } from "@lens-protocol/react-web";
+import { Avatar } from "@material-tailwind/react";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-types";
 
-interface Iconnection {
+interface IConnection {
   name: string;
   type: SocialType;
   profilePic?: string;
   id: number;
+  profile?: ProfileOwnedByMe;
 }
 
 const SocialIcon = ({ type }: { type: string }) => {
@@ -26,7 +27,7 @@ const SocialIcon = ({ type }: { type: string }) => {
   }
 };
 
-const ConnectedAccount = ({ name, type, profilePic, id }: Iconnection) => {
+const ConnectedAccount = ({ name, type, profilePic, id,profile }: IConnection) => {
   // const [selected, setSelected] = useState([{ type: "twitter", id: 0 }]);
   const {setSelectedSocials,selectedSocial} = useStore(state => ({
     setSelectedSocials: state.setSelectedSocials,
@@ -40,7 +41,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: Iconnection) => {
     if (isSelected) {
       setSelectedSocials(selectedSocial.filter((item) => item.id !== id));
     } else {
-      setSelectedSocials([...selectedSocial, { type: type, id }]);
+      setSelectedSocials([...selectedSocial, { type: type, id,lensProfile:profile}]);
     }
   }
   };
@@ -56,7 +57,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: Iconnection) => {
           withBorder={true}
           className="p-0.5 ring-4 ring-indigo-300 border border-transparent "
         />
-        <div className="buttom-0 absolute bottom-0 left-[-15px] flex h-8 w-8 items-center justify-center rounded-full bg-neutral shadow-md ">
+        <div className=" absolute bottom-0 left-[-15px] flex h-8 w-8 items-center justify-center rounded-full bg-neutral shadow-md ">
          <SocialIcon type={type}/>
         </div>
       </div>

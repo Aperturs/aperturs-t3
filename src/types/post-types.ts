@@ -1,10 +1,13 @@
+import { ProfileOwnedByMe } from "@lens-protocol/react-web"
+
 export type Tweet = {
     id:number,
     text:string
 }
 
 export type SelectedSocial = {
-  id:number,
+  lensProfile?: ProfileOwnedByMe
+  id:number ,
   type:string
 }
 

@@ -27,7 +27,7 @@ function useLensProfile() {
     }
   }, [LensData]);
 
-  return { profile, loading: lensLoading, error: lensError };
+  return { profile, loading: lensLoading, error: lensError, LensData: LensData };
 }
 
 export default useLensProfile;

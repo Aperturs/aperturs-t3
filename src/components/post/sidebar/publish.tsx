@@ -4,8 +4,10 @@ import Picker from '~/components/custom/datepicker/picker'
 import { useStore } from '~/store/post-store';
 import { shallow } from 'zustand/shallow';
 import toast from 'react-hot-toast';
-import { SocialType, Tweet } from '~/types/post-types';
+import { type SelectedSocial, SocialType, type Tweet } from '~/types/post-types';
 import { api } from '~/utils/api';
+import { ContentFocus, useActiveProfile } from '@lens-protocol/react-web';
+import { useLensPost } from './postLens';
 
 function Publish() {
     const { tweets, linkedinPost,selectedSocials } = useStore(state =>({
@@ -13,42 +15,50 @@ function Publish() {
         linkedinPost: state.linkedinPost,
         selectedSocials: state.selectedSocials
       }),shallow)
-      const {mutateAsync:createTweet,data,isLoading:tweeting} = api.twitter.postTweet.useMutation()
-      const {mutateAsync:createLinkedinPost,isLoading:linkedinPosting} = api.linkedin.postToLinkedin.useMutation()
+      const {mutateAsync:createTweet,error:twitterError, isLoading:tweeting} = api.twitter.postTweet.useMutation()
+      const {mutateAsync:createLinkedinPost,isLoading:linkedinPosting,error:linkedinError} = api.linkedin.postToLinkedin.useMutation()
 
-    //   const handlePublish = () => {
-    //     console.log("tweets", tweets);
-    //     console.log("linkedinPost", linkedinPost);
-    //     let tweetss = "";
-    //     for (let i = 0; i < tweets.length; i++) {
-    //       let tweetid = tweets[i]?.id;
-    //       let tweettext = tweets[i]?.text;
-    //       tweetss += `id: ${tweetid} text: ${tweettext} \n`;
-    //     }
-    //     toast(`tweets: ${tweetss} \n linkedinPost: ${linkedinPost}`);
-    //   };
 
-      const handlePublish = (tweets:Tweet[], linkedinPost:string) => {
-        console.log("handle triggering")
-        console.log(selectedSocials,"selected")
-        selectedSocials.forEach((item) => {
-          switch(item.type) {
+      const handlePublish = async (tweets: Tweet[], linkedinPost: string) => {
+        for (const item of selectedSocials) {
+          switch (item.type) {
             case `${SocialType.Twitter}`:
-            createTweet({tokenid:item.id,tweets}).then(()=>{
-                toast.success("Posted to Twitter")
-            })
+              await createTweet({ tokenId: item.id, tweets });
+              if (twitterError) {
+                toast.error(`Failed to post to Twitter: ${twitterError.message}`);
+              } else {
+                toast.success("Posted to Twitter");
+              }
               break;
             case `${SocialType.Linkedin}`:
-                console.log("linkedin trying")
-                createLinkedinPost({tokenid:item.id,content:linkedinPost}).then(()=>{
-                  toast.success("Posted to Linkedin")
-                })
+              console.log("linkedin trying");
+              await createLinkedinPost({ tokenId: item.id, content: linkedinPost });
+              if (linkedinError) {
+                toast.error(`Failed to post to LinkedIn: ${linkedinError.message}`);
+              } else {
+                toast.success("Posted to Linkedin");
+              }
+              break;
+            case `${SocialType.Lens}`:
+              if(item.lensProfile){
+                console.log("lens trying")
+                try{
+                  console.log("trying to post to lens")
+              const { createPost:lensCreatePost, isPosting:lensPosting } = useLensPost(item.lensProfile);
+              await lensCreatePost(linkedinPost);
+                }catch(e){
+                  console.log(e)
+                }
+              }
               break;
             default:
               console.log('Unsupported social media type');
           }
-        });
+        }
       };
+      
+
+      
       
       
   return (
