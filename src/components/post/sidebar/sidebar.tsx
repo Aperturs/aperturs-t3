@@ -17,7 +17,7 @@ const SideBar = () => {
   console.log("mounting sidebar");
   // const { tweets, linkedinPost } = useContext(PostContext);
 
-  // const {data} = api.user.fetchConnectedAccounts.useQuery()
+  const {data} = api.user.fetchConnectedAccounts.useQuery()
   const {
     profile: lensProfile,
     loading: lensLoading,
@@ -32,7 +32,7 @@ const SideBar = () => {
         <Publish />
         <span className="my-2 text-xl">Publish Post</span>
         <div className="grid grid-cols-3 place-items-start gap-3">
-          {/* {data?.map((item) => (
+          {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
@@ -40,7 +40,7 @@ const SideBar = () => {
               profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))} */}
+          ))}
 
           <ConnectedAccount
             name="Swaraj Bachu"

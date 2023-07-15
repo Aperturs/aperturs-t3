@@ -49,11 +49,11 @@ const ConnectSocials = () => {
                   profilePic={item.data.profile_image_url || '/user.png'}
                 />
               ))}
-          <AfterConnect
+          {/* <AfterConnect
             name="Swaraj"
             icon={<FaFacebookSquare />}
             profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          />
+          /> */}
           { profile && 
             <AfterConnect
               name={lensProfile.name}
@@ -73,9 +73,9 @@ const AddSocial = () => {
     <div>
       <label
         htmlFor="my-modal-3"
-        className="btn-primary btn h-full w-full text-white"
+        className="btn-primary btn h-full shadow-md w-full text-white"
       >
-        <div className="flex h-full w-full items-center justify-center gap-3 whitespace-nowrap	">
+        <div className="flex h-full w-full py-6 items-center justify-center gap-3 whitespace-nowrap	">
           <IoIosAddCircle className="text-2xl" />
           Add Socials
         </div>
@@ -137,13 +137,13 @@ const Socials = () => {
   );
 };
 
-interface Iconnection {
+interface IConnection {
   name: string;
   icon: React.ReactNode;
   profilePic?: string;
 }
 
-const AfterConnect = ({ name, icon, profilePic }: Iconnection) => {
+const AfterConnect = ({ name, icon, profilePic }: IConnection) => {
   return (
     <div className="flex w-full items-center justify-center rounded-lg px-10 py-6 shadow-md">
       <img
