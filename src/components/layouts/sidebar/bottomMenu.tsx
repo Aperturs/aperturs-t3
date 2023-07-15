@@ -19,6 +19,7 @@ import { MdCircleNotifications } from "react-icons/md";
 import { useClerk } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import { TbSocial } from "react-icons/tb";
 
 const bottomMenu = [
   {
@@ -41,9 +42,9 @@ const bottomMenu = [
     url: "/profile",
   },
   {
-    text: "Settings",
-    icon: <Cog6ToothIcon className="h-5 w-5" />,
-    url: "/settings",
+    text: "Socials",
+    icon: <TbSocial className="h-5 w-5" />,
+    url: "/socials",
   },
 ];
 

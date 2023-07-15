@@ -1,21 +1,15 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { getAccessToken } from "../../helpers";
-import axios from "axios";
 import { Client } from "twitter-api-sdk";
 
 
 
 export const twitterData = createTRPCRouter({
-  getAccessToken: protectedProcedure.input(z.object({
-        tokenId: z.number(),})).query(async ({ ctx, input }) => {
-     const token = await getAccessToken(input.tokenId);
-     return { token }; 
-    }),
-
+  
   postTweet: protectedProcedure.input(
     z.object({
-      tokenid: z.number(),
+      tokenId: z.number(),
       tweets: z.array(
         z.object({
           id: z.number(),
@@ -25,7 +19,7 @@ export const twitterData = createTRPCRouter({
     })
   ).mutation(async ({input})=> {
 
-    const accessToken = await getAccessToken(input.tokenid)
+    const accessToken = await getAccessToken(input.tokenId) as string
     console.log("accessToken",accessToken)
 
     const client = new Client(accessToken)

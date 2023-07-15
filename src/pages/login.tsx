@@ -2,12 +2,11 @@ import { SignIn } from "@clerk/nextjs";
 import { useRouter } from "next/router";
 import React from "react";
 
-const Login = () => {
+const Login = () => {  
+  
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const router = useRouter();
-
- 
 
   return (
     <div className="h-screen md:flex">
@@ -18,12 +17,9 @@ const Login = () => {
             One Stop Social Media Management Software
           </p>
           <button
-            type="submit"
-            onClick={() => {
-              window.location.href = "/";
-            }}
-            className="block w-28 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold mb-2"
-          >
+            type= "submit"
+            onClick= {() => { window.location.href = "/"; }}
+            className= "block w-28 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold mb-2">
             Read More
           </button>
         </div>

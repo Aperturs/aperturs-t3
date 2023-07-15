@@ -8,14 +8,14 @@ export const linkedin = createTRPCRouter({
 
 postToLinkedin: protectedProcedure.input(
    z.object({
-    tokenid: z.number(),
+    tokenId: z.number(),
     content: z.string(),
    })
   ).mutation(async ({ctx,input})=> {
 
     const accessToken = await ctx.prisma.linkedInToken.findUnique({
         where: {
-            id: input.tokenid,
+            id: input.tokenId,
         },
         select:{
             access_token: true,

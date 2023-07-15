@@ -9,7 +9,7 @@ const AddTwitter = () => {
 
   return (
     <div className="w-screen lg:px-56 md:px-24 px-10 py-28">
-      <Link href={'/settings'} className="flex items-center space-x-2 my-2 text-sm text-gray-600 hover:text-gray-900">
+      <Link href={'/socials'} className="flex items-center space-x-2 my-2 text-sm text-gray-600 hover:text-gray-900">
         <IoIosArrowBack size={20} />
         <span>Back</span>
     </Link>
