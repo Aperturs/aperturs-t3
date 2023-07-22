@@ -30,6 +30,7 @@ export const twitterData = createTRPCRouter({
         const firstTweet = await client.tweets.createTweet({
           text: input.tweets[0].text,
         });
+        
         if(firstTweet.data){
         let previousTweetId =  firstTweet.data.id
         // Loop through the rest of the tweets

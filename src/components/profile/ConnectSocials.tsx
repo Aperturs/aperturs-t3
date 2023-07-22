@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { IoIosAddCircle } from "react-icons/io";
 import { FaFacebookSquare, FaLinkedinIn } from "react-icons/fa";
 import { AiOutlineTwitter } from "react-icons/ai";
@@ -16,6 +16,7 @@ import { api } from "~/utils/api";
 import { onLinkedLnConnect } from "~/utils/connections";
 import { SocialType } from "~/types/post-types";
 import useLensProfile from "~/hooks/lens-profile";
+import { currentUser, useAuth } from "@clerk/nextjs";
 
 const SocialIcon = ({ type }: { type: string }) => {
   if (type === SocialType.Twitter) {
@@ -33,13 +34,14 @@ const ConnectSocials = () => {
 
 
   return (
-    <Card className="h-[50vh] rounded-xl p-6">
+    <Card className="min-h-[50vh] w-full rounded-xl p-6">
       {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
       <div className="mt-4 flex flex-col">
-        <h2 className="mb-3 text-xl font-bold md:text-3xl">
+        <h2 className="mb-6 text-xl font-bold md:text-3xl">
           Connect your socials
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
+          <Suspense fallback={<div>Loading...</div>}>
           {data &&
               data.map((item,key) => (
                 <AfterConnect
@@ -61,6 +63,7 @@ const ConnectSocials = () => {
               profilePic={lensProfile.imageUrl}
             />
           }
+          </Suspense>
           <AddSocial />
         </div>
       </div>
@@ -100,6 +103,7 @@ const AddSocial = () => {
 
 const Socials = () => {
   const router = useRouter();
+  const { userId, } = useAuth();
 
   return (
     <div className="grid grid-cols-3 gap-4 py-4">
@@ -121,7 +125,8 @@ const Socials = () => {
       <button
         className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
         onClick={() => {
-          onLinkedLnConnect();
+          if (userId)
+          onLinkedLnConnect({currentUser:userId});
         }}
       >
         <FaLinkedinIn className="text-2xl " />

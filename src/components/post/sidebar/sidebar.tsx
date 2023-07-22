@@ -42,12 +42,6 @@ const SideBar = () => {
             />
           ))}
 
-          <ConnectedAccount
-            name="Swaraj Bachu"
-            type={SocialType.Twitter}
-            profilePic="/user.png"
-            id={2}
-          />
           {profile && (
             <ConnectedAccount
               id={0}

@@ -1,12 +1,11 @@
+import { TRPCError } from "@trpc/server";
 import Link from "next/link";
 import React from "react";
+import { toast } from "react-hot-toast";
 import { IoIosArrowBack } from "react-icons/io";
 import { api } from "~/utils/api";
 
 const AddTwitter = () => {
-
-
-
   return (
     <div className="w-screen lg:px-56 md:px-24 px-10 py-28">
       <Link href={'/socials'} className="flex items-center space-x-2 my-2 text-sm text-gray-600 hover:text-gray-900">
@@ -31,15 +30,25 @@ function ApiBox() {
   const {  data,mutateAsync,error,isLoading } = api.user.addTwitter.useMutation()
 
   console.log(error,'error')
-  const [clientID, setClientID] = React.useState("UE05dTJ3ZjhjTnFESUQ5aTBIcFo6MTpjaQ");
-  const [clientSecret, setClientSecret] = React.useState("NzEjJmLCdQud4JjTSw2QaLjFv6zXKQWtg51hrbrvgGgj6lezfs");
+  const [clientID, setClientID] = React.useState("");
+  const [clientSecret, setClientSecret] = React.useState("");
 
   const connectHandler = async () => {
-
-    await mutateAsync({clientId:clientID,clientSecret:clientSecret}).then((data)=>
+    
+    try{
+    await mutateAsync({clientId:clientID,clientSecret:clientSecret,}).then((data)=>
     {
     window.location.href = data
-    })
+    })}
+    catch(err ){
+      if (error) {
+        // handle the TRPCError
+        toast.error(error.message);
+      } else {
+        // handle other types of errors
+        console.error(err);
+      }
+    }
   }
 
   return (

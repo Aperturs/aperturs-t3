@@ -5,6 +5,8 @@ import { auth } from "twitter-api-sdk";
 import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { SocialType } from "~/types/post-types";
+import { ConnectSocial } from "../helpers/misc";
+import { TRPCError } from "@trpc/server";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -59,34 +61,39 @@ export const userRouter = createTRPCRouter({
       //     clerkUserId: ctx.currentUser,
       //   },
       // });
+      const canConnect = await ConnectSocial({ user: ctx.currentUser });
+      if (canConnect) {
+        const authClient = new auth.OAuth2User({
+          client_id: input.clientId,
+          client_secret: input.clientSecret,
+          callback: env.TWITTER_CALLBACK_URL,
+          scopes: [
+            "users.read",
+            "tweet.read",
+            "offline.access",
+            "tweet.write",
+            "follows.read",
+            "follows.write",
+            "like.write",
+            "list.read",
+            "list.write",
+            "bookmark.read",
+            "bookmark.write",
+          ],
+        });
+        const url = authClient.generateAuthURL({
+          state: `${input.clientId}-${input.clientSecret}`,
+          // state: org.id.toString(),
+          code_challenge_method: "plain",
+          code_challenge: "challenge",
+        });
 
-      const authClient = new auth.OAuth2User({
-        client_id: input.clientId,
-        client_secret: input.clientSecret,
-        callback: env.TWITTER_CALLBACK_URL,
-        scopes: [
-          "users.read",
-          "tweet.read",
-          "offline.access",
-          "tweet.write",
-          "follows.read",
-          "follows.write",
-          "like.write",
-          "list.read",
-          "list.write",
-          "bookmark.read",
-          "bookmark.write",
-        ],
-      });
-      const url = authClient.generateAuthURL({
-        state: `${input.clientId}-${input.clientSecret}`,
-        // state: org.id.toString(),
-        code_challenge_method: "plain",
-        code_challenge: "challenge",
-      });
-
-      return url;
-    }),
+        return url;
+      }else{
+        throw new TRPCError({message:"Upgrade to higher plan to connect more Socials",code:"FORBIDDEN"})
+      }
+    }
+    ),
 
   addGithub: protectedProcedure
     .input(
@@ -106,6 +113,8 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const twitter = await ctx.prisma.twitterToken.findMany({
@@ -153,4 +162,5 @@ export const userRouter = createTRPCRouter({
       console.log(error);
     }
   }),
+
 });
