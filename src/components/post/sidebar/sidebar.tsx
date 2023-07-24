@@ -41,7 +41,6 @@ const SideBar = () => {
               id={item.data.tokenId}
             />
           ))}
-
           {profile && (
             <ConnectedAccount
               id={0}

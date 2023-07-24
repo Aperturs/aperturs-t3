@@ -126,7 +126,7 @@ const Socials = () => {
         className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
         onClick={() => {
           if (userId)
-          onLinkedLnConnect({currentUser:userId});
+          onLinkedLnConnect();
         }}
       >
         <FaLinkedinIn className="text-2xl " />

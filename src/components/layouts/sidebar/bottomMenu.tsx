@@ -1,3 +1,4 @@
+import { PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import {
   Chip,
   ListItem,
@@ -5,20 +6,11 @@ import {
   ListItemSuffix,
 } from "@material-tailwind/react";
 import Link from "next/link";
-import React from "react";
-import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  InboxIcon,
-  PowerIcon,
-} from "@heroicons/react/24/solid";
 
-import { MdCircleNotifications } from "react-icons/md";
 import { useClerk } from "@clerk/nextjs";
-import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
+import { MdCircleNotifications } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
 
 const bottomMenu = [
