@@ -1,29 +1,12 @@
-import React, { ReactElement } from "react";
-import { Layout } from "~/components";
-import { ContentPage } from "~/components";
-
+import { type ReactElement } from "react";
+import { ContentPage, Layout } from "~/components";
 
 const Dashboard = () => {
-
-  return (
-  
-    <ContentPage />
-  
-    );
-
+  return <ContentPage />;
 };
 
 Dashboard.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout> 
-
-      {page}
-
-      
-    </Layout>
-  )
-}
- 
-
+  return <Layout>{page}</Layout>;
+};
 
 export default Dashboard;

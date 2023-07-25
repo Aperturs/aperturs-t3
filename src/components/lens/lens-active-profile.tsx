@@ -1,4 +1,4 @@
-import { useActiveProfile } from '@lens-protocol/react-web';
+import { useActiveProfile } from "@lens-protocol/react-web";
 
 export function MyProfile() {
   const { data, error, loading } = useActiveProfile();

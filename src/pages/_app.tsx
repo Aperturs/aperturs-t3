@@ -1,19 +1,19 @@
-import { AppProps, type AppType } from "next/app";
-import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@material-tailwind/react";
 import { Analytics } from "@vercel/analytics/react";
+import { type AppProps, type AppType } from "next/app";
+import { Toaster } from "react-hot-toast";
 import { api } from "~/utils/api";
 
-import "~/styles/globals.css";
-import "~/styles/calendar.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import { NextPage } from "next";
-import { ReactElement, ReactNode, useEffect, useState } from "react";
+import { type NextPage } from "next";
 import { Router } from "next/router";
+import { useEffect, useState, type ReactElement, type ReactNode } from "react";
 import LogoLoad from "~/components/custom/loading/logoLoad";
 import Lenswrapper from "~/components/wrappers/lenswrapper";
+import "~/styles/calendar.css";
+import "~/styles/globals.css";
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
@@ -21,7 +21,7 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const MyApp: AppType<{}> = ({
+const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) => {

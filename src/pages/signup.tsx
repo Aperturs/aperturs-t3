@@ -1,12 +1,6 @@
 import { SignUp } from "@clerk/nextjs";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
-
   return (
     <div className="h-screen md:flex">
       <div className="i relative hidden w-1/2 items-center justify-around overflow-hidden bg-gradient-to-tr from-blue-800 to-purple-700 md:flex">
@@ -31,7 +25,11 @@ const Signup = () => {
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
       </div>
       <div className="flex items-center justify-center bg-white py-10 md:w-1/2">
-        <SignUp path="/signup" signInUrl={"/login"} afterSignUpUrl={"/onboarding"} />
+        <SignUp
+          path="/signup"
+          signInUrl={"/login"}
+          afterSignUpUrl={"/onboarding"}
+        />
       </div>
     </div>
   );

@@ -1,11 +1,10 @@
 import type { User } from "@clerk/nextjs/api";
-import { Webhook } from "svix";
-import { headers } from "next/headers";
-import { env } from "~/env.mjs";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Webhook } from "svix";
+import { env } from "~/env.mjs";
 import { appRouter } from "~/server/api/root";
-import { prisma } from "~/server/db";
 import cronJobServer from "~/server/cronjob";
+import { prisma } from "~/server/db";
 
 type UnwantedKeys =
   | "emailAddresses"
@@ -36,7 +35,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await req.body;
 
   const payloadString = JSON.stringify(payload);
@@ -49,7 +48,6 @@ export default async function handler(
     console.log("svixIdTimeStamp", svixIdTimeStamp);
     console.log("svixSignature", svixSignature);
     return res.status(500).json({ message: "Error Happended" });
-
   }
   const svixHeaders = {
     "svix-id": svixId,
@@ -71,13 +69,14 @@ export default async function handler(
     cronJobServer: cronJobServer,
     currentUser: "",
   });
-  
+
   const { id } = evt.data;
   // Handle the webhook
   const eventType: EventType = evt.type;
-  if (eventType === "user.created"
-  //  || eventType === "user.updated" (for now we dont need to check for updating, it for no reasons makes more prisma calls )
-   ) {
+  if (
+    eventType === "user.created"
+    //  || eventType === "user.updated" (for now we dont need to check for updating, it for no reasons makes more prisma calls )
+  ) {
     const { email_addresses, primary_email_address_id } = evt.data;
     const emailObject = email_addresses?.find((email) => {
       return email.id === primary_email_address_id;
@@ -85,9 +84,8 @@ export default async function handler(
     if (!emailObject) {
       return res.status(500).json({ message: "no email found" });
     }
-    const user = await caller.user.createUser({
+    await caller.user.createUser({
       clerkId: id,
-
     });
   }
   return res.status(200).json({ message: "ok" });

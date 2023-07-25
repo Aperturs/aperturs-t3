@@ -3,11 +3,10 @@ import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
-import { SocialType } from "~/types/post-types";
 
 interface IConnection {
   name: string;
-  type: SocialType;
+  type: SOCIAL_TYPES;
   profilePic?: string;
   id: number;
 }
@@ -18,7 +17,7 @@ const SocialIcon = ({ type }: { type: string }) => {
   } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className="" />;
   } else if (type === SocialType.Lens) {
-    return <img src="/lens.svg" className="h-6 w-6" />
+    return <img src="/lens.svg" className="h-6 w-6" alt="lens"/>
   }
   else {
     return null; // Return null or a default icon for other types

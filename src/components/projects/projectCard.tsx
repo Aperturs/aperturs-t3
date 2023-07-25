@@ -1,13 +1,13 @@
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Typography,
   Button,
+  Card,
+  CardBody,
   CardFooter,
+  CardHeader,
+  Typography,
 } from "@material-tailwind/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 
 type Props = {
   repoName: string;
@@ -22,18 +22,25 @@ export default function GithubCard({
   repoDescription,
   lastUpdated,
   repoImage,
-  projectId
+  projectId,
 }: Props) {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <Card className="w-auto">
       {repoImage && (
         <CardHeader shadow={false} floated={false} className="h-56">
-          <img src={repoImage} className="w-full h-full object-cover" />
+          <Image
+            src={repoImage}
+            className="h-full w-full object-cover"
+            alt="repo image"
+            style={{
+              objectFit: "cover",
+            }}
+          />
         </CardHeader>
       )}
       <CardBody>
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2 flex items-center justify-between">
           <Typography color="blue-gray" className="font-medium">
             {repoName}
           </Typography>
@@ -53,8 +60,10 @@ export default function GithubCard({
         <Button
           ripple={false}
           fullWidth={true}
-          onClick={() => { router.push(`/project/${projectId}/context`) }}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:shadow-none hover:scale-105 focus:shadow-none focus:scale-105 active:scale-100"
+          onClick={() => {
+            router.push(`/project/${projectId}/context`);
+          }}
+          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
         >
           Overview
         </Button>

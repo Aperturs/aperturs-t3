@@ -18,8 +18,8 @@ export default function Example() {
         Aperturs gives you marketing superpowers with powerful features
         </Typography>
         <button className="btn text-white btn-primary btn-wide my-3"
-        onClick={()=>{
-            router.push("/onboarding/addSocial")
+        onClick={async ()=>{
+           await router.push("/onboarding/addSocial")
         }}
         >
             Get Started

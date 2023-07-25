@@ -1,51 +1,42 @@
-import React from "react";
 import {
-  Tabs,
-  TabsHeader,
-  TabsBody,
   Tab,
   TabPanel,
+  Tabs,
+  TabsBody,
+  TabsHeader,
 } from "@material-tailwind/react";
-import {
-  Square3Stack3DIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-} from "@heroicons/react/24/solid";
-import LinkedinPostCard from "../linkedin/LinkedinPostCard";
-import TweetEntry from "~/components/dashboard/CreateContent/TweetEntry";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
+import LinkedinPostCard from "../linkedin/LinkedinPostCard";
 import TweetPost from "../tweets/tweetsPost";
- 
-export default function SocialTabs() {
 
+export default function SocialTabs() {
   return (
     <div className="w-full">
-    <Tabs  value="twitter" >
-      <TabsHeader className="w-52">
-         <Tab  value="twitter">
+      <Tabs value="twitter">
+        <TabsHeader className="w-52">
+          <Tab value="twitter">
             <div className="flex items-center gap-2">
-                <AiOutlineTwitter />
+              <AiOutlineTwitter />
               Twitter
             </div>
           </Tab>
-          <Tab  value="linkedin">
+          <Tab value="linkedin">
             <div className="flex items-center gap-2">
-                <FaLinkedinIn/>
-             Linkedin
+              <FaLinkedinIn />
+              Linkedin
             </div>
           </Tab>
-          
-      </TabsHeader>
-      <TabsBody>
+        </TabsHeader>
+        <TabsBody>
           <TabPanel value="twitter">
-          <TweetPost />
+            <TweetPost />
           </TabPanel>
           <TabPanel value="linkedin">
             <LinkedinPostCard />
           </TabPanel>
-      </TabsBody>
-    </Tabs>
+        </TabsBody>
+      </Tabs>
     </div>
   );
 }

@@ -1,27 +1,15 @@
-import { Avatar, Switch, Tooltip } from "@material-tailwind/react";
-import React, { useContext } from "react";
-import Picker from "~/components/custom/datepicker/picker";
-import toast from "react-hot-toast";
-import { api } from "~/utils/api";
-import { AiOutlineTwitter } from "react-icons/ai";
-import { FaLinkedinIn } from "react-icons/fa";
-import ConnectedAccount from "./connections";
-import { useStore } from "~/store/post-store";
-import { shallow } from "zustand/shallow";
-import { SocialType } from "~/types/post-types";
-import Publish from "./publish";
 import useLensProfile from "~/hooks/lens-profile";
-import { useActiveProfile } from "@lens-protocol/react-web";
+import { api } from "~/utils/api";
+import ConnectedAccount from "./connections";
+import Publish from "./publish";
 
 const SideBar = () => {
   console.log("mounting sidebar");
   // const { tweets, linkedinPost } = useContext(PostContext);
 
-  const {data} = api.user.fetchConnectedAccounts.useQuery()
+  const { data } = api.user.fetchConnectedAccounts.useQuery();
   const {
     profile: lensProfile,
-    loading: lensLoading,
-    error: lensError,
     LensData: profile,
   } = useLensProfile();
 
@@ -45,7 +33,7 @@ const SideBar = () => {
             <ConnectedAccount
               id={0}
               name={lensProfile.name}
-              type={SocialType.Lens}
+              type="lens"
               profilePic={lensProfile.imageUrl}
             />
           )}

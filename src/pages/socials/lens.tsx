@@ -1,23 +1,24 @@
-import { useRouter } from 'next/router'
-import React from 'react'
-import LensAuthenticate from '~/components/lens/lens-auth'
+import { useRouter } from "next/router";
+import LensAuthenticate from "~/components/lens/lens-auth";
 
 export default function LensProtoCol() {
-
-    const router = useRouter()
+  const router = useRouter();
   return (
-    <div className='w-full min-h-screen  h-full flex justify-center items-center'>
-      <div className='shadow-md rounded-lg w-[30vw] p-16'>
-        <h1 className='whitespace-nowrap text-center font-semibold text-2xl'>
-            Connect your Wallet
+    <div className="flex h-full  min-h-screen w-full items-center justify-center">
+      <div className="w-[30vw] rounded-lg p-16 shadow-md">
+        <h1 className="whitespace-nowrap text-center text-2xl font-semibold">
+          Connect your Wallet
         </h1>
-        <div className='my-5'>
-        <LensAuthenticate />
-        <button className='btn w-full' onClick={()=>router.push('/socials')}>
+        <div className="my-5">
+          <LensAuthenticate />
+          <button
+            className="btn w-full"
+            onClick={() => router.push("/socials")}
+          >
             Go Back
-        </button>
+          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

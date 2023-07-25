@@ -15,7 +15,7 @@
     "@lens-protocol/react-web": "^1.2.1",
     "@lens-protocol/wagmi": "^2.0.1",
     "@material-tailwind/react": "^2.0.3",
-    "@prisma/client": "^4.11.0",
+    "@prisma/client": "^5.0.0",
     "@tanstack/react-query": "^4.29.19",
     "@trpc/client": "^10.18.0",
     "@trpc/next": "^10.18.0",
@@ -57,7 +57,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
     "prettier-plugin-tailwindcss": "^0.2.6",
-    "prisma": "^4.11.0",
+    "prisma": "^5.0.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.0.2"
   },

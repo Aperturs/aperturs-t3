@@ -44,10 +44,10 @@ const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+export const createTRPCContext =  (opts: CreateNextContextOptions) => {
   const { req, res } = opts;
-  const session = getAuth(req);
-  const user = session.user;
+  // const session =  getAuth(req);
+  // const user =  session.user;
   // Get the session from the server using the getServerSession wrapper function
   // const session = await getServerAuthSession({ req, res });
 
@@ -64,14 +64,11 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
+import { getAuth } from "@clerk/nextjs/dist/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { Client, auth } from "twitter-api-sdk";
-import axios from "axios";
-import { AuthClient } from "twitter-api-sdk/dist/types";
 import cronJobServer from "../cronjob";
-import { getAuth } from "@clerk/nextjs/dist/server";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,

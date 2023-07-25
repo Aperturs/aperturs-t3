@@ -60,11 +60,11 @@ function BottomMenu() {
       <ListItem
         onClick={() =>
           signOut()
-            .then(() => {
-              router.push("/");
+            .then(async () => {
+              await router.push("/");
               toast.success("Signed Out");
             })
-            .catch((e) => {
+            .catch(() => {
               toast.error("Error Signing Out");
             })
         }
