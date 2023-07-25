@@ -4,7 +4,6 @@ import Picker from '~/components/custom/datepicker/picker'
 import { useStore } from '~/store/post-store';
 import { shallow } from 'zustand/shallow';
 import toast from 'react-hot-toast';
-import { SocialType, type Tweet } from '~/types/post-types';
 import { api } from '~/utils/api';
 import PostWeb from './lens/postLens';
 

@@ -3,11 +3,10 @@ import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
-import { SocialType } from "~/types/post-types";
 
 interface IConnection {
   name: string;
-  type: SocialType;
+  type: SOCIAL_TYPES;
   profilePic?: string;
   id: number;
 }

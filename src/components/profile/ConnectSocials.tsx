@@ -7,7 +7,6 @@ import { IoIosAddCircle } from "react-icons/io";
 import { useAuth } from "@clerk/nextjs";
 import { Card } from "@material-tailwind/react";
 import useLensProfile from "~/hooks/lens-profile";
-import { SocialType } from "~/types/post-types";
 import { api } from "~/utils/api";
 import { onLinkedLnConnect } from "~/utils/connections";
 
