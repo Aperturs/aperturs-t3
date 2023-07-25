@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { GithubCard, Layout, NewRepoFormModal } from "~/components";
 
 function Projects() {
@@ -23,11 +23,7 @@ function Projects() {
 }
 
 Projects.getLayout = function getLayout(page: ReactElement) {
-    return (
-      <Layout>
-        {page}
-      </Layout>
-    )
-}
+  return <Layout>{page}</Layout>;
+};
 
 export default Projects;

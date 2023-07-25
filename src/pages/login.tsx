@@ -1,34 +1,30 @@
 import { SignIn } from "@clerk/nextjs";
-import { useRouter } from "next/router";
-import React from "react";
 
-const Login = () => {  
-  
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const router = useRouter();
-
+const Login = () => {
   return (
     <div className="h-screen md:flex">
-      <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-blue-800 to-purple-700 i justify-around items-center hidden">
+      <div className="i relative hidden w-1/2 items-center justify-around overflow-hidden bg-gradient-to-tr from-blue-800 to-purple-700 md:flex">
         <div>
-          <h1 className="text-white font-bold text-4xl font-sans">Aperturs</h1>
-          <p className="text-white mt-1">
+          <h1 className="font-sans text-4xl font-bold text-white">Aperturs</h1>
+          <p className="mt-1 text-white">
             One Stop Social Media Management Software
           </p>
           <button
-            type= "submit"
-            onClick= {() => { window.location.href = "/"; }}
-            className= "block w-28 bg-white text-indigo-800 mt-4 py-2 rounded-2xl font-bold mb-2">
+            type="submit"
+            onClick={() => {
+              window.location.href = "/";
+            }}
+            className="mb-2 mt-4 block w-28 rounded-2xl bg-white py-2 font-bold text-indigo-800"
+          >
             Read More
           </button>
         </div>
-        <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
-        <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+        <div className="absolute -bottom-32 -left-40 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
+        <div className="absolute -bottom-40 -left-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
+        <div className="absolute -right-0 -top-40 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
+        <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
       </div>
-      <div className="flex md:w-1/2 justify-center py-10 items-center bg-white">
+      <div className="flex items-center justify-center bg-white py-10 md:w-1/2">
         <SignIn path="/login" signUpUrl="/signup" afterSignInUrl="/dashboard" />
       </div>
     </div>

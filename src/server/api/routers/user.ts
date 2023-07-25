@@ -4,7 +4,6 @@ import { env } from "~/env.mjs";
 import { auth } from "twitter-api-sdk";
 import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
-import { SocialType } from "~/types/post-types";
 import { ConnectSocial } from "../helpers/misc";
 import { TRPCError } from "@trpc/server";
 
@@ -54,13 +53,6 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // const org = await ctx.prisma.twitterToken.create({
-      //   data: {
-      //     client_id: input.clientId,
-      //     client_secret: input.clientSecret,
-      //     clerkUserId: ctx.currentUser,
-      //   },
-      // });
       const canConnect = await ConnectSocial({ user: ctx.currentUser });
       if (canConnect) {
         const authClient = new auth.OAuth2User({

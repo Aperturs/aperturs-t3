@@ -24,6 +24,7 @@ postToLinkedin: protectedProcedure.input(
     })
     console.log(accessToken?.access_token,"accessToken linkedin")
     const profileId = accessToken?.profileId
+    if(profileId){
     try{
     const data = {
         author: `urn:li:person:${profileId}`,
@@ -57,6 +58,8 @@ postToLinkedin: protectedProcedure.input(
         });
     }catch(err){
         console.log("error",err)
+    }}else{
+        console.log("no profile id")
     }
 
   })

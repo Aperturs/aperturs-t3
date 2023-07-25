@@ -4,6 +4,14 @@ import { Client } from "twitter-api-sdk";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
+interface Response {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  // other properties...
+}
+
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -37,7 +45,7 @@ export default async function handler(
 
   const bearerToken = Buffer.from(`${id}:${secret}`).toString("base64");
 
-  fetch("https://api.twitter.com/2/oauth2/token", {
+  await fetch("https://api.twitter.com/2/oauth2/token", {
     method: "POST",
     headers: {
       Authorization: `Basic ${bearerToken}`,
@@ -50,7 +58,7 @@ export default async function handler(
     }),
   })
     .then(async (data) => {
-      data.json().then(async (response) => {
+     await  data.json().then(async (response:Response) => {
         console.log(response, "response");
         if (
           response.access_token &&
@@ -83,27 +91,12 @@ export default async function handler(
                 .finally(() => {
                   console.log("working");
                 });
-              // await prisma.twitterToken
-              //   .update({
-              //     where: {
-              //       id: parseInt(state as string),
-              //     },
-              //     data: {
-              //       access_token: response.access_token,
-              //       refresh_token: response.refresh_token,
-              //       expires_in: new Date(
-              //         new Date().getTime() + response.expires_in * 1000
-              //       ),
-              //       profileId: userObject.id,
-              //     },
-              //   })
-              //
-              //   });
             }
           } else {
             console.log("I dont have user");
           }
         }
+        
       });
     })
     .catch((err) => {

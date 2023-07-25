@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PrismaClient, TwitterToken } from "@prisma/client";
 import Client from "twitter-api-sdk";
 import { prisma } from "~/server/db";
@@ -34,6 +38,7 @@ export const getAccessToken = async (tokenId: number) => {
             refresh_token: token.refresh_token,
           }),
         });
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const data = await response.json();
         console.log(data, "data");
         if (data) {

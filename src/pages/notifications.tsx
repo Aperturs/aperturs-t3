@@ -1,20 +1,16 @@
-import React, { ReactElement } from 'react'
-import { Layout } from '~/components'
+import { type ReactElement } from "react";
+import { Layout } from "~/components";
 
 function Notifications() {
   return (
-    <div className='h-full w-full flex justify-center items-center'>
+    <div className="flex h-full w-full items-center justify-center">
       you have no notifications
     </div>
-  )
+  );
 }
 
 Notifications.getLayout = function getLayout(page: ReactElement) {
-    return (
-      <Layout>
-        {page}
-      </Layout>
-    )
-  }
+  return <Layout>{page}</Layout>;
+};
 
-export default Notifications
+export default Notifications;

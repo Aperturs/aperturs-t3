@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { getAuth } from "@clerk/nextjs/dist/server";
 import { NextApiRequest, NextApiResponse } from "next";
 import { env } from "~/env.mjs";
@@ -12,6 +14,7 @@ export default async function handler(
   // const code = new URLSearchParams(req.query).get("code");
   const code = req.query.code;
   const response = await fetch(
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     "https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=" +
       code +
       "&redirect_uri=" +
@@ -30,6 +33,7 @@ export default async function handler(
   const data = await response.json();
   const userResponse = await fetch("https://api.linkedin.com/v2/me", {
     headers: {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       Authorization: `Bearer ${data.access_token}`,
       "cache-control": "no-cache",
       "X-Restli-Protocol-Version": "2.0.0",

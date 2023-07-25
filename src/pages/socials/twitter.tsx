@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import Link from "next/link";
 import React from "react";
 import { toast } from "react-hot-toast";
@@ -7,11 +6,14 @@ import { api } from "~/utils/api";
 
 const AddTwitter = () => {
   return (
-    <div className="w-screen lg:px-56 md:px-24 px-10 py-28">
-      <Link href={'/socials'} className="flex items-center space-x-2 my-2 text-sm text-gray-600 hover:text-gray-900">
+    <div className="w-screen px-10 py-28 md:px-24 lg:px-56">
+      <Link
+        href={"/socials"}
+        className="my-2 flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900"
+      >
         <IoIosArrowBack size={20} />
         <span>Back</span>
-    </Link>
+      </Link>
       <h1 className="text-4xl font-medium text-primary">Add Twitter</h1>
       <p className="mt-2 text-gray-500">
         you will need to give your own
@@ -26,21 +28,22 @@ const AddTwitter = () => {
 };
 
 function ApiBox() {
+  const { data, mutateAsync, error, isLoading } =
+    api.user.addTwitter.useMutation();
 
-  const {  data,mutateAsync,error,isLoading } = api.user.addTwitter.useMutation()
-
-  console.log(error,'error')
+  console.log(error, "error");
   const [clientID, setClientID] = React.useState("");
   const [clientSecret, setClientSecret] = React.useState("");
 
   const connectHandler = async () => {
-    
-    try{
-    await mutateAsync({clientId:clientID,clientSecret:clientSecret,}).then((data)=>
-    {
-    window.location.href = data
-    })}
-    catch(err ){
+    try {
+      await mutateAsync({
+        clientId: clientID,
+        clientSecret: clientSecret,
+      }).then((data) => {
+        window.location.href = data;
+      });
+    } catch (err) {
       if (error) {
         // handle the TRPCError
         toast.error(error.message);
@@ -49,7 +52,7 @@ function ApiBox() {
         console.error(err);
       }
     }
-  }
+  };
 
   return (
     <div className="postShadow mt-8 flex  w-full flex-col rounded-xl p-6">
@@ -86,25 +89,24 @@ function ApiBox() {
             />
           </svg>
           <div>
-          <span className="font-bold">Bring your Own APIs</span>
-          <span className="m-1">
-            Due to Twitter new APIs rules, we are only allowing user who bring
-            their own Api Keys
-          </span>
+            <span className="font-bold">Bring your Own APIs</span>
+            <span className="m-1">
+              Due to Twitter new APIs rules, we are only allowing user who bring
+              their own Api Keys
+            </span>
           </div>
         </div>
-
       </div>
 
-      <div className="w-full flex justify-end">
-      <button className="btn btn-primary sm:w-56 w-24  text-white rounded-xl px-4 py-2 mt-4"
-      onClick={connectHandler}
-      disabled={isLoading}
-      >
-        Connect
-      </button>
+      <div className="flex w-full justify-end">
+        <button
+          className="btn-primary btn mt-4 w-24  rounded-xl px-4 py-2 text-white sm:w-56"
+          onClick={connectHandler}
+          disabled={isLoading}
+        >
+          Connect
+        </button>
       </div>
-      
     </div>
   );
 }

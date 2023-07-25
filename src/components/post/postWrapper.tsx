@@ -34,7 +34,7 @@ function PostView({ id }: { id: number; }) {
 
   // // const [date, setDate] = useState<Date>(new Date());
   // // const [time, setTime] = useState(new Date().getTime());
-
+  console.log(id);
   // useEffect(() => {
   //   setLinkedinPost(value)
   // }, []);

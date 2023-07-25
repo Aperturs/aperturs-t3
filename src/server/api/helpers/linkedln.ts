@@ -12,6 +12,7 @@ export const getLinkedinAccountDetails = async (
 ) => {
   const linkedinDetails: TwitterAccountDetails[] = [];
   for (const linkedinToken of linkedinTokens) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const userObject = await (
       await fetch("https://api.linkedin.com/v2/me", {
         headers: {
@@ -28,6 +29,7 @@ export const getLinkedinAccountDetails = async (
       refresh_token: linkedinToken.refresh_token,
       profileId: linkedinToken.profileId,
       full_name:
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-member-access
         userObject.localizedFirstName + " " + userObject.localizedLastName,
     });
   }

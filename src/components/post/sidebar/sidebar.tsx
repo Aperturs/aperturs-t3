@@ -1,5 +1,4 @@
 import useLensProfile from "~/hooks/lens-profile";
-import { SocialType } from "~/types/post-types";
 import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
@@ -34,7 +33,7 @@ const SideBar = () => {
             <ConnectedAccount
               id={0}
               name={lensProfile.name}
-              type={SocialType.Lens}
+              type="lens"
               profilePic={lensProfile.imageUrl}
             />
           )}

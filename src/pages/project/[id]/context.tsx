@@ -1,28 +1,34 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, type ReactElement } from "react";
 import toast from "react-hot-toast";
-import { type } from "os";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Layout, ProjectLayout, QuestionCard } from "~/components";
 
 type Question = { question: string; answer: string; description: string };
 
 const ProjectContext = () => {
-
   useEffect(() => {
-    toast((t) => (
-      <div className="flex flex-col">
-      <span>
-        The questions below are optional. You can answer them if you want to
-        share more about your project. It will help our AI to generate a better
-        post for you.
-      </span>
-      <button className="bg-gray-300 px-4 btn rounded-lg mt-2" onClick={() => toast.dismiss(t.id)}>Dismiss</button>
-      </div>
-    ),{
-      duration: 4000,
-    });
+    toast(
+      (t) => (
+        <div className="flex flex-col">
+          <span>
+            The questions below are optional. You can answer them if you want to
+            share more about your project. It will help our AI to generate a
+            better post for you.
+          </span>
+          <button
+            className="btn mt-2 rounded-lg bg-gray-300 px-4"
+            onClick={() => toast.dismiss(t.id)}
+          >
+            Dismiss
+          </button>
+        </div>
+      ),
+      {
+        duration: 4000,
+      }
+    );
   }, []);
-  
+
   const [questionsNanswers, setQuestionsAnswer] = useState([
     {
       question: "What inspired you to start this project?",
@@ -99,16 +105,15 @@ const ProjectContext = () => {
     });
     setQuestionsAnswer(newQuestions);
   };
-  const submit = async () => {
+  const submit =  () => {
     const finalResponse = questionsNanswers.map(({ answer, question }) => {
       return { question, answer };
     });
     console.log({ finalResponse });
-
   };
   return (
     <div className="container mx-auto py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {questionsNanswers.map((q, index) => (
           <QuestionCard
             index={index}
@@ -122,7 +127,7 @@ const ProjectContext = () => {
       </div>
       <button
         onClick={submit}
-        className=" btn btn-primary mt-4 text-white py-2 px-6 rounded-lg"
+        className=" btn-primary btn mt-4 rounded-lg px-6 py-2 text-white"
       >
         Submit
       </button>
@@ -133,11 +138,9 @@ const ProjectContext = () => {
 ProjectContext.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
-      <ProjectLayout>
-      {page}
-      </ProjectLayout>
+      <ProjectLayout>{page}</ProjectLayout>
     </Layout>
-  )
-}
+  );
+};
 
 export default ProjectContext;

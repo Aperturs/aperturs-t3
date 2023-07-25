@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { env } from "~/env.mjs";
 
 export const onLinkedLnConnect = () => {

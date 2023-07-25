@@ -1,11 +1,10 @@
-import { useRouter } from 'next/router';
-import React, { ReactElement, useEffect } from 'react'
-import { Layout, PostView } from '~/components'
-import { useStore } from '~/store/post-store';
+import { useRouter } from "next/router";
+import { useEffect, type ReactElement } from "react";
+import { Layout, PostView } from "~/components";
+import { useStore } from "~/store/post-store";
 
 export default function Post() {
-
-  const reset = useStore(state => state.reset);
+  const reset = useStore((state) => state.reset);
   const router = useRouter();
 
   useEffect(() => {
@@ -13,25 +12,20 @@ export default function Post() {
       reset();
     };
 
-    router.events.on('routeChangeStart', handleRouteChange);
+    router.events.on("routeChangeStart", handleRouteChange);
 
     return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
+      router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [reset, router]);
 
   return (
-          <div className="container mx-auto p-4">
-      <PostView value='testing t2 2' id={1}/>
+    <div className="container mx-auto p-4">
+      <PostView id={1} />
     </div>
-  )
+  );
 }
 
 Post.getLayout = function getLayout(page: ReactElement) {
-    return (
-      <Layout>
-        {page}
-      </Layout>
-    )
-  }
-   
+  return <Layout>{page}</Layout>;
+};

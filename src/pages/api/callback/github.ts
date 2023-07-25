@@ -1,10 +1,21 @@
+/* eslint-disable */
+
 import { getAuth } from "@clerk/nextjs/server";
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { appRouter } from "~/server/api/root";
 import cronJobServer from "~/server/cronjob";
 import { prisma } from "~/server/db";
-import { GithubUser } from "~/types/types";
+
+interface TokenData {
+  access_token: string;
+  // add other properties you expect in the response
+}
+
+interface UserObject {
+  login: string;
+  // add other properties you expect in the response
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,6 +33,7 @@ export default async function handler(
       }
     )
   ).json();
+  
   const userObject: GithubUser = await (
     await fetch("https://api.github.com/user", {
       headers: {
