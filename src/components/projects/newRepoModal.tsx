@@ -38,7 +38,9 @@ const RepoOption = () => {
   const [options, setOptions] = useState();
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm =  () => {
+    console.log("onConfirm event is triggered");
+  };
   return (
     <>
       <button className="btn-primary btn px-8 text-white" onClick={handleOpen}>

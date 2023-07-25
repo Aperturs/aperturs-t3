@@ -4,7 +4,7 @@ import Picker from '~/components/custom/datepicker/picker'
 import { useStore } from '~/store/post-store';
 import { shallow } from 'zustand/shallow';
 import toast from 'react-hot-toast';
-import { type SelectedSocial, SocialType, type Tweet } from '~/types/post-types';
+import { SocialType, type Tweet } from '~/types/post-types';
 import { api } from '~/utils/api';
 import PostWeb from './lens/postLens';
 
@@ -53,15 +53,20 @@ function Publish() {
     <div className="my-4 flex w-full flex-col justify-end gap-1">
     <div className="grid grid-cols-2 gap-1">
       <Picker />
-      <SimpleButton text="Schedule" onClick={() => {}} />
-    </div>
-    <SimpleButton isLoading={tweeting || linkedinPosting} text="Publish Now" onClick={()=>{
+      <SimpleButton text="Schedule" onClick={() => {
         console.log("onClick event is triggered");
-      handlePublish(tweets,linkedinPost)
+      }} />
+    </div>
+    <SimpleButton isLoading={tweeting || linkedinPosting} text="Publish Now" onClick={async ()=>{
+      await handlePublish(tweets,linkedinPost)
       }} />
       <PostWeb content={linkedinPost}/>
-    <SimpleButton  text="Save" onClick={() => {}} />
-    <SimpleButton text="Add to Queue" onClick={() => {}} />
+    <SimpleButton  text="Save" onClick={() => {
+        console.log("onClick event is triggered");
+    }} />
+    <SimpleButton text="Add to Queue" onClick={() => {
+        console.log("onClick event is triggered");
+    }} />
     </div>
   )
 }

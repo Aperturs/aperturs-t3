@@ -1,7 +1,4 @@
-import {
-  ChevronDownIcon,
-  ChevronRightIcon
-} from "@heroicons/react/24/outline";
+import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import {
   Accordion,
   AccordionBody,
@@ -14,8 +11,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-
-
 
 interface AccordanceProps {
   open: number;
@@ -32,12 +27,8 @@ interface MenuProps {
   list: AccordanceProps[];
 }
 
-
-
 export default function AccordionMenu(props: MenuProps) {
-
   const { list } = props;
-
 
   const [openItems, setOpenItems] = React.useState<number[]>([1, 2]);
   const router = useRouter();
@@ -69,14 +60,16 @@ export default function AccordionMenu(props: MenuProps) {
           }
           key={index}
         >
-          <ListItem key={item.open} className="p-0" selected={openItems.includes(item.open)}>
+          <ListItem
+            key={item.open}
+            className="p-0"
+            selected={openItems.includes(item.open)}
+          >
             <AccordionHeader
               onClick={() => handleOpen(item.open)}
               className="border-b-0 p-3"
             >
-              <ListItemPrefix>
-                {item.icon}
-              </ListItemPrefix>
+              <ListItemPrefix>{item.icon}</ListItemPrefix>
               <Typography color="blue-gray" className="mr-auto font-normal">
                 {item.text}
               </Typography>
@@ -88,12 +81,19 @@ export default function AccordionMenu(props: MenuProps) {
                 <Link href={subItem.url} key={subIndex}>
                   <ListItem
                     className={`${
-                      currentPath(subItem.url) &&
-                      "!bg-primary !text-white !shadow-sm hover:bg-primary hover:text-white"
+                      currentPath(subItem.url)
+                        ? "bg-primary text-white shadow-sm hover:bg-primary hover:text-white"
+                        : ""
                     }`}
                   >
-                    <ListItemPrefix>{subItem.subIcon ? subItem.subIcon :  <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />}</ListItemPrefix>
-                    {subItem.subText }
+                    <ListItemPrefix>
+                      {subItem.subIcon ? (
+                        subItem.subIcon
+                      ) : (
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      )}
+                    </ListItemPrefix>
+                    {subItem.subText}
                   </ListItem>
                 </Link>
               ))}

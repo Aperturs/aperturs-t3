@@ -1,15 +1,5 @@
-import { createContext, useEffect, useState } from "react";
-import SocialTabs from "./tabs/socialtabs";
-import Picker from "../custom/datepicker/picker";
-import { Switch } from "@material-tailwind/react";
-import { toast } from "react-hot-toast";
 import SideBar from "./sidebar/sidebar";
-import { useStore } from "~/store/post-store";
-
-type Tweet = {
-  id: number;
-  text: string;
-};
+import SocialTabs from "./tabs/socialtabs";
 
 // export const PostContext = createContext({
 //   // linkedinPost: "",
@@ -29,10 +19,7 @@ type Tweet = {
 //   setTime: (time: number) => {},
 // });
 
-function PostView({id,value}:{id:number,value:string}) {
-
-
-
+function PostView({ id }: { id: number; }) {
   // const [linkedinPost, setLinkedinPost] = useState("");
   // const [tweets, setTweets] = useState<Tweet[]>([
   //   { id: 0,text: " " },
@@ -66,19 +53,14 @@ function PostView({id,value}:{id:number,value:string}) {
     //     // setTime,
     //   }}
     // >
-      <div className="flex  gap-5 justify-center">
-        <SocialTabs />
-        <div className="lg:max-w-[18rem] mt-[-6rem] w-full">
+    <div className="flex  justify-center gap-5">
+      <SocialTabs />
+      <div className="mt-[-6rem] w-full lg:max-w-[18rem]">
         <SideBar />
-        </div>
       </div>
+    </div>
     // </PostContext.Provider>
   );
 }
-
-
-
-
-
 
 export default PostView;

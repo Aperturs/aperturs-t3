@@ -18,7 +18,7 @@ const SocialIcon = ({ type }: { type: string }) => {
   } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className="" />;
   } else if (type === SocialType.Lens) {
-    return <img src="/lens.svg" className="h-6 w-6" />
+    return <img src="/lens.svg" className="h-6 w-6" alt="lens"/>
   }
   else {
     return null; // Return null or a default icon for other types
