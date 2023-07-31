@@ -6,6 +6,8 @@ import { shallow } from 'zustand/shallow';
 import toast from 'react-hot-toast';
 import { api } from '~/utils/api';
 import PostWeb from './lens/postLens';
+import { SocialType } from '~/types/post-enums';
+import { Tweet } from '~/types/post-types';
 
 
 function Publish() {
@@ -20,6 +22,7 @@ function Publish() {
 
       const handlePublish = async (tweets: Tweet[], linkedinPost: string) => {
         for (const item of selectedSocials) {
+          if(!item.id) continue
           switch (item.type) {
             case `${SocialType.Twitter}`:
               await createTweet({ tokenId: item.id, tweets });
