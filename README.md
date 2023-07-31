@@ -38,7 +38,7 @@ Aperturs offers the following features:
    - Scheduling posts: Users can schedule posts to be published at a specific time.
    - Adding to queue: Users can add posts to a queue with preset times for maintaining a consistent posting frequency.
 
-## First Beta Release (Expected Date: 22 - 27 June)
+## First Beta Release
 The first beta release of Aperturs will include the following features:
 
 1. Connecting to Twitter, LinkedIn, and Lens Protocol.
@@ -47,7 +47,7 @@ The first beta release of Aperturs will include the following features:
 4. Optional integration with payments (or available in the pro version).
 5. Basic features like posting, scheduling, drafts, and queue management.
 
-## First Stable Release (Expected Date: July 15 to 25)
+## First Stable Release 
 The first stable release of Aperturs will include the features mentioned above and the following additional feature:
 
 1. Instagram integration: Convert text to image and post to Instagram.
