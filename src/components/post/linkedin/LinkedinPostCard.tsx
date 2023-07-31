@@ -4,14 +4,14 @@ import LinkedInPostCreation from "./textarea";
 // import { PostContext } from '../postWrapper';
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
+import { type Tweet } from "~/types/post-types";
 
 function convertTweetsToPlaintext(tweets: Tweet[]): string {
   let plaintext = "";
 
   for (let i = 0; i < tweets.length; i++) {
     const tweet = tweets[i];
-    if(tweet)
-    plaintext += tweet.text + "\n\n"; // Now this will concatenate strings properly
+    if (tweet) plaintext += tweet.text + "\n\n"; // Now this will concatenate strings properly
   }
 
   return plaintext;
