@@ -6,6 +6,7 @@ import { getTwitterAccountDetails } from "../helpers/twitter";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
 import { TRPCError } from "@trpc/server";
+import { SocialType } from "~/types/post-enums";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure

@@ -9,6 +9,7 @@ import { Card } from "@material-tailwind/react";
 import useLensProfile from "~/hooks/lens-profile";
 import { api } from "~/utils/api";
 import { onLinkedLnConnect } from "~/utils/connections";
+import { SocialType } from "~/types/post-enums";
 
 const SocialIcon = ({ type }: { type: string }) => {
   if (type === SocialType.Twitter) {
@@ -44,6 +45,7 @@ const ConnectSocials = () => {
                 <AfterConnect
                   key={key}
                   name={item.data.name}
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   icon={<SocialIcon type={item.type} />}
                   profilePic={item.data.profile_image_url || "/user.png"}
                 />
