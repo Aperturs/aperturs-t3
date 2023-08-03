@@ -7,6 +7,7 @@ export const onLinkedLnConnect = () => {
     env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL
   }&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
 };
+
 export const onGithubConnect = () => {
   window.location.href = `https://github.com/login/oauth/authorize?client_id=${
     process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID
