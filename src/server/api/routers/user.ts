@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { env } from "~/env.mjs";
+import { TRPCError } from "@trpc/server";
 import { auth } from "twitter-api-sdk";
-import { getTwitterAccountDetails } from "../helpers/twitter";
+import { z } from "zod";
+import { env } from "~/env.mjs";
+import { SocialType } from "~/types/post-enums";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
-import { TRPCError } from "@trpc/server";
-import { SocialType } from "~/types/post-enums";
+import { getTwitterAccountDetails } from "../helpers/twitter";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
   createUser: publicProcedure
@@ -23,28 +23,17 @@ export const userRouter = createTRPCRouter({
       });
       return user;
     }),
-  addLinkedln: protectedProcedure
-    .input(
-      z.object({
-        profileId: z.string(),
-        access_token: z.string(),
-        refresh_token: z.string().optional(),
-        expires_in: z.date(),
-        refresh_token_expires_in: z.string().optional(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.linkedInToken.create({
-        data: {
-          profileId: input.profileId,
-          access_token: input.access_token,
-          refresh_token: input.refresh_token,
-          expires_in: input.expires_in,
-          refresh_token_expires_in: input.refresh_token_expires_in,
-          user: { connect: { clerkUserId: ctx.currentUser } },
-        },
-      });
-    }),
+  addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
+    const canConnect = await ConnectSocial({ user: ctx.currentUser });
+    if (canConnect) {
+      const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
+      return { url };
+    }
+    throw new TRPCError({
+      message: "Upgrade to higher plan to connect more Socials",
+      code: "FORBIDDEN",
+    });
+  }),
 
   addTwitter: protectedProcedure
     .input(
@@ -82,11 +71,13 @@ export const userRouter = createTRPCRouter({
         });
 
         return url;
-      }else{
-        throw new TRPCError({message:"Upgrade to higher plan to connect more Socials",code:"FORBIDDEN"})
+      } else {
+        throw new TRPCError({
+          message: "Upgrade to higher plan to connect more Socials",
+          code: "FORBIDDEN",
+        });
       }
-    }
-    ),
+    }),
 
   addGithub: protectedProcedure
     .input(
@@ -106,8 +97,6 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
-
-  
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const twitter = await ctx.prisma.twitterToken.findMany({
@@ -155,5 +144,4 @@ export const userRouter = createTRPCRouter({
       console.log(error);
     }
   }),
-
 });
