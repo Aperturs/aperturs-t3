@@ -3,9 +3,8 @@ import { shallow } from "zustand/shallow";
 import Picker from "~/components/custom/datepicker/picker";
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
-import { type Tweet } from "~/types/post-types";
 import { api } from "~/utils/api";
-import { SimpleButton } from "./common";
+import { SimpleButton } from "../common";
 import PostWeb from "./lens/postLens";
 
 function Publish() {

@@ -1,4 +1,3 @@
-import { ProfileOwnedByMe } from "@lens-protocol/react-web"
 
 interface Tweet {
     id:number,
@@ -11,5 +10,8 @@ interface SelectedSocial  {
   type:string
 }
 
-
+interface PostContent {
+  socialType: SocialType,
+  content: string
+}
  

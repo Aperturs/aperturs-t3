@@ -1,9 +1,7 @@
 import { Avatar } from "@material-tailwind/react";
-import { AiOutlineTwitter } from "react-icons/ai";
-import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
-import { SocialType } from "~/types/post-enums";
+import { SocialIcon } from "../common";
 
 interface IConnection {
   name: string;
@@ -11,18 +9,6 @@ interface IConnection {
   profilePic?: string;
   id: number;
 }
-
-const SocialIcon = ({ type }: { type: string }) => {
-  if (type === SocialType.Twitter) {
-    return <AiOutlineTwitter className="" />;
-  } else if (type === SocialType.Linkedin) {
-    return <FaLinkedinIn className="" />;
-  } else if (type === SocialType.Lens) {
-    return <img src="/lens.svg" className="h-6 w-6" alt="lens" />;
-  } else {
-    return null; // Return null or a default icon for other types
-  }
-};
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
   // const [selected, setSelected] = useState([{ type: "twitter", id: 0 }]);

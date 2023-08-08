@@ -2,12 +2,15 @@ import useLensProfile from "~/hooks/lens-profile";
 import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
+import { useEffect } from "react";
+import { SocialType } from "~/types/post-enums";
 
 const SideBar = () => {
-  console.log("mounting sidebar");
-  // const { tweets, linkedinPost } = useContext(PostContext);
+  
+  useEffect(() => {
+  // const { data } = api.user.fetchConnectedAccounts.useQuery();
+  }, []);
 
-  const { data } = api.user.fetchConnectedAccounts.useQuery();
   const {
     profile: lensProfile,
     LensData: profile,
@@ -20,7 +23,7 @@ const SideBar = () => {
         <Publish />
         <span className="my-2 text-xl">Publish Post</span>
         <div className="grid grid-cols-3 place-items-start gap-3">
-          {data?.map((item) => (
+          {/* {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
@@ -28,12 +31,12 @@ const SideBar = () => {
               profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))}
+          ))} */}
           {profile && (
             <ConnectedAccount
               id={0}
               name={lensProfile.name}
-              type="lens"
+              type= {SocialType.Lens}
               profilePic={lensProfile.imageUrl}
             />
           )}

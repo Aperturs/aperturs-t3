@@ -1,6 +1,5 @@
-// store.ts
 import { create } from "zustand";
-import { type SelectedSocial, type Tweet } from "~/types/post-types";
+import { SocialType } from "~/types/post-enums";
 
 type StateValues = {
   linkedinPost: string;
@@ -9,6 +8,7 @@ type StateValues = {
   date: Date | null;
   time: string;
   selectedSocials: SelectedSocial[];
+  content: PostContent[];
 };
 
 type StateSetters = {
@@ -19,6 +19,7 @@ type StateSetters = {
   setTime: (time: string) => void;
   setSelectedSocials: (selectedSocials: SelectedSocial[]) => void;
   reset: () => void;
+  setContent: (content: PostContent[]) => void;
 };
 
 type State = StateValues & StateSetters;
@@ -30,6 +31,12 @@ const initialState: StateValues = {
   date: null,
   time: "00:00",
   selectedSocials: [],
+  content: [
+    {
+      socialType: SocialType.Twitter,
+      content: "",
+    }
+  ],
 };
 
 export const useStore = create<State>((set) => ({
@@ -42,5 +49,6 @@ export const useStore = create<State>((set) => ({
   setSync: (sync) => set((state) => ({ ...state, sync })),
   setDate: (date) => set((state) => ({ ...state, date })),
   setTime: (time) => set((state) => ({ ...state, time })),
+  setContent: (content) => set((state) => ({ ...state, content })),
   reset: () => set(() => initialState),
 }));
