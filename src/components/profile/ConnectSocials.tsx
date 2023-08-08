@@ -1,15 +1,15 @@
-import { useRouter } from "next/router";
-import React, { Suspense } from "react";
-import { AiOutlineTwitter } from "react-icons/ai";
-import { FaLinkedinIn } from "react-icons/fa";
-import { IoIosAddCircle } from "react-icons/io";
-
 import { useAuth } from "@clerk/nextjs";
-import { Card } from "@material-tailwind/react";
+import { Card, Spinner } from "@material-tailwind/react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import React from "react";
+import { toast } from "react-hot-toast";
+import { AiOutlineTwitter } from "react-icons/ai";
+import { FaFacebookSquare, FaLinkedinIn } from "react-icons/fa";
+import { IoIosAddCircle } from "react-icons/io";
 import useLensProfile from "~/hooks/lens-profile";
-import { api } from "~/utils/api";
-import { onLinkedLnConnect } from "~/utils/connections";
 import { SocialType } from "~/types/post-enums";
+import { api } from "~/utils/api";
 
 const SocialIcon = ({ type }: { type: string }) => {
   if (type === SocialType.Twitter) {
@@ -22,12 +22,11 @@ const SocialIcon = ({ type }: { type: string }) => {
 };
 
 const ConnectSocials = () => {
-  const { data, isLoading, isFetching } =
-    api.user.fetchConnectedAccounts.useQuery();
+  const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
   const {
     profile: lensProfile,
-    loading: lensLoading,
-    error: lensError,
+    // loading: lensLoading,
+    // error: lensError,
     LensData: profile,
   } = useLensProfile();
 
@@ -39,30 +38,35 @@ const ConnectSocials = () => {
           Connect your socials
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
-          <Suspense fallback={<div>Loading...</div>}>
-            {data &&
-              data.map((item, key) => (
-                <AfterConnect
-                  key={key}
-                  name={item.data.name}
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  icon={<SocialIcon type={item.type} />}
-                  profilePic={item.data.profile_image_url || "/user.png"}
-                />
-              ))}
-            {/* <AfterConnect
+          {/* <Suspense fallback={<div>Loading...</div>}> */}
+          {isLoading ? (
+            <Spinner className="h-8 w-8 text-blue-500/10" />
+          ) : (
+            data &&
+            data.map((item, key) => (
+              <AfterConnect
+                key={key}
+                name={item.data.name}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                icon={<SocialIcon type={item.type} />}
+                profilePic={item.data.profile_image_url || "/user.png"}
+              />
+            ))
+          )}
+
+          <AfterConnect
             name="Swaraj"
             icon={<FaFacebookSquare />}
             profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          /> */}
-            {profile && (
-              <AfterConnect
-                name={lensProfile.name}
-                icon={<img src="/lens.svg" className="h-6 w-6" />}
-                profilePic={lensProfile.imageUrl}
-              />
-            )}
-          </Suspense>
+          />
+          {profile && (
+            <AfterConnect
+              name={lensProfile.name}
+              icon={<Image src="/lens.svg" alt="lens" height={40} width={40} />}
+              profilePic={lensProfile.imageUrl}
+            />
+          )}
+          {/* </Suspense> */}
           <AddSocial />
         </div>
       </div>
@@ -103,6 +107,17 @@ const AddSocial = () => {
 const Socials = () => {
   const router = useRouter();
   const { userId } = useAuth();
+  const { mutateAsync, data, error } = api.user.addLinkedln.useMutation();
+
+  const handleLinkedln = async () => {
+    await mutateAsync();
+    if (data) {
+      window.location.href = data.url;
+    }
+    if (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="grid grid-cols-3 gap-4 py-4">
@@ -123,18 +138,18 @@ const Socials = () => {
       </button> */}
       <button
         className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
-        onClick={() => {
-          if (userId) onLinkedLnConnect();
+        onClick={async () => {
+          if (userId) await handleLinkedln();
         }}
       >
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
       </button>
       <button
-        className="btn gap-2 hover:border-0 hover:bg-[#AAFE2C]  hover:text-black"
+        className="btn gap-2 hover:border-0 hover:bg-[#DACCF3]  hover:text-black"
         onClick={() => router.push("/socials/lens")}
       >
-        <img src="/lens.svg" className="h-6 w-6" />
+        <Image src="/lens.svg" alt="lens" width={40} height={40} />
         <p>Lens </p>
       </button>
     </div>
@@ -144,15 +159,18 @@ const Socials = () => {
 interface IConnection {
   name: string;
   icon: React.ReactNode;
-  profilePic?: string;
+  profilePic: string;
 }
 
 const AfterConnect = ({ name, icon, profilePic }: IConnection) => {
   return (
     <div className="flex w-full items-center justify-center rounded-lg px-10 py-6 shadow-md">
-      <img
+      <Image
         className="mx-2 h-10 w-10 rounded-full object-cover"
         src={profilePic}
+        alt="profile"
+        width={40}
+        height={40}
       />
       <div className="mx-2 my-2 flex w-full flex-col items-center">
         <h2 className="whitespace-nowrap text-sm leading-3 ">{name}</h2>

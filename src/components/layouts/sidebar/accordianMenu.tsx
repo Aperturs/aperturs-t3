@@ -82,7 +82,7 @@ export default function AccordionMenu(props: MenuProps) {
                   <ListItem
                     className={`${
                       currentPath(subItem.url)
-                        ? "bg-primary text-white shadow-sm hover:bg-primary hover:text-white"
+                        ? "!bg-primary !text-white !shadow-sm hover:bg-primary hover:text-white"
                         : ""
                     }`}
                   >

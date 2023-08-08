@@ -9,7 +9,7 @@ const config = {
   reactStrictMode: true,
 
   images:{
-    domains: ["images.unsplash.com","pbs.twimg.com"]
+    domains: ["images.unsplash.com","pbs.twimg.com","ik.imagekit.io"]
 
   },
   // eslint: {

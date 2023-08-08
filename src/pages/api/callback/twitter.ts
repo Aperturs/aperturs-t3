@@ -8,7 +8,6 @@ interface Response {
   access_token: string;
   refresh_token: string;
   expires_in: number;
-  // other properties...
 }
 
 
@@ -16,18 +15,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { state, code, codeVerifier } = req.query;
+  const { state, code } = req.query;
   console.log("state", state);
   console.log("code", code);
-  // const org = await prisma.twitterToken.findUnique({
-  //   where: {
-  //     id: parseInt(state as string),
-  //   },
-  //   select: {
-  //     client_id: true,
-  //     client_secret: true,
-  //   },
-  // });
 
   if (!state || !code) {
     return res.status(400).send("You denied the app or your session expired!");
@@ -40,10 +30,7 @@ export default async function handler(
 
   const codeAuth = code as string;
 
-  const secret = "nuzYTKTPXVF6L61uQo3MYCqgWhGtKa2zfjRWgNU5Yh7wg";
-  const id = "UE05dTJ3ZjhjTnFESUQ5aTBIcFo6MTpjaQ";
-
-  const bearerToken = Buffer.from(`${id}:${secret}`).toString("base64");
+  const bearerToken = Buffer.from(`${formattedClientId}:${formattedClientSecret}`).toString("base64");
 
   await fetch("https://api.twitter.com/2/oauth2/token", {
     method: "POST",

@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { PrismaClient, TwitterToken } from "@prisma/client";
+import { type TwitterToken } from "@prisma/client";
 import Client from "twitter-api-sdk";
 import { prisma } from "~/server/db";
 
-export interface TwitterAccountDetails
+interface TwitterAccountDetails
   extends Pick<TwitterToken, "access_token" | "refresh_token" | "profileId"> {
   full_name: string;
   username?: string;
@@ -22,12 +22,12 @@ export const getAccessToken = async (tokenId: number) => {
     if (token.expires_in && token.refresh_token && token.access_token) {
       console.log(token.expires_in, "token.expires_in");
       if (token.expires_in < new Date()) {
-        console.log('trying to fetch access token')
+        console.log("trying to fetch access token");
 
         const bearerToken = Buffer.from(
           `${token.client_id}:${token.client_secret}`
         ).toString("base64");
-        
+
         const response = await fetch("https://api.twitter.com/2/oauth2/token", {
           method: "POST",
           headers: {

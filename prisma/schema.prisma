@@ -15,17 +15,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-// model User {
-//     id            String    @id @default(cuid())
-//     name          String?
-//     image         String?
-//     password          String?
-//     email         String?   @unique
-//     emailVerified DateTime?
-//     role          Role @default(USER)
-//     accounts      Account[]
-//     sessions      Session[]
-// }
 
 model VerificationToken {
   identifier String
@@ -60,6 +49,8 @@ model TwitterToken {
   refresh_token String?   @unique
   expires_in    DateTime?
   profileId     String?   @unique
+
+  @@index([clerkUserId])
 }
 
 model GithubToken {
@@ -87,6 +78,8 @@ model LinkedInToken {
   refresh_token_expires_in DateTime?
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
+
+  @@index([clerkUserId])
 }
 
 enum SubscriptionType {
@@ -103,6 +96,7 @@ model Subscription {
   type           SubscriptionType
 
   @@index([clerkUserId])
+  @@index([transactionId])
 }
 
 model Transaction {
@@ -147,6 +141,10 @@ model Content {
   updatedAt       DateTime       @updatedAt
   twitterThreadId Int
   pollId          Int?
+
+  @@index([id])
+  @@index([twitterThreadId])
+  @@index([pollId])
 }
 
 model TwitterThread {
@@ -154,6 +152,8 @@ model TwitterThread {
   tweet  Content[]
   post   Post   @relation(fields: [postId], references: [id])
   postId Int 
+
+  @@index([postId])
 }
 
 model Idea {

@@ -1,6 +1,5 @@
-import { PrismaClient, LinkedInToken } from "@prisma/client";
-import { prisma } from "~/server/db";
-export interface TwitterAccountDetails
+import { type LinkedInToken } from "@prisma/client";
+interface LinkedInTokenDetails
   extends Pick<LinkedInToken, "access_token" | "refresh_token" | "profileId"> {
   full_name: string;
   username?: string;
@@ -10,7 +9,7 @@ export interface TwitterAccountDetails
 export const getLinkedinAccountDetails = async (
   linkedinTokens: LinkedInToken[]
 ) => {
-  const linkedinDetails: TwitterAccountDetails[] = [];
+  const linkedinDetails: LinkedInTokenDetails[] = [];
   for (const linkedinToken of linkedinTokens) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const userObject = await (
@@ -35,5 +34,3 @@ export const getLinkedinAccountDetails = async (
   }
   return linkedinDetails;
 };
-
-

@@ -1,6 +1,6 @@
 // store.ts
 import { create } from "zustand";
-import { SelectedSocial, Tweet } from "~/types/post-types";
+import { type SelectedSocial, type Tweet } from "~/types/post-types";
 
 type StateValues = {
   linkedinPost: string;
