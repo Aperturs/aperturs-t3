@@ -1,9 +1,10 @@
 import {
-    IconButton,
-    Menu,
-    MenuHandler,
-    MenuList,
-    Switch,
+  IconButton,
+  Menu,
+  MenuHandler,
+  MenuItem,
+  MenuList,
+  Switch,
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
@@ -36,9 +37,9 @@ function SocialsMenu() {
       >
         {selectedSocials.map((item) => {
           return (
-            <div key={item.id}>
-              <MenuItem type={item.type} name={item.name} id={item.id} />
-            </div>
+            <MenuItem key={item.id}>
+              <MenuItems type={item.type} name={item.name} id={item.id} />
+            </MenuItem>
           );
         })}
         {/* <MenuItem>Menu Item 1</MenuItem>
@@ -51,7 +52,7 @@ function SocialsMenu() {
 
 export default SocialsMenu;
 
-const MenuItem = ({
+const MenuItems = ({
   type,
   name,
   id,
@@ -66,39 +67,20 @@ const MenuItem = ({
   }));
 
   const handleChange = () => {
-    console.log("content",content);
-    let updatedContent = [...content]
-    if(content.some((contentItem) => contentItem.id === id)){
-        updatedContent = content.filter((contentItem) => !(contentItem.id === id))
+    console.log("content", content);
+    let updatedContent = [...content];
+    if (content.some((contentItem) => contentItem.id === id)) {
+      updatedContent = content.filter(
+        (contentItem) => !(contentItem.id === id)
+      );
+    } else {
+      updatedContent.push({
+        id: id,
+        socialType: type,
+        name: name,
+        content: "",
+      });
     }
-    else{
-        updatedContent.push({
-            id: id,
-            socialType: type,
-            name: name,
-            content: "",
-          });
-    }
-    // const updatedContent = content.filter(
-    //   (contentItem) =>
-    //     !(contentItem.id === id)
-    // );
-    console.log("Updated content after filtering:", updatedContent);
-
-    // if (
-    //   !updatedContent.some(
-    //     (contentItem) =>
-    //       contentItem.id === id
-    //   )
-    // ) {
-    //   updatedContent.push({
-    //     id: updatedContent.length,
-    //     socialType: type,
-    //     name: name,
-    //     content: "",
-    //   });
-    // }
-    // else
 
     setContent(updatedContent);
   };
@@ -106,9 +88,11 @@ const MenuItem = ({
   return (
     <div key={type}>
       <div className="flex justify-between gap-2 align-middle">
-        <div className="flex gap-2 align-middle">
-          <SocialIcon type={type} />
-          <span className="mt-1">{name}</span>
+        <div className={`flex gap-2 align-middle ${type === "LENS" ? " ": 'py-1'}`}>
+          <div className={`${type === "LENS" ? "" : "pl-[7px]"}`}>
+            <SocialIcon type={type} />
+          </div>
+          <span className={`${type === "LENS" ? "mt-[5px]" : ""}`}>{name}</span>
         </div>
         <Switch onChange={handleChange} className="text-primary" />
       </div>

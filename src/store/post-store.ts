@@ -31,7 +31,21 @@ const initialState: StateValues = {
   date: null,
   time: "00:00",
   selectedSocials: [
-
+    // {
+    //   id: 0,
+    //   type: SocialType.Twitter,
+    //   name: "Twitter",
+    // },
+    // {
+    //   id: 0,
+    //   type: SocialType.Lens,
+    //   name: "Twitter",
+    // },
+    // {
+    //   id: 0,
+    //   type: SocialType.Lens,
+    //   name: "Twitter",
+    // }
   ],
   content: [
     // {

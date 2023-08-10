@@ -1,20 +1,15 @@
+import { useEffect } from "react";
 import useLensProfile from "~/hooks/lens-profile";
+import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
-import { useEffect } from "react";
-import { SocialType } from "~/types/post-enums";
 
 const SideBar = () => {
-  
-  useEffect(() => {
-  // const { data } = api.user.fetchConnectedAccounts.useQuery();
-  }, []);
+  console.log("mounted")
 
-  const {
-    profile: lensProfile,
-    LensData: profile,
-  } = useLensProfile();
+  // const { data } = api.user.fetchConnectedAccounts.useQuery();
+  const { profile: lensProfile, LensData: profile } = useLensProfile();
 
   return (
     <div className="z-20 w-full rounded-lg bg-white p-4 px-8 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
@@ -36,10 +31,28 @@ const SideBar = () => {
             <ConnectedAccount
               id={0}
               name={lensProfile.name}
-              type= {SocialType.Lens}
+              type={SocialType.Lens}
               profilePic={lensProfile.imageUrl}
             />
           )}
+           <ConnectedAccount
+              id={1}
+              name="Swaraj"
+              type={SocialType.Twitter}
+              profilePic={lensProfile.imageUrl}
+            />
+             <ConnectedAccount
+              id={2}
+              name="Swaraj"
+              type={SocialType.Linkedin}
+              profilePic={lensProfile.imageUrl}
+            />
+             <ConnectedAccount
+              id={3}
+              name="Swaraj"
+              type={SocialType.Twitter}
+              profilePic={lensProfile.imageUrl}
+            />
         </div>
       </div>
     </div>

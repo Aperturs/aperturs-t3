@@ -10,7 +10,7 @@ import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
-import LinkedinPostCard from "../linkedin/LinkedinPostCard";
+import LinkedinPostCard from "../content/ContentPostCard";
 import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 

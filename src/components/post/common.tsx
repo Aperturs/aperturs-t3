@@ -28,11 +28,18 @@ export const SimpleButton = ({
 };
 export const SocialIcon = ({ type }: { type: string }) => {
   if (type === SocialType.Twitter) {
-    return <AiOutlineTwitter className="" />;
+    return <AiOutlineTwitter className="h-4 w-4" />;
   } else if (type === SocialType.Linkedin) {
-    return <FaLinkedinIn className="" />;
+    return <FaLinkedinIn className="h-4 w-4" />;
   } else if (type === SocialType.Lens) {
-    return <Image src="/lens.svg" width={30} height={30} alt="lens" />;
+    return (
+      <Image
+        src="/lens.svg"
+        width={30}
+        height={30}
+        alt="lens"
+      />
+    );
   } else {
     return null; // Return null or a default icon for other types
   }

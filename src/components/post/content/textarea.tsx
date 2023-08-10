@@ -7,7 +7,7 @@ interface LinkedInPostCreationProps {
   sync: boolean;
 }
 
-const LinkedInPostCreation: React.FC<LinkedInPostCreationProps> = ({ content, onContentChange,sync }) => {
+const ContentPostCreation: React.FC<LinkedInPostCreationProps> = ({ content, onContentChange,sync }) => {
   return (
     <div className="relative">
       <textarea
@@ -21,4 +21,4 @@ const LinkedInPostCreation: React.FC<LinkedInPostCreationProps> = ({ content, on
   );
 };
 
-export default LinkedInPostCreation;
+export default ContentPostCreation;
