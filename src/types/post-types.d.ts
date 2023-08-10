@@ -1,17 +1,18 @@
-
 interface Tweet {
-    id:number,
-    text:string
+  id: number;
+  text: string;
 }
 
-interface SelectedSocial  {
-  lensProfile?: ProfileOwnedByMe
-  id:number ,
-  type:string
+interface SelectedSocial {
+  lensProfile?: ProfileOwnedByMe;
+  id: number;
+  type: string;
+  name: string;
 }
 
 interface PostContent {
-  socialType: SocialType,
-  content: string
+  id: number;
+  name: string;
+  socialType: SocialType;
+  content: string;
 }
- 

@@ -30,12 +30,16 @@ const initialState: StateValues = {
   sync: false,
   date: null,
   time: "00:00",
-  selectedSocials: [],
+  selectedSocials: [
+
+  ],
   content: [
-    {
-      socialType: SocialType.Twitter,
-      content: "",
-    }
+    // {
+    //   id: 0,
+    //   socialType: SocialType.Default,
+    //   content: "",
+    //   name: "",
+    // }
   ],
 };
 

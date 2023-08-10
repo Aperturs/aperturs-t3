@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable react/jsx-key */
 import {
   Tab,
   TabPanel,
@@ -13,6 +12,7 @@ import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 import LinkedinPostCard from "../linkedin/LinkedinPostCard";
 import TweetPost from "../tweets/tweetsPost";
+import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
   const { content } = useStore((state) => ({
@@ -21,9 +21,9 @@ export default function SocialTabs() {
   return (
     <div className="w-full">
       <Tabs value="twitter">
-        <TabsHeader className="w-auto">
+        <TabsHeader className="h-10 w-1/2">
           {content.map((item) => (
-            <Tab value={item.socialType}>
+            <Tab value={item.socialType} key={item.socialType}>
               <div className="flex items-center gap-2 capitalize">
                 <SocialIcon type={item.socialType} />
                 {typeof item.socialType === "string"
@@ -44,10 +44,11 @@ export default function SocialTabs() {
               Linkedin
             </div>
           </Tab>
+          <SocialsMenu />
         </TabsHeader>
         <TabsBody>
           {content.map((item) => (
-            <TabPanel value={item.socialType}>
+            <TabPanel key={item.socialType} value={item.socialType}>
               <TweetPost />
             </TabPanel>
           ))}
@@ -62,3 +63,5 @@ export default function SocialTabs() {
     </div>
   );
 }
+
+///

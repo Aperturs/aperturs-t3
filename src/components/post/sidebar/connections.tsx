@@ -30,7 +30,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
         setSelectedSocials(selectedSocial.filter((item) => item.id !== id));
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setSelectedSocials([...selectedSocial, { type: type, id }]);
+        setSelectedSocials([...selectedSocial, { type: type, id, name }]);
       }
     }
   };

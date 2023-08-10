@@ -4,7 +4,6 @@ import LinkedInPostCreation from "./textarea";
 // import { PostContext } from '../postWrapper';
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
-import { type Tweet } from "~/types/post-types";
 
 function convertTweetsToPlaintext(tweets: Tweet[]): string {
   let plaintext = "";
