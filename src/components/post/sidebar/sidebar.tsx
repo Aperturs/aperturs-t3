@@ -33,7 +33,7 @@ const SideBar = () => {
               profilePic={lensProfile.imageUrl}
             />
           )}
-          {/* <ConnectedAccount
+          <ConnectedAccount
               id={1}
               name="Swaraj"
               type={SocialType.Twitter}
@@ -50,7 +50,7 @@ const SideBar = () => {
               name="Swaraj"
               type={SocialType.Twitter}
               profilePic={lensProfile.imageUrl}
-            /> */}
+            />
         </div>
       </div>
     </div>

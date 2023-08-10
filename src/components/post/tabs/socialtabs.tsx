@@ -11,7 +11,6 @@ import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
-import { SocialType } from "~/types/post-enums";
 
 export default function SocialTabs() {
   const { content } = useStore((state) => ({

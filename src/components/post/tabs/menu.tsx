@@ -20,9 +20,9 @@ function SocialsMenu() {
   if (!selectedSocials.length) return null;
   return (
     <Menu open={menuOpen} dismiss={{ enabled: false }}>
-      <MenuHandler >
+      <MenuHandler>
         <IconButton
-          className="!h-[30px] ml-2 w-36 rounded-full"
+          className="ml-2 !h-[30px] w-36 rounded-full"
           onClick={() => {
             setMenuOpen(!menuOpen);
           }}
@@ -65,15 +65,16 @@ const MenuItems = ({
     setContent: state.setContent,
     content: state.content,
   }));
-
+  const [checked, setChecked] = useState<boolean>(content.some((contentItem) => contentItem.id === id));
   const handleChange = () => {
-    console.log("content", content);
     let updatedContent = [...content];
     if (content.some((contentItem) => contentItem.id === id)) {
+      setChecked(false)
       updatedContent = content.filter(
         (contentItem) => !(contentItem.id === id)
       );
     } else {
+      setChecked(true)
       updatedContent.push({
         id: id,
         socialType: type,
@@ -88,13 +89,23 @@ const MenuItems = ({
   return (
     <div key={type}>
       <div className="flex justify-between gap-2 align-middle">
-        <div className={`flex gap-2 align-middle ${type === "LENS" ? " ": 'py-1'}`}>
+        <div
+          className={`flex gap-2 align-middle ${
+            type === "LENS" ? " " : "py-1"
+          }`}
+        >
           <div className={`${type === "LENS" ? "" : "pl-[7px]"}`}>
             <SocialIcon type={type} />
           </div>
           <span className={`${type === "LENS" ? "mt-[5px]" : ""}`}>{name}</span>
         </div>
-        <Switch onChange={handleChange} className="text-primary" />
+        <Switch
+          checked={checked}
+          onChange={() => {
+            handleChange()
+          }}
+          className="text-primary"
+        />
       </div>
     </div>
   );
