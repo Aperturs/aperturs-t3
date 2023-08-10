@@ -20,9 +20,9 @@ function SocialsMenu() {
   if (!selectedSocials.length) return null;
   return (
     <Menu open={menuOpen} dismiss={{ enabled: false }}>
-      <MenuHandler>
+      <MenuHandler >
         <IconButton
-          className="!h-[30px] w-36 rounded-full"
+          className="!h-[30px] ml-2 w-36 rounded-full"
           onClick={() => {
             setMenuOpen(!menuOpen);
           }}

@@ -16,16 +16,26 @@ function convertTweetsToPlaintext(tweets: Tweet[]): string {
   return plaintext;
 }
 
-function LinkedinPostCard() {
+function ContentPostCard({ id }: { id: number }) {
   // const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
 
-  const { setLinkedinPost, linkedinPost, sync, tweets, setSync } = useStore(
+  const {
+    setLinkedinPost,
+    linkedinPost,
+    sync,
+    tweets,
+    setSync,
+    setContent,
+    content,
+  } = useStore(
     (state) => ({
+      content: state.content,
       setLinkedinPost: state.setLinkedinPost,
       linkedinPost: state.linkedinPost,
       sync: state.sync,
       tweets: state.tweets,
       setSync: state.setSync,
+      setContent: state.setContent,
     }),
     shallow
   );
@@ -37,6 +47,20 @@ function LinkedinPostCard() {
       setLinkedinPost(newLinkedinContent);
     }
   }, [sync, tweets, setLinkedinPost]);
+
+  const onChangeContent = (textContent: string) => {
+
+    const updatedItems = content.map(item => {
+      if (item.id === id) {
+        return { ...item, content: textContent };
+      }
+      return item;
+    });
+      
+      // Update the state with the updated content array
+      setContent(updatedItems);
+
+  };
 
   return (
     <div className="w-full rounded-lg bg-white p-4 shadow-md">
@@ -54,7 +78,7 @@ function LinkedinPostCard() {
         </div> */}
       <LinkedInPostCreation
         content={linkedinPost}
-        onContentChange={setLinkedinPost}
+        onContentChange={onChangeContent}
         sync={sync}
       />
       <Switch
@@ -68,4 +92,4 @@ function LinkedinPostCard() {
   );
 }
 
-export default LinkedinPostCard;
+export default ContentPostCard;

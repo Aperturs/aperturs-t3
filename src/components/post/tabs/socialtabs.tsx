@@ -6,13 +6,12 @@ import {
   TabsBody,
   TabsHeader,
 } from "@material-tailwind/react";
-import { AiOutlineTwitter } from "react-icons/ai";
-import { FaLinkedinIn } from "react-icons/fa";
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
-import LinkedinPostCard from "../content/ContentPostCard";
+import ContentPostCard from "../content/ContentPostCard";
 import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
+import { SocialType } from "~/types/post-enums";
 
 export default function SocialTabs() {
   const { content } = useStore((state) => ({
@@ -20,10 +19,16 @@ export default function SocialTabs() {
   }));
   return (
     <div className="w-full">
-      <Tabs value="twitter">
+      <Tabs value={0}>
         <TabsHeader className="h-10 w-1/2">
+          <Tab value={0}>
+            <div className="flex items-center gap-2">
+              {/* <AiOutlineTwitter /> */}
+              Default
+            </div>
+          </Tab>
           {content.map((item) => (
-            <Tab value={item.socialType} key={item.socialType}>
+            <Tab value={item.id} key={item.socialType}>
               <div className="flex items-center gap-2 capitalize">
                 <SocialIcon type={item.socialType} />
                 {typeof item.socialType === "string"
@@ -32,31 +37,19 @@ export default function SocialTabs() {
               </div>
             </Tab>
           ))}
-          <Tab value="twitter">
-            <div className="flex items-center gap-2">
-              <AiOutlineTwitter />
-              Twitter
-            </div>
-          </Tab>
-          <Tab value="linkedin">
-            <div className="flex items-center gap-2">
-              <FaLinkedinIn />
-              Linkedin
-            </div>
-          </Tab>
           <SocialsMenu />
         </TabsHeader>
         <TabsBody>
           {content.map((item) => (
-            <TabPanel key={item.socialType} value={item.socialType}>
-              <TweetPost />
+            <TabPanel key={item.socialType} value={item.id}>
+              <ContentPostCard id={item.id} />
             </TabPanel>
           ))}
           <TabPanel value="twitter">
             <TweetPost />
           </TabPanel>
-          <TabPanel value="linkedin">
-            <LinkedinPostCard />
+          <TabPanel value={0}>
+            <ContentPostCard id={0} />
           </TabPanel>
         </TabsBody>
       </Tabs>

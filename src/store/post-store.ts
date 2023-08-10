@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { SocialType } from "~/types/post-enums";
 
 type StateValues = {
   linkedinPost: string;
