@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import useLensProfile from "~/hooks/lens-profile";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
@@ -6,10 +5,10 @@ import ConnectedAccount from "./connections";
 import Publish from "./publish";
 
 const SideBar = () => {
-  console.log("mounted")
+  console.log("mounted");
 
-  // const { data } = api.user.fetchConnectedAccounts.useQuery();
   const { profile: lensProfile, LensData: profile } = useLensProfile();
+  const { data } = api.user.fetchConnectedAccounts.useQuery();
 
   return (
     <div className="z-20 w-full rounded-lg bg-white p-4 px-8 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
@@ -18,7 +17,7 @@ const SideBar = () => {
         <Publish />
         <span className="my-2 text-xl">Publish Post</span>
         <div className="grid grid-cols-3 place-items-start gap-3">
-          {/* {data?.map((item) => (
+          {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
@@ -26,7 +25,7 @@ const SideBar = () => {
               profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))} */}
+          ))}
           {profile && (
             <ConnectedAccount
               id={0}
@@ -35,7 +34,7 @@ const SideBar = () => {
               profilePic={lensProfile.imageUrl}
             />
           )}
-           <ConnectedAccount
+          {/* <ConnectedAccount
               id={1}
               name="Swaraj"
               type={SocialType.Twitter}
@@ -52,7 +51,7 @@ const SideBar = () => {
               name="Swaraj"
               type={SocialType.Twitter}
               profilePic={lensProfile.imageUrl}
-            />
+            /> */}
         </div>
       </div>
     </div>
