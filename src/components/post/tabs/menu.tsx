@@ -19,7 +19,7 @@ function SocialsMenu() {
 
   if (!selectedSocials.length) return null;
   return (
-    <Menu open={menuOpen} dismiss={{ enabled: false }}>
+    <Menu open={menuOpen} dismiss={{ enabled: false, outsidePress: true }}>
       <MenuHandler>
         <IconButton
           className="ml-2 !h-[30px] w-36 rounded-full"
@@ -61,25 +61,28 @@ const MenuItems = ({
   name: string;
   id: number;
 }) => {
-  const { setContent, content } = useStore((state) => ({
+  const { setContent, content, defaultContent } = useStore((state) => ({
     setContent: state.setContent,
     content: state.content,
+    defaultContent: state.defaultContent,
   }));
-  const [checked, setChecked] = useState<boolean>(content.some((contentItem) => contentItem.id === id));
+  const [checked, setChecked] = useState<boolean>(
+    content.some((contentItem) => contentItem.id === id)
+  );
   const handleChange = () => {
     let updatedContent = [...content];
     if (content.some((contentItem) => contentItem.id === id)) {
-      setChecked(false)
+      setChecked(false);
       updatedContent = content.filter(
         (contentItem) => !(contentItem.id === id)
       );
     } else {
-      setChecked(true)
+      setChecked(true);
       updatedContent.push({
         id: id,
         socialType: type,
         name: name,
-        content: "",
+        content: defaultContent,
       });
     }
 
@@ -102,7 +105,7 @@ const MenuItems = ({
         <Switch
           checked={checked}
           onChange={() => {
-            handleChange()
+            handleChange();
           }}
           className="text-primary"
         />

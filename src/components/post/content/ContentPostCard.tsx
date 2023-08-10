@@ -1,37 +1,28 @@
 import { Switch } from "@material-tailwind/react";
-import { useEffect } from "react";
-import LinkedInPostCreation from "./textarea";
 // import { PostContext } from '../postWrapper';
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
+import ContentPostCreation from "./textarea";
 
-function convertTweetsToPlaintext(tweets: Tweet[]): string {
-  let plaintext = "";
+// function convertTweetsToPlaintext(tweets: Tweet[]): string {
+//   let plaintext = "";
 
-  for (let i = 0; i < tweets.length; i++) {
-    const tweet = tweets[i];
-    if (tweet) plaintext += tweet.text + "\n\n"; // Now this will concatenate strings properly
-  }
+//   for (let i = 0; i < tweets.length; i++) {
+//     const tweet = tweets[i];
+//     if (tweet) plaintext += tweet.text + "\n\n"; // Now this will concatenate strings properly
+//   }
 
-  return plaintext;
-}
+//   return plaintext;
+// }
 
 function ContentPostCard({ id }: { id: number }) {
   // const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
 
-  const {
-    setLinkedinPost,
-    linkedinPost,
-    sync,
-    tweets,
-    setSync,
-    setContent,
-    content,
-  } = useStore(
+  const { sync, setSync, setContent, content,setDefaultContent } = useStore(
     (state) => ({
       content: state.content,
-      setLinkedinPost: state.setLinkedinPost,
-      linkedinPost: state.linkedinPost,
+      setDefaultContent: state.setDefaultContent,
+      defaultContent: state.defaultContent,
       sync: state.sync,
       tweets: state.tweets,
       setSync: state.setSync,
@@ -40,26 +31,20 @@ function ContentPostCard({ id }: { id: number }) {
     shallow
   );
 
-  useEffect(() => {
-    console.log("from linkedin component", convertTweetsToPlaintext(tweets));
-    if (sync) {
-      const newLinkedinContent = convertTweetsToPlaintext(tweets);
-      setLinkedinPost(newLinkedinContent);
-    }
-  }, [sync, tweets, setLinkedinPost]);
-
   const onChangeContent = (textContent: string) => {
-
-    const updatedItems = content.map(item => {
+    if(id === 0){
+      setDefaultContent(textContent)
+    }
+    const updatedItems = content.map((item) => {
       if (item.id === id) {
         return { ...item, content: textContent };
       }
       return item;
     });
-      
-      // Update the state with the updated content array
-      setContent(updatedItems);
+    console.log(content);
 
+    // Update the state with the updated content array
+    setContent(updatedItems);
   };
 
   return (
@@ -76,8 +61,8 @@ function ContentPostCard({ id }: { id: number }) {
               <div className="text-sm text-gray-500">@John</div>
             </div>
         </div> */}
-      <LinkedInPostCreation
-        content={linkedinPost}
+      <ContentPostCreation
+        content={content.find((item) => item.id === id)?.content || ""}
         onContentChange={onChangeContent}
         sync={sync}
       />

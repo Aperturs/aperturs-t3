@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 type StateValues = {
-  linkedinPost: string;
+  defaultContent: string;
   tweets: Tweet[];
   sync: boolean;
   date: Date | null;
@@ -11,7 +11,7 @@ type StateValues = {
 };
 
 type StateSetters = {
-  setLinkedinPost: (content: string) => void;
+  setDefaultContent: (defaultContent: string) => void;
   setTweets: (tweet: Tweet[]) => void;
   setSync: (sync: boolean) => void;
   setDate: (date: Date) => void;
@@ -24,7 +24,7 @@ type StateSetters = {
 type State = StateValues & StateSetters;
 
 const initialState: StateValues = {
-  linkedinPost: "",
+  defaultContent: "",
   tweets: [{ id: 0, text: "" }],
   sync: false,
   date: null,
@@ -58,8 +58,8 @@ const initialState: StateValues = {
 
 export const useStore = create<State>((set) => ({
   ...initialState,
-  setLinkedinPost: (content) =>
-    set((state) => ({ ...state, linkedinPost: content })),
+  setDefaultContent: (defaultContent) =>
+    set((state) => ({ ...state, defaultContent: defaultContent })),
   setTweets: (tweets) => set((state) => ({ ...state, tweets })),
   setSelectedSocials: (selectedSocials) =>
     set((state) => ({ ...state, selectedSocials })),
