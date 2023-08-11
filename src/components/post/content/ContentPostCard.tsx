@@ -1,5 +1,6 @@
 import { Switch } from "@material-tailwind/react";
 // import { PostContext } from '../postWrapper';
+import { useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
 import ContentPostCreation from "./textarea";
@@ -18,34 +19,50 @@ import ContentPostCreation from "./textarea";
 function ContentPostCard({ id }: { id: number }) {
   // const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
 
-  const { sync, setSync, setContent, content,setDefaultContent } = useStore(
+  const { setContent, content, setDefaultContent, defaultContent } = useStore(
     (state) => ({
       content: state.content,
       setDefaultContent: state.setDefaultContent,
       defaultContent: state.defaultContent,
-      sync: state.sync,
       tweets: state.tweets,
-      setSync: state.setSync,
       setContent: state.setContent,
     }),
     shallow
   );
+  const [sync, setSync] = useState(false);
 
   const onChangeContent = (textContent: string) => {
-    if(id === 0){
-      setDefaultContent(textContent)
+    let updatedContent = content;
+    if (id === 0) {
+      setDefaultContent(textContent);
+      console.log(updatedContent);
     }
-    const updatedItems = content.map((item) => {
-      if (item.id === id) {
-        return { ...item, content: textContent };
-      }
-      return item;
-    });
-    console.log(content);
-
-    // Update the state with the updated content array
-    setContent(updatedItems);
+    if (sync) {
+      console.log("updting sync content", sync);
+      updatedContent = content.map((item) => {
+        if (item.id === id) {
+          return { ...item, content: defaultContent };
+        }
+        return item;
+      });
+      console.log("default content", sync, updatedContent);
+    } else {
+      console.log("updting normal content content", sync);
+      updatedContent = content.map((item) => {
+        if (item.id === id) {
+          return { ...item, content: textContent };
+        }
+        return item;
+      });
+      console.log(content);
+    }
+    setContent(updatedContent);
   };
+
+  useEffect(() => {
+    console.log("sync", sync);
+    onChangeContent(defaultContent);
+  }, [sync]);
 
   return (
     <div className="w-full rounded-lg bg-white p-4 shadow-md">
@@ -62,17 +79,22 @@ function ContentPostCard({ id }: { id: number }) {
             </div>
         </div> */}
       <ContentPostCreation
-        content={content.find((item) => item.id === id)?.content || ""}
+        content={
+          id === 0
+            ? defaultContent
+            : content.find((item) => item.id === id)?.content || ""
+        }
         onContentChange={onChangeContent}
         sync={sync}
       />
-      <Switch
-        label="Sync with Twitter"
-        color="blue"
-        defaultChecked={sync}
-        onChange={(e) => setSync(e.target.checked)}
-      />
-      <div></div>
+      {id != 0 && (
+        <Switch
+          label="Sync with Default"
+          color="blue"
+          defaultChecked={sync}
+          onChange={(e) => setSync(e.target.checked)}
+        />
+      )}
     </div>
   );
 }
