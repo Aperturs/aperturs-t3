@@ -49,7 +49,7 @@ export default function SocialTabs() {
           </TabPanel>
           <TabPanel value={0}>
             <ContentPostCard id={0} />
-            <ContentPostCard id={1} />
+            {/* <ContentPostCard id={1} /> */}
           </TabPanel>
         </TabsBody>
       </Tabs>
