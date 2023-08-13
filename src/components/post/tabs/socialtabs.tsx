@@ -7,6 +7,7 @@ import {
   TabsHeader,
 } from "@material-tailwind/react";
 import { useStore } from "~/store/post-store";
+import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import TweetPost from "../tweets/tweetsPost";
@@ -41,7 +42,11 @@ export default function SocialTabs() {
         <TabsBody>
           {content.map((item) => (
             <TabPanel key={item.socialType} value={item.id}>
-              <ContentPostCard id={item.id} />
+              {item.socialType === SocialType.Twitter ? (
+                <TweetPost />
+              ) : (
+                <ContentPostCard id={item.id} />
+              )}
             </TabPanel>
           ))}
           <TabPanel value="twitter">

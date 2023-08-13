@@ -8,6 +8,7 @@ const SideBar = () => {
 
   const { profile: lensProfile, LensData: profile } = useLensProfile();
   // const { data } = api.user.fetchConnectedAccounts.useQuery();
+  //TODO: Add lens profile for both backend and frontend ( proper integration )
 
   return (
     <div className="z-20 w-full rounded-lg bg-white p-4 px-8 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
@@ -25,32 +26,33 @@ const SideBar = () => {
               id={item.data.tokenId}
             />
           ))} */}
-          {profile && (
+          {/* TODO: Add lens profile */}
+          {/* {profile && (
             <ConnectedAccount
               id={1}
               name={lensProfile.name}
               type={SocialType.Lens}
               profilePic={lensProfile.imageUrl}
             />
-          )}
+          )} */}
           <ConnectedAccount
-              id={2}
-              name="Swaraj"
-              type={SocialType.Twitter}
-              profilePic={lensProfile.imageUrl}
-            />
-             <ConnectedAccount
-              id={3}
-              name="Swaraj"
-              type={SocialType.Linkedin}
-              profilePic={lensProfile.imageUrl}
-            />
-             <ConnectedAccount
-              id={4}
-              name="Swaraj"
-              type={SocialType.Twitter}
-              profilePic={lensProfile.imageUrl}
-            />
+            id={2}
+            name="Swaraj"
+            type={SocialType.Twitter}
+            profilePic={'/user.png'}
+          />
+          <ConnectedAccount
+            id={3}
+            name="Swaraj"
+            type={SocialType.Linkedin}
+            profilePic={'/user.png'}
+          />
+          <ConnectedAccount
+            id={4}
+            name="Swaraj"
+            type={SocialType.Twitter}
+            profilePic={'/user.png'}
+          />
         </div>
       </div>
     </div>

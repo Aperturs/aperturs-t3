@@ -5,13 +5,12 @@ import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
-import PostWeb from "./lens/postLens";
 
 function Publish() {
-  const { tweets, linkedinPost, selectedSocials } = useStore(
+  const { tweets, defaultContent, selectedSocials } = useStore(
     (state) => ({
       tweets: state.tweets,
-      linkedinPost: state.linkedinPost,
+      defaultContent: state.defaultContent,
       selectedSocials: state.selectedSocials,
     }),
     shallow
@@ -27,7 +26,7 @@ function Publish() {
     error: linkedinError,
   } = api.linkedin.postToLinkedin.useMutation();
 
-  const handlePublish = async (tweets: Tweet[], linkedinPost: string) => {
+  const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
     for (const item of selectedSocials) {
       if (!item.id) continue;
       switch (item.type) {
@@ -41,7 +40,10 @@ function Publish() {
           break;
         case `${SocialType.Linkedin}`:
           console.log("linkedin trying");
-          await createLinkedinPost({ tokenId: item.id, content: linkedinPost });
+          await createLinkedinPost({
+            tokenId: item.id,
+            content: defaultContent,
+          });
           if (linkedinError) {
             toast.error(`Failed to post to LinkedIn: ${linkedinError.message}`);
           } else {
@@ -69,10 +71,10 @@ function Publish() {
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
         onClick={async () => {
-          await handlePublish(tweets, linkedinPost);
+          await handlePublish(tweets, defaultContent);
         }}
       />
-      <PostWeb content={linkedinPost} />
+      {/* <PostWeb content={defaultContent} /> */}
       <SimpleButton
         text="Save"
         onClick={() => {
