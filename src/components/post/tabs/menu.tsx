@@ -61,14 +61,18 @@ const MenuItems = ({
   name: string;
   id: number;
 }) => {
-  const { setContent, content, defaultContent } = useStore((state) => ({
-    setContent: state.setContent,
-    content: state.content,
-    defaultContent: state.defaultContent,
-  }));
-  const [checked, setChecked] = useState<boolean>(
-    content.some((contentItem) => contentItem.id === id)
+  const { setContent, content, defaultContent } = useStore(
+    (state) => ({
+      setContent: state.setContent,
+      content: state.content,
+      defaultContent: state.defaultContent,
+      selectedSocials: state.selectedSocials,
+    })
   );
+  const checkChecked = (id: number) => {
+    return content.some((contentItem) => contentItem.id === id);
+  };
+  const [checked, setChecked] = useState<boolean>(checkChecked(id));
   const handleChange = () => {
     let updatedContent = [...content];
     if (content.some((contentItem) => contentItem.id === id)) {
@@ -85,7 +89,6 @@ const MenuItems = ({
         content: defaultContent,
       });
     }
-
     setContent(updatedContent);
   };
 

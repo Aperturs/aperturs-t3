@@ -1,4 +1,3 @@
-import useLensProfile from "~/hooks/lens-profile";
 import { SocialType } from "~/types/post-enums";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
@@ -6,7 +5,6 @@ import Publish from "./publish";
 const SideBar = () => {
   console.log("mounted");
 
-  const { profile: lensProfile, LensData: profile } = useLensProfile();
   // const { data } = api.user.fetchConnectedAccounts.useQuery();
   //TODO: Add lens profile for both backend and frontend ( proper integration )
 
@@ -39,19 +37,19 @@ const SideBar = () => {
             id={2}
             name="Swaraj"
             type={SocialType.Twitter}
-            profilePic={'/user.png'}
+            profilePic={"/user.png"}
           />
           <ConnectedAccount
             id={3}
             name="Swaraj"
             type={SocialType.Linkedin}
-            profilePic={'/user.png'}
+            profilePic={"/user.png"}
           />
           <ConnectedAccount
             id={4}
             name="Swaraj"
             type={SocialType.Twitter}
-            profilePic={'/user.png'}
+            profilePic={"/user.png"}
           />
         </div>
       </div>
