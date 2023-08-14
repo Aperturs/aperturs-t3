@@ -1,15 +1,26 @@
-import { ProfileOwnedByMe } from "@lens-protocol/react-web"
-
 interface Tweet {
-    id:number,
-    text:string
+  id: number;
+  text: string;
 }
 
-interface SelectedSocial  {
-  lensProfile?: ProfileOwnedByMe
-  id:number ,
-  type:string
+interface Thread {
+  threadId: 0;
+  thread: Tweet[];
+}
+interface IThreadVersions {
+  threadVersions: Thread[];
 }
 
+interface SelectedSocial {
+  lensProfile?: ProfileOwnedByMe;
+  id: number;
+  type: string;
+  name: string;
+}
 
- 
+interface PostContent {
+  id: number;
+  name: string;
+  socialType: SocialType;
+  content: string;
+}

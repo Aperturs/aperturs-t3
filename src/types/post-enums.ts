@@ -1,5 +1,6 @@
 export enum SocialType {
-  Twitter = "twitter",
-  Linkedin = "linkedin",
-  Lens = "lens",
+  Default = "DEFAULT",
+  Twitter = "TWITTER",
+  Linkedin = "LINKEDIN",
+  Lens = "LENS",
 }

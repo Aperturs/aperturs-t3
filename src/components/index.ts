@@ -5,7 +5,7 @@ import DraftPage from "./drafts/draft";
 import ProjectLayout from "./layouts/projectnavbar/projectLayout";
 import SideBar from "./layouts/sidebar/sidebar";
 import { LensLoginButton } from "./lens/lens-login";
-import LinkedinPostCard from "./post/linkedin/LinkedinPostCard";
+import LinkedinPostCard from "./post/content/ContentPostCard";
 import PostView from "./post/postWrapper";
 import SocialTabs from "./post/tabs/socialtabs";
 import TweetPost from "./post/tweets/tweetsPost";

@@ -44,3 +44,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 package-lock.json
+
+# have some different local setup
+src/components/post/sidebar/sidebar.tsx

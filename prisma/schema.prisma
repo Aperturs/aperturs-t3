@@ -194,6 +194,7 @@ model QueueItem {
 }
 
 enum Platform {
+  DEFAULT
   TWITTER
   LINKEDIN
   INSTAGRAM
