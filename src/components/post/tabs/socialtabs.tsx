@@ -22,26 +22,25 @@ export default function SocialTabs() {
     setContent: state.setContent,
   }));
 
+  // TODO: You can comment the below code and make a youtube video on how to use useEffect to filter content based on selected social media
   useEffect(() => {
-    console.log(selectedSocials);
-    let tempContent = content;
-    // basically, if there is no social media selected, there should not be content for that social media
-    if(!selectedSocials.length) return setContent([]);
-    selectedSocials.forEach((item) => {
-        tempContent = tempContent.filter((contentItem) => {
-          console.log(contentItem.id, item.id);
-          contentItem.id === item.id;
-      });
-    });
-    console.log("selectedSocials", selectedSocials);
-    console.log("tempContent", tempContent);
-    setContent(tempContent);
+    if (!selectedSocials) {
+      setContent([]);
+      return;
+    }
+
+    const filteredContent = content.filter((contentItem) =>
+      selectedSocials.some((item) => item.id === contentItem.id)
+    );
+
+    setContent(filteredContent);
   }, [selectedSocials]);
+
 
   return (
     <div className="w-full">
       <Tabs value={0}>
-        <TabsHeader className="h-10 w-1/2">
+        <TabsHeader className="h-10">
           <Tab value={0}>
             <div className="flex items-center gap-2">
               {/* <AiOutlineTwitter /> */}
@@ -63,16 +62,13 @@ export default function SocialTabs() {
         <TabsBody>
           {content.map((item) => (
             <TabPanel key={item.id} value={`${item.id}${item.socialType}`}>
-              {item.socialType === SocialType.Twitter ? (
+              {/* {item.socialType === SocialType.Twitter ? (
                 <TweetPost />
-              ) : (
+              ) : ( */}
                 <ContentPostCard id={item.id} />
-              )}
+              {/* )} */}
             </TabPanel>
           ))}
-          <TabPanel value="twitter">
-            <TweetPost />
-          </TabPanel>
           <TabPanel value={0}>
             <ContentPostCard id={0} />
             {/* <ContentPostCard id={1} /> */}

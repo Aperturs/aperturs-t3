@@ -61,14 +61,12 @@ const MenuItems = ({
   name: string;
   id: number;
 }) => {
-  const { setContent, content, defaultContent } = useStore(
-    (state) => ({
-      setContent: state.setContent,
-      content: state.content,
-      defaultContent: state.defaultContent,
-      selectedSocials: state.selectedSocials,
-    })
-  );
+  const { setContent, content, defaultContent } = useStore((state) => ({
+    setContent: state.setContent,
+    content: state.content,
+    defaultContent: state.defaultContent,
+    selectedSocials: state.selectedSocials,
+  }));
   const checkChecked = (id: number) => {
     return content.some((contentItem) => contentItem.id === id);
   };
@@ -94,7 +92,13 @@ const MenuItems = ({
 
   return (
     <div key={type}>
-      <div className="flex justify-between gap-2 align-middle">
+      <div
+        className="flex justify-between gap-2 align-middle"
+        // onClick={(event) => {
+        //   // event.stopPropagation();
+        //   handleChange();
+        // }}
+      >
         <div
           className={`flex gap-2 align-middle ${
             type === "LENS" ? " " : "py-1"
@@ -107,7 +111,7 @@ const MenuItems = ({
         </div>
         <Switch
           checked={checked}
-          onChange={() => {
+          onClick={() => {
             handleChange();
           }}
           className="text-primary"

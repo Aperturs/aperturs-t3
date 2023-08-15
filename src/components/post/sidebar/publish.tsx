@@ -31,7 +31,7 @@ function Publish() {
       if (!item.id) continue;
       switch (item.type) {
         case `${SocialType.Twitter}`:
-          await createTweet({ tokenId: item.id, tweets });
+          const content = await createTweet({ tokenId: item.id, tweets });
           if (twitterError) {
             toast.error(`Failed to post to Twitter: ${twitterError.message}`);
           } else {
@@ -62,6 +62,7 @@ function Publish() {
         <Picker />
         <SimpleButton
           text="Schedule"
+          disabled={selectedSocials.length === 0}
           onClick={() => {
             console.log("onClick event is triggered");
           }}
@@ -70,6 +71,7 @@ function Publish() {
       <SimpleButton
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
+        disabled={selectedSocials.length === 0}
         onClick={async () => {
           await handlePublish(tweets, defaultContent);
         }}
@@ -86,6 +88,8 @@ function Publish() {
         onClick={() => {
           console.log("onClick event is triggered");
         }}
+        disabled={selectedSocials.length === 0}
+
       />
     </div>
   );
