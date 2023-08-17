@@ -153,10 +153,9 @@ model Content {
 model SocialSelected {
   id          Int      @id @default(autoincrement())
   platform    Platform
-  accessToken String
+  platformId  Int
   Content     Content? @relation(fields: [contentId], references: [id])
   contentId   Int?
-
   @@index([id])
   @@index([contentId])
 }
