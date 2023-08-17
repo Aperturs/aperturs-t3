@@ -3,7 +3,6 @@ import ConnectedAccount from "./connections";
 import Publish from "./publish";
 
 const SideBar = () => {
-  console.log("mounted");
 
   // const { data } = api.user.fetchConnectedAccounts.useQuery();
   //TODO: Add lens profile for both backend and frontend ( proper integration )

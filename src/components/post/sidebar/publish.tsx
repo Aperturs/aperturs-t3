@@ -7,11 +7,12 @@ import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 
 function Publish() {
-  const { tweets, defaultContent, selectedSocials } = useStore(
+  const { tweets, defaultContent, selectedSocials, content } = useStore(
     (state) => ({
       tweets: state.tweets,
       defaultContent: state.defaultContent,
       selectedSocials: state.selectedSocials,
+      content: state.content,
     }),
     shallow
   );
@@ -28,10 +29,20 @@ function Publish() {
 
   const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
     for (const item of selectedSocials) {
+      const PostContent =
+        content.find((post) => post.id === item.id)?.content || defaultContent;
       if (!item.id) continue;
       switch (item.type) {
         case `${SocialType.Twitter}`:
-          const content = await createTweet({ tokenId: item.id, tweets });
+          await createTweet({
+            tokenId: item.id,
+            tweets: [
+              {
+                id: 0,
+                text: PostContent,
+              },
+            ],
+          });
           if (twitterError) {
             toast.error(`Failed to post to Twitter: ${twitterError.message}`);
           } else {
@@ -39,10 +50,9 @@ function Publish() {
           }
           break;
         case `${SocialType.Linkedin}`:
-          console.log("linkedin trying");
           await createLinkedinPost({
             tokenId: item.id,
-            content: defaultContent,
+            content: PostContent,
           });
           if (linkedinError) {
             toast.error(`Failed to post to LinkedIn: ${linkedinError.message}`);
@@ -51,7 +61,7 @@ function Publish() {
           }
           break;
         default:
-          console.log("Unsupported social media type");
+          toast.error("Please select a social media platform")
       }
     }
   };
@@ -78,7 +88,7 @@ function Publish() {
       />
       {/* <PostWeb content={defaultContent} /> */}
       <SimpleButton
-        text="Save"
+        text="Save to drafts"
         onClick={() => {
           console.log("onClick event is triggered");
         }}
@@ -89,7 +99,6 @@ function Publish() {
           console.log("onClick event is triggered");
         }}
         disabled={selectedSocials.length === 0}
-
       />
     </div>
   );

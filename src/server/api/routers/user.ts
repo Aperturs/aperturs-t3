@@ -141,7 +141,10 @@ export const userRouter = createTRPCRouter({
 
       return accounts;
     } catch (error) {
-      console.log(error);
+      throw new TRPCError({
+        message: "Error fetching connected accounts",
+        code: "INTERNAL_SERVER_ERROR",
+      });
     }
   }),
 });
