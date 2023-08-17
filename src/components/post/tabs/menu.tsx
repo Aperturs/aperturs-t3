@@ -19,7 +19,7 @@ function SocialsMenu() {
 
   if (!selectedSocials.length) return null;
   return (
-    <Menu open={menuOpen} dismiss={{ enabled: false, outsidePress: true }}>
+    <Menu open={menuOpen} dismiss={{ enabled: !menuOpen, outsidePress: true }}>
       <MenuHandler>
         <IconButton
           className="ml-2 !h-[30px] w-36 rounded-full"
@@ -30,11 +30,7 @@ function SocialsMenu() {
           <IoIosArrowDown />
         </IconButton>
       </MenuHandler>
-      <MenuList
-        onSubmitCapture={() => {
-          console.log("clicked");
-        }}
-      >
+      <MenuList>
         {selectedSocials.map((item) => {
           return (
             <MenuItem key={item.id}>
