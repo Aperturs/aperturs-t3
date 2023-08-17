@@ -15,7 +15,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-
 model VerificationToken {
   identifier String
   token      String   @unique
@@ -25,23 +24,24 @@ model VerificationToken {
 }
 
 model User {
-  id             Int             @id @default(autoincrement())
-  clerkUserId    String          @unique
-  posts          Post[]
-  ideas          Idea[]
-  transactions   Transaction[]
-  githubTokens   GithubToken[]
-  linkedInTokens LinkedInToken[]
-  twitterTokens  TwitterToken[]
-  subscritpion   Subscription?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  Queue          Queue?
+  id               Int             @id @default(autoincrement())
+  clerkUserId      String          @unique
+  posts            Post[]
+  ideas            Idea[]
+  transactions     Transaction[]
+  githubTokens     GithubToken[]
+  linkedInTokens   LinkedInToken[]
+  twitterTokens    TwitterToken[]
+  subscritpion     Subscription?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  Queue            Queue?
+  socialSelectedId Int?
 }
 
 model TwitterToken {
   id            Int       @id @default(autoincrement())
-  usesr         User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId   String
   client_id     String
   client_secret String
@@ -65,6 +65,8 @@ model GithubToken {
   refresh_token_expires_in DateTime?
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
+
+  @@index([clerkUserId])
 }
 
 model LinkedInToken {
@@ -80,6 +82,7 @@ model LinkedInToken {
   updatedAt                DateTime  @updatedAt
 
   @@index([clerkUserId])
+  @@index([id])
 }
 
 enum SubscriptionType {
@@ -115,30 +118,30 @@ model Transaction {
 }
 
 model Post {
-  id            Int           @id @default(autoincrement())
-  user          User          @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId   String        @unique
-  status        Status
-  scheduledAt   DateTime?
-  content       Content[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  TweetThread   TwitterThread[]
-  Poll          Poll?
+  id          Int             @id @default(autoincrement())
+  user        User            @relation(fields: [clerkUserId], references: [clerkUserId])
+  clerkUserId String          @unique
+  status      Status
+  scheduledAt DateTime?
+  content     Content[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  TweetThread TwitterThread[]
+  Poll        Poll?
 
   @@index([clerkUserId])
 }
 
 model Content {
-  id              Int            @id @default(autoincrement())
-  postId          Post           @relation(fields: [id], references: [id])
-  Platform        Platform
-  token           String
-  Twitter         TwitterThread? @relation(fields: [twitterThreadId], references: [id])
+  id              Int              @id @default(autoincrement())
+  postId          Post             @relation(fields: [id], references: [id])
+  socialSelected  SocialSelected[]
+  content         String
+  Twitter         TwitterThread?   @relation(fields: [twitterThreadId], references: [id])
   imgUrls         Json
-  poll            Poll?          @relation(fields: [pollId], references: [id])
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  poll            Poll?            @relation(fields: [pollId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
   twitterThreadId Int
   pollId          Int?
 
@@ -147,11 +150,22 @@ model Content {
   @@index([pollId])
 }
 
+model SocialSelected {
+  id          Int      @id @default(autoincrement())
+  platform    Platform
+  accessToken String
+  Content     Content? @relation(fields: [contentId], references: [id])
+  contentId   Int?
+
+  @@index([id])
+  @@index([contentId])
+}
+
 model TwitterThread {
-  id     Int    @id @default(autoincrement())
+  id     Int       @id @default(autoincrement())
   tweet  Content[]
-  post   Post   @relation(fields: [postId], references: [id])
-  postId Int 
+  post   Post      @relation(fields: [postId], references: [id])
+  postId Int
 
   @@index([postId])
 }
@@ -173,6 +187,8 @@ model Poll {
   post    Post      @relation(fields: [postId], references: [id])
   options Json
   Content Content[]
+
+  @@index([id])
 }
 
 model Queue {
