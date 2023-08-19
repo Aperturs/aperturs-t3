@@ -39,16 +39,16 @@ export default function SocialTabs() {
 
   return (
     <div className="w-full">
-      <Tabs value={0}>
+      <Tabs value={SocialType.Default}>
         <TabsHeader className="h-10">
-          <Tab value={0}>
+          <Tab value={SocialType.Default}>
             <div className="flex items-center gap-2">
               {/* <AiOutlineTwitter /> */}
               Default
             </div>
           </Tab>
           {content.map((item) => (
-            <Tab value={`${item.id}${item.socialType}`} key={item.id}>
+            <Tab value={item.id} key={item.id}>
               <div className="flex items-center gap-2 capitalize">
                 <SocialIcon type={item.socialType} />
                 {typeof item.socialType === "string"
@@ -61,7 +61,7 @@ export default function SocialTabs() {
         </TabsHeader>
         <TabsBody>
           {content.map((item) => (
-            <TabPanel key={item.id} value={`${item.id}${item.socialType}`}>
+            <TabPanel key={item.id} value={item.id}>
               {/* {item.socialType === SocialType.Twitter ? (
                 <TweetPost />
               ) : ( */}
@@ -69,8 +69,8 @@ export default function SocialTabs() {
               {/* )} */}
             </TabPanel>
           ))}
-          <TabPanel value={0}>
-            <ContentPostCard id={0} />
+          <TabPanel value={SocialType.Default}>
+            <ContentPostCard id={SocialType.Default} />
             {/* <ContentPostCard id={1} /> */}
           </TabPanel>
         </TabsBody>

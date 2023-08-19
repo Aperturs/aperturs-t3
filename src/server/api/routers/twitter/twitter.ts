@@ -10,7 +10,7 @@ export const twitterData = createTRPCRouter({
   postTweet: protectedProcedure
     .input(
       z.object({
-        tokenId: z.number(),
+        tokenId: z.string(),
         tweets: z.array(
           z.object({
             id: z.number(),
@@ -108,7 +108,7 @@ export const twitterData = createTRPCRouter({
   removeTwitter: protectedProcedure
     .input(
       z.object({
-        tokenId: z.number(),
+        tokenId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {

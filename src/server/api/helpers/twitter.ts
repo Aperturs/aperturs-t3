@@ -11,10 +11,10 @@ interface TwitterAccountDetails
   full_name: string;
   username?: string;
   profile_image_url?: string;
-  tokenId: number;
+  tokenId: string;
 }
 
-export const getAccessToken = async (tokenId: number) => {
+export const getAccessToken = async (tokenId: string) => {
   const token = await prisma.twitterToken.findUnique({
     where: { id: tokenId },
   });

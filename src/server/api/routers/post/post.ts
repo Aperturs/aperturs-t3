@@ -1,20 +1,20 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
-export const postingFunc = createTRPCRouter({
-  saveToDraft: protectedProcedure
+export const posting = createTRPCRouter({
+  savePost: protectedProcedure
     .input(
       z.object({
         selectedSocials: z.array(
           z.object({
             id: z.number(),
             type: z.string(),
-            platformId: z.string(),
+            platformId: z.number(),
           })
         ),
         postContent: z.array(
           z.object({
-            id: z.number(),
+            id: z.number(),  
             socialType: z.string(),
             content: z.string(),
           })

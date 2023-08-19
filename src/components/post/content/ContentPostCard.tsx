@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
 import ContentPostCreation from "./textarea";
+import { SocialType } from "~/types/post-enums";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
@@ -15,7 +16,7 @@ import ContentPostCreation from "./textarea";
 //   return plaintext;
 // }
 
-function ContentPostCard({ id }: { id: number }) {
+function ContentPostCard({ id }: { id: string }) {
   // const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
 
   const { setContent, content, setDefaultContent, defaultContent } = useStore(
@@ -32,7 +33,7 @@ function ContentPostCard({ id }: { id: number }) {
 
   const onChangeContent = (textContent: string) => {
 
-    if (id === 0) {
+    if (id === SocialType.Default) {
       setDefaultContent(textContent);
     }
     const updatedContent = content.map((item) => {
@@ -56,14 +57,14 @@ function ContentPostCard({ id }: { id: number }) {
     <div className="w-full rounded-lg bg-white p-4 shadow-md">
       <ContentPostCreation
         content={
-          id === 0
+          id === SocialType.Default
             ? defaultContent
             : content.find((item) => item.id === id)?.content || ""
         }
         onContentChange={onChangeContent}
         sync={sync}
       />
-      {id != 0 && (
+      {id != SocialType.Default && (
         <Switch
           label="Sync with Default"
           color="blue"

@@ -4,7 +4,7 @@ interface LinkedInTokenDetails
   full_name: string;
   username?: string;
   profile_image_url?: string;
-  tokenId: number;
+  tokenId: string;
 }
 export const getLinkedinAccountDetails = async (
   linkedinTokens: LinkedInToken[]

@@ -7,7 +7,7 @@ interface IConnection {
   name: string;
   type: string;
   profilePic?: string;
-  id: number;
+  id: string;
 }
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {

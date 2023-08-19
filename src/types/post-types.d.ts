@@ -13,13 +13,13 @@ interface IThreadVersions {
 
 interface SelectedSocial {
   lensProfile?: ProfileOwnedByMe;
-  id: number;
+  id: string;
   type: string;
   name: string;
 }
 
 interface PostContent {
-  id: number;
+  id: string;
   name: string;
   socialType: SocialType;
   content: string;
