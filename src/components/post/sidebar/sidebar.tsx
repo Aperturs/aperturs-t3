@@ -33,19 +33,19 @@ const SideBar = () => {
             />
           )} */}
           <ConnectedAccount
-            id={2}
+            id="2"
             name="Swaraj"
             type={SocialType.Twitter}
             profilePic={"/user.png"}
           />
           <ConnectedAccount
-            id={3}
+            id="3"
             name="Swaraj"
             type={SocialType.Linkedin}
             profilePic={"/user.png"}
           />
           <ConnectedAccount
-            id={4}
+            id="4"
             name="Swaraj"
             type={SocialType.Twitter}
             profilePic={"/user.png"}

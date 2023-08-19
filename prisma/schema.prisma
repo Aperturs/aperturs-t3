@@ -24,7 +24,7 @@ model VerificationToken {
 }
 
 model User {
-  id               Int             @id @default(autoincrement())
+  id               String             @id @default(uuid())
   clerkUserId      String          @unique
   posts            Post[]
   ideas            Idea[]
@@ -37,10 +37,12 @@ model User {
   updatedAt        DateTime        @updatedAt
   Queue            Queue?
   socialSelectedId Int?
+
+  @@index([clerkUserId])
 }
 
 model TwitterToken {
-  id            Int       @id @default(autoincrement())
+  id            String       @id @default(uuid())
   user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId   String
   client_id     String
@@ -54,7 +56,7 @@ model TwitterToken {
 }
 
 model GithubToken {
-  id            Int     @id @default(autoincrement())
+  id            String     @id @default(uuid())
   access_token  String  @unique
   refresh_token String? @unique
   user          User    @relation(fields: [clerkUserId], references: [clerkUserId])
@@ -70,7 +72,7 @@ model GithubToken {
 }
 
 model LinkedInToken {
-  id                       Int       @id @default(autoincrement())
+  id                       String       @id @default(uuid())
   profileId                String?
   access_token             String    @db.Text
   refresh_token            String?   @db.Text
@@ -118,7 +120,7 @@ model Transaction {
 }
 
 model Post {
-  id          Int             @id @default(autoincrement())
+  id          String             @id @default(uuid())
   user        User            @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId String          @unique
   status      Status
@@ -133,7 +135,7 @@ model Post {
 }
 
 model Content {
-  id              Int              @id @default(autoincrement())
+  id              String              @id @default(uuid())
   postId          Post             @relation(fields: [id], references: [id])
   socialSelected  SocialSelected[]
   content         String
@@ -142,7 +144,7 @@ model Content {
   poll            Poll?            @relation(fields: [pollId], references: [id])
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  twitterThreadId Int
+  twitterThreadId String?
   pollId          Int?
 
   @@index([id])
@@ -151,27 +153,27 @@ model Content {
 }
 
 model SocialSelected {
-  id          Int      @id @default(autoincrement())
-  platform    Platform
-  accessToken String
-  Content     Content? @relation(fields: [contentId], references: [id])
-  contentId   Int?
+  id         String      @id @default(uuid())
+  platform   Platform
+  platformId Int
+  Content    Content? @relation(fields: [contentId], references: [id])
+  contentId  String?
 
   @@index([id])
   @@index([contentId])
 }
 
 model TwitterThread {
-  id     Int       @id @default(autoincrement())
+  id     String       @id @default(uuid())
   tweet  Content[]
   post   Post      @relation(fields: [postId], references: [id])
-  postId Int
+  postId String
 
   @@index([postId])
 }
 
 model Idea {
-  id          Int      @id @default(autoincrement())
+  id          String      @id @default(uuid())
   content     String
   user        User     @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId String   @unique
@@ -183,7 +185,7 @@ model Idea {
 
 model Poll {
   id      Int       @id @default(autoincrement())
-  postId  Int       @unique
+  postId  String       @unique
   post    Post      @relation(fields: [postId], references: [id])
   options Json
   Content Content[]
@@ -192,7 +194,7 @@ model Poll {
 }
 
 model Queue {
-  id          Int         @id @default(autoincrement())
+  id          String         @id @default(uuid())
   user        User        @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId String      @unique
   day         String
@@ -200,11 +202,11 @@ model Queue {
 }
 
 model QueueItem {
-  id      Int    @id @default(autoincrement())
+  id      String    @id @default(uuid())
   time    String
   type    String
   queue   Queue  @relation(fields: [queueId], references: [id])
-  queueId Int
+  queueId String
 
   @@index([queueId])
 }

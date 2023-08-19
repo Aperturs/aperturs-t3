@@ -6,12 +6,12 @@ export const linkedin = createTRPCRouter({
   postToLinkedin: protectedProcedure
     .input(
       z.object({
-        tokenId: z.number(),
+        tokenId: z.string(),
         content: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const accessToken = await ctx.prisma.linkedInToken.findUnique({
+      const tokenData = await ctx.prisma.linkedInToken.findUnique({
         where: {
           id: input.tokenId,
         },
@@ -20,8 +20,8 @@ export const linkedin = createTRPCRouter({
           profileId: true,
         },
       });
-      console.log(accessToken?.access_token, "accessToken linkedin");
-      const profileId = accessToken?.profileId;
+      console.log(tokenData?.access_token, "tokenData linkedin");
+      const profileId = tokenData?.profileId;
       if (profileId) {
         try {
           const data = {
@@ -44,7 +44,7 @@ export const linkedin = createTRPCRouter({
             .post("https://api.linkedin.com/v2/ugcPosts", data, {
               headers: {
                 "X-Restli-Protocol-Version": "2.0.0",
-                Authorization: `Bearer ${accessToken?.access_token}`,
+                Authorization: `Bearer ${tokenData?.access_token}`,
               },
             })
             .then((response) => {

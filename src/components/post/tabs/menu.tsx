@@ -55,7 +55,7 @@ const MenuItems = ({
 }: {
   type: string;
   name: string;
-  id: number;
+  id: string;
 }) => {
   const { setContent, content, defaultContent } = useStore((state) => ({
     setContent: state.setContent,
@@ -63,7 +63,7 @@ const MenuItems = ({
     defaultContent: state.defaultContent,
     selectedSocials: state.selectedSocials,
   }));
-  const checkChecked = (id: number) => {
+  const checkChecked = (id: string) => {
     return content.some((contentItem) => contentItem.id === id);
   };
   const [checked, setChecked] = useState<boolean>(checkChecked(id));
