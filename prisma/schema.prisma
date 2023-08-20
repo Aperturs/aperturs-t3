@@ -121,7 +121,7 @@ model Transaction {
 
 model Post {
   id          String          @id @default(uuid())
-  user        User            @relation(fields: [clerkUserId], references: [clerkUserId])
+  user        User            @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   clerkUserId String          @unique
   status      Status
   scheduledAt DateTime?
@@ -136,13 +136,13 @@ model Post {
 
 model Content {
   id              String           @id @default(uuid())
-  postId          String?
-  post            Post?            @relation(fields: [postId], references: [id])
+  postId          String
+  post            Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
   socialSelected  SocialSelected[]
   content         String
-  Twitter         TwitterThread?   @relation(fields: [twitterThreadId], references: [id])
+  Twitter         TwitterThread?   @relation(fields: [twitterThreadId], references: [id], onDelete: Cascade)
   imgUrls         Json?
-  poll            Poll?            @relation(fields: [pollId], references: [id])
+  poll            Poll?            @relation(fields: [pollId], references: [id], onDelete: Cascade)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   twitterThreadId String?
@@ -158,7 +158,7 @@ model SocialSelected {
   id         String   @id @default(uuid())
   platform   Platform
   platformId String
-  Content    Content  @relation(fields: [contentId], references: [id])
+  Content    Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
   contentId  String
 
   @@index([id])
@@ -168,7 +168,7 @@ model SocialSelected {
 model TwitterThread {
   id     String    @id @default(uuid())
   tweet  Content[]
-  post   Post      @relation(fields: [postId], references: [id])
+  post   Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 
   @@index([postId])
@@ -177,7 +177,7 @@ model TwitterThread {
 model Idea {
   id          String   @id @default(uuid())
   content     String
-  user        User     @relation(fields: [clerkUserId], references: [clerkUserId])
+  user        User     @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   clerkUserId String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -196,7 +196,7 @@ model Poll {
 
 model Queue {
   id          String      @id @default(uuid())
-  user        User        @relation(fields: [clerkUserId], references: [clerkUserId])
+  user        User        @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   clerkUserId String      @unique
   day         String
   items       QueueItem[]
@@ -206,7 +206,7 @@ model QueueItem {
   id      String @id @default(uuid())
   time    String
   type    String
-  queue   Queue  @relation(fields: [queueId], references: [id])
+  queue   Queue  @relation(fields: [queueId], references: [id], onDelete: Cascade)
   queueId String
 
   @@index([queueId])
