@@ -24,7 +24,7 @@ model VerificationToken {
 }
 
 model User {
-  id               String             @id @default(uuid())
+  id               String          @id @default(uuid())
   clerkUserId      String          @unique
   posts            Post[]
   ideas            Idea[]
@@ -42,7 +42,7 @@ model User {
 }
 
 model TwitterToken {
-  id            String       @id @default(uuid())
+  id            String    @id @default(uuid())
   user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId   String
   client_id     String
@@ -56,7 +56,7 @@ model TwitterToken {
 }
 
 model GithubToken {
-  id            String     @id @default(uuid())
+  id            String  @id @default(uuid())
   access_token  String  @unique
   refresh_token String? @unique
   user          User    @relation(fields: [clerkUserId], references: [clerkUserId])
@@ -72,7 +72,7 @@ model GithubToken {
 }
 
 model LinkedInToken {
-  id                       String       @id @default(uuid())
+  id                       String    @id @default(uuid())
   profileId                String?
   access_token             String    @db.Text
   refresh_token            String?   @db.Text
@@ -120,7 +120,7 @@ model Transaction {
 }
 
 model Post {
-  id          String             @id @default(uuid())
+  id          String          @id @default(uuid())
   user        User            @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId String          @unique
   status      Status
@@ -135,8 +135,9 @@ model Post {
 }
 
 model Content {
-  id              String              @id @default(uuid())
-  postId          Post                @relation(fields: [id], references: [id])
+  id              String           @id @default(uuid())
+  postId          String?
+  post            Post?            @relation(fields: [postId], references: [id])
   socialSelected  SocialSelected[]
   content         String
   Twitter         TwitterThread?   @relation(fields: [twitterThreadId], references: [id])
@@ -150,13 +151,14 @@ model Content {
   @@index([id])
   @@index([twitterThreadId])
   @@index([pollId])
+  @@index([postId])
 }
 
 model SocialSelected {
-  id         String      @id @default(uuid())
+  id         String   @id @default(uuid())
   platform   Platform
   platformId String
-  Content    Content @relation(fields: [contentId], references: [id])
+  Content    Content  @relation(fields: [contentId], references: [id])
   contentId  String
 
   @@index([id])
@@ -164,7 +166,7 @@ model SocialSelected {
 }
 
 model TwitterThread {
-  id     String       @id @default(uuid())
+  id     String    @id @default(uuid())
   tweet  Content[]
   post   Post      @relation(fields: [postId], references: [id])
   postId String
@@ -173,7 +175,7 @@ model TwitterThread {
 }
 
 model Idea {
-  id          String      @id @default(uuid())
+  id          String   @id @default(uuid())
   content     String
   user        User     @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId String   @unique
@@ -185,7 +187,7 @@ model Idea {
 
 model Poll {
   id      Int       @id @default(autoincrement())
-  postId  String       @unique
+  postId  String    @unique
   options Json
   Content Content[]
 
@@ -193,15 +195,15 @@ model Poll {
 }
 
 model Queue {
-  id          String         @id @default(uuid())
-  user        User           @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId String         @unique
+  id          String      @id @default(uuid())
+  user        User        @relation(fields: [clerkUserId], references: [clerkUserId])
+  clerkUserId String      @unique
   day         String
   items       QueueItem[]
 }
 
 model QueueItem {
-  id      String    @id @default(uuid())
+  id      String @id @default(uuid())
   time    String
   type    String
   queue   Queue  @relation(fields: [queueId], references: [id])

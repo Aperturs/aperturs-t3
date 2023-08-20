@@ -85,6 +85,7 @@ function Publish() {
         socialType: post.socialType,
         content: post.content,
       })),
+      defaultContent: defaultContent,
     });
     if (savingError) {
       toast.error(`Failed to save to drafts: ${savingError.message}`);
