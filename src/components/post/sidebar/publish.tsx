@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 import Picker from "~/components/custom/datepicker/picker";
@@ -26,6 +28,12 @@ function Publish() {
     isLoading: linkedinPosting,
     error: linkedinError,
   } = api.linkedin.postToLinkedin.useMutation();
+
+  const {
+    mutateAsync: saveToDrafts,
+    isLoading: saving,
+    error: savingError,
+  } = api.userPost.savePost.useMutation();
 
   const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
     for (const item of selectedSocials) {
@@ -61,8 +69,27 @@ function Publish() {
           }
           break;
         default:
-          toast.error("Please select a social media platform")
+          toast.error("Please select a social media platform");
       }
+    }
+  };
+
+  const handleSave = async () => {
+    await saveToDrafts({
+      selectedSocials: selectedSocials.map((social) => ({
+        id: social.id,
+        type: social.type,
+      })),
+      postContent: content.map((post) => ({
+        id: post.id,
+        socialType: post.socialType,
+        content: post.content,
+      })),
+    });
+    if (savingError) {
+      toast.error(`Failed to save to drafts: ${savingError.message}`);
+    } else {
+      toast.success("Saved to drafts");
     }
   };
 
@@ -88,9 +115,10 @@ function Publish() {
       />
       {/* <PostWeb content={defaultContent} /> */}
       <SimpleButton
+        isLoading={saving}
         text="Save to drafts"
-        onClick={() => {
-          console.log("onClick event is triggered");
+        onClick={async () => {
+          await handleSave();
         }}
       />
       <SimpleButton

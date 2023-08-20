@@ -129,18 +129,18 @@ model Post {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   TweetThread TwitterThread[]
-  Poll        Poll?
 
   @@index([clerkUserId])
+  @@index([id])
 }
 
 model Content {
   id              String              @id @default(uuid())
-  postId          Post             @relation(fields: [id], references: [id])
+  postId          Post                @relation(fields: [id], references: [id])
   socialSelected  SocialSelected[]
   content         String
   Twitter         TwitterThread?   @relation(fields: [twitterThreadId], references: [id])
-  imgUrls         Json
+  imgUrls         Json?
   poll            Poll?            @relation(fields: [pollId], references: [id])
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -155,9 +155,9 @@ model Content {
 model SocialSelected {
   id         String      @id @default(uuid())
   platform   Platform
-  platformId Int
-  Content    Content? @relation(fields: [contentId], references: [id])
-  contentId  String?
+  platformId String
+  Content    Content @relation(fields: [contentId], references: [id])
+  contentId  String
 
   @@index([id])
   @@index([contentId])
@@ -186,7 +186,6 @@ model Idea {
 model Poll {
   id      Int       @id @default(autoincrement())
   postId  String       @unique
-  post    Post      @relation(fields: [postId], references: [id])
   options Json
   Content Content[]
 
@@ -195,8 +194,8 @@ model Poll {
 
 model Queue {
   id          String         @id @default(uuid())
-  user        User        @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId String      @unique
+  user        User           @relation(fields: [clerkUserId], references: [clerkUserId])
+  clerkUserId String         @unique
   day         String
   items       QueueItem[]
 }

@@ -2,6 +2,7 @@ import { createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { twitterData } from "./routers/twitter/twitter";
 import { linkedin } from "./routers/linkedin/linkedin";
+import { posting } from "./routers/post/post";
 
 /**
  * This is the primary router for your server.
@@ -11,7 +12,8 @@ import { linkedin } from "./routers/linkedin/linkedin";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   twitter: twitterData,
-  linkedin: linkedin
+  linkedin: linkedin,
+  userPost: posting
 
 });
 

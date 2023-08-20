@@ -1,10 +1,11 @@
 import { SocialType } from "~/types/post-enums";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
+import { api } from "~/utils/api";
 
 const SideBar = () => {
 
-  // const { data } = api.user.fetchConnectedAccounts.useQuery();
+  const { data } = api.user.fetchConnectedAccounts.useQuery();
   //TODO: Add lens profile for both backend and frontend ( proper integration )
 
   return (
@@ -14,7 +15,7 @@ const SideBar = () => {
         <Publish />
         <span className="my-2 text-xl">Publish Post</span>
         <div className="grid grid-cols-3 place-items-start gap-3">
-          {/* {data?.map((item) => (
+          {data?.map((item) => (
             <ConnectedAccount
               key={item.data.tokenId}
               name={item.data.name}
@@ -22,7 +23,7 @@ const SideBar = () => {
               profilePic={item.data.profile_image_url || "/user.png"}
               id={item.data.tokenId}
             />
-          ))} */}
+          ))}
           {/* TODO: Add lens profile */}
           {/* {profile && (
             <ConnectedAccount
@@ -32,7 +33,7 @@ const SideBar = () => {
               profilePic={lensProfile.imageUrl}
             />
           )} */}
-          <ConnectedAccount
+          {/* <ConnectedAccount
             id="2"
             name="Swaraj"
             type={SocialType.Twitter}
@@ -49,7 +50,7 @@ const SideBar = () => {
             name="Swaraj"
             type={SocialType.Twitter}
             profilePic={"/user.png"}
-          />
+          /> */}
         </div>
       </div>
     </div>
