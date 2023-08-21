@@ -39,6 +39,7 @@ model User {
   socialSelectedId Int?
 
   @@index([clerkUserId])
+  @@index([id])
 }
 
 model TwitterToken {
@@ -53,6 +54,7 @@ model TwitterToken {
   profileId     String?   @unique
 
   @@index([clerkUserId])
+  @@index([id])
 }
 
 model GithubToken {
@@ -69,6 +71,7 @@ model GithubToken {
   updatedAt                DateTime  @updatedAt
 
   @@index([clerkUserId])
+  @@index([id])
 }
 
 model LinkedInToken {
@@ -122,7 +125,7 @@ model Transaction {
 model Post {
   id          String          @id @default(uuid())
   user        User            @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
-  clerkUserId String          @unique
+  clerkUserId String          
   status      Status
   scheduledAt DateTime?
   content     Content[]

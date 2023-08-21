@@ -36,8 +36,22 @@ export const posting = createTRPCRouter({
         // }
         const unmatchedSocials = [];
         const ContentIDS: string[] = [];
+        let postId = "";
 
         try {
+          await ctx.prisma.post
+            .create({
+              data: {
+                clerkUserId: ctx.currentUser,
+                status: "SAVED",
+                content: {
+                  connect: ContentIDS.map((id) => ({ id: id })),
+                },
+              },
+            })
+            .then((res) => {
+              postId = res.id;
+            });
           for (const social of input.selectedSocials) {
             const content = input.postContent.find(
               (content) => content.id === social.id
@@ -45,63 +59,46 @@ export const posting = createTRPCRouter({
             console.log(content?.content);
 
             if (content && content.content && social.type) {
-              await ctx.prisma.content
-                .create({
-                  data: {
-                    content: content.content,
-                    socialSelected: {
-                      create: {
-                        platform: social.type as Platform,
-                        platformId: social.id,
-                      },
+              await ctx.prisma.content.create({
+                data: {
+                  content: content.content,
+                  postId: postId,
+                  socialSelected: {
+                    create: {
+                      platform: social.type as Platform,
+                      platformId: social.id,
                     },
                   },
-                })
-                .then((res) => {
-                  // console.log(res);
-                  ContentIDS.push(res.id);
-                });
+                },
+              });
             } else {
               unmatchedSocials.push(social);
             }
           }
 
           if (unmatchedSocials.length > 0) {
-            await ctx.prisma.content
-              .create({
-                data: {
-                  content: input.defaultContent,
-                  socialSelected: {
-                    create: unmatchedSocials.map((social) => ({
-                      platform: social.type as Platform,
-                      platformId: social.id,
-                    })),
-                  },
+            await ctx.prisma.content.create({
+              data: {
+                content: input.defaultContent,
+                postId: postId,
+                socialSelected: {
+                  create: unmatchedSocials.map((social) => ({
+                    platform: social.type as Platform,
+                    platformId: social.id,
+                  })),
                 },
-              })
-              .then((res) => {
-                ContentIDS.push(res.id);
-              });
+              },
+            });
           }
 
-          await ctx.prisma.post.create({
-            data: {
-              clerkUserId: ctx.currentUser,
-              status: "SAVED",
-              content: {
-                connect: ContentIDS.map((id) => ({ id: id })),
-              },
-            },
-          });
+          return {
+            success: true,
+            message: "Saved to draft successfully",
+            state: 200,
+          };
         } catch (error) {
-          console.log(error);
+          return { success: false, message: "Error saving to draft try again" };
         }
-
-        return {
-          success: true,
-          message: "Saved to draft successfully",
-          state: 200,
-        };
       } catch (error) {
         return { success: false, message: "Error saving to draft" };
       }

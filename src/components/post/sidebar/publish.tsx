@@ -32,7 +32,7 @@ function Publish() {
   const {
     mutateAsync: saveToDrafts,
     isLoading: saving,
-    error: savingError,
+    status: saveStatus,
   } = api.userPost.savePost.useMutation();
 
   const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
@@ -87,10 +87,11 @@ function Publish() {
       })),
       defaultContent: defaultContent,
     });
-    if (savingError) {
-      toast.error(`Failed to save to drafts: ${savingError.message}`);
-    } else {
+    console.log(saveStatus);
+    if (saveStatus == "success") {
       toast.success("Saved to drafts");
+    } else {
+      toast.error("Failed to save to drafts");
     }
   };
 
