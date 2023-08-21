@@ -160,20 +160,20 @@ export const userRouter = createTRPCRouter({
           });
         }
       }
-      const githubDetails = await getGithubAccountDetails(github);
-      if (github.length > 0) {
-        for (const githubDetail of githubDetails) {
-          accounts.push({
-            type: SocialType.Github,
-            data: {
-              tokenId: githubDetail.tokenId,
-              name: githubDetail.username,
-              profile_image_url: githubDetail.profile_image_url,
-              profileId: githubDetail.profileId,
-            },
-          });
-        }
-      }
+      // const githubDetails = await getGithubAccountDetails(github);
+      // if (github.length > 0) {
+      //   for (const githubDetail of githubDetails) {
+      //     accounts.push({
+      //       type: SocialType.Github,
+      //       data: {
+      //         tokenId: githubDetail.tokenId,
+      //         name: githubDetail.username,
+      //         profile_image_url: githubDetail.profile_image_url,
+      //         profileId: githubDetail.profileId,
+      //       },
+      //     });
+      //   }
+      // }
 
       return accounts;
     } catch (error) {
