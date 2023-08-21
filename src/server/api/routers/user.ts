@@ -3,6 +3,7 @@ import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import { SocialType } from "~/types/post-enums";
+import { getGithubAccountDetails } from "../helpers/github";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
 import { getTwitterAccountDetails } from "../helpers/twitter";
@@ -27,6 +28,23 @@ export const userRouter = createTRPCRouter({
     const canConnect = await ConnectSocial({ user: ctx.currentUser });
     if (canConnect) {
       const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
+      return { url };
+    }
+    throw new TRPCError({
+      message: "Upgrade to higher plan to connect more Socials",
+      code: "FORBIDDEN",
+    });
+  }),
+
+  addGithub: protectedProcedure.mutation(async ({ ctx }) => {
+    const canConnect = await ConnectSocial({ user: ctx.currentUser });
+
+    if (canConnect) {
+      const url = `https://github.com/login/oauth/authorize?client_id=${
+        env.NEXT_PUBLIC_GITHUB_CLIENT_ID
+      }&redirect_uri=${encodeURIComponent(
+        env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
+      )}&scope=${encodeURIComponent("user repo")}`;
       return { url };
     }
     throw new TRPCError({
@@ -79,30 +97,34 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  addGithub: protectedProcedure
-    .input(
-      z.object({
-        access_token: z.string(),
-        profileId: z.string(),
-        expires_in: z.date().optional(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.prisma.githubToken.create({
-        data: {
-          user: { connect: { clerkUserId: ctx.currentUser } },
-          access_token: input.access_token,
-          expires_in: input.expires_in,
-          profileId: input.profileId,
-        },
-      });
-    }),
+  // addGithub: protectedProcedure
+  //   .input(
+  //     z.object({
+  //       access_token: z.string(),
+  //       profileId: z.string(),
+  //       expires_in: z.date().optional(),
+  //     })
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     return await ctx.prisma.githubToken.create({
+  //       data: {
+  //         user: { connect: { clerkUserId: ctx.currentUser } },
+  //         access_token: input.access_token,
+  //         expires_in: input.expires_in,
+  //         profileId: input.profileId,
+  //       },
+  //     });
+  //   }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const twitter = await ctx.prisma.twitterToken.findMany({
       where: { clerkUserId: ctx.currentUser },
     });
     const linkedin = await ctx.prisma.linkedInToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
+
+    const github = await ctx.prisma.githubToken.findMany({
       where: { clerkUserId: ctx.currentUser },
     });
 
@@ -134,6 +156,20 @@ export const userRouter = createTRPCRouter({
               name: linkedinDetail.full_name,
               profile_image_url: linkedinDetail.profile_image_url,
               profileId: linkedinDetail.profileId,
+            },
+          });
+        }
+      }
+      const githubDetails = await getGithubAccountDetails(github);
+      if (github.length > 0) {
+        for (const githubDetail of githubDetails) {
+          accounts.push({
+            type: SocialType.Github,
+            data: {
+              tokenId: githubDetail.tokenId,
+              name: githubDetail.username,
+              profile_image_url: githubDetail.profile_image_url,
+              profileId: githubDetail.profileId,
             },
           });
         }

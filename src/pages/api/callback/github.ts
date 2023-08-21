@@ -3,8 +3,6 @@
 import { getAuth } from "@clerk/nextjs/server";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { env } from "~/env.mjs";
-import { appRouter } from "~/server/api/root";
-import cronJobServer from "~/server/cronjob";
 import { prisma } from "~/server/db";
 
 interface TokenData {
@@ -33,7 +31,7 @@ export default async function handler(
       }
     )
   ).json();
-  
+
   const userObject: GithubUser = await (
     await fetch("https://api.github.com/user", {
       headers: {
@@ -42,17 +40,17 @@ export default async function handler(
     })
   ).json();
 
-  const session = getAuth(req);
-  const caller = appRouter.createCaller({
-    prisma: prisma,
-    cronJobServer: cronJobServer,
-    currentUser: session.userId,
-  });
-  if (userObject) {
-    await caller.user.addGithub({
-      access_token: tokenData.access_token,
-      profileId: userObject.login,
+  const { userId } = getAuth(req);
+
+  if (userObject && userId) {
+    await prisma.githubToken.create({
+      data: {
+        clerkUserId: userId,
+        access_token: tokenData.access_token,
+        expires_in: null,
+        profileId: userObject.login,
+      },
     });
   }
-  return res.redirect("/dashboard");
+  return res.redirect("/settings");
 }

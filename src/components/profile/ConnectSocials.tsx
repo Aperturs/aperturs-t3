@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
-import { FaFacebookSquare, FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookSquare, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import useLensProfile from "~/hooks/lens-profile";
 import { SocialType } from "~/types/post-enums";
@@ -16,7 +16,12 @@ const SocialIcon = ({ type }: { type: string }) => {
     return <AiOutlineTwitter className="text-2xl" />;
   } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className="text-2xl" />;
-  } else {
+
+  }
+  else if (type === SocialType.Github) {
+    return <FaGithub className="text-2xl" />;
+  }
+  else {
     return null; // Return null or a default icon for other types
   }
 };
@@ -107,17 +112,27 @@ const AddSocial = () => {
 const Socials = () => {
   const router = useRouter();
   const { userId } = useAuth();
-  const { mutateAsync, data, error } = api.user.addLinkedln.useMutation();
+  const { mutateAsync: addLinkedln, data: linkedlnData, error } = api.user.addLinkedln.useMutation();
+  const { mutateAsync: addGithub, data: githubData } = api.user.addGithub.useMutation();
 
   const handleLinkedln = async () => {
-    await mutateAsync();
-    if (data) {
-      window.location.href = data.url;
+    await addLinkedln();
+    if (linkedlnData) {
+      window.location.href = linkedlnData.url;
     }
     if (error) {
       toast.error(error.message);
     }
   };
+  const handleGithub = async () => {
+    await addGithub();
+    if (githubData) {
+      window.location.href = githubData.url;
+    }
+    if (error) {
+      toast.error(error.message);
+    }
+  }
 
   return (
     <div className="grid grid-cols-3 gap-4 py-4">
@@ -151,6 +166,15 @@ const Socials = () => {
       >
         <Image src="/lens.svg" alt="lens" width={40} height={40} />
         <p>Lens </p>
+      </button>
+      <button
+        className="btn gap-2 hover:border-0 hover:bg-[#DACCF3]  hover:text-black"
+        onClick={async () => {
+          if (userId) await handleGithub();
+        }}
+      >
+        <FaGithub className="text-2xl " />
+        <p>Github </p>
       </button>
     </div>
   );

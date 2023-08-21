@@ -8,24 +8,28 @@
 const config = {
   reactStrictMode: true,
 
-  images:{
-    domains: ["images.unsplash.com","pbs.twimg.com","ik.imagekit.io"]
-
+  images: {
+    domains: [
+      "images.unsplash.com",
+      "pbs.twimg.com",
+      "ik.imagekit.io",
+      "avatars.githubusercontent.com",
+    ],
   },
   // eslint: {
   //   // Warning: This allows production builds to successfully complete even if
   //   // your project has ESLint errors.
   //   ignoreDuringBuilds: true,
   // },
-  transpilePackages: ['@lens-protocol'],
+  transpilePackages: ["@lens-protocol"],
   async redirects() {
     return [
       {
-        source: '/',
-        destination: '/dashboard',
+        source: "/",
+        destination: "/dashboard",
         permanent: true,
       },
-    ]
+    ];
   },
 
   /**
