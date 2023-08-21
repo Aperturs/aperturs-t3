@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 import Picker from "~/components/custom/datepicker/picker";
@@ -7,15 +10,18 @@ import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 
 function Publish() {
-  const { tweets, defaultContent, selectedSocials, content } = useStore(
-    (state) => ({
-      tweets: state.tweets,
-      defaultContent: state.defaultContent,
-      selectedSocials: state.selectedSocials,
-      content: state.content,
-    }),
-    shallow
-  );
+  const { tweets, defaultContent, selectedSocials, content, date, time } =
+    useStore(
+      (state) => ({
+        tweets: state.tweets,
+        defaultContent: state.defaultContent,
+        selectedSocials: state.selectedSocials,
+        content: state.content,
+        date: state.date,
+        time: state.time,
+      }),
+      shallow
+    );
   const {
     mutateAsync: createTweet,
     error: twitterError,
@@ -26,6 +32,18 @@ function Publish() {
     isLoading: linkedinPosting,
     error: linkedinError,
   } = api.linkedin.postToLinkedin.useMutation();
+
+  const {
+    mutateAsync: saveToDrafts,
+    isLoading: saving,
+    // status: saveStatus,
+    // error: saveError,
+  } = api.userPost.savePost.useMutation();
+
+  console.log(date, "date");
+  console.log(time, "time");
+
+  const router = useRouter();
 
   const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
     for (const item of selectedSocials) {
@@ -61,9 +79,56 @@ function Publish() {
           }
           break;
         default:
-          toast.error("Please select a social media platform")
+          toast.error("Please select a social media platform");
       }
     }
+  };
+
+  const handleSave = async () => {
+    const [hours, minutes] = time.split(":");
+    const scheduledTime =
+      date && hours !== undefined && minutes !== undefined
+        ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
+        : undefined;
+
+    if (!defaultContent || !content)
+      return toast.error("Please add a post content");
+    await toast
+      .promise(
+        saveToDrafts({
+          selectedSocials: selectedSocials.map((social) => ({
+            id: social.id,
+            type: social.type,
+          })),
+          postContent: content.map((post) => ({
+            id: post.id,
+            socialType: post.socialType,
+            content: post.content,
+          })),
+          defaultContent: defaultContent,
+          scheduledTime: scheduledTime ? new Date(scheduledTime) : undefined,
+        }),
+        {
+          loading: "Saving to drafts...",
+          success: "Saved to drafts",
+          error: "Failed to save to drafts",
+        }
+      )
+      .then(async (response) => {
+        if (response.success) {
+          await router.push("/drafts");
+        }
+      });
+    // console.log(saveStatus);
+    // if (saveStatus == "success") {
+    //   toast.success("Saved to drafts");
+    // }
+    // // else {
+    // //   toast.error("Failed to save to drafts");
+    // // }
+    // if (saveError) {
+    //   toast.error(`Failed to save to drafts: ${saveError.message}`);
+    // }
   };
 
   return (
@@ -88,9 +153,10 @@ function Publish() {
       />
       {/* <PostWeb content={defaultContent} /> */}
       <SimpleButton
+        isLoading={saving}
         text="Save to drafts"
-        onClick={() => {
-          console.log("onClick event is triggered");
+        onClick={async () => {
+          await handleSave();
         }}
       />
       <SimpleButton
