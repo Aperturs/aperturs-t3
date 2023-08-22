@@ -3,7 +3,6 @@ import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import { SocialType } from "~/types/post-enums";
-import { getGithubAccountDetails } from "../helpers/github";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
 import { getTwitterAccountDetails } from "../helpers/twitter";
@@ -124,9 +123,9 @@ export const userRouter = createTRPCRouter({
       where: { clerkUserId: ctx.currentUser },
     });
 
-    const github = await ctx.prisma.githubToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
-    });
+    // const github = await ctx.prisma.githubToken.findMany({
+    //   where: { clerkUserId: ctx.currentUser },
+    // });
 
     // TODO: define proper output types, instead of directly using Prisma types
     try {

@@ -1,10 +1,8 @@
-import { SocialType } from "~/types/post-enums";
+import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
-import { api } from "~/utils/api";
 
 const SideBar = () => {
-
   const { data } = api.user.fetchConnectedAccounts.useQuery();
   //TODO: Add lens profile for both backend and frontend ( proper integration )
 

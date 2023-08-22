@@ -1,4 +1,5 @@
-import { GithubToken } from "@prisma/client";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { type GithubToken } from "@prisma/client";
 
 interface GithubTokenDetails
   extends Pick<GithubToken, "access_token" | "refresh_token" | "profileId"> {
