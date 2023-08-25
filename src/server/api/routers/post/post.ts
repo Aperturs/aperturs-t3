@@ -45,7 +45,9 @@ export const posting = createTRPCRouter({
               content: {
                 connect: ContentIDS.map((id) => ({ id: id })),
               },
-              scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
+              scheduledAt: input.scheduledTime
+                ? new Date(input.scheduledTime)
+                : null,
             },
           })
           .then((res) => {
@@ -108,5 +110,22 @@ export const posting = createTRPCRouter({
           message: "Error saving to draft",
         });
       }
+    }),
+
+  getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.prisma.post.findMany({
+      where: { clerkUserId: ctx.currentUser, status: "SAVED" },
+    });
+    return posts;
+  }),
+
+  getSavedPostById: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findUnique({
+        where: { id: input },
+        include: { content: true },
+      });
+      return post;
     }),
 });

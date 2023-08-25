@@ -35,21 +35,20 @@ export const userRouter = createTRPCRouter({
     });
   }),
 
-  addGithub: protectedProcedure.mutation(async ({ ctx }) => {
-    const canConnect = await ConnectSocial({ user: ctx.currentUser });
+  addGithub: protectedProcedure.mutation(() => {
+    // const canConnect = await ConnectSocial({ user: ctx.currentUser });
 
-    if (canConnect) {
+    // if (canConnect) {
+    try {
       const url = `https://github.com/login/oauth/authorize?client_id=${
         env.NEXT_PUBLIC_GITHUB_CLIENT_ID
       }&redirect_uri=${encodeURIComponent(
         env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
       )}&scope=${encodeURIComponent("user repo")}`;
       return { url };
+    } catch (error) {
+      console.log(error);
     }
-    throw new TRPCError({
-      message: "Upgrade to higher plan to connect more Socials",
-      code: "FORBIDDEN",
-    });
   }),
 
   addTwitter: protectedProcedure

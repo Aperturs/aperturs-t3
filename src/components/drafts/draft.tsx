@@ -1,7 +1,11 @@
 import { BsFillCalendarFill } from "react-icons/bs";
+import { api } from "~/utils/api";
 import PostCard from "./darfCard";
 
 const DraftPage = () => {
+  const { data } = api.userPost.getSavedPosts.useQuery();
+  console.log(data)
+
   return (
     <div className="flex w-full flex-col">
       <div className="flex justify-between">
@@ -19,9 +23,13 @@ const DraftPage = () => {
         xl:grid-cols-3
         "
       >
-        <PostCard id={1} />
-        <PostCard id={2} />
-        <PostCard id={3} />
+        {data
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          ? data.map((item) => <PostCard key={item.id} id={item.id} />)
+          : null}
+        {/* <PostCard id="1" />
+        <PostCard id="2" />
+        <PostCard id="3" /> */}
       </div>
     </div>
   );

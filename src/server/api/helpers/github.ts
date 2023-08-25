@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type GithubToken } from "@prisma/client";
 
 interface GithubTokenDetails
@@ -18,7 +17,7 @@ export const getGithubAccountDetails = async (githubTokens: GithubToken[]) => {
           Authorization: `token ${githubToken.access_token}`,
         },
       })
-    ).json();
+    ).json() as GithubUser;
     githubTokenDetails.push({
       access_token: githubToken.access_token,
       refresh_token: githubToken.refresh_token,

@@ -2,7 +2,6 @@ import { useAuth } from "@clerk/nextjs";
 import { Card, Spinner } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaFacebookSquare, FaGithub, FaLinkedinIn } from "react-icons/fa";
@@ -16,12 +15,9 @@ const SocialIcon = ({ type }: { type: string }) => {
     return <AiOutlineTwitter className="text-2xl" />;
   } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className="text-2xl" />;
-
-  }
-  else if (type === SocialType.Github) {
+  } else if (type === SocialType.Github) {
     return <FaGithub className="text-2xl" />;
-  }
-  else {
+  } else {
     return null; // Return null or a default icon for other types
   }
 };
@@ -112,8 +108,16 @@ const AddSocial = () => {
 const Socials = () => {
   const router = useRouter();
   const { userId } = useAuth();
-  const { mutateAsync: addLinkedln, data: linkedlnData, error } = api.user.addLinkedln.useMutation();
-  const { mutateAsync: addGithub, data: githubData } = api.user.addGithub.useMutation();
+  const {
+    mutateAsync: addLinkedln,
+    data: linkedlnData,
+    error,
+  } = api.user.addLinkedln.useMutation();
+  const {
+    mutateAsync: addGithub,
+    data: githubData,
+    isLoading: githubLoading,
+  } = api.user.addGithub.useMutation();
 
   const handleLinkedln = async () => {
     await addLinkedln();
@@ -132,7 +136,7 @@ const Socials = () => {
     if (error) {
       toast.error(error.message);
     }
-  }
+  };
 
   return (
     <div className="grid grid-cols-3 gap-4 py-4">
@@ -168,10 +172,11 @@ const Socials = () => {
         <p>Lens </p>
       </button>
       <button
-        className="btn gap-2 hover:border-0 hover:bg-[#DACCF3]  hover:text-black"
+        className={`btn gap-2 hover:border-0 hover:bg-primary  hover:text-white `}
         onClick={async () => {
           if (userId) await handleGithub();
         }}
+        disabled={githubLoading}
       >
         <FaGithub className="text-2xl " />
         <p>Github </p>

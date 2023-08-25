@@ -11,12 +11,18 @@ import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
 import Image from "next/image";
 
-export default function DraftCard({ id }: { id: number }) {
+
+interface IDarfCard {
+  id: string;
+  content: string;
+}
+
+export default function DraftCard({ id }: { id: string }) {
   const router = useRouter();
   return (
     <Card className="mt-6 ">
       <CardHeader color="blue-gray" className="relative ">
-        {id !== 1 && (
+        {id !== "1" && (
           <Image
             src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
             alt="img-blur-shadow"
@@ -28,6 +34,7 @@ export default function DraftCard({ id }: { id: number }) {
       </CardHeader>
       <CardBody>
         <Typography>
+          id is {id}
           The place is close to Barceloneta Beach and bus stop just 2 min by
           walk and near to &quot;Naviglio&quot; where you can enjoy the main
           night life in Barcelona.
