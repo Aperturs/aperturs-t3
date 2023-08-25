@@ -1,6 +1,6 @@
 import { type ReactElement } from "react";
 import { BsFillCalendarFill } from "react-icons/bs";
-import {  DraftCard, Layout, ProjectLayout } from "~/components";
+import { Layout, ProjectLayout } from "~/components";
 
 const DraftPage = () => {
   return (
@@ -19,9 +19,9 @@ const DraftPage = () => {
         xl:grid-cols-3
         "
       >
-        <DraftCard id={1} />
+        {/* <DraftCard id={1} />
         <DraftCard id={2} />
-        <DraftCard id={3} />
+        <DraftCard id={3} /> */}
       </div>
     </div>
   );
