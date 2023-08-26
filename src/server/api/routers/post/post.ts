@@ -1,4 +1,3 @@
-import { type Platform } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
@@ -18,6 +17,7 @@ export const posting = createTRPCRouter({
           z.object({
             id: z.string(),
             type: z.string(),
+            name: z.string(),
           })
         ),
         postContent: z.array(
@@ -32,9 +32,8 @@ export const posting = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const unmatchedSocials = [];
-      const ContentIDS: string[] = [];
-      let postId = "";
+      // const unmatchedSocials = [];
+      // let postId = "";
 
       try {
         await ctx.prisma.post
@@ -42,62 +41,61 @@ export const posting = createTRPCRouter({
             data: {
               clerkUserId: ctx.currentUser,
               status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-              content: {
-                connect: ContentIDS.map((id) => ({ id: id })),
-              },
               scheduledAt: input.scheduledTime
                 ? new Date(input.scheduledTime)
                 : null,
+              defaultContent: input.defaultContent,
+              content: input.postContent,
+              socialSelected: input.selectedSocials
             },
           })
-          .then((res) => {
-            postId = res.id;
-          });
-        for (const social of input.selectedSocials) {
-          const content = input.postContent.find(
-            (content) => content.id === social.id
-          );
-          console.log(content?.content);
 
-          if (content && content.content && social.type) {
-            await ctx.prisma.content.create({
-              data: {
-                content: content.content,
-                postId: postId,
-                socialSelected: {
-                  create: {
-                    platform: social.type as Platform,
-                    platformId: social.id,
-                  },
-                },
-              },
-            });
-          } else {
-            unmatchedSocials.push(social);
-          }
-        }
+        // try {
+        //   for (const social of input.selectedSocials) {
+        //     const content = input.postContent.find(
+        //       (content) => content.id === social.id
+        //     );
+        //     console.log(content?.content);
+        //     if (content && content.content && social.type) {
+        //       await ctx.prisma.content.create({
+        //         data: {
+        //           content: content.content,
+        //           postId: postId,
+        //           socialSelected: [
+        //             {
+        //               id: social.id,
+        //               type: social.type,
+        //               name: social.name,
+        //             },
+        //           ],
+        //         },
+        //       });
+        //     } else {
+        //       unmatchedSocials.push(social);
+        //     }
+        //   }
 
-        if (unmatchedSocials.length > 0) {
-          await ctx.prisma.content.create({
-            data: {
-              content: input.defaultContent,
-              postId: postId,
-              socialSelected: {
-                create: unmatchedSocials.map((social) => ({
-                  platform: social.type as Platform,
-                  platformId: social.id,
-                })),
-              },
-            },
-          });
-        } else {
-          await ctx.prisma.content.create({
-            data: {
-              content: input.defaultContent,
-              postId: postId,
-            },
-          });
-        }
+        //   if (unmatchedSocials.length > 0) {
+        //     await ctx.prisma.content.create({
+        //       data: {
+        //         content: input.defaultContent,
+        //         postId: postId,
+        //         socialSelected: unmatchedSocials,
+        //       },
+        //     });
+        //   } else {
+        //     await ctx.prisma.content.create({
+        //       data: {
+        //         content: input.defaultContent,
+        //         postId: postId,
+        //       },
+        //     });
+        //   }
+        // } catch (error) {
+        //   await ctx.prisma.post.delete({
+        //     where: { id: postId },
+        //   });
+        // }
 
         return {
           success: true,
@@ -124,7 +122,6 @@ export const posting = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const post = await ctx.prisma.post.findUnique({
         where: { id: input },
-        include: { content: true },
       });
       return post;
     }),

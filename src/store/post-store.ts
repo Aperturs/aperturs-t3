@@ -10,6 +10,8 @@ type StateValues = {
 };
 
 type StateSetters = {
+  shouldReset: boolean;
+  setShouldReset: (shouldReset: boolean) => void;
   setDefaultContent: (defaultContent: string) => void;
   setTweets: (tweet: Tweet[]) => void;
   setDate: (date: Date) => void;
@@ -32,6 +34,8 @@ const initialState: StateValues = {
 
 export const useStore = create<State>((set) => ({
   ...initialState,
+  shouldReset: false,
+  setShouldReset: (shouldReset) => set((state) => ({ ...state, shouldReset })),
   setDefaultContent: (defaultContent) =>
     set((state) => ({ ...state, defaultContent: defaultContent })),
   setTweets: (tweets) => set((state) => ({ ...state, tweets })),

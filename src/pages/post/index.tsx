@@ -4,24 +4,23 @@ import { Layout, PostView } from "~/components";
 import { useStore } from "~/store/post-store";
 
 export default function Post() {
-  const reset = useStore((state) => state.reset);
+  const { reset, shouldReset, setShouldReset } = useStore((state) => ({
+    reset: state.reset,
+    shouldReset: state.shouldReset,
+    setShouldReset: state.setShouldReset,
+  }));
   const router = useRouter();
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      reset();
-    };
+    if (shouldReset) reset();
 
-    router.events.on("routeChangeStart", handleRouteChange);
+    setShouldReset(false);
 
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChange);
-    };
-  }, [reset, router]);
+  }, [reset, router, setShouldReset, shouldReset]);
 
   return (
     <div className="container mx-auto p-4">
-      <PostView id={1} />
+      <PostView />
     </div>
   );
 }

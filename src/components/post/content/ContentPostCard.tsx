@@ -43,6 +43,7 @@ function ContentPostCard({ id }: { id: string }) {
       return item;
     });
     setContent(updatedContent);
+    console.log(content,"content")
   }
 
   useEffect(() => {

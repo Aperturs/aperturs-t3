@@ -12,7 +12,6 @@ import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
-import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
@@ -35,7 +34,6 @@ export default function SocialTabs() {
 
     setContent(filteredContent);
   }, [selectedSocials]);
-
 
   return (
     <div className="w-full">
@@ -65,7 +63,7 @@ export default function SocialTabs() {
               {/* {item.socialType === SocialType.Twitter ? (
                 <TweetPost />
               ) : ( */}
-                <ContentPostCard id={item.id} />
+              <ContentPostCard id={item.id} />
               {/* )} */}
             </TabPanel>
           ))}

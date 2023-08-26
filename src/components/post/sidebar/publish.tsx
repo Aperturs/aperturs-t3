@@ -99,6 +99,7 @@ function Publish() {
           selectedSocials: selectedSocials.map((social) => ({
             id: social.id,
             type: social.type,
+            name: social.name,
           })),
           postContent: content.map((post) => ({
             id: post.id,

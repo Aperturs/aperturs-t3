@@ -18,9 +18,14 @@ interface SelectedSocial {
   name: string;
 }
 
+interface ContentSocialSelected {
+  id: string;
+  platform: string;
+}
+
 interface PostContent {
   id: string;
   name: string;
-  socialType: SocialType;
+  socialType: string;
   content: string;
 }

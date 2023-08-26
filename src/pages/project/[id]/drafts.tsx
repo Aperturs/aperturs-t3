@@ -9,7 +9,7 @@ const DraftPage = () => {
         <h2 className="text-2xl font-bold">Draft</h2>
         <div className="flex gap-2">
           <button className="btn-primary btn gap-2 px-4 py-2 text-white">
-            Add to Queue
+            Add all to Queue
             <BsFillCalendarFill className="ml-2" />
           </button>
         </div>

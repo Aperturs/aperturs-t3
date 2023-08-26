@@ -19,7 +19,7 @@ import SocialTabs from "./tabs/socialtabs";
 //   setTime: (time: number) => {},
 // });
 
-function PostView({ id }: { id: number; }) {
+function PostView() {
   // const [linkedinPost, setLinkedinPost] = useState("");
   // const [tweets, setTweets] = useState<Tweet[]>([
   //   { id: 0,text: " " },
@@ -34,7 +34,7 @@ function PostView({ id }: { id: number; }) {
 
   // // const [date, setDate] = useState<Date>(new Date());
   // // const [time, setTime] = useState(new Date().getTime());
-  console.log(id);
+
   // useEffect(() => {
   //   setLinkedinPost(value)
   // }, []);
