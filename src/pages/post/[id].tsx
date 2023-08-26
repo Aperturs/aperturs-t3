@@ -72,7 +72,7 @@ export default function Post() {
       try {
         const data = getData.data;
         if (!data) return;
-        const defaultContent = data.defaultContent as string;
+        const defaultContent = data.defaultContent;
         setDefaultContent(defaultContent);
         const localSocialsSelected =
           data.socialSelected as unknown as SelectedSocial[];
