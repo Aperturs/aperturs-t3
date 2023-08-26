@@ -25,7 +25,6 @@ const CalendarComponent: FC<CalendarProps> = ({ handleDate }) => {
         className="REACT-CALENDAR p-2"
         view="month"
         onClickDay={(value) => {
-          console.log(date);
           setDate(value);
           handleDate(value);
         }}

@@ -43,12 +43,10 @@ function ContentPostCard({ id }: { id: string }) {
       return item;
     });
     setContent(updatedContent);
-    console.log(content,"content")
   }
 
   useEffect(() => {
     if (sync) {
-      console.log("sync from id",id,sync)
       onChangeContent(defaultContent);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

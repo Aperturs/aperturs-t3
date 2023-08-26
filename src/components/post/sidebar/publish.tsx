@@ -40,9 +40,6 @@ function Publish() {
     // error: saveError,
   } = api.userPost.savePost.useMutation();
 
-  console.log(date, "date");
-  console.log(time, "time");
-
   const router = useRouter();
 
   const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
@@ -140,7 +137,7 @@ function Publish() {
           text="Schedule"
           disabled={selectedSocials.length === 0}
           onClick={() => {
-            console.log("onClick event is triggered");
+            //
           }}
         />
       </div>
@@ -163,7 +160,7 @@ function Publish() {
       <SimpleButton
         text="Add to Queue"
         onClick={() => {
-          console.log("onClick event is triggered");
+          // console.log("onClick event is triggered");
         }}
         disabled={selectedSocials.length === 0}
       />

@@ -4,7 +4,6 @@ import PostCard from "./darfCard";
 
 const DraftPage = () => {
   const { data } = api.userPost.getSavedPosts.useQuery();
-  console.log(data)
 
   return (
     <div className="flex w-full flex-col">

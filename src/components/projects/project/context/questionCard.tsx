@@ -11,7 +11,6 @@ export default function QuestionCard({ index, question, description, answer, set
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(answer);
   };
 
   return (

@@ -41,7 +41,6 @@ export default function CommitSettings() {
         className="btn btn-primary w-full text-white"
             onClick={() => {
               // Your logic to generate posts based on commits
-              console.log(`Generating posts for ${commits} commits.`);
             }}
           >
            Save

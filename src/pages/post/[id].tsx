@@ -73,14 +73,11 @@ export default function Post() {
         const data = getData.data;
         if (!data) return;
         const defaultContent = data.defaultContent as string;
-        console.log(defaultContent);
         setDefaultContent(defaultContent);
         const localSocialsSelected =
           data.socialSelected as unknown as SelectedSocial[];
-        console.log(localSocialsSelected);
         setSelectedSocials(localSocialsSelected);
         const localContent = data.content as unknown as PostContent[];
-        console.log(localContent);
         setContent(localContent);
         setShouldReset(true);
       } catch (error) {
@@ -96,16 +93,19 @@ export default function Post() {
   ]);
 
   useEffect(() => {
-    setLoading(true);
     fetchData();
-    setLoading(false);
+
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // 2-second delay
+
     return () => {
-      // Cleanup if needed
+      clearTimeout(timeout);
     };
   }, [fetchData]);
 
-  if (loading) return <div>Loading...</div>;
-  // if (error) return <div>{error.message}</div>;
+  if (loading || getData.isLoading) return <div>Loading...</div>;
+  if (getData.error) return <div>{getData.error.message}</div>;
 
   return (
     <div>

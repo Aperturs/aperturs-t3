@@ -28,10 +28,8 @@ const AddTwitter = () => {
 };
 
 function ApiBox() {
-  const { data, mutateAsync, error, isLoading } =
-    api.user.addTwitter.useMutation();
+  const { mutateAsync, error, isLoading } = api.user.addTwitter.useMutation();
 
-  console.log(error, "error");
   const [clientID, setClientID] = React.useState("");
   const [clientSecret, setClientSecret] = React.useState("");
 

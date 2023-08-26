@@ -109,7 +109,6 @@ const ProjectContext = () => {
     const finalResponse = questionsNanswers.map(({ answer, question }) => {
       return { question, answer };
     });
-    console.log({ finalResponse });
   };
   return (
     <div className="container mx-auto py-8">

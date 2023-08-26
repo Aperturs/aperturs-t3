@@ -8,7 +8,6 @@ interface ContentCreationProps {
 }
 
 const ContentCreation: React.FC<ContentCreationProps> = ({ content, onContentChange,sync }) => {
-  console.log("content creation",content)
   return (
     <div className="relative">
       <textarea

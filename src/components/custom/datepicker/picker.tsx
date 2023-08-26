@@ -23,7 +23,6 @@ export default function Picker() {
   const setTime = useStore((state) => state.setTime);
 
   const [open, setOpen] = useState(false);
-  console.log("mounting");
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTime(event.target.value);
@@ -68,7 +67,6 @@ export default function Picker() {
   };
 
   const handleConfirm = () => {
-    console.log(`scheduled for ${formatDate(date || new Date())} at ${time}`);
     handleOpen();
   };
 
