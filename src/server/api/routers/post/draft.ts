@@ -8,12 +8,7 @@ import {
   publicProcedure,
 } from "../../trpc";
 
-// const socialSelectedSchema = z.array(
-//   z.object({
-//     id: z.string(),
-//     type: z.nativeEnum(SocialType),
-//   })
-// );
+
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
@@ -38,9 +33,7 @@ export const posting = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // const unmatchedSocials = [];
-      // let postId = "";
-
+ 
       try {
         await ctx.prisma.post.create({
           data: {
@@ -55,53 +48,6 @@ export const posting = createTRPCRouter({
           },
         });
 
-        // try {
-        //   for (const social of input.selectedSocials) {
-        //     const content = input.postContent.find(
-        //       (content) => content.id === social.id
-        //     );
-        //     console.log(content?.content);
-        //     if (content && content.content && social.type) {
-        //       await ctx.prisma.content.create({
-        //         data: {
-        //           content: content.content,
-        //           postId: postId,
-        //           socialSelected: [
-        //             {
-        //               id: social.id,
-        //               type: social.type,
-        //               name: social.name,
-        //             },
-        //           ],
-        //         },
-        //       });
-        //     } else {
-        //       unmatchedSocials.push(social);
-        //     }
-        //   }
-
-        //   if (unmatchedSocials.length > 0) {
-        //     await ctx.prisma.content.create({
-        //       data: {
-        //         content: input.defaultContent,
-        //         postId: postId,
-        //         socialSelected: unmatchedSocials,
-        //       },
-        //     });
-        //   } else {
-        //     await ctx.prisma.content.create({
-        //       data: {
-        //         content: input.defaultContent,
-        //         postId: postId,
-        //       },
-        //     });
-        //   }
-        // } catch (error) {
-        //   await ctx.prisma.post.delete({
-        //     where: { id: postId },
-        //   });
-        // }
-
         return {
           success: true,
           message: "Saved to draft successfully",
@@ -114,6 +60,50 @@ export const posting = createTRPCRouter({
         });
       }
     }),
+
+  updatePost: protectedProcedure.input(z.object({
+    postId: z.string(),
+    selectedSocials: z.array(
+      z.object({
+        id: z.string(),
+        type: z.string(),
+        name: z.string(),
+      })
+    ),
+    postContent: z.array(
+      z.object({
+        id: z.string(),
+        socialType: z.string(),
+        content: z.string(),
+      })
+    ),
+    defaultContent: z.string(),
+    scheduledTime: z.date().optional(),
+  })).mutation(async ({ ctx, input }) => {
+    try {
+      await ctx.prisma.post.update({
+        where: { id: input.postId },
+        data: {
+          status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+          scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
+          defaultContent: input.defaultContent,
+          content: input.postContent,
+          socialSelected: input.selectedSocials,
+        },
+      });
+
+      return {
+        success: true,
+        message: "Saved to draft successfully",
+        state: 200,
+      };
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Error saving to draft",
+      });
+    }
+  }),
 
   getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
@@ -150,6 +140,8 @@ export const posting = createTRPCRouter({
         });
       }
     }),
+
+  
 
   test: protectedProcedure
     .input(

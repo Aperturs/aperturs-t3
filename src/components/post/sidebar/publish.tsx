@@ -18,6 +18,7 @@ function Publish() {
     date,
     time,
     reset,
+    shouldReset,
   } = useStore(
     (state) => ({
       tweets: state.tweets,
@@ -27,6 +28,7 @@ function Publish() {
       date: state.date,
       time: state.time,
       reset: state.reset,
+      shouldReset: state.shouldReset,
     }),
     shallow
   );
@@ -47,8 +49,17 @@ function Publish() {
     // status: saveStatus,
     // error: saveError,
   } = api.userPost.savePost.useMutation();
+  const {
+    mutateAsync: updatePost,
+    isLoading: updating,
+    error: upadatingError,
+  } = api.userPost.updatePost.useMutation();
 
-  const {mutateAsync:Schedule,isLoading:scheduling,error:scheduleError} = api.userPost.test.useMutation()
+  const {
+    mutateAsync: Schedule,
+    isLoading: scheduling,
+    error: scheduleError,
+  } = api.userPost.test.useMutation();
 
   const router = useRouter();
 
@@ -170,6 +181,32 @@ function Publish() {
     // }
   };
 
+  const handleUpdate = async () => {
+    try {
+      const id = router.query.id as string;
+      await toast.promise(
+        updatePost({
+          postId: id,
+          selectedSocials: selectedSocials,
+          postContent: content,
+          defaultContent: defaultContent,
+        }),
+        {
+          loading: "Updating post...",
+          success: "Updated post",
+          error: "Failed to update post",
+        }
+      ).then(async (response) => {
+        if (response.success) {
+          reset();
+          await router.push("/drafts");
+        }
+      });
+    } catch (err) {
+      toast.error(`Failed to update post`);
+    }
+  };
+
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       <div className="grid grid-cols-2 gap-1">
@@ -181,8 +218,10 @@ function Publish() {
           onClick={async () => {
             await Schedule({
               id: "1",
-              date: new Date(new Date().setMinutes(new Date().getMinutes() + 1)),
-            })
+              date: new Date(
+                new Date().setMinutes(new Date().getMinutes() + 1)
+              ),
+            });
           }}
         />
       </div>
@@ -195,13 +234,23 @@ function Publish() {
         }}
       />
       {/* <PostWeb content={defaultContent} /> */}
-      <SimpleButton
-        isLoading={saving}
-        text="Save to drafts"
-        onClick={async () => {
-          await handleSave();
-        }}
-      />
+      {shouldReset ? (
+        <SimpleButton
+          text="Update Post"
+          isLoading={updating}
+          onClick={async () => {
+            await handleUpdate();
+          }}
+        />
+      ) : (
+        <SimpleButton
+          isLoading={saving}
+          text="Save to drafts"
+          onClick={async () => {
+            await handleSave();
+          }}
+        />
+      )}
       <SimpleButton
         text="Add to Queue"
         onClick={() => {
