@@ -10,18 +10,26 @@ import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 
 function Publish() {
-  const { tweets, defaultContent, selectedSocials, content, date, time } =
-    useStore(
-      (state) => ({
-        tweets: state.tweets,
-        defaultContent: state.defaultContent,
-        selectedSocials: state.selectedSocials,
-        content: state.content,
-        date: state.date,
-        time: state.time,
-      }),
-      shallow
-    );
+  const {
+    tweets,
+    defaultContent,
+    selectedSocials,
+    content,
+    date,
+    time,
+    reset,
+  } = useStore(
+    (state) => ({
+      tweets: state.tweets,
+      defaultContent: state.defaultContent,
+      selectedSocials: state.selectedSocials,
+      content: state.content,
+      date: state.date,
+      time: state.time,
+      reset: state.reset,
+    }),
+    shallow
+  );
   const {
     mutateAsync: createTweet,
     error: twitterError,
@@ -49,35 +57,65 @@ function Publish() {
       if (!item.id) continue;
       switch (item.type) {
         case `${SocialType.Twitter}`:
-          await createTweet({
-            tokenId: item.id,
-            tweets: [
-              {
-                id: 0,
-                text: PostContent,
-              },
-            ],
-          });
-          if (twitterError) {
-            toast.error(`Failed to post to Twitter: ${twitterError.message}`);
-          } else {
-            toast.success("Posted to Twitter");
-          }
+          await toast.promise(
+            createTweet({
+              tokenId: item.id,
+              tweets: [
+                {
+                  id: 0,
+                  text: PostContent,
+                },
+              ],
+            }),
+            {
+              loading: "Posting to Twitter...",
+              success: "Posted to Twitter",
+              error: "Failed to post to Twitter",
+            }
+          );
+          // await createTweet({
+          //   tokenId: item.id,
+          //   tweets: [
+          //     {
+          //       id: 0,
+          //       text: PostContent,
+          //     },
+          //   ],
+          // });
+          // if (twitterError) {
+          //   toast.error(`Failed to post to Twitter: ${twitterError.message}`);
+          // } else {
+          //   toast.success("Posted to Twitter");
+          // }
           break;
         case `${SocialType.Linkedin}`:
-          await createLinkedinPost({
-            tokenId: item.id,
-            content: PostContent,
-          });
-          if (linkedinError) {
-            toast.error(`Failed to post to LinkedIn: ${linkedinError.message}`);
-          } else {
-            toast.success("Posted to Linkedin");
-          }
+          await toast.promise(
+            createLinkedinPost({
+              tokenId: item.id,
+              content: PostContent,
+            }),
+            {
+              loading: "Posting to LinkedIn...",
+              success: "Posted to LinkedIn",
+              error: "Failed to post to LinkedIn",
+            }
+          );
+          // await createLinkedinPost({
+          //   tokenId: item.id,
+          //   content: PostContent,
+          // });
+          // if (linkedinError) {
+          //   toast.error(`Failed to post to LinkedIn: ${linkedinError.message}`);
+          // } else {
+          //   toast.success("Posted to Linkedin");
+          // }
           break;
         default:
           toast.error("Please select a social media platform");
       }
+    }
+    if (!twitterError || !linkedinError) {
+      reset();
     }
   };
 
@@ -114,6 +152,7 @@ function Publish() {
       )
       .then(async (response) => {
         if (response.success) {
+          reset();
           await router.push("/drafts");
         }
       });
