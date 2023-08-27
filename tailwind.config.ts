@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type Config } from "tailwindcss";
-const withMT = require("@material-tailwind/react/utils/withMT");
+import withMT from "@material-tailwind/react/utils/withMT";
 
 module.exports = withMT({
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -43,5 +44,5 @@ module.exports = withMT({
       },
     ],
   },
-  plugins: [require("daisyui")],
+  plugins: [require("daisyui"),require('@tailwindcss/container-queries')],
 } satisfies Config);

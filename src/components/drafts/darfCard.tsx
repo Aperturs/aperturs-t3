@@ -5,19 +5,18 @@ import {
   CardHeader,
   Typography,
 } from "@material-tailwind/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
-import Image from "next/image";
-
 
 interface IDarfCard {
   id: string;
   content: string;
 }
 
-export default function DraftCard({ id }: { id: string }) {
+export default function DraftCard({ id, content }: IDarfCard) {
   const router = useRouter();
   return (
     <Card className="mt-6 ">
@@ -28,17 +27,12 @@ export default function DraftCard({ id }: { id: string }) {
             alt="img-blur-shadow"
             width={400}
             height={400}
-            className="object-cover rounded-lg"
+            className="rounded-lg object-cover"
           />
         )}
       </CardHeader>
       <CardBody>
-        <Typography>
-          id is {id}
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to &quot;Naviglio&quot; where you can enjoy the main
-          night life in Barcelona.
-        </Typography>
+        <Typography>{content}</Typography>
       </CardBody>
       <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
         {/* <button className="btn btn-primary text-white"

@@ -24,7 +24,7 @@ const DraftPage = () => {
       >
         {data
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          ? data.map((item) => <PostCard key={item.id} id={item.id} />)
+          ? data.map((item) => <PostCard key={item.id} id={item.id} content={item.defaultContent} />)
           : null}
         {/* <PostCard id="1" />
         <PostCard id="2" />
