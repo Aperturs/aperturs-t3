@@ -1,6 +1,12 @@
 import { TRPCError } from "@trpc/server";
+import axios from "axios";
+import https from "https";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
 
 // const socialSelectedSchema = z.array(
 //   z.object({
@@ -36,19 +42,18 @@ export const posting = createTRPCRouter({
       // let postId = "";
 
       try {
-        await ctx.prisma.post
-          .create({
-            data: {
-              clerkUserId: ctx.currentUser,
-              status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-              scheduledAt: input.scheduledTime
-                ? new Date(input.scheduledTime)
-                : null,
-              defaultContent: input.defaultContent,
-              content: input.postContent,
-              socialSelected: input.selectedSocials
-            },
-          })
+        await ctx.prisma.post.create({
+          data: {
+            clerkUserId: ctx.currentUser,
+            status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+            scheduledAt: input.scheduledTime
+              ? new Date(input.scheduledTime)
+              : null,
+            defaultContent: input.defaultContent,
+            content: input.postContent,
+            socialSelected: input.selectedSocials,
+          },
+        });
 
         // try {
         //   for (const social of input.selectedSocials) {
@@ -112,8 +117,8 @@ export const posting = createTRPCRouter({
 
   getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
-        where: { clerkUserId: ctx.currentUser, status: "SAVED", },
-        orderBy: [{ updatedAt: "desc" }],
+      where: { clerkUserId: ctx.currentUser, status: "SAVED" },
+      orderBy: [{ updatedAt: "desc" }],
     });
     return posts;
   }),
@@ -125,5 +130,71 @@ export const posting = createTRPCRouter({
         where: { id: input },
       });
       return post;
+    }),
+
+  deleteSavedPostById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.post.delete({
+          where: { id: input.id },
+        });
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error deleting post",
+        });
+      }
+    }),
+
+  test: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        date: z.date(),
+      })
+    )
+    .mutation(async ({ ctx }) => {
+      const headers = {
+        Accept: "/",
+        url: `https://52.66.162.116/ping`,
+        delay: "one minute",
+        Authorization:
+          "eyJVc2VySUQiOiI2MWViNWNiMy01MTFiLTQ5NDEtYWE4OS03MGRlMTkzNmY0NDciLCJQYXNzd29yZCI6IjY5OWNhZjRlMzVm",
+      };
+
+      const url = "https://52.66.162.116/v1/publish";
+
+      await axios
+        .post(
+          url,
+          {},
+          {
+            headers,
+            httpsAgent: new https.Agent({
+              rejectUnauthorized: false,
+            }),
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }),
+  hello: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(({ input }) => {
+      console.log("this is hit");
+      return input.id;
     }),
 });

@@ -48,6 +48,8 @@ function Publish() {
     // error: saveError,
   } = api.userPost.savePost.useMutation();
 
+  const {mutateAsync:Schedule,isLoading:scheduling,error:scheduleError} = api.userPost.test.useMutation()
+
   const router = useRouter();
 
   const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
@@ -174,9 +176,13 @@ function Publish() {
         <Picker />
         <SimpleButton
           text="Schedule"
+          isLoading={scheduling}
           disabled={selectedSocials.length === 0}
-          onClick={() => {
-            //
+          onClick={async () => {
+            await Schedule({
+              id: "1",
+              date: new Date(new Date().setMinutes(new Date().getMinutes() + 1)),
+            })
           }}
         />
       </div>
