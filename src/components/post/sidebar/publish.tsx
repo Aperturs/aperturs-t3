@@ -48,18 +48,18 @@ function Publish() {
     isLoading: saving,
     // status: saveStatus,
     // error: saveError,
-  } = api.userPost.savePost.useMutation();
+  } = api.savepost.savePost.useMutation();
   const {
     mutateAsync: updatePost,
     isLoading: updating,
     error: upadatingError,
-  } = api.userPost.updatePost.useMutation();
+  } = api.savepost.updatePost.useMutation();
 
   const {
     mutateAsync: Schedule,
     isLoading: scheduling,
     error: scheduleError,
-  } = api.userPost.test.useMutation();
+  } = api.savepost.test.useMutation();
 
   const router = useRouter();
 
@@ -184,24 +184,26 @@ function Publish() {
   const handleUpdate = async () => {
     try {
       const id = router.query.id as string;
-      await toast.promise(
-        updatePost({
-          postId: id,
-          selectedSocials: selectedSocials,
-          postContent: content,
-          defaultContent: defaultContent,
-        }),
-        {
-          loading: "Updating post...",
-          success: "Updated post",
-          error: "Failed to update post",
-        }
-      ).then(async (response) => {
-        if (response.success) {
-          reset();
-          await router.push("/drafts");
-        }
-      });
+      await toast
+        .promise(
+          updatePost({
+            postId: id,
+            selectedSocials: selectedSocials,
+            postContent: content,
+            defaultContent: defaultContent,
+          }),
+          {
+            loading: "Updating post...",
+            success: "Updated post",
+            error: "Failed to update post",
+          }
+        )
+        .then(async (response) => {
+          if (response.success) {
+            reset();
+            await router.push("/drafts");
+          }
+        });
     } catch (err) {
       toast.error(`Failed to update post`);
     }

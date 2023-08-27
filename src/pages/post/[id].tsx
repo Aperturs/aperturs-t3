@@ -65,7 +65,7 @@ export default function Post() {
   //   }
   //   setLoading(false);
   // }, [data, setContent, setDefaultContent, setSelectedSocials]);
-  const getData = api.userPost.getSavedPostById.useQuery(id as string);
+  const getData = api.savepost.getSavedPostById.useQuery(id as string);
 
   const fetchData = useMemo(() => {
     return () => {

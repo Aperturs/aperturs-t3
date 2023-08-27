@@ -19,13 +19,13 @@ interface IDarfCard {
   refetch: () => void;
 }
 
-export default function DraftCard({ id, content,refetch }: IDarfCard) {
+export default function DraftCard({ id, content, refetch }: IDarfCard) {
   const router = useRouter();
   const {
     mutateAsync: DeleteDraft,
     isLoading: deleting,
     error: deleteError,
-  } = api.userPost.deleteSavedPostById.useMutation();
+  } = api.savepost.deleteSavedPostById.useMutation();
 
   const handleDelete = async () => {
     await toast.promise(DeleteDraft({ id }), {
@@ -33,7 +33,7 @@ export default function DraftCard({ id, content,refetch }: IDarfCard) {
       success: "Deleted",
       error: "Failed to delete",
     });
-    refetch()
+    refetch();
   };
   return (
     <Card className="mt-6 ">

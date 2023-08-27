@@ -6,7 +6,7 @@ import PostCard from "./darfCard";
 
 const DraftPage = () => {
   const { data, isLoading, error, refetch } =
-    api.userPost.getSavedPosts.useQuery();
+    api.savepost.getSavedPosts.useQuery();
 
   if (isLoading) return <LogoLoad size="100" />;
   if (error) return <div>Something Went Wrong</div>;
@@ -39,11 +39,11 @@ const DraftPage = () => {
             />
           ))
         ) : (
-          <div className="absolute grid top-[40dvh] left-[40%] place-content-center">
-            <h1 className="text-center text-xl mb-2 font-semibold">
+          <div className="absolute top-[40dvh] grid w-full place-content-center">
+            <h1 className="mb-2 text-center text-xl font-semibold">
               No Drafts Available
             </h1>
-            <Link href="/newpost" className="btn">
+            <Link href="/post" className="btn">
               Create New Draft
             </Link>
           </div>
