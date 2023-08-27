@@ -1,9 +1,13 @@
 import { BsFillCalendarFill } from "react-icons/bs";
 import { api } from "~/utils/api";
 import PostCard from "./darfCard";
+import LogoLoad from "../custom/loading/logoLoad";
 
 const DraftPage = () => {
-  const { data } = api.userPost.getSavedPosts.useQuery();
+  const { data,isLoading,error } = api.userPost.getSavedPosts.useQuery();
+
+  if(isLoading) return <LogoLoad size="100" />;
+  if(error) return <div>Something Went Wrong</div>;
 
   return (
     <div className="flex w-full flex-col">

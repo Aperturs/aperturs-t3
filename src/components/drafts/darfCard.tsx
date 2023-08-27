@@ -32,7 +32,9 @@ export default function DraftCard({ id, content }: IDarfCard) {
         )}
       </CardHeader>
       <CardBody>
-        <Typography>{content}</Typography>
+        <div className="overflow-auto h-20">
+          <Typography>{content}</Typography>
+        </div>
       </CardBody>
       <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
         {/* <button className="btn btn-primary text-white"

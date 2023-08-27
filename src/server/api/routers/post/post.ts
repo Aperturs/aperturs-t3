@@ -112,7 +112,8 @@ export const posting = createTRPCRouter({
 
   getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
-      where: { clerkUserId: ctx.currentUser, status: "SAVED" },
+        where: { clerkUserId: ctx.currentUser, status: "SAVED", },
+        orderBy: [{ updatedAt: "desc" }],
     });
     return posts;
   }),

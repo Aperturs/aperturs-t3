@@ -36,7 +36,6 @@ model User {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   Queue            Queue?
-  socialSelectedId Int?
 
   @@index([clerkUserId])
   @@index([id])
@@ -53,6 +52,7 @@ model TwitterToken {
   expires_in    DateTime?
   profileId     String?   @unique
 
+  @@index([profileId])
   @@index([clerkUserId])
   @@index([id])
 }
@@ -86,6 +86,7 @@ model LinkedInToken {
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
 
+  @@index([profileId])
   @@index([clerkUserId])
   @@index([id])
 }
@@ -135,6 +136,8 @@ model Post {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
+  @@index([updatedAt])
+  @@index([status])
   @@index([clerkUserId])
   @@index([id])
 }
