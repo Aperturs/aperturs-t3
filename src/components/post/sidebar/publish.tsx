@@ -59,7 +59,7 @@ function Publish() {
     mutateAsync: Schedule,
     isLoading: scheduling,
     error: scheduleError,
-  } = api.savepost.test.useMutation();
+  } = api.post.schedule.useMutation();
 
   const router = useRouter();
 

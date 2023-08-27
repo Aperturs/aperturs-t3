@@ -142,43 +142,6 @@ export const posting = createTRPCRouter({
     }),
 
   
-
-  test: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        date: z.date(),
-      })
-    )
-    .mutation(async ({ ctx }) => {
-      const headers = {
-        Accept: "/",
-        url: `https://52.66.162.116/ping`,
-        delay: "one minute",
-        Authorization:
-          "eyJVc2VySUQiOiI2MWViNWNiMy01MTFiLTQ5NDEtYWE4OS03MGRlMTkzNmY0NDciLCJQYXNzd29yZCI6IjY5OWNhZjRlMzVm",
-      };
-
-      const url = "https://52.66.162.116/v1/publish";
-
-      await axios
-        .post(
-          url,
-          {},
-          {
-            headers,
-            httpsAgent: new https.Agent({
-              rejectUnauthorized: false,
-            }),
-          }
-        )
-        .then((response) => {
-          console.log("Response:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }),
   hello: publicProcedure
     .input(
       z.object({

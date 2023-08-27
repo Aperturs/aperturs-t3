@@ -17,7 +17,7 @@ export default async function handler(
     currentUser: userId,
   });
 
-  const response = await caller.savepost.hello({ id: id });
+  const response = await caller.post.postbyid({ postId: id });
 
   res.status(200).json({ message: response });
 }
