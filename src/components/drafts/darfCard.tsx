@@ -7,17 +7,34 @@ import {
 } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
+import { api } from "~/utils/api";
 
 interface IDarfCard {
   id: string;
   content: string;
+  refetch: () => void;
 }
 
-export default function DraftCard({ id, content }: IDarfCard) {
+export default function DraftCard({ id, content,refetch }: IDarfCard) {
   const router = useRouter();
+  const {
+    mutateAsync: DeleteDraft,
+    isLoading: deleting,
+    error: deleteError,
+  } = api.userPost.deleteSavedPostById.useMutation();
+
+  const handleDelete = async () => {
+    await toast.promise(DeleteDraft({ id }), {
+      loading: "Deleting...",
+      success: "Deleted",
+      error: "Failed to delete",
+    });
+    refetch()
+  };
   return (
     <Card className="mt-6 ">
       <CardHeader color="blue-gray" className="relative ">
@@ -32,7 +49,7 @@ export default function DraftCard({ id, content }: IDarfCard) {
         )}
       </CardHeader>
       <CardBody>
-        <div className="overflow-auto h-20">
+        <div className="h-20 overflow-auto">
           <Typography>{content}</Typography>
         </div>
       </CardBody>
@@ -64,7 +81,11 @@ export default function DraftCard({ id, content }: IDarfCard) {
           </button>
         </div>
         <div className="tooltip" data-tip="delete">
-          <button className="btn w-full hover:bg-red-200">
+          <button
+            disabled={deleting}
+            className="btn w-full hover:bg-red-200"
+            onClick={handleDelete}
+          >
             <TbTrashFilled />
           </button>
         </div>
