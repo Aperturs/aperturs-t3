@@ -44,9 +44,6 @@ export default async function handler(
   const svixIdTimeStamp = headerPayload["svix-timestamp"] as string;
   const svixSignature = headerPayload["svix-signature"] as string;
   if (!svixId || !svixIdTimeStamp || !svixSignature) {
-    console.log("svixId", svixId);
-    console.log("svixIdTimeStamp", svixIdTimeStamp);
-    console.log("svixSignature", svixSignature);
     return res.status(500).json({ message: "Error Happended" });
   }
   const svixHeaders = {

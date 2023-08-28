@@ -1,16 +1,18 @@
+import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
 import { api } from "~/utils/api";
-import PostCard from "./darfCard";
 import LogoLoad from "../custom/loading/logoLoad";
+import PostCard from "./darfCard";
 
 const DraftPage = () => {
-  const { data,isLoading,error } = api.userPost.getSavedPosts.useQuery();
+  const { data, isLoading, error, refetch } =
+    api.savepost.getSavedPosts.useQuery();
 
-  if(isLoading) return <LogoLoad size="100" />;
-  if(error) return <div>Something Went Wrong</div>;
+  if (isLoading) return <LogoLoad size="100" />;
+  if (error) return <div>Something Went Wrong</div>;
 
   return (
-    <div className="flex w-full flex-col">
+    <div className=" relative flex w-full flex-col">
       <div className="flex justify-between">
         <h2 className="text-2xl font-bold">Draft</h2>
         <div className="flex gap-2">
@@ -26,13 +28,26 @@ const DraftPage = () => {
         xl:grid-cols-3
         "
       >
-        {data
+        {data.length > 0 ? (
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          ? data.map((item) => <PostCard key={item.id} id={item.id} content={item.defaultContent} />)
-          : null}
-        {/* <PostCard id="1" />
-        <PostCard id="2" />
-        <PostCard id="3" /> */}
+          data.map((item) => (
+            <PostCard
+              key={item.id}
+              id={item.id}
+              content={item.defaultContent}
+              refetch={refetch}
+            />
+          ))
+        ) : (
+          <div className="absolute top-[40dvh] grid w-full place-content-center">
+            <h1 className="mb-2 text-center text-xl font-semibold">
+              No Drafts Available
+            </h1>
+            <Link href="/post" className="btn">
+              Create New Draft
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

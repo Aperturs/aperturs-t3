@@ -58,9 +58,9 @@ export default function Picker() {
   const handleOpen = () => {
     if (open) {
       if (date) {
-        if (!handleIsPastTime(date, time)) {
-          toast.error("Please select a time at least 20 minutes from now");
-        }
+        // if (!handleIsPastTime(date, time)) {
+        //   toast.error("Please select a time at least 20 minutes from now");
+        // }
       }
     }
     setOpen(!open);

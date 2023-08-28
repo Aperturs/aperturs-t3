@@ -18,6 +18,7 @@ function Publish() {
     date,
     time,
     reset,
+    shouldReset,
   } = useStore(
     (state) => ({
       tweets: state.tweets,
@@ -27,6 +28,7 @@ function Publish() {
       date: state.date,
       time: state.time,
       reset: state.reset,
+      shouldReset: state.shouldReset,
     }),
     shallow
   );
@@ -44,9 +46,21 @@ function Publish() {
   const {
     mutateAsync: saveToDrafts,
     isLoading: saving,
+    data: saveData,
     // status: saveStatus,
     // error: saveError,
-  } = api.userPost.savePost.useMutation();
+  } = api.savepost.savePost.useMutation();
+  const {
+    mutateAsync: updatePost,
+    isLoading: updating,
+    error: upadatingError,
+  } = api.savepost.updatePost.useMutation();
+
+  const {
+    mutateAsync: Schedule,
+    isLoading: scheduling,
+    error: scheduleError,
+  } = api.post.schedule.useMutation();
 
   const router = useRouter();
 
@@ -100,15 +114,6 @@ function Publish() {
               error: "Failed to post to LinkedIn",
             }
           );
-          // await createLinkedinPost({
-          //   tokenId: item.id,
-          //   content: PostContent,
-          // });
-          // if (linkedinError) {
-          //   toast.error(`Failed to post to LinkedIn: ${linkedinError.message}`);
-          // } else {
-          //   toast.success("Posted to Linkedin");
-          // }
           break;
         default:
           toast.error("Please select a social media platform");
@@ -119,13 +124,17 @@ function Publish() {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async ({ isScheduling }: { isScheduling: boolean }) => {
+    let postId = "";
     const [hours, minutes] = time.split(":");
     const scheduledTime =
       date && hours !== undefined && minutes !== undefined
         ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
         : undefined;
 
+    if (isScheduling && !scheduledTime) {
+      return toast.error("Please select a date and time");
+    }
     if (!defaultContent || !content)
       return toast.error("Please add a post content");
     await toast
@@ -142,7 +151,8 @@ function Publish() {
             content: post.content,
           })),
           defaultContent: defaultContent,
-          scheduledTime: scheduledTime ? new Date(scheduledTime) : undefined,
+          scheduledTime:
+            isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
         }),
         {
           loading: "Saving to drafts...",
@@ -153,9 +163,14 @@ function Publish() {
       .then(async (response) => {
         if (response.success) {
           reset();
-          await router.push("/drafts");
+          if (!isScheduling) {
+            await router.push("/drafts");
+          }
+          postId = response.data;
         }
       });
+    return postId;
+
     // console.log(saveStatus);
     // if (saveStatus == "success") {
     //   toast.success("Saved to drafts");
@@ -168,15 +183,81 @@ function Publish() {
     // }
   };
 
+  const handleUpdate = async () => {
+    try {
+      const id = router.query.id as string;
+      await toast
+        .promise(
+          updatePost({
+            postId: id,
+            selectedSocials: selectedSocials,
+            postContent: content,
+            defaultContent: defaultContent,
+          }),
+          {
+            loading: "Updating post...",
+            success: "Updated post",
+            error: "Failed to update post",
+          }
+        )
+        .then(async (response) => {
+          if (response.success) {
+            reset();
+            await router.push("/drafts");
+          }
+        });
+    } catch (err) {
+      toast.error(`Failed to update post`);
+    }
+  };
+
+  const handleSchedule = async () => {
+    const [hours, minutes] = time.split(":");
+    const scheduledTime =
+      date && hours !== undefined && minutes !== undefined
+        ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
+        : undefined;
+
+    if (!scheduledTime) {
+      return toast.error("Please select a date and time");
+    }
+    try {
+      const postId = await handleSave({ isScheduling: true });
+      const id = shouldReset ? (router.query.id as string) : (postId);
+      console.log(id, "id");
+      console.log(saveData, "savedData");
+      await toast
+        .promise(
+          Schedule({
+            id: id,
+            date: new Date(scheduledTime),
+          }),
+          {
+            loading: "Scheduling post...",
+            success: "Scheduled post",
+            error: "Failed to schedule post",
+          }
+        )
+        .then(async (response) => {
+          if (response) {
+            reset();
+            await router.push("/post");
+          }
+        });
+    } catch (err) {
+      toast.error(`Failed to schedule post`);
+    }
+  };
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       <div className="grid grid-cols-2 gap-1">
         <Picker />
         <SimpleButton
           text="Schedule"
+          isLoading={scheduling || saving}
           disabled={selectedSocials.length === 0}
-          onClick={() => {
-            //
+          onClick={async () => {
+            await handleSchedule();
           }}
         />
       </div>
@@ -189,13 +270,23 @@ function Publish() {
         }}
       />
       {/* <PostWeb content={defaultContent} /> */}
-      <SimpleButton
-        isLoading={saving}
-        text="Save to drafts"
-        onClick={async () => {
-          await handleSave();
-        }}
-      />
+      {shouldReset ? (
+        <SimpleButton
+          text="Update Post"
+          isLoading={updating}
+          onClick={async () => {
+            await handleUpdate();
+          }}
+        />
+      ) : (
+        <SimpleButton
+          isLoading={saving}
+          text="Save to drafts"
+          onClick={async () => {
+            await handleSave({ isScheduling: false });
+          }}
+        />
+      )}
       <SimpleButton
         text="Add to Queue"
         onClick={() => {

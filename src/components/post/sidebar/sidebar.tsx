@@ -1,7 +1,6 @@
 import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
-import { SocialType } from "~/types/post-enums";
 
 const SideBar = () => {
   const { data } = api.user.fetchConnectedAccounts.useQuery();
@@ -32,7 +31,7 @@ const SideBar = () => {
               profilePic={lensProfile.imageUrl}
             />
           )} */}
-          <ConnectedAccount
+          {/* <ConnectedAccount
             id="2"
             name="Swaraj"
             type={SocialType.Twitter}
@@ -49,7 +48,7 @@ const SideBar = () => {
             name="Swaraj"
             type={SocialType.Twitter}
             profilePic={"/user.png"}
-          />
+          /> */}
         </div>
       </div>
     </div>
