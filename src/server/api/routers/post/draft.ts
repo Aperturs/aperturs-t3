@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { saveDraft } from "../../helpers/misc";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -13,8 +12,21 @@ export const posting = createTRPCRouter({
     .input(savePostInputSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        await saveDraft({ user: ctx.currentUser, input });
+        const savedPost = await ctx.prisma.post.create({
+          data: {
+            clerkUserId: ctx.currentUser,
+            status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+            scheduledAt: input.scheduledTime
+              ? new Date(input.scheduledTime)
+              : null,
+            defaultContent: input.defaultContent,
+            content: input.postContent,
+            socialSelected: input.selectedSocials,
+          },
+        });
+        console.log(savedPost.id);
         return {
+          data: savedPost.id,
           success: true,
           message: "Saved to draft successfully",
           state: 200,
@@ -26,6 +38,7 @@ export const posting = createTRPCRouter({
         });
       }
     }),
+
   updatePost: protectedProcedure
     .input(
       z.object({

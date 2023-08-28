@@ -2,7 +2,10 @@ import { TRPCError } from "@trpc/server";
 import axios from "axios";
 import https from "https";
 import { z } from "zod";
+import { env } from "~/env.mjs";
 import { SocialType } from "~/types/post-enums";
+import { postToLinkedin } from "../../helpers/linkedln";
+import { postToTwitter } from "../../helpers/twitter";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -36,11 +39,21 @@ export const post = createTRPCRouter({
             if (!item.id) continue;
             switch (item.type) {
               case `${SocialType.Twitter}`:
-                //post to twitter
-                console.log(PostContent);
+                await postToTwitter({
+                  tokenId: item.id,
+                  tweets: [
+                    {
+                      id: 0,
+                      text: PostContent,
+                    },
+                  ],
+                });
                 break;
               case `${SocialType.Linkedin}`:
-                console.log(PostContent);
+                await postToLinkedin({
+                  tokenId: item.id,
+                  content: PostContent,
+                });
                 //post to linkedin
                 break;
               default:
@@ -51,6 +64,12 @@ export const post = createTRPCRouter({
           //   reset();
           // }
         }
+        await ctx.prisma.post.update({
+          where: { id: input.postId },
+          data: {
+            status: "PUBLISHED",
+          },
+        });
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -66,18 +85,19 @@ export const post = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(`${input.date.getTime() - Date.now()}`, "delay");
+      console.log(`${input.date.getTime() - Date.now()}`, "delay ms");
+
+      try{
+      const delay = input.date.getTime() - Date.now();
       const headers = {
         Accept: "/",
-        url: `https://2aa6-2a09-bac5-406c-101e-00-19b-5.ngrok-free.app/api/post/schedule?id=${input.id}&userId=${ctx.currentUser}`,
-        delay: `30 seconds`,
-        Authorization:
-          "eyJVc2VySUQiOiI2MWViNWNiMy01MTFiLTQ5NDEtYWE4OS03MGRlMTkzNmY0NDciLCJQYXNzd29yZCI6IjY5OWNhZjRlMzVm",
+        url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
+        delay: `${delay} milliseconds`,
+        Authorization: env.CRONJOB_AUTH,
       };
-
+      console.log(headers)
       const url = "https://52.66.162.116/v1/publish";
-
-      await axios
+      const res = await axios
         .post(
           url,
           {},
@@ -91,5 +111,18 @@ export const post = createTRPCRouter({
         .catch((error) => {
           console.error("Error:", error);
         });
+      console.log("Response", res?.data);
+      return {
+        success: true,
+        message: "Post scheduled successfully",
+        state: 200,
+      };
+      }catch(err){
+        return {
+          success: false,
+          message: "Error scheduling post",
+          state: 500,
+        };
+      }
     }),
 });
