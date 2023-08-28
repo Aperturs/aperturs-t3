@@ -11,6 +11,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../trpc";
+import { roundToNearestMinutes } from "date-fns";
 
 export const post = createTRPCRouter({
   postbyid: publicProcedure
@@ -88,11 +89,12 @@ export const post = createTRPCRouter({
       console.log(`${input.date.getTime() - Date.now()}`, "delay ms");
 
       try{
-      const delay = input.date.getTime() - Date.now();
+      const delay = Math.round((input.date.getTime() - Date.now())/1000);
+      console.log(delay)
       const headers = {
         Accept: "/",
         url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
-        delay: `${delay} milliseconds`,
+        delay: `${delay} seconds`,
         Authorization: env.CRONJOB_AUTH,
       };
       console.log(headers)
