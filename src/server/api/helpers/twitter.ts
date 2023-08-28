@@ -5,6 +5,7 @@
 import { type TwitterToken } from "@prisma/client";
 import Client from "twitter-api-sdk";
 import { prisma } from "~/server/db";
+import { type PostTweetInput } from "../types";
 
 interface TwitterAccountDetails
   extends Pick<TwitterToken, "access_token" | "refresh_token" | "profileId"> {
@@ -21,7 +22,6 @@ export const getAccessToken = async (tokenId: string) => {
   if (token) {
     if (token.expires_in && token.refresh_token && token.access_token) {
       if (token.expires_in < new Date()) {
-
         const bearerToken = Buffer.from(
           `${token.client_id}:${token.client_secret}`
         ).toString("base64");
@@ -81,4 +81,43 @@ export const getTwitterAccountDetails = async (
     }
   }
   return twitterDetails;
+};
+
+export const postToTwitter = async (
+  input: PostTweetInput
+) => {
+  const accessToken = (await getAccessToken(input.tokenId)) as string;
+  const client = new Client(accessToken);
+  try {
+    if (input.tweets[0] && input.tweets.length > 0) {
+      // Post the first tweet
+      const firstTweet = await client.tweets.createTweet({
+        text: input.tweets[0].text,
+      });
+
+      if (firstTweet.data) {
+        let previousTweetId = firstTweet.data.id;
+        // Loop through the rest of the tweets
+        for (let i = 1; i < input.tweets.length; i++) {
+          const tweet = input.tweets[i];
+          if (tweet) {
+            const post = await client.tweets.createTweet({
+              text: tweet.text,
+              reply: {
+                in_reply_to_tweet_id: previousTweetId,
+              },
+            });
+            if (post.data) {
+              previousTweetId = post.data.id;
+            } else {
+              console.log("error");
+              return;
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
 };
