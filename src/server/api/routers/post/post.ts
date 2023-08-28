@@ -24,8 +24,6 @@ export const post = createTRPCRouter({
           },
         });
 
-        console.log("route is hit")
-
         if (post) {
           const content = post.content as unknown as PostContent[];
           const selectedSocials =
@@ -68,7 +66,7 @@ export const post = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-        console.log(`${input.date.getTime() - Date.now()}`,"delay")
+      console.log(`${input.date.getTime() - Date.now()}`, "delay");
       const headers = {
         Accept: "/",
         url: `https://2aa6-2a09-bac5-406c-101e-00-19b-5.ngrok-free.app/api/post/schedule?id=${input.id}&userId=${ctx.currentUser}`,
@@ -90,9 +88,6 @@ export const post = createTRPCRouter({
             }),
           }
         )
-        .then((response) => {
-          console.log("Response:", response.data);
-        })
         .catch((error) => {
           console.error("Error:", error);
         });

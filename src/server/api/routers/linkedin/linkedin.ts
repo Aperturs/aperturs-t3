@@ -20,7 +20,6 @@ export const linkedin = createTRPCRouter({
           profileId: true,
         },
       });
-      console.log(tokenData?.access_token, "tokenData linkedin");
       const profileId = tokenData?.profileId;
       if (profileId) {
         try {

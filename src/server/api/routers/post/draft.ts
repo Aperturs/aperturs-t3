@@ -149,7 +149,6 @@ export const posting = createTRPCRouter({
       })
     )
     .mutation(({ input }) => {
-      console.log("this is hit");
       return input.id;
     }),
 });

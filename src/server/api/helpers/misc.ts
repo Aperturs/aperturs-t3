@@ -21,7 +21,6 @@ export const ConnectSocial = async ({user}:{user:string}):Promise<boolean> =>{
     }
     return false;
     } catch (error) {
-      console.error(error);
       throw error; // or handle it in some other way
     }
   }
