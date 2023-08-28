@@ -254,7 +254,7 @@ function Publish() {
         <Picker />
         <SimpleButton
           text="Schedule"
-          isLoading={scheduling}
+          isLoading={scheduling || saving}
           disabled={selectedSocials.length === 0}
           onClick={async () => {
             await handleSchedule();
