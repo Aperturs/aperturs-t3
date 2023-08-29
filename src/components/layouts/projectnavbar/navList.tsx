@@ -43,7 +43,7 @@ export default function NavList() {
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       {menuItems.map(({ text, icon, url }) => (
-        <Link href={`/project/${router.query.id as string}/${url}`} key={text}>
+        <Link href={`/project/${router.query.id as string}${url}`} key={text}>
           <Typography
             variant="small"
             color="blue-gray"

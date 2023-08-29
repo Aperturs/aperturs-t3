@@ -27,7 +27,7 @@ function Projects() {
         </h3>
         <NewRepoFormModal />
       </div>
-      <div className={`grid-col-1  grid gap-6 sm:grid-cols-2 xl:grid-cols-4`}>
+      <div className={`grid-col-1  grid gap-6  xl:grid-cols-2 2xl:grid-cols-3`}>
         {/* <GithubCard
           projectId="test"
           repoName="test"
@@ -38,7 +38,7 @@ function Projects() {
           data.map((item) => (
             <GithubCard
               key={item.id}
-              projectId={item.repoId}
+              projectId={item.id}
               repoName={item.repoName}
               repoDescription={item.repoDescription}
               lastUpdated=""
