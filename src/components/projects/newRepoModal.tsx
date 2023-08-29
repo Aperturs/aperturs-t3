@@ -97,13 +97,19 @@ const NewRepoFormModal = () => {
 
   const onConfirm = async () => {
     // console.log("onConfirm event is triggered");
-    await addProject({
-      repoId: option.value.id.toString(),
-      commitCount: commitsCount,
-      questionsAnswersJsonString: JSON.stringify({}),
-      repoDescription: option.value.description,
-      repoName: option.value.name,
-      repoUrl: option.value.html_url,
+
+    toast.promise(
+      addProject({
+        repoId: option.value.id.toString(),
+        commitCount: commitsCount,
+        questionsAnswersJsonString: undefined,
+        repoDescription: option.value.description,
+        repoName: option.value.name,
+        repoUrl: option.value.html_url,
+      }), {
+      loading: "loading...",
+      success: "connected",
+      error: "there is some error"
     })
 
   };

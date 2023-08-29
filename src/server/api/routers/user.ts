@@ -31,7 +31,7 @@ export const userRouter = createTRPCRouter({
         repoDescription: z.string(),
         repoUrl: z.string(),
         repoId: z.string(),
-        questionsAnswersJsonString: z.string(),
+        questionsAnswersJsonString: z.string().optional(),
         commitCount: z.number().positive(),
       })
     )
@@ -42,7 +42,7 @@ export const userRouter = createTRPCRouter({
           repoDescription: input.repoDescription,
           repoUrl: input.repoUrl,
           repoId: input.repoId,
-          questionsAnswersJsonString: input.questionsAnswersJsonString,
+          questionsAnswersJsonString: input.questionsAnswersJsonString ? JSON.parse(input.questionsAnswersJsonString) : [],
           commitCount: input.commitCount,
           user: { connect: { clerkUserId: ctx.currentUser } },
         },
@@ -98,11 +98,10 @@ export const userRouter = createTRPCRouter({
 
     // if (canConnect) {
     try {
-      const url = `https://github.com/login/oauth/authorize?client_id=${
-        env.NEXT_PUBLIC_GITHUB_CLIENT_ID
-      }&redirect_uri=${encodeURIComponent(
-        env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
-      )}&scope=${encodeURIComponent("user repo")}`;
+      const url = `https://github.com/login/oauth/authorize?client_id=${env.NEXT_PUBLIC_GITHUB_CLIENT_ID
+        }&redirect_uri=${encodeURIComponent(
+          env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
+        )}&scope=${encodeURIComponent("user repo")}`;
       return { url };
     } catch (error) {
       console.log(error);
