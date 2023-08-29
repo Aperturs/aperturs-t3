@@ -1,7 +1,24 @@
+import Link from "next/link";
 import { type ReactElement } from "react";
 import { GithubCard, Layout, NewRepoFormModal } from "~/components";
+import LogoLoad from "~/components/custom/loading/logoLoad";
+import { api } from "~/utils/api";
 
 function Projects() {
+  const { data, isLoading } = api.github.project.getAllProjects.useQuery();
+  const { data: githubTokens, isLoading: tokensLoading } =
+    api.user.getGithubAccounts.useQuery();
+
+  if (isLoading || tokensLoading) return <LogoLoad size="24" />;
+  if (!githubTokens || githubTokens.length <= 0)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Go to settings and add github
+        <Link href="/settings" className="btn">
+          Settings
+        </Link>
+      </div>
+    );
   return (
     <div className="w-full py-12 ">
       <div className="mb-6 w-full justify-between md:flex">
@@ -11,12 +28,27 @@ function Projects() {
         <NewRepoFormModal />
       </div>
       <div className={`grid-col-1  grid gap-6 sm:grid-cols-2 xl:grid-cols-4`}>
-        <GithubCard
+        {/* <GithubCard
           projectId="test"
           repoName="test"
           repoDescription="test"
           lastUpdated="test"
-        />
+        /> */}
+        {data ? (
+          data.map((item) => (
+            <GithubCard
+              key={item.id}
+              projectId={item.repoId}
+              repoName={item.repoName}
+              repoDescription={item.repoDescription}
+              lastUpdated=""
+            />
+          ))
+        ) : (
+          <div className="grid h-full w-full place-content-center">
+            No Projects Connected
+          </div>
+        )}
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../trpc";
-import { roundToNearestMinutes } from "date-fns";
 
 export const post = createTRPCRouter({
   postbyid: publicProcedure
@@ -78,6 +77,7 @@ export const post = createTRPCRouter({
         });
       }
     }),
+
   schedule: protectedProcedure
     .input(
       z.object({
@@ -86,20 +86,17 @@ export const post = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(`${input.date.getTime() - Date.now()}`, "delay ms");
 
       try{
       const delay = Math.round((input.date.getTime() - Date.now())/1000);
-      console.log(delay)
       const headers = {
         Accept: "/",
         url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
         delay: `${delay} seconds`,
         Authorization: env.CRONJOB_AUTH,
       };
-      console.log(headers)
       const url = "https://52.66.162.116/v1/publish";
-      const res = await axios
+       await axios
         .post(
           url,
           {},
@@ -113,7 +110,6 @@ export const post = createTRPCRouter({
         .catch((error) => {
           console.error("Error:", error);
         });
-      console.log("Response", res?.data);
       return {
         success: true,
         message: "Post scheduled successfully",

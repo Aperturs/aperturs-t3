@@ -3,6 +3,7 @@ import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import { SocialType } from "~/types/post-enums";
+import { getGithubAccountDetails } from "../helpers/github";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
 import { getTwitterAccountDetails } from "../helpers/twitter";
@@ -23,6 +24,8 @@ export const userRouter = createTRPCRouter({
       });
       return user;
     }),
+
+    
   addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
     const canConnect = await ConnectSocial({ user: ctx.currentUser });
     if (canConnect) {
@@ -40,11 +43,10 @@ export const userRouter = createTRPCRouter({
 
     // if (canConnect) {
     try {
-      const url = `https://github.com/login/oauth/authorize?client_id=${
-        env.NEXT_PUBLIC_GITHUB_CLIENT_ID
-      }&redirect_uri=${encodeURIComponent(
-        env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
-      )}&scope=${encodeURIComponent("user repo")}`;
+      const url = `https://github.com/login/oauth/authorize?client_id=${env.NEXT_PUBLIC_GITHUB_CLIENT_ID
+        }&redirect_uri=${encodeURIComponent(
+          env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
+        )}&scope=${encodeURIComponent("user repo")}`;
       return { url };
     } catch (error) {
       console.log(error);
@@ -95,24 +97,13 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  // addGithub: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       access_token: z.string(),
-  //       profileId: z.string(),
-  //       expires_in: z.date().optional(),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     return await ctx.prisma.githubToken.create({
-  //       data: {
-  //         user: { connect: { clerkUserId: ctx.currentUser } },
-  //         access_token: input.access_token,
-  //         expires_in: input.expires_in,
-  //         profileId: input.profileId,
-  //       },
-  //     });
-  //   }),
+  getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
+    const github = await ctx.prisma.githubToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
+    const githubDetails = await getGithubAccountDetails(github);
+    return githubDetails;
+  }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const twitter = await ctx.prisma.twitterToken.findMany({
@@ -122,9 +113,9 @@ export const userRouter = createTRPCRouter({
       where: { clerkUserId: ctx.currentUser },
     });
 
-    // const github = await ctx.prisma.githubToken.findMany({
-    //   where: { clerkUserId: ctx.currentUser },
-    // });
+    const github = await ctx.prisma.githubToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
 
     // TODO: define proper output types, instead of directly using Prisma types
     try {
@@ -158,23 +149,24 @@ export const userRouter = createTRPCRouter({
           });
         }
       }
-      // const githubDetails = await getGithubAccountDetails(github);
-      // if (github.length > 0) {
-      //   for (const githubDetail of githubDetails) {
-      //     accounts.push({
-      //       type: SocialType.Github,
-      //       data: {
-      //         tokenId: githubDetail.tokenId,
-      //         name: githubDetail.username,
-      //         profile_image_url: githubDetail.profile_image_url,
-      //         profileId: githubDetail.profileId,
-      //       },
-      //     });
-      //   }
-      // }
+      const githubDetails = await getGithubAccountDetails(github);
+      if (github.length > 0) {
+        for (const githubDetail of githubDetails) {
+          accounts.push({
+            type: SocialType.Github,
+            data: {
+              tokenId: githubDetail.tokenId,
+              name: githubDetail.username,
+              profile_image_url: githubDetail.profile_image_url,
+              profileId: githubDetail.profileId,
+            },
+          });
+        }
+      }
 
       return accounts;
     } catch (error) {
+      console.log(error);
       throw new TRPCError({
         message: "Error fetching connected accounts",
         code: "INTERNAL_SERVER_ERROR",

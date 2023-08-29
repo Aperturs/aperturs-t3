@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
-import { FaFacebookSquare, FaGithub, FaLinkedinIn } from "react-icons/fa";
+import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import useLensProfile from "~/hooks/lens-profile";
 import { SocialType } from "~/types/post-enums";
@@ -47,7 +47,7 @@ const ConnectSocials = () => {
             data.map((item, key) => (
               <AfterConnect
                 key={key}
-                name={item.data.name}
+                name={item.data.name || ""}
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 icon={<SocialIcon type={item.type} />}
                 profilePic={item.data.profile_image_url || "/user.png"}
@@ -55,11 +55,6 @@ const ConnectSocials = () => {
             ))
           )}
 
-          <AfterConnect
-            name="Swaraj"
-            icon={<FaFacebookSquare />}
-            profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          />
           {profile && (
             <AfterConnect
               name={lensProfile.name}

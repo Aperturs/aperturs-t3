@@ -11,13 +11,13 @@ interface GithubTokenDetails
 export const getGithubAccountDetails = async (githubTokens: GithubToken[]) => {
   const githubTokenDetails: GithubTokenDetails[] = [];
   for (const githubToken of githubTokens) {
-    const userObject: GithubUser = await (
+    const userObject: GithubUser = (await (
       await fetch("https://api.github.com/user", {
         headers: {
           Authorization: `token ${githubToken.access_token}`,
         },
       })
-    ).json() as GithubUser;
+    ).json()) as GithubUser;
     githubTokenDetails.push({
       access_token: githubToken.access_token,
       refresh_token: githubToken.refresh_token,

@@ -1,5 +1,3 @@
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import { Alert } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import QueueCard from "./queueCard";
 
@@ -23,11 +21,11 @@ const queue = [
     posts: [
       {
         time: "10:15",
-        type: "instagram",
+        type: "",
       },
       {
         time: "12:16",
-        type: "twitter recurring",
+        type: "",
       },
     ],
   },
@@ -36,7 +34,7 @@ const queue = [
     posts: [
       {
         time: "10:15",
-        type: "instagram",
+        type: "",
       },
     ],
   },
@@ -45,7 +43,7 @@ const queue = [
     posts: [
       {
         time: "23:15",
-        type: "instagram",
+        type: "",
       },
     ],
   },
@@ -111,13 +109,13 @@ export const QueueNav = () => {
     }
 
     setFilteredQueue(availableSlots);
-  }, [queue]);
+  }, []);
 
   return (
-    <div className="max-w-screen-lg">
+    <div className="w-full max-w-screen-lg">
       {/* ... existing JSX */}
       <h2 className="my-2 text-2xl font-bold">Queue</h2>
-      <Alert
+      {/* <Alert
         className="my-4"
         color="amber"
         icon={<InformationCircleIcon strokeWidth={2} className="h-6 w-6" />}
@@ -125,8 +123,8 @@ export const QueueNav = () => {
         You are currently on the free plan. You can schedule tweets and threads
         up to 2 days ahead.Grab a Aperturs subscription to unlock unlimited
         scheduling, autoplugs, recurrent promotional posts and much more.
-      </Alert>
-      <div className="my-4">
+      </Alert> */}
+      <div className="my-4 w-full">
         {filteredQueue.map((dayInfo) => (
           <div key={dayInfo.date} className="">
             <h3 className="pl-1 text-lg font-bold">{dayInfo.day}</h3>

@@ -1,9 +1,8 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useState, type ReactElement } from "react";
 import toast from "react-hot-toast";
 import { Layout, ProjectLayout, QuestionCard } from "~/components";
-
-type Question = { question: string; answer: string; description: string };
+import { api } from "~/utils/api";
 
 const ProjectContext = () => {
   useEffect(() => {
@@ -95,6 +94,7 @@ const ProjectContext = () => {
       answer: "",
     },
   ]);
+
   const router = useRouter();
   const setAnswer = (index: number, answer: string) => {
     const newQuestions = questionsNanswers.map((q, i) => {
@@ -105,10 +105,31 @@ const ProjectContext = () => {
     });
     setQuestionsAnswer(newQuestions);
   };
-  const submit =  () => {
+  const { mutateAsync: updateContext } =
+    api.github.project.updateProject.useMutation();
+  const submit = async () => {
+    const id = router.query.id;
+    if (!id) return;
     const finalResponse = questionsNanswers.map(({ answer, question }) => {
       return { question, answer };
     });
+    await toast
+      .promise(
+        updateContext({
+          data: {
+            questionsAnswersJsonString: JSON.stringify(finalResponse),
+          },
+          id: id.toString(),
+        }),
+        {
+          loading: "Submitting...",
+          success: "Submitted successfully",
+          error: "Something went wrong",
+        }
+      )
+      .then(async () => {
+        await router.push(`/project/${router.query.id as string}/commits`);
+      });
   };
   return (
     <div className="container mx-auto py-8">
@@ -125,7 +146,9 @@ const ProjectContext = () => {
         ))}
       </div>
       <button
-        onClick={submit}
+        onClick={async () => {
+          await submit();
+        }}
         className=" btn-primary btn mt-4 rounded-lg px-6 py-2 text-white"
       >
         Submit
