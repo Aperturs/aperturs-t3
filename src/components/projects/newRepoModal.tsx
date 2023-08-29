@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   Avatar,
   Button,
@@ -8,7 +10,7 @@ import {
   DialogHeader,
   Input,
   Spinner,
-  Typography
+  Typography,
 } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -16,7 +18,6 @@ import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import Select from "react-select";
 import { useGithub } from "~/hooks/useGithub";
-import { Repo } from "~/types/githubTypes";
 import { api } from "~/utils/api";
 type RepoOptionType = {
   value: Repo;
@@ -33,7 +34,7 @@ const RepoOption = ({ label, value }: RepoOptionType) => {
               alt="avatar"
               variant="square"
             />
-            <p className="text-black  font-bold">{label}</p>
+            <p className="font-bold  text-black">{label}</p>
             <p>Owner : {value.owner.type}</p>
             <div className="flex">
               <Chip variant="ghost" value={value.visibility} />
@@ -48,7 +49,8 @@ const RepoOption = ({ label, value }: RepoOptionType) => {
 const NewRepoFormModal = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
-  const { data: githubTokens, isLoading } = api.user.getGithubAccounts.useQuery();
+  const { data: githubTokens, isLoading } =
+    api.user.getGithubAccounts.useQuery();
 
   const { getRepositories, loading, error } = useGithub(
     githubTokens?.at(0)?.access_token as string
@@ -57,37 +59,43 @@ const NewRepoFormModal = () => {
     if (error) {
       toast.error(`Could Not Create  due to the Error , ${error}`);
     }
-  }, [error])
-  useEffect(() => {
-    if (!githubTokens || githubTokens.length <= 0) {
-      toast.error("Go to settings and add github")
-      router.push("/settings")
-    }
-  }, [githubTokens])
+  }, [error]);
+  // useEffect(() => {
+  //   if (!githubTokens || githubTokens.length <= 0) {
+  //     toast.error("Go to settings and add github");
+  //     router.push("/settings");
+  //   }
+  // }, [githubTokens]);
   const [option, setOption] = useState({} as RepoOptionType);
   const [commitsCount, setCommitsCount] = useState(3);
   const [options, setOptions] = useState([] as RepoOptionType[]);
   const router = useRouter();
   useEffect(() => {
-    getRepositories().then((res) => {
-      const repos = res?.data as Repo[];
-      if (repos) {
-        const repoOptions: RepoOptionType[] = repos.map((repo) => {
-          return {
-            value: repo,
-            label: repo.full_name,
-          } as RepoOptionType;
-        });
-        // console.log({ repoOptions })
-        setOptions(repoOptions);
-      }
-    });
+    getRepositories()
+      .then((res) => {
+        const repos = res?.data as Repo[];
+        if (repos) {
+          const repoOptions: RepoOptionType[] = repos.map((repo) => {
+            return {
+              value: repo,
+              label: repo.full_name,
+            } as RepoOptionType;
+          });
+          // console.log({ repoOptions })
+          setOptions(repoOptions);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
-  const { mutateAsync: addProject, isLoading: projectLoading } = api.user.addProject.useMutation({
-    onSuccess: (data) => {
-      router.push(`/project/${data.id}/settings`)
-    }
-  })
+
+  const { mutateAsync: addProject, isLoading: projectLoading } =
+    api.github.project.addProject.useMutation({
+      onSuccess: async (data) => {
+        await router.push(`/project/${data.id}/settings`);
+      },
+    });
 
   // useEffect(() => {
   //   if (failure) {
@@ -98,22 +106,27 @@ const NewRepoFormModal = () => {
   const onConfirm = async () => {
     // console.log("onConfirm event is triggered");
 
-    toast.promise(
-      addProject({
-        repoId: option.value.id.toString(),
-        commitCount: commitsCount,
-        questionsAnswersJsonString: undefined,
-        repoDescription: option.value.description,
-        repoName: option.value.name,
-        repoUrl: option.value.html_url,
-      }), {
-      loading: "loading...",
-      success: "connected",
-      error: "there is some error"
-    })
-
+    await toast
+      .promise(
+        addProject({
+          repoId: option.value.id.toString(),
+          commitCount: commitsCount,
+          questionsAnswersJsonString: undefined,
+          repoDescription: option.value.description,
+          repoName: option.value.name,
+          repoUrl: option.value.html_url,
+        }),
+        {
+          loading: "loading...",
+          success: "connected",
+          error: "there is some error",
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  if (isLoading) return <Spinner className="h-12 w-12" />
+  if (isLoading) return <Spinner className="h-12 w-12" />;
   return (
     <>
       <button className="btn-primary btn px-8 text-white" onClick={handleOpen}>
@@ -157,24 +170,26 @@ const NewRepoFormModal = () => {
                 <Typography
                   variant="small"
                   color="gray"
-                  className="flex items-center gap-1 font-normal mt-2"
+                  className="mt-2 flex items-center gap-1 font-normal"
                 >
-                  <BsInfoCircle className="w-4 h-4 -mt-px" />
-                  Select How many lastest commits will be taken in
-                  consideration before making a post
+                  <BsInfoCircle className="-mt-px h-4 w-4" />
+                  Select How many lastest commits will be taken in consideration
+                  before making a post
                 </Typography>
               </div>
             </div>
           </>
         </DialogBody>
         <DialogFooter>
-          <button className="btn mr-1 text-white btn-error" onClick={handleOpen}>
+          <button
+            className="btn-error btn mr-1 text-white"
+            onClick={handleOpen}
+          >
             <span>Cancel</span>
           </button>
-          <Button className="btn btn-success ml-1" onClick={onConfirm}>
+          <Button className="btn-success btn ml-1" onClick={onConfirm}>
             {projectLoading ? <Spinner className="h-6 w-6" /> : "Confirm"}
           </Button>
-
         </DialogFooter>
       </Dialog>
     </>
