@@ -1,7 +1,8 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useState, type ReactElement } from "react";
 import toast from "react-hot-toast";
 import { Layout, ProjectLayout, QuestionCard } from "~/components";
+import { api } from "~/utils/api";
 
 type Question = { question: string; answer: string; description: string };
 
@@ -105,10 +106,28 @@ const ProjectContext = () => {
     });
     setQuestionsAnswer(newQuestions);
   };
-  const submit =  () => {
+  const { mutateAsync: updateContext } = api.user.updateProject.useMutation()
+  const submit = () => {
+    const id = router.query.id
+    if (!id) return;
     const finalResponse = questionsNanswers.map(({ answer, question }) => {
       return { question, answer };
     });
+    toast
+      .promise(updateContext({
+        data: {
+          questionsAnswersJsonString: JSON.stringify(finalResponse),
+
+        },
+        id: id.toString()
+      }), {
+        loading: "Submitting...",
+        success: "Submitted successfully",
+        error: "Something went wrong",
+      })
+      .then(() => {
+        router.push(`/project/${router.query.id}/commits`);
+      });
   };
   return (
     <div className="container mx-auto py-8">

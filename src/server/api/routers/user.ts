@@ -3,6 +3,7 @@ import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import { SocialType } from "~/types/post-enums";
+import { getGithubAccountDetails } from "../helpers/github";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
 import { getTwitterAccountDetails } from "../helpers/twitter";
@@ -22,6 +23,63 @@ export const userRouter = createTRPCRouter({
         },
       });
       return user;
+    }),
+  addProject: protectedProcedure
+    .input(
+      z.object({
+        repoName: z.string(),
+        repoDescription: z.string(),
+        repoUrl: z.string(),
+        repoId: z.string(),
+        questionsAnswersJsonString: z.string(),
+        commitCount: z.number().positive(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const project = await ctx.prisma.project.create({
+        data: {
+          repoName: input.repoName,
+          repoDescription: input.repoDescription,
+          repoUrl: input.repoUrl,
+          repoId: input.repoId,
+          questionsAnswersJsonString: input.questionsAnswersJsonString,
+          commitCount: input.commitCount,
+          user: { connect: { clerkUserId: ctx.currentUser } },
+        },
+      });
+      return project;
+    }),
+  updateProject: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        data: z.object({
+          repoName: z.string().optional(),
+          repoDescription: z.string().optional(),
+          repoUrl: z.string().optional(),
+          repoId: z.string().optional(),
+          questionsAnswersJsonString: z.string().optional(),
+          commitCount: z.number().positive().optional(),
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, data } = input;
+
+      const project = await ctx.prisma.project.update({
+        where: { id },
+        data,
+      });
+
+      return project;
+    }),
+  getProject: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const project = await ctx.prisma.project.findUnique({
+        where: { id: input },
+      });
+      return project;
     }),
   addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
     const canConnect = await ConnectSocial({ user: ctx.currentUser });
@@ -113,6 +171,13 @@ export const userRouter = createTRPCRouter({
   //       },
   //     });
   //   }),
+  getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
+    const github = await ctx.prisma.githubToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
+    const githubDetails = await getGithubAccountDetails(github);
+    return githubDetails;
+  }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const twitter = await ctx.prisma.twitterToken.findMany({
@@ -122,9 +187,9 @@ export const userRouter = createTRPCRouter({
       where: { clerkUserId: ctx.currentUser },
     });
 
-    // const github = await ctx.prisma.githubToken.findMany({
-    //   where: { clerkUserId: ctx.currentUser },
-    // });
+    const github = await ctx.prisma.githubToken.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
 
     // TODO: define proper output types, instead of directly using Prisma types
     try {
@@ -158,20 +223,20 @@ export const userRouter = createTRPCRouter({
           });
         }
       }
-      // const githubDetails = await getGithubAccountDetails(github);
-      // if (github.length > 0) {
-      //   for (const githubDetail of githubDetails) {
-      //     accounts.push({
-      //       type: SocialType.Github,
-      //       data: {
-      //         tokenId: githubDetail.tokenId,
-      //         name: githubDetail.username,
-      //         profile_image_url: githubDetail.profile_image_url,
-      //         profileId: githubDetail.profileId,
-      //       },
-      //     });
-      //   }
-      // }
+      const githubDetails = await getGithubAccountDetails(github);
+      if (github.length > 0) {
+        for (const githubDetail of githubDetails) {
+          accounts.push({
+            type: SocialType.Github,
+            data: {
+              tokenId: githubDetail.tokenId,
+              name: githubDetail.username,
+              profile_image_url: githubDetail.profile_image_url,
+              profileId: githubDetail.profileId,
+            },
+          });
+        }
+      }
 
       return accounts;
     } catch (error) {

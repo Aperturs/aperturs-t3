@@ -32,6 +32,7 @@ model User {
   githubTokens     GithubToken[]
   linkedInTokens   LinkedInToken[]
   twitterTokens    TwitterToken[]
+  projects         Project[]
   subscritpion     Subscription?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
@@ -39,6 +40,17 @@ model User {
 
   @@index([clerkUserId])
   @@index([id])
+}
+model Project {
+  id String @id @default(uuid())
+  clerkUserId   String
+  user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  repoName String
+  repoDescription String @default("")
+  repoUrl String @unique
+  repoId String
+  questionsAnswersJsonString Json @default("{}")
+  commitCount Int
 }
 
 model TwitterToken {
