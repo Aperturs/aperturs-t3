@@ -1,129 +1,130 @@
 import { TRPCError } from "@trpc/server";
+import axios from "axios";
+import https from "https";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { env } from "~/env.mjs";
+import { SocialType } from "~/types/post-enums";
+import { postToLinkedin } from "../../helpers/linkedln";
+import { postToTwitter } from "../../helpers/twitter";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
+import { roundToNearestMinutes } from "date-fns";
 
-// const socialSelectedSchema = z.array(
-//   z.object({
-//     id: z.string(),
-//     type: z.nativeEnum(SocialType),
-//   })
-// );
-
-export const posting = createTRPCRouter({
-  savePost: protectedProcedure
+export const post = createTRPCRouter({
+  postbyid: publicProcedure
     .input(
       z.object({
-        selectedSocials: z.array(
-          z.object({
-            id: z.string(),
-            type: z.string(),
-            name: z.string(),
-          })
-        ),
-        postContent: z.array(
-          z.object({
-            id: z.string(),
-            socialType: z.string(),
-            content: z.string(),
-          })
-        ),
-        defaultContent: z.string(),
-        scheduledTime: z.date().optional(),
+        postId: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      // const unmatchedSocials = [];
-      // let postId = "";
-
       try {
-        await ctx.prisma.post
-          .create({
-            data: {
-              clerkUserId: ctx.currentUser,
-              status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-              scheduledAt: input.scheduledTime
-                ? new Date(input.scheduledTime)
-                : null,
-              defaultContent: input.defaultContent,
-              content: input.postContent,
-              socialSelected: input.selectedSocials
-            },
-          })
+        const post = await ctx.prisma.post.findUnique({
+          where: {
+            id: input.postId,
+          },
+        });
 
-        // try {
-        //   for (const social of input.selectedSocials) {
-        //     const content = input.postContent.find(
-        //       (content) => content.id === social.id
-        //     );
-        //     console.log(content?.content);
-        //     if (content && content.content && social.type) {
-        //       await ctx.prisma.content.create({
-        //         data: {
-        //           content: content.content,
-        //           postId: postId,
-        //           socialSelected: [
-        //             {
-        //               id: social.id,
-        //               type: social.type,
-        //               name: social.name,
-        //             },
-        //           ],
-        //         },
-        //       });
-        //     } else {
-        //       unmatchedSocials.push(social);
-        //     }
-        //   }
-
-        //   if (unmatchedSocials.length > 0) {
-        //     await ctx.prisma.content.create({
-        //       data: {
-        //         content: input.defaultContent,
-        //         postId: postId,
-        //         socialSelected: unmatchedSocials,
-        //       },
-        //     });
-        //   } else {
-        //     await ctx.prisma.content.create({
-        //       data: {
-        //         content: input.defaultContent,
-        //         postId: postId,
-        //       },
-        //     });
-        //   }
-        // } catch (error) {
-        //   await ctx.prisma.post.delete({
-        //     where: { id: postId },
-        //   });
-        // }
-
-        return {
-          success: true,
-          message: "Saved to draft successfully",
-          state: 200,
-        };
+        if (post) {
+          const content = post.content as unknown as PostContent[];
+          const selectedSocials =
+            post.socialSelected as unknown as SelectedSocial[];
+          const defaultContent = post.defaultContent;
+          for (const item of selectedSocials) {
+            const PostContent =
+              content.find((post) => post.id === item.id)?.content ||
+              defaultContent;
+            if (!item.id) continue;
+            switch (item.type) {
+              case `${SocialType.Twitter}`:
+                await postToTwitter({
+                  tokenId: item.id,
+                  tweets: [
+                    {
+                      id: 0,
+                      text: PostContent,
+                    },
+                  ],
+                });
+                break;
+              case `${SocialType.Linkedin}`:
+                await postToLinkedin({
+                  tokenId: item.id,
+                  content: PostContent,
+                });
+                //post to linkedin
+                break;
+              default:
+                break;
+            }
+          }
+          // if (!twitterError || !linkedinError) {
+          //   reset();
+          // }
+        }
+        await ctx.prisma.post.update({
+          where: { id: input.postId },
+          data: {
+            status: "PUBLISHED",
+          },
+        });
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Error saving to draft",
+          message: "Error fetching post",
         });
       }
     }),
+  schedule: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        date: z.date(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log(`${input.date.getTime() - Date.now()}`, "delay ms");
 
-  getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany({
-        where: { clerkUserId: ctx.currentUser, status: "SAVED", },
-        orderBy: [{ updatedAt: "desc" }],
-    });
-    return posts;
-  }),
-
-  getSavedPostById: protectedProcedure
-    .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.findUnique({
-        where: { id: input },
-      });
-      return post;
+      try{
+      const delay = Math.round((input.date.getTime() - Date.now())/1000);
+      console.log(delay)
+      const headers = {
+        Accept: "/",
+        url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
+        delay: `${delay} seconds`,
+        Authorization: env.CRONJOB_AUTH,
+      };
+      console.log(headers)
+      const url = "https://52.66.162.116/v1/publish";
+      const res = await axios
+        .post(
+          url,
+          {},
+          {
+            headers,
+            httpsAgent: new https.Agent({
+              rejectUnauthorized: false,
+            }),
+          }
+        )
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      console.log("Response", res?.data);
+      return {
+        success: true,
+        message: "Post scheduled successfully",
+        state: 200,
+      };
+      }catch(err){
+        return {
+          success: false,
+          message: "Error scheduling post",
+          state: 500,
+        };
+      }
     }),
 });

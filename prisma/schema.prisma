@@ -105,6 +105,8 @@ model LinkedInToken {
 
 enum SubscriptionType {
   FREE
+  PRO
+  ENTERPRISE
 }
 
 model Subscription {
@@ -114,7 +116,7 @@ model Subscription {
   customerUserId String
   transaction    Transaction      @relation(fields: [transactionId], references: [clerkUserId])
   transactionId  String
-  type           SubscriptionType
+  type           SubscriptionType @default(FREE)
 
   @@index([clerkUserId])
   @@index([transactionId])

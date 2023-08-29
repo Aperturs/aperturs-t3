@@ -1,65 +1,24 @@
 import { TRPCError } from "@trpc/server";
-import { Client, auth } from "twitter-api-sdk";
+import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 import { env } from "~/env.mjs";
-import { getAccessToken } from "../../helpers";
 import { ConnectSocial } from "../../helpers/misc";
+import { postToTwitter } from "../../helpers/twitter";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { postTweetInputSchema } from "../../types";
 
 export const twitterData = createTRPCRouter({
   postTweet: protectedProcedure
-    .input(
-      z.object({
-        tokenId: z.string(),
-        tweets: z.array(
-          z.object({
-            id: z.number(),
-            text: z.string(),
-          })
-        ),
-      })
-    )
+    .input(postTweetInputSchema)
     .mutation(async ({ input }) => {
-      const accessToken = (await getAccessToken(input.tokenId)) as string;
-
-      const client = new Client(accessToken);
-
       try {
-        if (input.tweets[0] && input.tweets.length > 0) {
-          // Post the first tweet
-          const firstTweet = await client.tweets.createTweet({
-            text: input.tweets[0].text,
-          });
-
-          if (firstTweet.data) {
-            let previousTweetId = firstTweet.data.id;
-            // Loop through the rest of the tweets
-            for (let i = 1; i < input.tweets.length; i++) {
-              const tweet = input.tweets[i];
-              if (tweet) {
-                const post = await client.tweets.createTweet({
-                  text: tweet.text,
-                  reply: {
-                    in_reply_to_tweet_id: previousTweetId,
-                  },
-                });
-                if (post.data) {
-                  previousTweetId = post.data.id;
-                } else {
-                  console.log("error");
-                  return;
-                }
-              }
-            }
-          }
-          return { success: true, message: "Tweeted successfully", state: 200 };
-        }
+        await postToTwitter( input);
+        return { success: true, message: "Tweeted successfully" };
       } catch (error) {
         return { success: false, message: "Error tweeting" };
       }
     }),
 
-    
   addTwitter: protectedProcedure
     .input(
       z.object({
@@ -103,7 +62,6 @@ export const twitterData = createTRPCRouter({
         });
       }
     }),
-
 
   removeTwitter: protectedProcedure
     .input(

@@ -8,7 +8,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("trying");
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   const data = await JSON.parse(req.body);
   const bundlr = new Bundlr(
@@ -27,6 +26,5 @@ export default async function handler(
   const tx = await bundlr.upload(JSON.stringify(data), {
     tags: [{ name: "Content-Type", value: "application/json" }],
   });
-  console.log(tx.id);
   res.status(200).json({ url: `https://arweave.net/${tx.id}` });
 }

@@ -37,10 +37,10 @@ export default async function handler(
       "cache-control": "no-cache",
       "X-Restli-Protocol-Version": "2.0.0",
     },
-  }).catch(console.log);
-  console.log({ userResponse });
+  }).catch();
+  // console.log({ userResponse });
   const user = await userResponse?.json();
-  console.log({ user });
+  // console.log({ user });
   if (user && userId) {
     await prisma.linkedInToken.create({
       data: {

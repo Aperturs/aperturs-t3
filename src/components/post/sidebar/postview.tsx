@@ -1,10 +1,5 @@
-import React from 'react'
-
 const PostView = () => {
-  return (
-<div>      
-    </div>
-  )
-}
+  return <div></div>;
+};
 
-export default PostView
+export default PostView;
