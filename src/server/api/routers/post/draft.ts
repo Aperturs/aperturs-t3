@@ -24,7 +24,6 @@ export const posting = createTRPCRouter({
             socialSelected: input.selectedSocials,
           },
         });
-        console.log(savedPost.id);
         return {
           data: savedPost.id,
           success: true,

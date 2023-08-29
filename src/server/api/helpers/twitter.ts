@@ -25,7 +25,6 @@ export const getAccessToken = async (tokenId: string) => {
         const bearerToken = Buffer.from(
           `${token.client_id}:${token.client_secret}`
         ).toString("base64");
-        console.log(bearerToken);
         try {
           const response = await fetch(
             "https://api.twitter.com/2/oauth2/token",
@@ -40,7 +39,6 @@ export const getAccessToken = async (tokenId: string) => {
               }),
             }
           );
-          console.log(response);
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const data = await response.json();
           if (data) {
