@@ -24,33 +24,37 @@ model VerificationToken {
 }
 
 model User {
-  id               String          @id @default(cuid())
-  clerkUserId      String          @unique
-  posts            Post[]
-  ideas            Idea[]
-  transactions     Transaction[]
-  githubTokens     GithubToken[]
-  linkedInTokens   LinkedInToken[]
-  twitterTokens    TwitterToken[]
-  projects         Project[]
-  subscritpion     Subscription?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  Queue            Queue?
+  id             String          @id @default(cuid())
+  clerkUserId    String          @unique
+  posts          Post[]
+  ideas          Idea[]
+  transactions   Transaction[]
+  githubTokens   GithubToken[]
+  linkedInTokens LinkedInToken[]
+  twitterTokens  TwitterToken[]
+  projects       Project[]
+  subscritpion   Subscription?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  Queue          Queue?
 
   @@index([clerkUserId])
   @@index([id])
 }
+
 model Project {
-  id String @id @default(uuid())
-  clerkUserId   String
-  user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  repoName String
-  repoDescription String @default("")
-  repoUrl String @unique
-  repoId String
-  questionsAnswersJsonString Json @default("{}")
-  commitCount Int
+  id                         String @id @default(cuid())
+  clerkUserId                String
+  user                       User   @relation(fields: [clerkUserId], references: [clerkUserId])
+  repoName                   String
+  repoDescription            String @default("")
+  repoUrl                    String @unique
+  repoId                     String
+  questionsAnswersJsonString Json   @default("{}")
+  commitCount                Int
+
+  @@index([clerkUserId])
+  @@index([id])
 }
 
 model TwitterToken {
@@ -63,7 +67,10 @@ model TwitterToken {
   refresh_token String?   @unique
   expires_in    DateTime?
   profileId     String?   @unique
-
+  username      String?
+  fullname      String?
+  profile_image String?
+  
   @@index([profileId])
   @@index([clerkUserId])
   @@index([id])
@@ -138,17 +145,17 @@ model Transaction {
 }
 
 model Post {
-  id             String          @id @default(cuid())
-  user           User            @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
+  id             String    @id @default(cuid())
+  user           User      @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   clerkUserId    String
   status         Status
   scheduledAt    DateTime?
   // content     Content[]
   content        Json
-  defaultContent String
+  defaultContent String    @db.Text
   socialSelected Json
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([updatedAt])
   @@index([status])

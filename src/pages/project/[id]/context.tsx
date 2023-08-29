@@ -4,8 +4,6 @@ import toast from "react-hot-toast";
 import { Layout, ProjectLayout, QuestionCard } from "~/components";
 import { api } from "~/utils/api";
 
-type Question = { question: string; answer: string; description: string };
-
 const ProjectContext = () => {
   useEffect(() => {
     toast(
@@ -96,6 +94,7 @@ const ProjectContext = () => {
       answer: "",
     },
   ]);
+
   const router = useRouter();
   const setAnswer = (index: number, answer: string) => {
     const newQuestions = questionsNanswers.map((q, i) => {
@@ -106,27 +105,30 @@ const ProjectContext = () => {
     });
     setQuestionsAnswer(newQuestions);
   };
-  const { mutateAsync: updateContext } = api.user.updateProject.useMutation()
-  const submit = () => {
-    const id = router.query.id
+  const { mutateAsync: updateContext } =
+    api.github.project.updateProject.useMutation();
+  const submit = async () => {
+    const id = router.query.id;
     if (!id) return;
     const finalResponse = questionsNanswers.map(({ answer, question }) => {
       return { question, answer };
     });
-    toast
-      .promise(updateContext({
-        data: {
-          questionsAnswersJsonString: JSON.stringify(finalResponse),
-
-        },
-        id: id.toString()
-      }), {
-        loading: "Submitting...",
-        success: "Submitted successfully",
-        error: "Something went wrong",
-      })
-      .then(() => {
-        router.push(`/project/${router.query.id}/commits`);
+    await toast
+      .promise(
+        updateContext({
+          data: {
+            questionsAnswersJsonString: JSON.stringify(finalResponse),
+          },
+          id: id.toString(),
+        }),
+        {
+          loading: "Submitting...",
+          success: "Submitted successfully",
+          error: "Something went wrong",
+        }
+      )
+      .then(async () => {
+        await router.push(`/project/${router.query.id as string}/commits`);
       });
   };
   return (
@@ -144,7 +146,9 @@ const ProjectContext = () => {
         ))}
       </div>
       <button
-        onClick={submit}
+        onClick={async () => {
+          await submit();
+        }}
         className=" btn-primary btn mt-4 rounded-lg px-6 py-2 text-white"
       >
         Submit

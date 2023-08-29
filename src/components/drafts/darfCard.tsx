@@ -2,10 +2,8 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Typography,
 } from "@material-tailwind/react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
@@ -21,11 +19,8 @@ interface IDarfCard {
 
 export default function DraftCard({ id, content, refetch }: IDarfCard) {
   const router = useRouter();
-  const {
-    mutateAsync: DeleteDraft,
-    isLoading: deleting,
-    error: deleteError,
-  } = api.savepost.deleteSavedPostById.useMutation();
+  const { mutateAsync: DeleteDraft, isLoading: deleting } =
+    api.savepost.deleteSavedPostById.useMutation();
 
   const handleDelete = async () => {
     await toast.promise(DeleteDraft({ id }), {
@@ -37,7 +32,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
   };
   return (
     <Card className="mt-6 ">
-      <CardHeader color="blue-gray" className="relative ">
+      {/* <CardHeader color="blue-gray" className="relative ">
         {id !== "1" && (
           <Image
             src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
@@ -47,7 +42,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
             className="rounded-lg object-cover"
           />
         )}
-      </CardHeader>
+      </CardHeader> */}
       <CardBody>
         <div className="h-20 overflow-auto">
           <Typography>{content}</Typography>

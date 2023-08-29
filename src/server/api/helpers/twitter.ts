@@ -25,34 +25,42 @@ export const getAccessToken = async (tokenId: string) => {
         const bearerToken = Buffer.from(
           `${token.client_id}:${token.client_secret}`
         ).toString("base64");
-
-        const response = await fetch("https://api.twitter.com/2/oauth2/token", {
-          method: "POST",
-          headers: {
-            Authorization: `Basic ${bearerToken}`,
-          },
-          body: new URLSearchParams({
-            grant_type: "refresh_token",
-            refresh_token: token.refresh_token,
-          }),
-        });
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const data = await response.json();
-        if (data) {
-          await prisma.twitterToken.update({
-            where: {
-              id: tokenId,
-            },
-            data: {
-              access_token: data.access_token,
-              refresh_token: data.refresh_token,
-              expires_in: new Date(
-                new Date().getTime() + data.expires_in * 1000
-              ),
-            },
-          });
+        console.log(bearerToken);
+        try {
+          const response = await fetch(
+            "https://api.twitter.com/2/oauth2/token",
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Basic ${bearerToken}`,
+              },
+              body: new URLSearchParams({
+                grant_type: "refresh_token",
+                refresh_token: token.refresh_token,
+              }),
+            }
+          );
+          console.log(response);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const data = await response.json();
+          if (data) {
+            await prisma.twitterToken.update({
+              where: {
+                id: tokenId,
+              },
+              data: {
+                access_token: data.access_token,
+                refresh_token: data.refresh_token,
+                expires_in: new Date(
+                  new Date().getTime() + data.expires_in * 1000
+                ),
+              },
+            });
+          }
+          return data.access_token;
+        } catch (err) {
+          console.log(err);
         }
-        return data.access_token;
       } else {
         return token.access_token;
       }
@@ -65,27 +73,50 @@ export const getTwitterAccountDetails = async (
   const twitterDetails: TwitterAccountDetails[] = [];
 
   for (const twitterToken of twitterTokens) {
-    const properAccessToken = await getAccessToken(twitterToken.id);
-    const client = new Client(properAccessToken);
-    const { data: userObject } = await client.users.findMyUser({
-      "user.fields": ["username", "profile_image_url", "name"],
-    });
-    if (userObject && userObject.username && userObject.profile_image_url) {
+    if (
+      (!twitterToken.fullname &&
+        !twitterToken.profile_image &&
+        !twitterToken.username) ||
+      (twitterToken.expires_in && twitterToken.expires_in < new Date())
+    ) {
+      const properAccessToken = await getAccessToken(twitterToken.id);
+      const client = new Client(properAccessToken);
+      const { data: userObject } = await client.users.findMyUser({
+        "user.fields": ["username", "profile_image_url", "name"],
+      });
+      if (userObject && userObject.username && userObject.profile_image_url) {
+        twitterDetails.push({
+          tokenId: twitterToken.id,
+          profileId: twitterToken.profileId,
+          full_name: userObject.name,
+          profile_image_url: userObject.profile_image_url,
+          username: userObject.username,
+        } as TwitterAccountDetails);
+        await prisma.twitterToken.update({
+          where: {
+            id: twitterToken.id,
+          },
+          data: {
+            username: userObject.username,
+            profile_image: userObject.profile_image_url,
+            fullname: userObject.name,
+          },
+        });
+      }
+    } else {
       twitterDetails.push({
         tokenId: twitterToken.id,
         profileId: twitterToken.profileId,
-        full_name: userObject.name,
-        profile_image_url: userObject.profile_image_url,
-        username: userObject.username,
+        full_name: twitterToken.fullname,
+        profile_image_url: twitterToken.profile_image,
+        username: twitterToken.username,
       } as TwitterAccountDetails);
     }
   }
   return twitterDetails;
 };
 
-export const postToTwitter = async (
-  input: PostTweetInput
-) => {
+export const postToTwitter = async (input: PostTweetInput) => {
   const accessToken = (await getAccessToken(input.tokenId)) as string;
   const client = new Client(accessToken);
   try {

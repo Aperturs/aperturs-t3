@@ -77,6 +77,7 @@ export const post = createTRPCRouter({
         });
       }
     }),
+
   schedule: protectedProcedure
     .input(
       z.object({
