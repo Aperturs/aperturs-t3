@@ -74,9 +74,9 @@ export const getTwitterAccountDetails = async (
 
   for (const twitterToken of twitterTokens) {
     if (
-      (!twitterToken.fullname &&
-        !twitterToken.profile_image &&
-        !twitterToken.username) ||
+      !twitterToken.fullname ||
+      !twitterToken.profile_image ||
+      !twitterToken.username ||
       (twitterToken.expires_in && twitterToken.expires_in < new Date())
     ) {
       const properAccessToken = await getAccessToken(twitterToken.id);

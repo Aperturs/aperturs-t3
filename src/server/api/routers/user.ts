@@ -121,6 +121,7 @@ export const userRouter = createTRPCRouter({
     try {
       const accounts = [];
       const twitterDetails = await getTwitterAccountDetails(twitter);
+      console.log(twitter)
       if (twitter.length > 0) {
         for (const twitterDetail of twitterDetails) {
           accounts.push({

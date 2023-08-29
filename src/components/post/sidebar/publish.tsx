@@ -50,17 +50,11 @@ function Publish() {
     // status: saveStatus,
     // error: saveError,
   } = api.savepost.savePost.useMutation();
-  const {
-    mutateAsync: updatePost,
-    isLoading: updating,
-    error: upadatingError,
-  } = api.savepost.updatePost.useMutation();
+  const { mutateAsync: updatePost, isLoading: updating } =
+    api.savepost.updatePost.useMutation();
 
-  const {
-    mutateAsync: Schedule,
-    isLoading: scheduling,
-    error: scheduleError,
-  } = api.post.schedule.useMutation();
+  const { mutateAsync: Schedule, isLoading: scheduling } =
+    api.post.schedule.useMutation();
 
   const router = useRouter();
 
@@ -162,28 +156,22 @@ function Publish() {
       )
       .then(async (response) => {
         if (response.success) {
-          reset();
           if (!isScheduling) {
+            reset();
             await router.push("/drafts");
           }
           postId = response.data;
         }
       });
     return postId;
-
-    // console.log(saveStatus);
-    // if (saveStatus == "success") {
-    //   toast.success("Saved to drafts");
-    // }
-    // // else {
-    // //   toast.error("Failed to save to drafts");
-    // // }
-    // if (saveError) {
-    //   toast.error(`Failed to save to drafts: ${saveError.message}`);
-    // }
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
+    const [hours, minutes] = time.split(":");
+    const scheduledTime =
+      date && hours !== undefined && minutes !== undefined
+        ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
+        : undefined;
     try {
       const id = router.query.id as string;
       await toast
@@ -193,17 +181,29 @@ function Publish() {
             selectedSocials: selectedSocials,
             postContent: content,
             defaultContent: defaultContent,
+            scheduledTime:
+              isScheduling && scheduledTime
+                ? new Date(scheduledTime)
+                : undefined,
           }),
           {
-            loading: "Updating post...",
-            success: "Updated post",
-            error: "Failed to update post",
+            loading: `${
+              isScheduling
+                ? "saving and is getting ready to schedule"
+                : "Updating post..."
+            }`,
+            success: `${
+              isScheduling ? "saved and is ready to schedule" : "Updated post"
+            }`,
+            error: `Failed to update post`,
           }
         )
         .then(async (response) => {
           if (response.success) {
-            reset();
-            await router.push("/drafts");
+            if (!isScheduling) {
+              reset();
+              await router.push("/drafts");
+            }
           }
         });
     } catch (err) {
@@ -222,8 +222,14 @@ function Publish() {
       return toast.error("Please select a date and time");
     }
     try {
-      const postId = await handleSave({ isScheduling: true });
-      const id = shouldReset ? (router.query.id as string) : (postId);
+      let id = "";
+      if (shouldReset) {
+        await handleUpdate({ isScheduling: true });
+        id = router.query.id as string;
+      } else {
+        const postId = await handleSave({ isScheduling: true });
+        id = postId;
+      }
       console.log(id, "id");
       console.log(saveData, "savedData");
       await toast
@@ -275,7 +281,7 @@ function Publish() {
           text="Update Post"
           isLoading={updating}
           onClick={async () => {
-            await handleUpdate();
+            await handleUpdate({ isScheduling: false });
           }}
         />
       ) : (
