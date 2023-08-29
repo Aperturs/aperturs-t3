@@ -96,7 +96,7 @@ export const post = createTRPCRouter({
         Authorization: env.CRONJOB_AUTH,
       };
       const url = "https://52.66.162.116/v1/publish";
-      const res = await axios
+       await axios
         .post(
           url,
           {},

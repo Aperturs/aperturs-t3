@@ -47,7 +47,7 @@ const ConnectSocials = () => {
             data.map((item, key) => (
               <AfterConnect
                 key={key}
-                name={item.data.name}
+                name={item.data.name || ""}
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 icon={<SocialIcon type={item.type} />}
                 profilePic={item.data.profile_image_url || "/user.png"}
