@@ -36,13 +36,14 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // const questionAnswer = input.questionsAnswersJsonString ? JSON.parse(input.questionsAnswersJsonString) as JSON: JSON.parse("[]") as JSON;
       const project = await ctx.prisma.project.create({
         data: {
           repoName: input.repoName,
           repoDescription: input.repoDescription,
           repoUrl: input.repoUrl,
           repoId: input.repoId,
-          questionsAnswersJsonString: input.questionsAnswersJsonString ? JSON.parse(input.questionsAnswersJsonString) : [],
+          questionsAnswersJsonString: input.questionsAnswersJsonString,
           commitCount: input.commitCount,
           user: { connect: { clerkUserId: ctx.currentUser } },
         },
@@ -81,6 +82,7 @@ export const userRouter = createTRPCRouter({
       });
       return project;
     }),
+    
   addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
     const canConnect = await ConnectSocial({ user: ctx.currentUser });
     if (canConnect) {
