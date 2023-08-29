@@ -62,7 +62,6 @@ const NewRepoFormModal = () => {
     if (!githubTokens || githubTokens.length <= 0) {
       toast.error("Go to settings and add github")
       router.push("/settings")
-
     }
   }, [githubTokens])
   const [option, setOption] = useState({} as RepoOptionType);
@@ -72,17 +71,19 @@ const NewRepoFormModal = () => {
   useEffect(() => {
     getRepositories().then((res) => {
       const repos = res?.data as Repo[];
-      const repoOptions: RepoOptionType[] = repos.map((repo) => {
-        return {
-          value: repo,
-          label: repo.full_name,
-        } as RepoOptionType;
-      });
-      // console.log({ repoOptions })
-      setOptions(repoOptions);
+      if (repos) {
+        const repoOptions: RepoOptionType[] = repos.map((repo) => {
+          return {
+            value: repo,
+            label: repo.full_name,
+          } as RepoOptionType;
+        });
+        // console.log({ repoOptions })
+        setOptions(repoOptions);
+      }
     });
   }, []);
-  const { mutateAsync: addProject,isLoading:projectLoading } = api.user.addProject.useMutation({
+  const { mutateAsync: addProject, isLoading: projectLoading } = api.user.addProject.useMutation({
     onSuccess: (data) => {
       router.push(`/project/${data.id}/settings`)
     }
@@ -164,12 +165,10 @@ const NewRepoFormModal = () => {
           <button className="btn mr-1 text-white btn-error" onClick={handleOpen}>
             <span>Cancel</span>
           </button>
-          <Button  className="btn btn-success ml-1" onClick={onConfirm}>
-            {projectLoading ? <Spinner className="h-12 w-12" /> : "Confirm"}
+          <Button className="btn btn-success ml-1" onClick={onConfirm}>
+            {projectLoading ? <Spinner className="h-6 w-6" /> : "Confirm"}
           </Button>
-          <button   onClick={onConfirm}>
-            <span>Confirm</span>
-          </button>
+
         </DialogFooter>
       </Dialog>
     </>
