@@ -134,7 +134,7 @@ model Transaction {
   user             User              @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId      String            @unique
   amount           Int
-  Subscription     Subscription[]
+  subscription     Subscription[]
   status           TransactionStatus @default(PENDING)
   paymentDetails   Json?
   type             TransactionType

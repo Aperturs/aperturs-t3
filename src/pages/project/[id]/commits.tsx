@@ -41,15 +41,17 @@ const CommitsPage = () => {
   const [ranOnce, setranOnce] = useState(false);
 
   useEffect(() => {
+    console.log({ project, isSuccess, ranOnce,},"testing")
     if (project && isSuccess && !ranOnce) {
+      console.log("in project");
       const owner = getUsername(project.repoUrl);
       const repo = project.repoName;
       console.log({ owner, repo });
-      console.log("in project");
       if (!owner || !repo) return;
       getCommits(owner, repo)
         .then((res) => {
           if (res) {
+            console.log(res,"commmits")
             const newTablesRows: TableRow[] = res.data.map((commit, index) => {
               return {
                 id: index,
@@ -71,8 +73,8 @@ const CommitsPage = () => {
     }
   }, [getCommits, project, isSuccess, ranOnce]);
 
-  if (!project && !githubTokens) return <LogoLoad />;
-  if (loading || isLoading) return <LogoLoad />;
+  if (!project && !githubTokens) return <LogoLoad size="24"/>;
+  if (loading || isLoading) return <LogoLoad  size="24"/>;
 
   return (
     <div className="">
