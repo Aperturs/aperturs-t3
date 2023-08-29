@@ -6,7 +6,7 @@ export const githubProject = createTRPCRouter({
     .input(
       z.object({
         repoName: z.string(),
-        repoDescription: z.string(),
+        repoDescription: z.string().optional(),
         repoUrl: z.string(),
         repoId: z.string(),
         questionsAnswersJsonString: z.string().optional(),
@@ -53,7 +53,14 @@ export const githubProject = createTRPCRouter({
       return project;
     }),
 
-    getProject: protectedProcedure
+  getAllProjects: protectedProcedure.query(async ({ ctx }) => {
+    const projects = await ctx.prisma.project.findMany({
+      where: { clerkUserId: ctx.currentUser },
+    });
+    return projects;
+  }),
+
+  getProject: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const project = await ctx.prisma.project.findUnique({
