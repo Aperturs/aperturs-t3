@@ -1,3 +1,4 @@
+import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
@@ -13,15 +14,17 @@ const SideBar = () => {
         <Publish />
         <span className="my-2 text-xl">Publish Post</span>
         <div className="grid grid-cols-3 place-items-start gap-3">
-          {data?.map((item) => (
-            <ConnectedAccount
-              key={item.data.tokenId}
-              name={item.data.name}
-              type={item.type}
-              profilePic={item.data.profile_image_url || "/user.png"}
-              id={item.data.tokenId}
-            />
-          ))}
+          {data?.map((item) =>
+            item.type === SocialType.Github ? null : (
+              <ConnectedAccount
+                key={item.data.tokenId}
+                name={item.data.name || ""}
+                type={item.type}
+                profilePic={item.data.profile_image_url || "/user.png"}
+                id={item.data.tokenId}
+              />
+            )
+          )}
           {/* TODO: Add lens profile */}
           {/* {profile && (
             <ConnectedAccount

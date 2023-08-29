@@ -2,6 +2,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
@@ -65,16 +66,30 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
             <IoPencilSharp />
           </button>
         </div>
-        <div className="tooltip w-auto" data-tip="post now">
+        <Tooltip
+          content="Comming Soon..."
+          className="bg-secondary text-black"
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0, y: 25 },
+          }}
+        >
           <button className="btn w-full">
             <HiPaperAirplane />
           </button>
-        </div>
-        <div className="tooltip" data-tip="queue">
+        </Tooltip>
+        <Tooltip
+          content="Comming Soon..."
+          className="bg-secondary text-black"
+          animate={{
+            mount: { scale: 1, y: 0 },
+            unmount: { scale: 0, y: 25 },
+          }}
+        >
           <button className="btn w-full">
             <HiQueueList />
           </button>
-        </div>
+        </Tooltip>
         <div className="tooltip" data-tip="delete">
           <button
             disabled={deleting}
