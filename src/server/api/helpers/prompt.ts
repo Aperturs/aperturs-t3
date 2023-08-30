@@ -12,7 +12,9 @@ export const prompt = ({ProjectName, ProjectDescription, ProjectContext, CommitI
     Generate engaging "build in public" style tweets based on commit messages from GitHub for the provided project. 
     Each tweet should be informative, insightful, and up to 280 characters. Context about the app and commit messages will be provided. 
     The aim is to create 4 distinct variations for each set of input data, formatted as an array:
-    ['result1', 'result2', 'result3', 'result4']
+    ["result1", "result2", "result3", "result4'"]
+    just this output format
+    
     Desired Output Format:
 
     Each tweet should be a small paragraph consisting of up to 280 characters.

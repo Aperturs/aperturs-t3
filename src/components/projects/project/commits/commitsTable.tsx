@@ -5,10 +5,12 @@ import {
   Dialog,
   DialogBody,
   DialogHeader,
+  Spinner,
   Typography,
 } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/utils/api";
 
@@ -58,15 +60,44 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
     }
   };
 
+  // const handleOpen = () => setOpen(!open);
+
   const generatePost = () => {
     setOpen(!open);
+    if (!open) {
+      toast
+        .promise(
+          generatePosts({
+            ProjectName: "Aperturs t3",
+            ProjectDescription: "Social Media Automation Platform",
+            ProjectContext: "Aperturs t3",
+            CommitInformation: `${commits.toString()}`,
+          }),
+          {
+            loading: "Generating Posts...",
+            success: "Generated Posts",
+            error: `${
+              generationError?.message
+                ? generationError?.message
+                : "Something went wrong"
+            }`,
+          }
+        )
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     // console.log("generate post");
   };
   return (
     <Card className="w-[90vw] p-4 shadow-sm lg:w-[70vw] ">
       <div className="flex items-center justify-between">
         <Typography variant="h5">Commits</Typography>
-        <button className="btn-primary btn text-white" onClick={generatePost}>
+        <button
+          className="btn-primary btn text-white"
+          disabled={isLoading}
+          onClick={generatePost}
+        >
           Generate Post
         </button>
       </div>
@@ -136,14 +167,15 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
       >
         <DialogHeader>Generated Posts</DialogHeader>
         <DialogBody>
-          {/* {isLoading ? <LogoLoad size="24" /> : <div>Generated Post</div>} */}
-          <GeneratedPostsCard
-            posts={[
-              "post1 fsdakhfj dafjkh dsakjfh aksjdh fkas",
-              "pofsdajfh kjsa fjkhsd akfksahf st2",
-              "pos fsdajhfs adfjkh asf t3",
-            ]}
-          />
+          {isLoading ? (
+            <Spinner scale={30} />
+          ) : generatedPosts?.data ? (
+            <GeneratedPostsCard posts={generatedPosts.data || []} />
+          ) : (
+            <Typography variant="p" color="red">
+              {generationError?.message}
+            </Typography>
+          )}
         </DialogBody>
       </Dialog>
     </Card>
@@ -156,7 +188,7 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
     <div className="flex flex-col gap-2">
       {posts.map((post) => (
         <Card
-          className={`cursor-pointer border-gray-800 p-4 shadow-sm  hover:shadow-md ${
+          className={`cursor-pointer border-gray-800 p-4 shadow-md  hover:shadow-md ${
             selectedPost === post ? "border-2 " : ""
           }`}
           key={post}
@@ -165,7 +197,7 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
           <Typography variant="p">{post}</Typography>
         </Card>
       ))}
-      <button className="btn btn-primary text-white">Save Post</button>
+      <button className="btn-primary btn text-white">Save Post</button>
     </div>
   );
 }
