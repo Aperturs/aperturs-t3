@@ -7,52 +7,57 @@ import { useAPICallWrapper } from "./useAPICallWrapper";
 type VisibilityType = "all" | "public" | "private" | undefined;
 
 export const useGithub = (token: string) => {
-  const {
-    isAPICallFailure,
-    isAPICallLoading,
-    APICallError,
-    isAPICallSuccess,
-    wrapAPICall,
-  } = useAPICallWrapper();
+    const {
+        isAPICallFailure,
+        isAPICallLoading,
+        APICallError,
+        isAPICallSuccess,
+        wrapAPICall,
+    } = useAPICallWrapper();
 
-  const octokit = new Octokit({
-    auth: token,
-  });
+    const octokit = new Octokit({
+        auth: token,
+    });
 
-  const getRepositories = async (visibility: VisibilityType = "all") => {
-    return wrapAPICall(
-      async () =>
-        await octokit.rest.repos.listForAuthenticatedUser({
-          visibility: visibility,
-          sort: "updated",
-        })
-    );
-  };
-  const getRepository = async (owner: string, repo: string) => {
-    return wrapAPICall(
-      async () =>
-        await octokit.rest.repos.get({
-          owner,
-          repo,
-        })
-    );
-  };
-  const getCommits = async (owner: string, repo: string) => {
-    return wrapAPICall(
-      async () =>
-        await octokit.rest.repos.listCommits({
-          owner,
-          repo,
-        })
-    );
-  };
-  return {
-    getRepositories,
-    getRepository,
-    loading: isAPICallLoading,
-    failure: isAPICallFailure,
-    error: APICallError,
-    success: isAPICallSuccess,
-    getCommits,
-  };
-};
+    const getRepositories = async (visibility: VisibilityType = "all") => {
+        return wrapAPICall(
+            async () =>
+                await octokit.rest.repos.listForAuthenticatedUser({
+                    visibility: visibility,
+                    sort: "updated",
+                })
+        )
+    }
+    const getRepository = async (owner: string, repo: string) => {
+        return wrapAPICall(async () => await octokit.rest.repos.get(
+            {
+                owner,
+                repo
+            }
+        ))
+    }
+    const getCommits = async (owner: string, repo: string) => {
+        return wrapAPICall(async () => await octokit.rest.repos.listCommits(
+            {
+                owner,
+                repo
+            }
+        ))
+    }
+    const getPullRequests = async (owner: string, repo: string, type: "open" | "closed" | "all" = "all") => {
+        return wrapAPICall(async () => await octokit.rest.pulls.list({
+            owner,
+            repo,
+            state: type
+        }))
+    }
+    return {
+        getRepositories,
+        getRepository,
+        loading: isAPICallLoading,
+        failure: isAPICallFailure,
+        error: APICallError,
+        success: isAPICallSuccess,
+        getCommits
+    }
+}
