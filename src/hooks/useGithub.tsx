@@ -42,6 +42,13 @@ export const useGithub = (token: string) => {
             }
         ))
     }
+    const getPullRequests = async (owner: string, repo: string, type: "open" | "closed" | "all" = "all") => {
+        return wrapAPICall(async () => await octokit.rest.pulls.list({
+            owner,
+            repo,
+            state: type
+        }))
+    }
     return {
         getRepositories,
         getRepository,
