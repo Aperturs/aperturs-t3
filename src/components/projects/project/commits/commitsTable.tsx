@@ -1,13 +1,6 @@
 import { Card, Checkbox, Chip, Typography } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
-
-interface TableRow {
-  id: number;
-  message: string;
-  author: string;
-  date: string;
-}
+import { useGithubStore } from "~/store/github-store";
 
 const staggerVariants = {
   hidden: { opacity: 0 },
@@ -21,24 +14,30 @@ function isPullRequestMergeCommit(commit: string): boolean {
   );
 }
 
-export default function CommitsTable({ rows }: { rows: TableRow[] }) {
-  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+export default function CommitsTable({ rows }: { rows: ICommit[] }) {
+  // const [selectedRows, setSelectedRows] = useState<number[]>([]);
+
+  const { commits, setCommits } = useGithubStore((state) => ({
+    commits: state.commits,
+    setCommits: state.setCommits,
+  }));
 
   const toggleSelectAll = () => {
-    if (selectedRows.length === rows.length) {
-      // If all rows are already selected, deselect all rows
-      setSelectedRows([]);
+    if (commits.length === rows.length) {
+      setCommits([]);
     } else {
-      // If some or no rows are selected, select all rows
-      setSelectedRows(rows.map((row) => row.id));
+      setCommits([...rows]);
     }
   };
 
   const toggleRowSelection = (id: number) => {
-    if (selectedRows.includes(id)) {
-      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+    if (commits.some((commit) => commit.id === id)) {
+      setCommits(commits.filter((commit) => commit.id !== id));
     } else {
-      setSelectedRows([...selectedRows, id]);
+      const selectedCommit = rows.find((commit) => commit.id === id);
+      if (selectedCommit) {
+        setCommits([...commits, selectedCommit]);
+      }
     }
   };
 
@@ -48,57 +47,59 @@ export default function CommitsTable({ rows }: { rows: TableRow[] }) {
       <div className="mb-4 flex items-center">
         <Checkbox
           color="blue"
-          checked={selectedRows.length === rows.length}
+          checked={commits.length === rows.length}
           onChange={toggleSelectAll}
         />
         <Typography variant="h6" className="ml-2">
-          {selectedRows.length} row(s) selected
+          {commits.length} row (s) selected
         </Typography>
       </div>
-      <AnimatePresence>
-        {rows.map((row, index) => (
-          <motion.div
-            key={row.id}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={staggerVariants}
-            custom={index}
-          >
-            <Card
-              className="mx-2 my-3 cursor-pointer p-4 shadow-md hover:shadow-sm transition-all duration-200"
-              onClick={() => toggleRowSelection(row.id)}
+      <div className="max-h-[80dvh] overflow-y-auto">
+        <AnimatePresence>
+          {rows.map((row, index) => (
+            <motion.div
+              key={row.id}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={staggerVariants}
+              custom={index}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Checkbox
-                    color="blue"
-                    checked={selectedRows.includes(row.id)}
-                    onChange={() => toggleRowSelection(row.id)}
-                  />
-                  <div>
-                    <Typography variant="h6" className="text-blue-gray-800 ">
-                      {row.message}
-                    </Typography>
-                    <Typography variant="body2">
-                      Created on {row.date} by {row.author}
-                    </Typography>
+              <Card
+                className="mx-2 my-3 cursor-pointer p-4 shadow-md transition-all duration-200 hover:shadow-sm"
+                onClick={() => toggleRowSelection(row.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Checkbox
+                      color="blue"
+                      checked={commits.some((commit) => commit.id === row.id)}
+                      onChange={() => toggleRowSelection(row.id)}
+                    />
+                    <div>
+                      <Typography variant="h6" className="text-blue-gray-800 ">
+                        {row.message}
+                      </Typography>
+                      <Typography variant="body2">
+                        Created on {row.date} by {row.author}
+                      </Typography>
+                    </div>
                   </div>
+                  <Chip
+                    variant="ghost"
+                    className="bg-secondary "
+                    value={`${
+                      isPullRequestMergeCommit(row.message)
+                        ? "Pull Request"
+                        : "Commit"
+                    }`}
+                  />
                 </div>
-                <Chip
-                  variant="ghost"
-                  className="bg-secondary "
-                  value={`${
-                    isPullRequestMergeCommit(row.message)
-                      ? "Pull Request"
-                      : "Commit"
-                  }`}
-                />
-              </div>
-            </Card>
-          </motion.div>
-        ))}
-      </AnimatePresence>
+              </Card>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
     </Card>
   );
 }
