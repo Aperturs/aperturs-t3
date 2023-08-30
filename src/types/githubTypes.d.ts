@@ -1,4 +1,4 @@
-export interface Repo {
+interface Repo {
   id: number;
   node_id: string;
   name: string;
@@ -81,7 +81,7 @@ export interface Repo {
   permissions: Permissions;
 }
 
-export interface Owner {
+interface Owner {
   login: string;
   id: number;
   node_id: string;
@@ -102,7 +102,7 @@ export interface Owner {
   site_admin: boolean;
 }
 
-export interface License {
+interface License {
   key: string;
   name: string;
   spdx_id: string;
@@ -110,7 +110,7 @@ export interface License {
   node_id: string;
 }
 
-export interface Permissions {
+interface Permissions {
   admin: boolean;
   maintain: boolean;
   push: boolean;
@@ -118,7 +118,7 @@ export interface Permissions {
   pull: boolean;
 }
 
-export interface CommitRoot {
+interface CommitRoot {
   sha: string;
   node_id: string;
   commit: Commit;
@@ -130,7 +130,7 @@ export interface CommitRoot {
   parents: Parent[];
 }
 
-export interface Commit {
+interface Commit {
   author: Author;
   committer: Committer;
   message: string;
@@ -140,31 +140,31 @@ export interface Commit {
   verification: Verification;
 }
 
-export interface Author {
+interface Author {
   name: string;
   email: string;
   date: string;
 }
 
-export interface Committer {
+interface Committer {
   name: string;
   email: string;
   date: string;
 }
 
-export interface Tree {
+interface Tree {
   sha: string;
   url: string;
 }
 
-export interface Verification {
+interface Verification {
   verified: boolean;
   reason: string;
   signature: any;
   payload: any;
 }
 
-export interface Author2 {
+interface Author2 {
   login: string;
   id: number;
   node_id: string;
@@ -185,7 +185,7 @@ export interface Author2 {
   site_admin: boolean;
 }
 
-export interface Committer2 {
+interface Committer2 {
   login: string;
   id: number;
   node_id: string;
@@ -206,7 +206,7 @@ export interface Committer2 {
   site_admin: boolean;
 }
 
-export interface Parent {
+interface Parent {
   sha: string;
   url: string;
   html_url: string;

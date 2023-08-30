@@ -1,8 +1,5 @@
 import { useMemo, useState } from "react"
 
-interface APICallWrapper {
-
-}
 export const useAPICallWrapper = () => {
     const [isAPICallLoading, setIsAPICallLoading] = useState(false)
     const [APICallError, setAPICallError] = useState("")

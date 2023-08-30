@@ -24,6 +24,7 @@ interface ContentSocialSelected {
 }
 
 interface PostContent {
+  [x: string]: any;
   id: string;
   name: string;
   socialType: string;

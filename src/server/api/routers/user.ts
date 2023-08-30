@@ -24,63 +24,8 @@ export const userRouter = createTRPCRouter({
       });
       return user;
     }),
-  addProject: protectedProcedure
-    .input(
-      z.object({
-        repoName: z.string(),
-        repoDescription: z.string(),
-        repoUrl: z.string(),
-        repoId: z.string(),
-        questionsAnswersJsonString: z.string(),
-        commitCount: z.number().positive(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const project = await ctx.prisma.project.create({
-        data: {
-          repoName: input.repoName,
-          repoDescription: input.repoDescription,
-          repoUrl: input.repoUrl,
-          repoId: input.repoId,
-          questionsAnswersJsonString: input.questionsAnswersJsonString,
-          commitCount: input.commitCount,
-          user: { connect: { clerkUserId: ctx.currentUser } },
-        },
-      });
-      return project;
-    }),
-  updateProject: protectedProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        data: z.object({
-          repoName: z.string().optional(),
-          repoDescription: z.string().optional(),
-          repoUrl: z.string().optional(),
-          repoId: z.string().optional(),
-          questionsAnswersJsonString: z.string().optional(),
-          commitCount: z.number().positive().optional(),
-        }),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { id, data } = input;
 
-      const project = await ctx.prisma.project.update({
-        where: { id },
-        data,
-      });
-
-      return project;
-    }),
-  getProject: protectedProcedure
-    .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const project = await ctx.prisma.project.findUnique({
-        where: { id: input },
-      });
-      return project;
-    }),
+    
   addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
     const canConnect = await ConnectSocial({ user: ctx.currentUser });
     if (canConnect) {
@@ -98,11 +43,10 @@ export const userRouter = createTRPCRouter({
 
     // if (canConnect) {
     try {
-      const url = `https://github.com/login/oauth/authorize?client_id=${
-        env.NEXT_PUBLIC_GITHUB_CLIENT_ID
-      }&redirect_uri=${encodeURIComponent(
-        env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
-      )}&scope=${encodeURIComponent("user repo")}`;
+      const url = `https://github.com/login/oauth/authorize?client_id=${env.NEXT_PUBLIC_GITHUB_CLIENT_ID
+        }&redirect_uri=${encodeURIComponent(
+          env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
+        )}&scope=${encodeURIComponent("user repo")}`;
       return { url };
     } catch (error) {
       console.log(error);
@@ -153,24 +97,6 @@ export const userRouter = createTRPCRouter({
       }
     }),
 
-  // addGithub: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       access_token: z.string(),
-  //       profileId: z.string(),
-  //       expires_in: z.date().optional(),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     return await ctx.prisma.githubToken.create({
-  //       data: {
-  //         user: { connect: { clerkUserId: ctx.currentUser } },
-  //         access_token: input.access_token,
-  //         expires_in: input.expires_in,
-  //         profileId: input.profileId,
-  //       },
-  //     });
-  //   }),
   getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
     const github = await ctx.prisma.githubToken.findMany({
       where: { clerkUserId: ctx.currentUser },
@@ -240,6 +166,7 @@ export const userRouter = createTRPCRouter({
 
       return accounts;
     } catch (error) {
+      console.log(error);
       throw new TRPCError({
         message: "Error fetching connected accounts",
         code: "INTERNAL_SERVER_ERROR",

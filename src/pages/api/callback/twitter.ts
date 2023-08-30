@@ -16,8 +16,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { state, code } = req.query;
-  console.log("state", state);
-  console.log("code", code);
+
 
   if (!state || !code) {
     return res.status(400).send("You denied the app or your session expired!");
@@ -46,7 +45,6 @@ export default async function handler(
   })
     .then(async (data) => {
      await  data.json().then(async (response:Response) => {
-        console.log(response, "response");
         if (
           response.access_token &&
           response.refresh_token &&
@@ -56,9 +54,7 @@ export default async function handler(
           const { data: userObject } = await client.users.findMyUser({
             "user.fields": ["id"],
           });
-          console.log(userObject, "userObject");
           if (userId) {
-            console.log("I have user");
             if (userObject) {
               //console.log(response.expires_in, "response.expires_in");
               await prisma.twitterToken
