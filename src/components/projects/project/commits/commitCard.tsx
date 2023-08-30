@@ -12,6 +12,8 @@ interface CommitCardProps {
   onToggle: (id: number) => void;
 }
 
+
+
 const CommitCard: React.FC<CommitCardProps> = ({ id, title, description, checked, onToggle }) => {
   return (
     <motion.div

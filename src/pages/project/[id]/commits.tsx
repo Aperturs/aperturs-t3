@@ -16,6 +16,7 @@ export interface TableRow {
   author: string;
   date: string;
 }
+
 function getUsername(url: string): string | null {
   const regex = /https:\/\/github\.com\/([^\/]+)\/[^\/]+/;
   const match = url.match(regex);
@@ -41,9 +42,7 @@ const CommitsPage = () => {
   const [ranOnce, setranOnce] = useState(false);
 
   useEffect(() => {
-    console.log({ project, isSuccess, ranOnce,},"testing")
     if (project && isSuccess && !ranOnce) {
-      console.log("in project");
       const owner = getUsername(project.repoUrl);
       const repo = project.repoName;
       console.log({ owner, repo });
