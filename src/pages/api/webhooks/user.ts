@@ -55,7 +55,7 @@ export default async function handler(
   let evt: Event | null = null;
   try {
     evt = wh.verify(payloadString, svixHeaders) as Event;
-  } catch (_) {
+  } catch (err) {
     console.log("error");
     return new Response("Error occured", {
       status: 400,

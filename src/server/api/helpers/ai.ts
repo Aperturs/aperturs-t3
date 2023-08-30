@@ -17,11 +17,12 @@ function convertStringToArray(input: string): string[] {
   // Extract the content inside the square brackets
   const content = input.slice(startIndex + 1, endIndex);
 
-  // Split the content into individual strings
-  const strings = content.split(",\n");
+  // Remove extra spaces and line breaks, and then split into individual strings
+  const cleanedContent = content.replace(/\s+/g, " ").trim();
+  const strings = cleanedContent.split('", ');
 
-  // Remove any leading or trailing spaces from each string
-  const cleanedStrings = strings.map((str) => str.trim());
+  // Remove the surrounding double quotes from each string
+  const cleanedStrings = strings.map((str) => str.replace(/^"(.*)"$/, "$1"));
 
   return cleanedStrings;
 }

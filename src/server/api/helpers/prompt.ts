@@ -14,20 +14,24 @@ export const prompt = ({ProjectName, ProjectDescription, ProjectContext, CommitI
     The aim is to create 4 distinct variations for each set of input data, formatted as an array:
     ["result1", "result2", "result3", "result4'"]
     just this output format
-    
+
     Desired Output Format:
 
     Each tweet should be a small paragraph consisting of up to 280 characters.
     Maintain concise, informative, and engaging content.
     Avoid unnecessary emojis, hashtags, or other distractions.
-    The tone should be informative and resemble a bot-generated tweet.
+    The tone should be informative, and can be little fun and exiting 
+    and should not resemble a bot-generated tweet.
     Examples of the Desired Output:
     
-    "Effortlessly manage subscriber tickets on http://breeew.com. Only 3 subs, yet just 1 ticket to handle. Fully automated for ultimate efficiency. #buildinpublic"
+    "Effortlessly manage subscriber tickets on http://breeew.com. 
+    Only 3 subs, yet just 1 ticket to handle. Fully automated for ultimate efficiency. #buildinpublic"
     
-    "Iterated through 3 ideas before landing on the perfect fit: http://genphrase.com. Curious to hear your thoughts! Your feedback is invaluable. #buildinpublic"
+    "Iterated through 3 ideas before landing on the perfect fit: http://genphrase.com. 
+    Curious to hear your thoughts! Your feedback is invaluable. #buildinpublic"
     
-    "Exciting launch of the toy version for my n&w s4 project! Dive into various frameworks to kick-start your ideas. Feel free to DM for the link. #buildinpublic"
+    "Exciting launch of the toy version for my n&w s4 project! Dive into various frameworks to kick-start your ideas. 
+    Feel free to DM for the link. #buildinpublic"
     
     Topics to Focus On:
     
