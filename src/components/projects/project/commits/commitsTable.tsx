@@ -1,6 +1,16 @@
-import { Card, Checkbox, Chip, Typography } from "@material-tailwind/react";
+import {
+  Card,
+  Checkbox,
+  Chip,
+  Dialog,
+  DialogBody,
+  DialogHeader,
+  Typography,
+} from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
 import { useGithubStore } from "~/store/github-store";
+import { api } from "~/utils/api";
 
 const staggerVariants = {
   hidden: { opacity: 0 },
@@ -21,6 +31,13 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
     commits: state.commits,
     setCommits: state.setCommits,
   }));
+  const [open, setOpen] = useState(false);
+  const {
+    data: generatedPosts,
+    mutateAsync: generatePosts,
+    error: generationError,
+    isLoading,
+  } = api.github.post.generatePost.useMutation();
 
   const toggleSelectAll = () => {
     if (commits.length === rows.length) {
@@ -41,9 +58,18 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
     }
   };
 
+  const generatePost = () => {
+    setOpen(!open);
+    // console.log("generate post");
+  };
   return (
     <Card className="w-[90vw] p-4 shadow-sm lg:w-[70vw] ">
-      <Typography variant="h5">Commits</Typography>
+      <div className="flex items-center justify-between">
+        <Typography variant="h5">Commits</Typography>
+        <button className="btn-primary btn text-white" onClick={generatePost}>
+          Generate Post
+        </button>
+      </div>
       <div className="mb-4 flex items-center">
         <Checkbox
           color="blue"
@@ -100,6 +126,46 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
           ))}
         </AnimatePresence>
       </div>
+      <Dialog
+        open={open}
+        handler={generatePost}
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0.9, y: -100 },
+        }}
+      >
+        <DialogHeader>Generated Posts</DialogHeader>
+        <DialogBody>
+          {/* {isLoading ? <LogoLoad size="24" /> : <div>Generated Post</div>} */}
+          <GeneratedPostsCard
+            posts={[
+              "post1 fsdakhfj dafjkh dsakjfh aksjdh fkas",
+              "pofsdajfh kjsa fjkhsd akfksahf st2",
+              "pos fsdajhfs adfjkh asf t3",
+            ]}
+          />
+        </DialogBody>
+      </Dialog>
     </Card>
+  );
+}
+
+function GeneratedPostsCard({ posts }: { posts: string[] }) {
+  const [selectedPost, setSelectedPost] = useState(posts[0]);
+  return (
+    <div className="flex flex-col gap-2">
+      {posts.map((post) => (
+        <Card
+          className={`cursor-pointer border-gray-800 p-4 shadow-sm  hover:shadow-md ${
+            selectedPost === post ? "border-2 " : ""
+          }`}
+          key={post}
+          onClick={() => setSelectedPost(post)}
+        >
+          <Typography variant="p">{post}</Typography>
+        </Card>
+      ))}
+      <button className="btn btn-primary text-white">Save Post</button>
+    </div>
   );
 }

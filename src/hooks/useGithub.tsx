@@ -51,6 +51,13 @@ export const useGithub = (token: string) => {
             state: type
         }))
     }
+    const getPullRequestById = async (owner: string, repo: string, id: number) => {
+        return wrapAPICall(async () => await octokit.rest.pulls.get({
+            owner,
+            repo,
+            pull_number: id
+        }))
+    }
     return {
         getRepositories,
         getRepository,
@@ -58,6 +65,8 @@ export const useGithub = (token: string) => {
         failure: isAPICallFailure,
         error: APICallError,
         success: isAPICallSuccess,
-        getCommits
+        getCommits,
+        getPullRequestById,
+        getPullRequests
     }
 }
