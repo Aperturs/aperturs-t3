@@ -16,7 +16,7 @@ const CalendarComponent: FC<CalendarProps> = ({ handleDate }) => {
 
   return (
     <div className="flex  flex-col items-center justify-center">
-      <p className="text-sm text-red-400">
+      <p className="text-sm text-orange-700 font-bold my-2">
         we are only allowing 10 days in advance for free plan users
       </p>
       <Calendar
