@@ -21,6 +21,9 @@ const config = {
   //   // your project has ESLint errors.
   //   ignoreDuringBuilds: true,
   // },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   transpilePackages: ["@lens-protocol"],
   async redirects() {
     return [
