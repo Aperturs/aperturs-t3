@@ -120,6 +120,9 @@ function Publish() {
 
   const handleSave = async ({ isScheduling }: { isScheduling: boolean }) => {
     let postId = "";
+    if(!time) {
+      return toast.error("Please select a time");
+    }
     const [hours, minutes] = time.split(":");
     const scheduledTime =
       date && hours !== undefined && minutes !== undefined
@@ -167,6 +170,9 @@ function Publish() {
   };
 
   const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
+    if(!time) {
+      return toast.error("Please select a time");
+    }
     const [hours, minutes] = time.split(":");
     const scheduledTime =
       date && hours !== undefined && minutes !== undefined
@@ -212,6 +218,9 @@ function Publish() {
   };
 
   const handleSchedule = async () => {
+    if(!time) {
+      return toast.error("Please select a time");
+    }
     const [hours, minutes] = time.split(":");
     const scheduledTime =
       date && hours !== undefined && minutes !== undefined

@@ -6,7 +6,7 @@ import {
   DialogHeader,
 } from "@material-tailwind/react";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
@@ -30,31 +30,34 @@ export default function Picker() {
     setTime(event.target.value);
   };
 
-  function handleIsPastTime(localdate: Date, localvalue: string): boolean {
-    const now = new Date();
-    const scheduledTime = new Date(localdate);
-    const [hours, minutes] = localvalue.split(":");
-    scheduledTime.setHours(Number(hours), Number(minutes), 0);
+  const handleIsPastTime = useCallback(
+    (localdate: Date, localvalue: string): boolean => {
+      const now = new Date();
+      const scheduledTime = new Date(localdate);
+      const [hours, minutes] = localvalue.split(":");
+      scheduledTime.setHours(Number(hours), Number(minutes), 0);
 
-    // Calculate the time 20 minutes from now
-    const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
+      // Calculate the time 20 minutes from now
+      const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
 
-    if (scheduledTime < tenMinutesFromNow) {
-      // If the scheduled time is less than present time + 10 minutes
-      // Update the date to 10 minutes from now
-      // const newScheduledTime = new Date(tenMinutesFromNow);
-      // setDate(newScheduledTime);
-      // const hours = newScheduledTime.getHours();
-      // const minutes = newScheduledTime.getMinutes();
-      // setTime(`${hours}:${minutes}`);
-      // toast(`date updated to ${formatDate(newScheduledTime)} at ${time}`);
-      setDisplayMessage("Please select a time at least 10 minutes from now");
-      canConfirm && setCanConfirm(false);
-      return false;
-    }
-    setCanConfirm(true);
-    return true;
-  }
+      if (scheduledTime < tenMinutesFromNow) {
+        // If the scheduled time is less than present time + 10 minutes
+        // Update the date to 10 minutes from now
+        // const newScheduledTime = new Date(tenMinutesFromNow);
+        // setDate(newScheduledTime);
+        // const hours = newScheduledTime.getHours();
+        // const minutes = newScheduledTime.getMinutes();
+        // setTime(`${hours}:${minutes}`);
+        // toast(`date updated to ${formatDate(newScheduledTime)} at ${time}`);
+        setDisplayMessage("Please select a time at least 10 minutes from now");
+        canConfirm && setCanConfirm(false);
+        return false;
+      }
+      setCanConfirm(true);
+      return true;
+    },
+    [canConfirm]
+  );
   useEffect(() => {
     if (date && time) {
       handleIsPastTime(date, time);
@@ -62,15 +65,16 @@ export default function Picker() {
       setCanConfirm(false);
       setDisplayMessage("Please select a date and time");
     }
-  }, [date, time]);
+  }, [date, handleIsPastTime, time]);
 
   const handleOpen = () => {
-    if(!open) {
+    if (!open) {
       setOpen(true);
-    }if(open){
-    setDate(null);
-    setTime(null);
-    setOpen(false);
+    }
+    if (open) {
+      setDate(null);
+      setTime(null);
+      setOpen(false);
     }
   };
 
