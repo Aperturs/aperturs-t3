@@ -138,7 +138,7 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
                       <Typography variant="h6" className="text-blue-gray-800 ">
                         {row.message}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="p">
                         Created on {row.date} by {row.author}
                       </Typography>
                     </div>

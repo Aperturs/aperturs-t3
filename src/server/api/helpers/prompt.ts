@@ -17,9 +17,10 @@ export const prompt = ({ProjectName, ProjectDescription, ProjectContext, CommitI
 
     Desired Output Format:
 
-    Each tweet should be a small paragraph consisting of up to 280 characters.
-    Maintain concise, informative, and engaging content.
-    Avoid unnecessary emojis, hashtags, or other distractions.
+    Each tweet should be list of small paragraphs with all overall text consisting of up to 280 characters.
+    Maintain concise, informative, and engaging content and fun.
+    Avoid  hashtags, or other distractions.
+    Add Emojis if needed
     The tone should be informative, and can be little fun and exiting 
     and should not resemble a bot-generated tweet.
     Examples of the Desired Output:

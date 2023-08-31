@@ -63,6 +63,7 @@ export const githubProject = createTRPCRouter({
   getProject: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
+      
       const project = await ctx.prisma.project.findUnique({
         where: { id: input },
       });
