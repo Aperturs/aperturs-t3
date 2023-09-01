@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useGithubStore } from "~/store/github-store";
@@ -137,7 +138,7 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
                       <Typography variant="h6" className="text-blue-gray-800 ">
                         {row.message}
                       </Typography>
-                      <Typography variant="body2">
+                      <Typography variant="p">
                         Created on {row.date} by {row.author}
                       </Typography>
                     </div>
@@ -184,6 +185,44 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
 
 function GeneratedPostsCard({ posts }: { posts: string[] }) {
   const [selectedPost, setSelectedPost] = useState(posts[0]);
+  const {
+    mutateAsync: savePost,
+    isLoading,
+    error,
+  } = api.savepost.savePost.useMutation();
+
+  const router = useRouter();
+
+  const handleSavePost = () => {
+   const projectId = router.query.id as string;
+    if (!selectedPost) {
+      toast.error("Please select a post");
+      return;
+    }
+    toast
+      .promise(
+        savePost({
+          defaultContent: selectedPost,
+          selectedSocials: [],
+          projectId: projectId,
+          postContent: [],
+        }),
+        {
+          loading: "Saving Post",
+          success: "Post Saved",
+          error: `${error?.message ? error?.message : "Something went wrong"}`,
+        }
+      )
+      .then(async (res) => {
+        if (res.success) {
+          await router.push(`/project/${projectId}/drafts`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="flex flex-col gap-2">
       {posts.map((post) => (
@@ -197,7 +236,13 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
           <Typography variant="p">{post}</Typography>
         </Card>
       ))}
-      <button className="btn-primary btn text-white">Save Post</button>
+      <button
+        className={`btn-primary btn text-white ${isLoading ? "loading" : ""}`}
+        onClick={handleSavePost}
+        disabled={isLoading}
+      >
+        Save Post
+      </button>
     </div>
   );
 }

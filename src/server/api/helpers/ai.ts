@@ -4,10 +4,10 @@ import { PromptTemplate } from "langchain/prompts";
 import { env } from "~/env.mjs";
 import { prompt, type IPrompt } from "./prompt";
 
-function convertStringToArray(input: string): string[] {
+function convertStringToArray(input:string):string[] {
   // Find the starting "[" and ending "]" positions
-  const startIndex = input.indexOf("[");
-  const endIndex = input.lastIndexOf("]");
+  const startIndex = input.indexOf('[');
+  const endIndex = input.lastIndexOf(']');
 
   if (startIndex === -1 || endIndex === -1) {
     // Return an empty array if the input doesn't have the expected structure
@@ -17,13 +17,13 @@ function convertStringToArray(input: string): string[] {
   // Extract the content inside the square brackets
   const content = input.slice(startIndex + 1, endIndex);
 
-  // Split the content into individual strings
-  const strings = content.split(",\n");
+  // Split the content into individual strings using a regex pattern
+  const strings = content.match(/"[^"]+"/g);
 
-  // Remove any leading or trailing spaces from each string
-  const cleanedStrings = strings.map((str) => str.trim());
+  // Remove the surrounding double quotes from each string
+  const cleanedStrings = strings?.map(str => str.slice(1, -1));
 
-  return cleanedStrings;
+  return cleanedStrings || [];
 }
 
 export async function AIGenerated({

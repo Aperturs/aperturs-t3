@@ -4,7 +4,7 @@ type StateValues = {
   defaultContent: string;
   tweets: Tweet[];
   date: Date | null;
-  time: string;
+  time: string | null;
   selectedSocials: SelectedSocial[];
   content: PostContent[];
 };
@@ -14,8 +14,8 @@ type StateSetters = {
   setShouldReset: (shouldReset: boolean) => void;
   setDefaultContent: (defaultContent: string) => void;
   setTweets: (tweet: Tweet[]) => void;
-  setDate: (date: Date) => void;
-  setTime: (time: string) => void;
+  setDate: (date: Date | null) => void;
+  setTime: (time: string | null) => void;
   setSelectedSocials: (selectedSocials: SelectedSocial[]) => void;
   reset: () => void;
   setContent: (content: PostContent[]) => void;

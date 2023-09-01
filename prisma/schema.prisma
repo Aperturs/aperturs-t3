@@ -52,6 +52,9 @@ model Project {
   repoId                     String
   questionsAnswersJsonString Json   @default("{}")
   commitCount                Int
+  posts                      Post[]
+  createdAt                  DateTime @default(now())
+  updatedAt                  DateTime @updatedAt @default(now())
 
   @@index([clerkUserId])
   @@index([id])
@@ -154,6 +157,8 @@ model Post {
   content        Json
   defaultContent String    @db.Text
   socialSelected Json
+  projectId      String?
+  project        Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -161,6 +166,7 @@ model Post {
   @@index([status])
   @@index([clerkUserId])
   @@index([id])
+  @@index([projectId])
 }
 
 // model Content {

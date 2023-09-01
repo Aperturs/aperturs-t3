@@ -6,7 +6,7 @@ import {
   DialogHeader,
 } from "@material-tailwind/react";
 import { format } from "date-fns";
-import { Fragment, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
@@ -21,6 +21,8 @@ export default function Picker() {
   const setDate = useStore((state) => state.setDate);
   const time = useStore((state) => state.time);
   const setTime = useStore((state) => state.setTime);
+  const [canConfirm, setCanConfirm] = useState(false);
+  const [displayMessage, setDisplayMessage] = useState("");
 
   const [open, setOpen] = useState(false);
 
@@ -28,50 +30,75 @@ export default function Picker() {
     setTime(event.target.value);
   };
 
-  function handleIsPastTime(date: Date, value: string): boolean {
-    if (!date || !value) {
-      return true; // Return true if any of the inputs are undefined
+  const handleIsPastTime = useCallback(
+    (localdate: Date, localvalue: string): boolean => {
+      const now = new Date();
+      const scheduledTime = new Date(localdate);
+      const [hours, minutes] = localvalue.split(":");
+      scheduledTime.setHours(Number(hours), Number(minutes), 0);
+
+      // Calculate the time 20 minutes from now
+      const tenMinutesFromNow = new Date(now.getTime() + 10 * 60000);
+
+      if (scheduledTime < tenMinutesFromNow) {
+        // If the scheduled time is less than present time + 10 minutes
+        // Update the date to 10 minutes from now
+        // const newScheduledTime = new Date(tenMinutesFromNow);
+        // setDate(newScheduledTime);
+        // const hours = newScheduledTime.getHours();
+        // const minutes = newScheduledTime.getMinutes();
+        // setTime(`${hours}:${minutes}`);
+        // toast(`date updated to ${formatDate(newScheduledTime)} at ${time}`);
+        setDisplayMessage("Please select a time at least 10 minutes from now");
+        canConfirm && setCanConfirm(false);
+        return false;
+      }
+      setCanConfirm(true);
+      return true;
+    },
+    [canConfirm]
+  );
+  useEffect(() => {
+    if (date && time) {
+      handleIsPastTime(date, time);
+    } else {
+      setCanConfirm(false);
+      setDisplayMessage("Please select a date and time");
     }
-    const now = new Date();
-    const scheduledTime = new Date(date);
-    const [hours, minutes] = value.split(":");
-    scheduledTime.setHours(Number(hours), Number(minutes), 0);
-
-    // Calculate the time 20 minutes from now
-    const tenMinutesFromNow = new Date(now.getTime() + 20 * 60000);
-
-    if (scheduledTime < tenMinutesFromNow) {
-      // If the scheduled time is less than present time + 10 minutes
-      // Update the date to 10 minutes from now
-      const newScheduledTime = new Date(tenMinutesFromNow);
-      setDate(newScheduledTime);
-      const hours = newScheduledTime.getHours();
-      const minutes = newScheduledTime.getMinutes();
-      setTime(`${hours}:${minutes}`);
-      toast(`date updated to ${formatDate(newScheduledTime)} at ${time}`);
-      return false;
-    }
-
-    return true;
-  }
+  }, [date, handleIsPastTime, time]);
 
   const handleOpen = () => {
-    if (open) {
-      if (date) {
-        // if (!handleIsPastTime(date, time)) {
-        //   toast.error("Please select a time at least 20 minutes from now");
-        // }
-      }
+    if (!open) {
+      setOpen(true);
     }
-    setOpen(!open);
+    if (open) {
+      setDate(null);
+      setTime(null);
+      setOpen(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setDate(null);
+    setTime(null);
+    setOpen(false);
   };
 
   const handleConfirm = () => {
-    handleOpen();
+    // handleOpen();
+    if (open) {
+      if (date && time) {
+        if (!handleIsPastTime(date, time)) {
+          toast.error("Please select a time at least 10 minutes from now");
+        }
+        setCanConfirm(true);
+        setOpen(false);
+      }
+    }
   };
 
   return (
-    <Fragment>
+    <>
       <span
         className="btn-primary btn bg-primary font-medium  normal-case  text-white"
         onClick={handleOpen}
@@ -83,10 +110,13 @@ export default function Picker() {
           Scheduled for {date ? formatDate(date) : ""} at {time}
         </DialogHeader>
         <DialogBody divider>
+          <p className="w-full text-center text-xs font-bold text-red-700 sm:text-sm">
+            {displayMessage}
+          </p>
           <CalendarComponent handleDate={setDate} />
           <input
             type="time"
-            value={time}
+            value={time || ""}
             onChange={onChange}
             className="time-input rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
@@ -96,16 +126,21 @@ export default function Picker() {
           <Button
             variant="text"
             color="red"
-            onClick={handleOpen}
+            onClick={handleCancel}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleConfirm}>
+          <Button
+            variant="gradient"
+            color="green"
+            disabled={!canConfirm}
+            onClick={handleConfirm}
+          >
             <span>Confirm</span>
           </Button>
         </DialogFooter>
       </Dialog>
-    </Fragment>
+    </>
   );
 }

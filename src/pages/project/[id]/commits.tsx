@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { useRouter } from "next/router";
 import { useEffect, useState, type ReactElement } from "react";
 import { CommitsTable, Layout, ProjectLayout } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
@@ -28,9 +27,9 @@ function getUsername(url: string): string | null {
   }
 }
 
-const CommitsPage = () => {
-  const router = useRouter();
-  const id = router.query.id as string;
+const CommitsPage = ({ id }: { id: string }) => {
+  // const router = useRouter();
+  // const id = router.query.id as string;
   const { data: project, isSuccess } =
     api.github.project.getProject.useQuery(id);
   const { data: githubTokens, isLoading } =
@@ -50,7 +49,7 @@ const CommitsPage = () => {
       getCommits(owner, repo)
         .then((res) => {
           if (res) {
-            console.log(res,"commmits")
+            console.log(res, "commmits");
             const newTablesRows: TableRow[] = res.data.map((commit, index) => {
               return {
                 id: index,
@@ -72,8 +71,8 @@ const CommitsPage = () => {
     }
   }, [getCommits, project, isSuccess, ranOnce]);
 
-  if (!project && !githubTokens) return <LogoLoad size="24"/>;
-  if (loading || isLoading) return <LogoLoad  size="24"/>;
+  if (!project && !githubTokens) return <LogoLoad size="24" />;
+  if (loading || isLoading) return <LogoLoad size="24" />;
 
   return (
     <div className="">
@@ -88,6 +87,18 @@ CommitsPage.getLayout = function getLayout(page: ReactElement) {
       <ProjectLayout>{page}</ProjectLayout>
     </Layout>
   );
+};
+
+export const getServerSideProps = (context: any) => {
+  const id = context.params.id;
+
+  if (typeof id !== "string") throw new Error("Invalid id");
+
+  return {
+    props: {
+      id,
+    },
+  };
 };
 
 export default CommitsPage;
