@@ -14,7 +14,7 @@ import React from "react";
 import UserProfilePage from "./userprofile";
 
 const Test = () => {
-  return <div className="w-full">comming soon..</div>;
+  return <div className="w-full bg-black">comming soon..</div>;
 };
 
 export default function AccountTabs() {
@@ -40,7 +40,7 @@ export default function AccountTabs() {
   ];
   return (
     <Tabs value="account">
-      <TabsHeader className="w-full flex text-center">
+      <TabsHeader className="w-full text-center">
         {data.map(({ label, value, icon }) => (
           <Tab key={value} value={value}>
             <div className="flex w-full items-center gap-2">
@@ -50,7 +50,7 @@ export default function AccountTabs() {
           </Tab>
         ))}
       </TabsHeader>
-      <TabsBody>
+      <TabsBody className="w-full">
         {data.map(({ value, element }) => (
           <TabPanel key={value} value={value}>
             <div className="w-full">{React.createElement(element)}</div>
