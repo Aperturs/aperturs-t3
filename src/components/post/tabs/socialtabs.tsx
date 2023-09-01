@@ -27,7 +27,6 @@ export default function SocialTabs() {
       setContent([]);
       return;
     }
-
     const filteredContent = content.filter((contentItem) =>
       selectedSocials.some((item) => item.id === contentItem.id)
     );

@@ -1,12 +1,8 @@
-import { UserProfile } from "@clerk/nextjs";
 import { type ReactElement } from "react";
 import { Layout } from "~/components";
+import AccountTabs from "~/components/profile/account/tabs";
 
-const UserProfilePage = () => (
-  <div className="flex w-full justify-center">
-    <UserProfile path="/profile" routing="path" />
-  </div>
-);
+const UserProfilePage = () => <AccountTabs />;
 
 export default UserProfilePage;
 

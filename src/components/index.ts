@@ -17,6 +17,7 @@ import QuestionCard from "./projects/project/context/questionCard";
 import CommitDescriptionSettingsCard from "./projects/project/settings/commitInfo";
 import CommitSettings from "./projects/project/settings/commitSettings";
 import GithubCard from "./projects/projectCard";
+import  AccountTabs  from "./profile/account/tabs";
 
 export {
   CommitDescriptionSettingsCard,
