@@ -22,7 +22,7 @@ const config = {
   //   ignoreDuringBuilds: true,
   // },
   compiler: {
-    removeConsole: process.env.NODE_ENV === "development",
+    removeConsole: process.env.NODE_ENV === "production",
   },
   transpilePackages: ["@lens-protocol"],
   async redirects() {
