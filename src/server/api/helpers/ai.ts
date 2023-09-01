@@ -1,13 +1,10 @@
-import { LLMChain } from "langchain/chains";
-import { OpenAI } from "langchain/llms/openai";
-import { PromptTemplate } from "langchain/prompts";
-import { env } from "~/env.mjs";
+import OpenAI from "openai";
 import { prompt, type IPrompt } from "./prompt";
 
-function convertStringToArray(input:string):string[] {
+function convertStringToArray(input: string): string[] {
   // Find the starting "[" and ending "]" positions
-  const startIndex = input.indexOf('[');
-  const endIndex = input.lastIndexOf(']');
+  const startIndex = input.indexOf("[");
+  const endIndex = input.lastIndexOf("]");
 
   if (startIndex === -1 || endIndex === -1) {
     // Return an empty array if the input doesn't have the expected structure
@@ -21,7 +18,7 @@ function convertStringToArray(input:string):string[] {
   const strings = content.match(/"[^"]+"/g);
 
   // Remove the surrounding double quotes from each string
-  const cleanedStrings = strings?.map(str => str.slice(1, -1));
+  const cleanedStrings = strings?.map((str) => str.slice(1, -1));
 
   return cleanedStrings || [];
 }
@@ -40,13 +37,24 @@ export async function AIGenerated({
     CommitInformation,
     website,
   });
-  const model = new OpenAI({
-    temperature: 0.6,
-    openAIApiKey: env.OPENAI_API_KEY,
+
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
   });
-  const promptTemp = PromptTemplate.fromTemplate(promptMessage);
-  const chainA = new LLMChain({ llm: model, prompt: promptTemp });
-  const resA = await chainA.run({ maxTokens: 100, stop: ["\n"] });
-  console.log(resA);
-  return convertStringToArray(resA);
+  // const promptTemp = PromptTemplate.fromTemplate(promptMessage);
+  // const chainA = new LLMChain({ llm: model, prompt: promptTemp });
+  // const resA = await chainA.run({ maxTokens: 100, stop: ["\n"] });
+  const response = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "user", content: `${promptMessage}` }],
+    n: 1,
+    temperature: 0.5,
+    frequency_penalty: 0.2,
+    presence_penalty: 0.0,
+    // stream: true
+  });
+  console.log(response.usage,"total tokens");
+  const endResponse = response.choices[0]?.message.content;
+
+  return convertStringToArray(endResponse || "");
 }

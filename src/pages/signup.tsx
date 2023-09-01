@@ -24,7 +24,7 @@ const Signup = () => {
         <div className="absolute -right-0 -top-40 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
       </div>
-      <div className="flex items-center justify-center bg-white py-10 md:w-1/2">
+      <div className="flex items-center justify-center bg-white px-8 py-10 md:w-1/2">
         <SignUp
           path="/signup"
           signInUrl={"/login"}

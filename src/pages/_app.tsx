@@ -51,7 +51,11 @@ const MyApp: AppType = ({
 
   return (
     <Lenswrapper>
-      <ClerkProvider {...pageProps}>
+      <ClerkProvider {...pageProps} appearance={{
+        elements: {
+         formButtonPrimary: 'bg-primary'
+        }
+      }}>
         <ThemeProvider>
           <Toaster position="top-left" reverseOrder={false} />
           {getLayout(
