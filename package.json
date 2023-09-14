@@ -29,6 +29,7 @@
     "bcrypt": "^5.1.0",
     "daisyui": "^2.51.5",
     "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.3",
     "https": "^1.0.0",
     "langchain": "^0.0.137",
     "micro": "^10.0.1",

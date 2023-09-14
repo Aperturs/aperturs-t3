@@ -15,7 +15,7 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-
+import { getAuth } from "@clerk/nextjs/server";
 import { prisma } from "~/server/db";
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -64,7 +64,6 @@ export const createTRPCContext =  (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { getAuth } from "@clerk/nextjs/dist/server";
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";

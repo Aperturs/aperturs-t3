@@ -4,10 +4,9 @@ import {
   CardFooter,
   CardHeader,
   Input,
-  Typography
+  Typography,
 } from "@material-tailwind/react";
 import { useState } from "react";
-
 
 export default function CommitSettings() {
   const [commits, setCommits] = useState(0);
@@ -16,17 +15,21 @@ export default function CommitSettings() {
     setCommits(parseInt(e.target.value, 10));
   };
 
-
   return (
     <Card className="mt-6">
       <CardHeader color="blue-gray">
-        <Typography variant="h5" color="white" className=" grid h-24 place-items-center">
+        <Typography
+          variant="h5"
+          color="white"
+          className=" grid h-24 place-items-center"
+        >
           Number of Commits
         </Typography>
       </CardHeader>
       <CardBody>
         <Typography color="blue-gray" className="mb-4">
-          Select the number of commits for which you want us to generate posts for you.
+          Select the number of commits for which you want us to generate posts
+          for you.
         </Typography>
         <Input
           type="number"
@@ -34,6 +37,7 @@ export default function CommitSettings() {
           value={commits}
           onChange={handleCommitsChange}
           className="mb-4"
+          crossOrigin={undefined}
         />
       </CardBody>
       <CardFooter>

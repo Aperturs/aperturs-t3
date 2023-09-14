@@ -69,9 +69,9 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
       toast
         .promise(
           generatePosts({
-            ProjectName: "Aperturs t3",
-            ProjectDescription: "Social Media Automation Platform",
-            ProjectContext: "Aperturs t3",
+            ProjectName: "Threads Web",
+            ProjectDescription: "Threads web to post directly from desktop, because threads dont have it yet",
+            ProjectContext: "I created a threads web so that people can post from desktop",
             CommitInformation: `${commits.toString()}`,
           }),
           {
@@ -106,8 +106,7 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
         <Checkbox
           color="blue"
           checked={commits.length === rows.length}
-          onChange={toggleSelectAll}
-        />
+          onChange={toggleSelectAll} crossOrigin={undefined}        />
         <Typography variant="h6" className="ml-2">
           {commits.length} row (s) selected
         </Typography>
@@ -132,13 +131,12 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
                     <Checkbox
                       color="blue"
                       checked={commits.some((commit) => commit.id === row.id)}
-                      onChange={() => toggleRowSelection(row.id)}
-                    />
+                      onChange={() => toggleRowSelection(row.id)} crossOrigin={undefined}                    />
                     <div>
                       <Typography variant="h6" className="text-blue-gray-800 ">
                         {row.message}
                       </Typography>
-                      <Typography variant="p">
+                      <Typography>
                         Created on {row.date} by {row.author}
                       </Typography>
                     </div>
@@ -173,7 +171,7 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
           ) : generatedPosts?.data ? (
             <GeneratedPostsCard posts={generatedPosts.data || []} />
           ) : (
-            <Typography variant="p" color="red">
+            <Typography color="red">
               {generationError?.message}
             </Typography>
           )}
@@ -233,7 +231,7 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
           key={post}
           onClick={() => setSelectedPost(post)}
         >
-          <Typography variant="p">{post}</Typography>
+          <Typography variant="paragraph">{post}</Typography>
         </Card>
       ))}
       <button
