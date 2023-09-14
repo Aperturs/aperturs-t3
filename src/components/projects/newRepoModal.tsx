@@ -129,7 +129,7 @@ const NewRepoFormModal = () => {
   if (isLoading) return <Spinner className="h-12 w-12" />;
   return (
     <>
-      <button className="btn-primary btn px-8 text-white" onClick={handleOpen}>
+      <button className="btn btn-primary px-8 text-white" onClick={handleOpen}>
         Connect new Repo
       </button>
       <Dialog open={open} handler={handleOpen}>
@@ -166,6 +166,7 @@ const NewRepoFormModal = () => {
                   }
                   type="number"
                   label="Number Of Commits"
+                  crossOrigin={undefined}
                 />
                 <Typography
                   variant="small"
@@ -182,12 +183,12 @@ const NewRepoFormModal = () => {
         </DialogBody>
         <DialogFooter>
           <button
-            className="btn-error btn mr-1 text-white"
+            className="btn btn-error mr-1 text-white"
             onClick={handleOpen}
           >
             <span>Cancel</span>
           </button>
-          <Button className="btn-success btn ml-1" onClick={onConfirm}>
+          <Button className="btn btn-success ml-1" onClick={onConfirm}>
             {projectLoading ? <Spinner className="h-6 w-6" /> : "Confirm"}
           </Button>
         </DialogFooter>

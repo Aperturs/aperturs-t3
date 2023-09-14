@@ -111,6 +111,7 @@ const MenuItems = ({
             handleChange();
           }}
           className="text-primary"
+          crossOrigin={undefined}
         />
       </div>
     </div>

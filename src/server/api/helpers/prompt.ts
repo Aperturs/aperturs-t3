@@ -9,7 +9,7 @@ export interface IPrompt{
 
 export const prompt = ({ProjectName, ProjectDescription, ProjectContext, CommitInformation,website}: IPrompt) => {
     return `
-    Generate engaging "build in public" style tweets based on commit messages from GitHub for the provided project. 
+    Generate engaging "feature update or new feature" style tweets based on commit messages from GitHub for the provided project. 
     Each tweet should be informative, insightful, and up to 280 characters. Context about the app and commit messages will be provided. 
     The aim is to create 4 distinct variations for each set of input data, formatted as an array:
     ["result1", "result2", "result3", "result4'"]
@@ -18,6 +18,8 @@ export const prompt = ({ProjectName, ProjectDescription, ProjectContext, CommitI
     Desired Output Format:
 
     Each tweet should be list of small paragraphs with all overall text consisting of up to 280 characters.
+    you can increase the length of the tweet if you want
+    
     Maintain concise, informative, and engaging content and fun.
     Avoid  hashtags, or other distractions.
     Add Emojis if needed
@@ -37,7 +39,7 @@ export const prompt = ({ProjectName, ProjectDescription, ProjectContext, CommitI
     Topics to Focus On:
     
     Building in public
-    Launching new features
+    (most important): Launching new features
     Product explanations
     Technology insights
     Additional Notes:

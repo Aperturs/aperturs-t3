@@ -29,7 +29,7 @@ model User {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   Queue          Queue?
-  userLimits     UserLimits?
+  userUsage     UserUsage?
 
   @@index([clerkUserId])
   @@index([id])
@@ -106,16 +106,16 @@ model LinkedInToken {
   @@index([id])
 }
 
-model UserLimits {
+model UserUsage {
   clerkUserId    String   @unique
   user           User     @relation(fields: [clerkUserId], references: [clerkUserId])
-  scheduledposts Int      @default(20)
-  scheduledtime  Int      @default(10)
-  projects       Int      @default(2)
-  socialaccounts Int      @default(3)
-  generatedposts Int      @default(20)
-  drafts         Int      @default(20)
-  ideas          Int      @default(10)
+  scheduledposts Int      @default(0)
+  scheduledtime  Int      @default(0)
+  projects       Int      @default(0)
+  socialaccounts Int      @default(0)
+  generatedposts Int      @default(0)
+  drafts         Int      @default(0)
+  ideas          Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

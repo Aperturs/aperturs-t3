@@ -35,7 +35,7 @@ const CommitCard: React.FC<CommitCardProps> = ({ id, title, description, checked
             <Typography variant="h5" className="mb-1">
               {title}
             </Typography>
-            <Typography variant="body1">{description}</Typography>
+            <Typography variant="paragraph">{description}</Typography>
           </div>
         </div>
       </Card>

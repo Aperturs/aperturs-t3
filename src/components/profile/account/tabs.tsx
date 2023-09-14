@@ -14,7 +14,7 @@ import React from "react";
 import UserProfilePage from "./userprofile";
 
 const Test = () => {
-  return <div className="w-full bg-black">comming soon..</div>;
+  return <div className="w-full py-5">comming soon..</div>;
 };
 
 export default function AccountTabs() {

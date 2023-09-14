@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { getAuth } from "@clerk/nextjs/dist/server";
+import { auth } from "@clerk/nextjs";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -11,7 +12,7 @@ export default async function handler(
 ) {
   // const code = new URLSearchParams(req.query).get("code");
   const code = req.query.code;
-  const { userId } = getAuth(req);
+  const { userId } = auth();
   const response = await fetch(
     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
     "https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=" +
