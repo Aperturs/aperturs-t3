@@ -27,7 +27,19 @@ function isPullRequestMergeCommit(commit: string): boolean {
   );
 }
 
-export default function CommitsTable({ rows }: { rows: ICommit[] }) {
+interface CommitTableProps {
+  rows: ICommit[];
+  projectName: string;
+  ProjectTagline: string;
+  projectDescription: string;
+}
+
+export default function CommitsTable({
+  rows,
+  projectDescription,
+  projectName,
+  ProjectTagline,
+}: CommitTableProps) {
   // const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
   const { commits, setCommits } = useGithubStore((state) => ({
@@ -69,9 +81,9 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
       toast
         .promise(
           generatePosts({
-            ProjectName: "Threads Web",
-            ProjectDescription: "Threads web to post directly from desktop, because threads dont have it yet",
-            ProjectContext: "I created a threads web so that people can post from desktop",
+            ProjectName: projectName,
+            ProjectDescription: projectDescription,
+            ProjectContext: ProjectTagline,
             CommitInformation: `${commits.toString()}`,
           }),
           {
@@ -95,7 +107,7 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
       <div className="flex items-center justify-between">
         <Typography variant="h5">Commits</Typography>
         <button
-          className="btn-primary btn text-white"
+          className="btn btn-primary text-white"
           disabled={isLoading}
           onClick={generatePost}
         >
@@ -106,7 +118,9 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
         <Checkbox
           color="blue"
           checked={commits.length === rows.length}
-          onChange={toggleSelectAll} crossOrigin={undefined}        />
+          onChange={toggleSelectAll}
+          crossOrigin={undefined}
+        />
         <Typography variant="h6" className="ml-2">
           {commits.length} row (s) selected
         </Typography>
@@ -131,7 +145,9 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
                     <Checkbox
                       color="blue"
                       checked={commits.some((commit) => commit.id === row.id)}
-                      onChange={() => toggleRowSelection(row.id)} crossOrigin={undefined}                    />
+                      onChange={() => toggleRowSelection(row.id)}
+                      crossOrigin={undefined}
+                    />
                     <div>
                       <Typography variant="h6" className="text-blue-gray-800 ">
                         {row.message}
@@ -171,9 +187,7 @@ export default function CommitsTable({ rows }: { rows: ICommit[] }) {
           ) : generatedPosts?.data ? (
             <GeneratedPostsCard posts={generatedPosts.data || []} />
           ) : (
-            <Typography color="red">
-              {generationError?.message}
-            </Typography>
+            <Typography color="red">{generationError?.message}</Typography>
           )}
         </DialogBody>
       </Dialog>
@@ -192,7 +206,7 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
   const router = useRouter();
 
   const handleSavePost = () => {
-   const projectId = router.query.id as string;
+    const projectId = router.query.id as string;
     if (!selectedPost) {
       toast.error("Please select a post");
       return;
@@ -235,7 +249,7 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
         </Card>
       ))}
       <button
-        className={`btn-primary btn text-white ${isLoading ? "loading" : ""}`}
+        className={`btn btn-primary text-white ${isLoading ? "loading" : ""}`}
         onClick={handleSavePost}
         disabled={isLoading}
       >

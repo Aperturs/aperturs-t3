@@ -76,7 +76,14 @@ const CommitsPage = ({ id }: { id: string }) => {
 
   return (
     <div className="">
-      <CommitsTable rows={tableRows} />
+      <CommitsTable
+        rows={tableRows}
+        projectName={project?.repoName ?? ""}
+        ProjectTagline={project?.repoDescription ?? ""}
+        projectDescription={
+          project?.questionsAnswersJsonString?.toString() ?? ""
+        }
+      />
     </div>
   );
 };
