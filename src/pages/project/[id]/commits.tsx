@@ -84,6 +84,7 @@ const CommitsPage = ({ id }: { id: string }) => {
         projectDescription={
           project?.questionsAnswersJsonString?.toString() ?? ""
         }
+        accessToken={githubTokens?.at(0)?.access_token ?? ""}
       />
     </div>
   );

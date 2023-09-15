@@ -39,6 +39,7 @@ model Project {
   id                         String   @id @default(cuid())
   clerkUserId                String
   user                       User     @relation(fields: [clerkUserId], references: [clerkUserId])
+  projectName                String?
   repoName                   String
   repoDescription            String   @default("")
   repoUrl                    String   @unique

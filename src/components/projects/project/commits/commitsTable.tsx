@@ -12,6 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useGithub } from "~/hooks/useGithub";
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/utils/api";
 
@@ -27,11 +28,23 @@ function isPullRequestMergeCommit(commit: string): boolean {
   );
 }
 
+function getPullRequestId(commit: string): string | null {
+  const message = commit.toLowerCase();
+  const regex = /merge pull request #(\d+) from/;
+  const match = message.match(regex);
+  if (match && match.length >= 2) {
+    return match[1] || null;
+  } else {
+    return null;
+  }
+}
+
 interface CommitTableProps {
   rows: ICommit[];
   projectName: string;
   ProjectTagline: string;
   projectDescription: string;
+  accessToken: string;
 }
 
 export default function CommitsTable({
@@ -39,6 +52,7 @@ export default function CommitsTable({
   projectDescription,
   projectName,
   ProjectTagline,
+  accessToken
 }: CommitTableProps) {
   // const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -46,6 +60,7 @@ export default function CommitsTable({
     commits: state.commits,
     setCommits: state.setCommits,
   }));
+  const {getPullRequestById} = useGithub(accessToken);
   const [open, setOpen] = useState(false);
   const {
     data: generatedPosts,
@@ -82,7 +97,7 @@ export default function CommitsTable({
         .promise(
           generatePosts({
             ProjectName: projectName,
-            ProjectDescription: projectDescription,
+            ProjectDescription: projectDescription + "",
             ProjectContext: ProjectTagline,
             CommitInformation: `${commits.toString()}`,
           }),
