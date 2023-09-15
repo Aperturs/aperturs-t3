@@ -51,7 +51,9 @@ const MyApp: AppType = ({
 
   return (
     <Lenswrapper>
-      <ClerkProvider {...pageProps} appearance={{
+      <ClerkProvider {...pageProps}
+      
+      appearance={{
         elements: {
          formButtonPrimary: 'bg-primary'
         }

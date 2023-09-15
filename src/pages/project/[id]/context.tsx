@@ -117,7 +117,7 @@ const ProjectContext = () => {
       .promise(
         updateContext({
           data: {
-            questionsAnswersJsonString: JSON.stringify(finalResponse),
+            questionsAnswersJsonString: finalResponse,
           },
           id: id.toString(),
         }),

@@ -93,7 +93,7 @@ const NewRepoFormModal = () => {
   const { mutateAsync: addProject, isLoading: projectLoading } =
     api.github.project.addProject.useMutation({
       onSuccess: async (data) => {
-        await router.push(`/project/${data.id}/context`);
+        await router.push(`/project/${data.id}/commits`);
       },
     });
 
