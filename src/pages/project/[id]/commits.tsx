@@ -50,6 +50,7 @@ const CommitsPage = ({ id }: { id: string }) => {
         .then((res) => {
           if (res) {
             console.log(res, "commmits");
+            
             const newTablesRows: TableRow[] = res.data.map((commit, index) => {
               return {
                 id: index,
@@ -76,7 +77,15 @@ const CommitsPage = ({ id }: { id: string }) => {
 
   return (
     <div className="">
-      <CommitsTable rows={tableRows} />
+      <CommitsTable
+        rows={tableRows}
+        projectName={project?.repoName ?? ""}
+        ProjectTagline={project?.repoDescription ?? ""}
+        projectDescription={
+          project?.questionsAnswersJsonString?.toString() ?? ""
+        }
+        accessToken={githubTokens?.at(0)?.access_token ?? ""}
+      />
     </div>
   );
 };

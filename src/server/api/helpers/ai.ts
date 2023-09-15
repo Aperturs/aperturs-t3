@@ -55,6 +55,7 @@ export async function AIGenerated({
   });
   console.log(response.usage,"total tokens");
   const endResponse = response.choices[0]?.message.content;
+  console.log(endResponse)
 
   return convertStringToArray(endResponse || "");
 }

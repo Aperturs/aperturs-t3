@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ProjectQnASchema } from "~/types/project";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const githubProject = createTRPCRouter({
@@ -37,7 +38,7 @@ export const githubProject = createTRPCRouter({
           repoDescription: z.string().optional(),
           repoUrl: z.string().optional(),
           repoId: z.string().optional(),
-          questionsAnswersJsonString: z.string().optional(),
+          questionsAnswersJsonString: z.array(ProjectQnASchema).optional(),
           commitCount: z.number().positive().optional(),
         }),
       })
@@ -63,7 +64,6 @@ export const githubProject = createTRPCRouter({
   getProject: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      
       const project = await ctx.prisma.project.findUnique({
         where: { id: input },
       });

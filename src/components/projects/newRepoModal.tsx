@@ -93,7 +93,7 @@ const NewRepoFormModal = () => {
   const { mutateAsync: addProject, isLoading: projectLoading } =
     api.github.project.addProject.useMutation({
       onSuccess: async (data) => {
-        await router.push(`/project/${data.id}/context`);
+        await router.push(`/project/${data.id}/commits`);
       },
     });
 
@@ -188,7 +188,7 @@ const NewRepoFormModal = () => {
           >
             <span>Cancel</span>
           </button>
-          <Button className="btn btn-success ml-1" onClick={onConfirm}>
+          <Button className="!btn !btn-success ml-1" color="green" onClick={onConfirm}>
             {projectLoading ? <Spinner className="h-6 w-6" /> : "Confirm"}
           </Button>
         </DialogFooter>

@@ -41,7 +41,7 @@ function Projects() {
               projectId={item.id}
               repoName={item.repoName}
               repoDescription={item.repoDescription}
-              lastUpdated=""
+              lastUpdated={item.updatedAt.toDateString()}
             />
           ))
         ) : (
