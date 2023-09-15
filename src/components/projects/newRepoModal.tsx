@@ -188,7 +188,7 @@ const NewRepoFormModal = () => {
           >
             <span>Cancel</span>
           </button>
-          <Button className="btn btn-success ml-1" onClick={onConfirm}>
+          <Button className="!btn !btn-success ml-1" color="green" onClick={onConfirm}>
             {projectLoading ? <Spinner className="h-6 w-6" /> : "Confirm"}
           </Button>
         </DialogFooter>
