@@ -10,7 +10,7 @@ export const githubProject = createTRPCRouter({
         repoDescription: z.string().optional(),
         repoUrl: z.string(),
         repoId: z.string(),
-        questionsAnswersJsonString: z.string().optional(),
+        questionsAnswersJsonString: z.array(ProjectQnASchema).optional(),
         commitCount: z.number().positive(),
       })
     )
@@ -34,7 +34,7 @@ export const githubProject = createTRPCRouter({
       z.object({
         id: z.string(),
         data: z.object({
-          repoName: z.string().optional(),
+          projectName: z.string().optional(),
           repoDescription: z.string().optional(),
           repoUrl: z.string().optional(),
           repoId: z.string().optional(),
