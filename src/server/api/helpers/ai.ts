@@ -1,5 +1,7 @@
 import OpenAI from "openai";
-import { prompt, type IPrompt } from "./prompt";
+import { prompt as myPrompt, systemPrompt, type IPrompt, prompting, promptuser } from "./prompt";
+import { env } from "~/env.mjs";
+
 
 function convertStringToArray(input: string): string[] {
   // Find the starting "[" and ending "]" positions
@@ -30,7 +32,7 @@ export async function AIGenerated({
   CommitInformation,
   website,
 }: IPrompt) {
-  const promptMessage = prompt({
+  const promptMessage = promptuser({
     ProjectName,
     ProjectContext,
     ProjectDescription,
@@ -39,23 +41,29 @@ export async function AIGenerated({
   });
 
   const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: env.OPENAI_API_KEY
   });
   // const promptTemp = PromptTemplate.fromTemplate(promptMessage);
   // const chainA = new LLMChain({ llm: model, prompt: promptTemp });
   // const resA = await chainA.run({ maxTokens: 100, stop: ["\n"] });
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
-    messages: [{ role: "user", content: `${promptMessage}` }],
+    messages: [
+      { role: "user", content: `${promptMessage}` },
+      // { role: "system", content: `${prompting()}` },
+    ],
     n: 1,
-    temperature: 0.5,
-    frequency_penalty: 0.2,
-    presence_penalty: 0.0,
+    temperature: 0,
+    presence_penalty: 0.5,
+    frequency_penalty: 0.5,
+
     // stream: true
   });
-  console.log(response.usage,"total tokens");
+  console.log(response.usage, "total tokens");
   const endResponse = response.choices[0]?.message.content;
-  console.log(endResponse)
+  console.log(endResponse);
+
+
 
   return convertStringToArray(endResponse || "");
 }
