@@ -34,7 +34,7 @@ export const githubProject = createTRPCRouter({
       z.object({
         id: z.string(),
         data: z.object({
-          repoName: z.string().optional(),
+          projectName: z.string().optional(),
           repoDescription: z.string().optional(),
           repoUrl: z.string().optional(),
           repoId: z.string().optional(),
