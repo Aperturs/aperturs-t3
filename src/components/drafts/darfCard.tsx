@@ -46,7 +46,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
       </CardHeader> */}
       <CardBody>
         <div className="h-20 overflow-auto">
-          <Typography className="whitespace-pre-line">{content}</Typography>
+          <Typography>{content}</Typography>
         </div>
       </CardBody>
       <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">

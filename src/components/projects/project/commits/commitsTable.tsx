@@ -5,13 +5,14 @@ import {
   Dialog,
   DialogBody,
   DialogHeader,
-  Typography
+  Spinner,
+  Typography,
 } from "@material-tailwind/react";
-import { LineWobble } from "@uiball/loaders";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useGithub } from "~/hooks/useGithub";
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/utils/api";
 
@@ -26,22 +27,17 @@ function isPullRequestMergeCommit(commit: string): boolean {
     message.includes("merge pull request") || message.includes("merge branch")
   );
 }
-function formatedSavePost(text:string) {
-  // Use the regular expression /\n+/g to match one or more consecutive line breaks
-  // and replace them with a single space character " "
-  return text.replace(/\\n+/g, '\n');
-}
 
-// function getPullRequestId(commit: string): string | null {
-//   const message = commit.toLowerCase();
-//   const regex = /merge pull request #(\d+) from/;
-//   const match = message.match(regex);
-//   if (match && match.length >= 2) {
-//     return match[1] || null;
-//   } else {
-//     return null;
-//   }
-// }
+function getPullRequestId(commit: string): string | null {
+  const message = commit.toLowerCase();
+  const regex = /merge pull request #(\d+) from/;
+  const match = message.match(regex);
+  if (match && match.length >= 2) {
+    return match[1] || null;
+  } else {
+    return null;
+  }
+}
 
 interface CommitTableProps {
   rows: ICommit[];
@@ -56,6 +52,7 @@ export default function CommitsTable({
   projectDescription,
   projectName,
   ProjectTagline,
+  accessToken
 }: CommitTableProps) {
   // const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -63,6 +60,7 @@ export default function CommitsTable({
     commits: state.commits,
     setCommits: state.setCommits,
   }));
+  const {getPullRequestById} = useGithub(accessToken);
   const [open, setOpen] = useState(false);
   const {
     data: generatedPosts,
@@ -93,12 +91,6 @@ export default function CommitsTable({
   // const handleOpen = () => setOpen(!open);
 
   const generatePost = () => {
-    const CommitInformation = commits.map((commit) => {
-      return `${commit.message}`;
-    });
-
-    const combinedMessages = CommitInformation.join(" + ");
-    console.log(combinedMessages);
     setOpen(!open);
     if (!open) {
       toast
@@ -107,22 +99,23 @@ export default function CommitsTable({
             ProjectName: projectName,
             ProjectDescription: projectDescription + "",
             ProjectContext: ProjectTagline,
-            CommitInformation: combinedMessages,
+            CommitInformation: `${commits.toString()}`,
           }),
           {
             loading: "Generating Posts...",
             success: "Generated Posts",
-            error: `${generationError?.message
-              ? generationError?.message
-              : "Something went wrong"
-              }`,
+            error: `${
+              generationError?.message
+                ? generationError?.message
+                : "Something went wrong"
+            }`,
           }
         )
         .catch((err) => {
           console.log(err);
         });
     }
-    console.log("generate post");
+    // console.log("generate post");
   };
   return (
     <Card className="w-[90vw] p-4 shadow-sm lg:w-[70vw] ">
@@ -182,10 +175,11 @@ export default function CommitsTable({
                   <Chip
                     variant="ghost"
                     className="bg-secondary "
-                    value={`${isPullRequestMergeCommit(row.message)
-                      ? "Pull Request"
-                      : "Commit"
-                      }`}
+                    value={`${
+                      isPullRequestMergeCommit(row.message)
+                        ? "Pull Request"
+                        : "Commit"
+                    }`}
                   />
                 </div>
               </Card>
@@ -202,15 +196,9 @@ export default function CommitsTable({
         }}
       >
         <DialogHeader>Generated Posts</DialogHeader>
-        <DialogBody className="max-h-[40rem] overflow-scroll">
+        <DialogBody>
           {isLoading ? (
-            <div className="h-24 grid place-items-center w-full">
-              <LineWobble
-                size={80}
-                lineWeight={5}
-                speed={1.75}
-              />
-            </div>
+            <Spinner scale={30} />
           ) : generatedPosts?.data ? (
             <GeneratedPostsCard posts={generatedPosts.data || []} />
           ) : (
@@ -231,8 +219,6 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
   } = api.savepost.savePost.useMutation();
 
   const router = useRouter();
-  console.log(selectedPost)
-
 
   const handleSavePost = () => {
     const projectId = router.query.id as string;
@@ -268,15 +254,13 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
     <div className="flex flex-col gap-2">
       {posts.map((post) => (
         <Card
-          className={`cursor-pointer border-gray-800 p-4 shadow-md  hover:shadow-md ${selectedPost === formatedSavePost(post) ? "border-2 " : ""
-            }`}
+          className={`cursor-pointer border-gray-800 p-4 shadow-md  hover:shadow-md ${
+            selectedPost === post ? "border-2 " : ""
+          }`}
           key={post}
-          onClick={() => setSelectedPost(formatedSavePost(post))}
+          onClick={() => setSelectedPost(post)}
         >
-          {/* {post.split('\\n').map((paragraph, index) => (
-            <p className="py-1" key={index}>{paragraph}</p>
-          ))} */}
-          <Typography className="whitespace-pre-line">{formatedSavePost(post)}</Typography>
+          <Typography variant="paragraph">{post}</Typography>
         </Card>
       ))}
       <button

@@ -10,7 +10,6 @@ import {
   DialogHeader,
   Input,
   Spinner,
-  Textarea,
   Typography,
 } from "@material-tailwind/react";
 import { useRouter } from "next/router";
@@ -69,8 +68,6 @@ const NewRepoFormModal = () => {
   // }, [githubTokens]);
   const [option, setOption] = useState({} as RepoOptionType);
   const [commitsCount, setCommitsCount] = useState(3);
-  const [tagline, setTagline] = useState("");
-  const [description, setDescription] = useState("");
   const [options, setOptions] = useState([] as RepoOptionType[]);
   const router = useRouter();
   useEffect(() => {
@@ -114,11 +111,8 @@ const NewRepoFormModal = () => {
         addProject({
           repoId: option.value.id.toString(),
           commitCount: commitsCount,
-          questionsAnswersJsonString: [{
-            question: "description",
-            answer: description,
-          }],
-          repoDescription: tagline || option.value.description || "",
+          questionsAnswersJsonString: undefined,
+          repoDescription: option.value.description || "",
           repoName: option.value.name,
           repoUrl: option.value.html_url,
         }),
@@ -161,8 +155,8 @@ const NewRepoFormModal = () => {
                 placeholder="Search And Select your Repo"
                 onChange={(value) => setOption(value as any)}
               />
-              <div className="mt-5 flex flex-col gap-3">
-                {/* <Input
+              <div className="mt-5">
+                <Input
                   max={"10"}
                   min={"3"}
                   defaultValue={3}
@@ -182,29 +176,7 @@ const NewRepoFormModal = () => {
                   <BsInfoCircle className="-mt-px h-4 w-4" />
                   Select How many lastest commits will be taken in consideration
                   before making a post
-                </Typography> */}
-                <div>
-                  <span>
-                    Tagline
-                  </span>
-                  <Input
-                    crossOrigin={undefined}
-                    value={tagline}
-                    placeholder="One line description about your project"
-                    onChange={(event) => setTagline(event.target.value)}
-                  />
-                </div>
-                <div>
-                  <span>
-                    Description
-                  </span>
-                  <Textarea
-                    value={description}
-                    onChange={(event) => setDescription(event.target.value)}
-                    placeholder="short description about your project"
-
-                  />
-                </div>
+                </Typography>
               </div>
             </div>
           </>

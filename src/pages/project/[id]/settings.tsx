@@ -38,7 +38,7 @@ const Settings = () => {
         ? (data.questionsAnswersJsonString as unknown as ProjectQnA[]) // Parse JSON string to object
         : ([] as ProjectQnA[]);
 
-      setName(data.projectName || data.repoName);
+      setName(data.repoName);
       setTagline(data.repoDescription);
       if (questionAnswer[0]) {
         setDescription(questionAnswer[0].answer);
@@ -55,7 +55,7 @@ const Settings = () => {
     await toast.promise(
       updateContext({
         data: {
-          projectName: name,
+          repoName: name,
           questionsAnswersJsonString: [
             { question: "Description", answer: description },
           ],
@@ -64,8 +64,8 @@ const Settings = () => {
         id: id.toString(),
       }),
       {
-        loading: "Saving Changes ...",
-        success: "Saved Successfully",
+        loading: "Saving... changes",
+        success: "Saved successfully",
         error: `Something went wrong ${error?.message as string}`,
       }
     );
