@@ -16,8 +16,8 @@ datasource db {
 }
 
 model User {
-  clerkUserId    String          @unique
-  userDetails     Json?          
+  clerkUserId    String            @unique
+  userDetails    Json?
   posts          Post[]
   ideas          Idea[]
   transactions   Transaction[]
@@ -25,10 +25,10 @@ model User {
   linkedInTokens LinkedInToken[]
   twitterTokens  TwitterToken[]
   projects       Project[]
-  currentPlan    SubscriptionPlans     @default(FREE)
+  currentPlan    SubscriptionPlans @default(FREE)
   subscritpion   Subscription?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
   Queue          Queue?
   userUsage      UserUsage?
 
