@@ -36,7 +36,9 @@
 //   matcher: "/((?!_next/image|_next/static|favicon.ico).*)",
 // };
 
-import { authMiddleware } from "@clerk/nextjs";
+import { authMiddleware } from "@clerk/nextjs/server";
+console.log("something");
+
 export default authMiddleware({
   // "/" will be accessible to all users
   publicRoutes: [
@@ -47,6 +49,7 @@ export default authMiddleware({
     "/api/lens/upload",
     "/api/post/schedule",
   ],
+  debug: process.env.NODE_ENV === "development",  
 });
 
 export const config = {

@@ -28,8 +28,8 @@ const Signup = () => {
         <SignUp
           path="/sign-up"
           routing="path"
-          signInUrl={"/sing-in"}
-          afterSignUpUrl={"/onboarding"}
+          // signInUrl={"/sing-in"}
+          // afterSignUpUrl={"/onboarding"}
         />
       </div>
     </div>
