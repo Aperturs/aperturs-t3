@@ -40,13 +40,12 @@ import { authMiddleware } from "@clerk/nextjs";
 export default authMiddleware({
   // "/" will be accessible to all users
   publicRoutes: [
-    "/login*",
-    "/signup*",
-    "/api/webhooks/user*",
-    "/api/callback/*",
-    "/api/lens/upload*",
-    "/api/post/schedule*",
-    "/api/userPost.hello",
+    "/login",
+    "/signup",
+    "/api/webhooks/user",
+    "/api/callback/",
+    "/api/lens/upload",
+    "/api/post/schedule",
   ],
 });
 
