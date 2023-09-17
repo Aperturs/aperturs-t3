@@ -23,7 +23,7 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp: AppType = ({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: { ...pageProps },
 }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => page);
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,13 @@ const MyApp: AppType = ({
 
   return (
     <Lenswrapper>
-      <ClerkProvider {...pageProps}>
+      <ClerkProvider {...pageProps}
+      
+      appearance={{
+        elements: {
+         formButtonPrimary: 'bg-primary'
+        }
+      }}>
         <ThemeProvider>
           <Toaster position="top-left" reverseOrder={false} />
           {getLayout(

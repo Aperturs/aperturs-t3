@@ -2,9 +2,10 @@ import { useAuth } from "@clerk/nextjs";
 import { Card, Spinner } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
-import { FaFacebookSquare, FaGithub, FaLinkedinIn } from "react-icons/fa";
+import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import useLensProfile from "~/hooks/lens-profile";
 import { SocialType } from "~/types/post-enums";
@@ -47,7 +48,7 @@ const ConnectSocials = () => {
             data.map((item, key) => (
               <AfterConnect
                 key={key}
-                name={item.data.name}
+                name={item.data.name || ""}
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 icon={<SocialIcon type={item.type} />}
                 profilePic={item.data.profile_image_url || "/user.png"}
@@ -55,11 +56,6 @@ const ConnectSocials = () => {
             ))
           )}
 
-          <AfterConnect
-            name="Swaraj"
-            icon={<FaFacebookSquare />}
-            profilePic="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-          />
           {profile && (
             <AfterConnect
               name={lensProfile.name}
@@ -80,7 +76,7 @@ const AddSocial = () => {
     <div>
       <label
         htmlFor="my-modal-3"
-        className="btn-primary btn h-full w-full text-white shadow-md"
+        className="btn btn-primary h-full w-full text-white shadow-md"
       >
         <div className="flex h-full w-full items-center justify-center gap-3 whitespace-nowrap py-6	">
           <IoIosAddCircle className="text-2xl" />
@@ -93,7 +89,7 @@ const AddSocial = () => {
         <div className="modal-box relative">
           <label
             htmlFor="my-modal-3"
-            className="btn-sm btn-circle btn absolute right-2 top-2"
+            className="btn btn-circle btn-sm absolute right-2 top-2"
           >
             ✕
           </label>
@@ -106,6 +102,7 @@ const AddSocial = () => {
 };
 
 const Socials = () => {
+  const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
   const { userId } = useAuth();
   const {
@@ -120,6 +117,7 @@ const Socials = () => {
   } = api.user.addGithub.useMutation();
 
   const handleLinkedln = async () => {
+    setLocalLoading(true);
     await addLinkedln();
     if (linkedlnData) {
       window.location.href = linkedlnData.url;
@@ -127,8 +125,10 @@ const Socials = () => {
     if (error) {
       toast.error(error.message);
     }
+    setLocalLoading(false);
   };
   const handleGithub = async () => {
+    setLocalLoading(true);
     await addGithub();
     if (githubData) {
       window.location.href = githubData.url;
@@ -136,6 +136,7 @@ const Socials = () => {
     if (error) {
       toast.error(error.message);
     }
+    setLocalLoading(false);
   };
 
   return (
@@ -160,6 +161,7 @@ const Socials = () => {
         onClick={async () => {
           if (userId) await handleLinkedln();
         }}
+        disabled={localLoading}
       >
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
@@ -176,7 +178,7 @@ const Socials = () => {
         onClick={async () => {
           if (userId) await handleGithub();
         }}
-        disabled={githubLoading}
+        disabled={githubLoading || localLoading}
       >
         <FaGithub className="text-2xl " />
         <p>Github </p>

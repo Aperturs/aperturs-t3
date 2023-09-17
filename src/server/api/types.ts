@@ -17,6 +17,7 @@ export const savePostInputSchema = z.object({
   ),
   defaultContent: z.string(),
   scheduledTime: z.date().optional(),
+  projectId: z.string().optional(),
 });
 
 export type SavePostInput = z.infer<typeof savePostInputSchema>;

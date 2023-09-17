@@ -22,9 +22,9 @@ export const posting = createTRPCRouter({
             defaultContent: input.defaultContent,
             content: input.postContent,
             socialSelected: input.selectedSocials,
+            projectId: input.projectId,
           },
         });
-        console.log(savedPost.id);
         return {
           data: savedPost.id,
           success: true,
@@ -106,6 +106,22 @@ export const posting = createTRPCRouter({
       return post;
     }),
 
+  getSavedPostsByProjectId: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      try {
+        const posts = await ctx.prisma.post.findMany({
+          where: { projectId: input, status: "SAVED" },
+          orderBy: [{ updatedAt: "desc" }],
+        });
+        return posts;
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error fetching posts",
+        });
+      }
+    }),
   deleteSavedPostById: protectedProcedure
     .input(
       z.object({

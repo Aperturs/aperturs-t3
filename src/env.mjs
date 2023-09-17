@@ -19,6 +19,7 @@ const server = z.object({
   CLERK_SECRET_KEY: z.string().min(1),
   CRONJOB_AUTH: z.string(),
   CRONJOB_SCHEDULE_URL: z.string().url(),
+  OPENAI_API_KEY: z.string(),
 });
 
 /**
@@ -57,6 +58,8 @@ const processEnv = {
     process.env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL,
   CRONJOB_AUTH: process.env.CRONJOB_AUTH,
   CRONJOB_SCHEDULE_URL: process.env.CRONJOB_SCHEDULE_URL,
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+
 
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };

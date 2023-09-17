@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { shallow } from "zustand/shallow";
 import { Layout, PostView } from "~/components";
+import LogoLoad from "~/components/custom/loading/logoLoad";
 import { useStore } from "~/store/post-store";
 import { api } from "~/utils/api";
 
@@ -26,45 +27,6 @@ export default function Post() {
       shallow
     );
 
-  // useEffect(() => {
-  //   // if (data) {
-  //   //   let localSocialsSelected = [] as SelectedSocial[];
-  //   //   const localContent = [] as PostContent[];
-  //   //   data.content.forEach((item) => {
-  //   //     if (item.socialSelected) {
-  //   //       const socialSelected =
-  //   //         item.socialSelected as unknown as SelectedSocial[];
-  //   //       if (socialSelected.length > 1) {
-  //   //         localSocialsSelected = socialSelected;
-  //   //         setDefaultContent(item.content);
-  //   //       } else if(socialSelected.length === 1) {
-  //   //         const selectedSocialIndividual =
-  //   //           socialSelected[0] as SelectedSocial;
-  //   //         localSocialsSelected.push(selectedSocialIndividual);
-  //   //         localContent.push({
-  //   //           id: selectedSocialIndividual.id,
-  //   //           content: item.content,
-  //   //           socialType: selectedSocialIndividual.type,
-  //   //           name: selectedSocialIndividual.name,
-  //   //         });
-  //   //       }
-  //   //     }
-  //   //   });
-  //   //   setSelectedSocials(localSocialsSelected);
-  //   //   setContent(localContent);
-  //   //   console.log(content,"content")
-  //   // }
-
-  //   if(data){
-  //     const defaultContent = data.defaultContent as string;
-  //     setDefaultContent(defaultContent);
-  //     const localSocialsSelected = data.socialSelected as unknown as SelectedSocial[];
-  //     setSelectedSocials(localSocialsSelected);
-  //     const localContent = data.content as unknown as PostContent[];
-  //     setContent(localContent);
-  //   }
-  //   setLoading(false);
-  // }, [data, setContent, setDefaultContent, setSelectedSocials]);
   const getData = api.savepost.getSavedPostById.useQuery(id as string);
 
   const fetchData = useMemo(() => {
@@ -104,7 +66,7 @@ export default function Post() {
     };
   }, [fetchData]);
 
-  if (loading || getData.isLoading) return <div>Loading...</div>;
+  if (loading || getData.isLoading) return <LogoLoad size="24" />;
   if (getData.error) return <div>{getData.error.message}</div>;
 
   return (

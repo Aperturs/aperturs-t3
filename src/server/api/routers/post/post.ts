@@ -11,7 +11,6 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "../../trpc";
-import { roundToNearestMinutes } from "date-fns";
 
 export const post = createTRPCRouter({
   postbyid: publicProcedure
@@ -78,6 +77,7 @@ export const post = createTRPCRouter({
         });
       }
     }),
+
   schedule: protectedProcedure
     .input(
       z.object({
@@ -86,40 +86,41 @@ export const post = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      console.log(`${input.date.getTime() - Date.now()}`, "delay ms");
-
-      try{
-      const delay = Math.round((input.date.getTime() - Date.now())/1000);
-      console.log(delay)
-      const headers = {
-        Accept: "/",
-        url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
-        delay: `${delay} seconds`,
-        Authorization: env.CRONJOB_AUTH,
-      };
-      console.log(headers)
-      const url = "https://52.66.162.116/v1/publish";
-      const res = await axios
-        .post(
-          url,
-          {},
-          {
-            headers,
-            httpsAgent: new https.Agent({
-              rejectUnauthorized: false,
-            }),
-          }
-        )
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-      console.log("Response", res?.data);
-      return {
-        success: true,
-        message: "Post scheduled successfully",
-        state: 200,
-      };
-      }catch(err){
+      const inputDate = new Date(input.date.toUTCString());
+      const currentDate = new Date(new Date().toUTCString());
+      console.log(inputDate, currentDate);
+      try {
+        const delay = Math.round(
+          (inputDate.getTime() - currentDate.getTime()) / 1000
+        );
+        // console.log(de)
+        const headers = {
+          Accept: "/",
+          url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
+          delay: `900 seconds`,
+          Authorization: env.CRONJOB_AUTH,
+        };
+        const url = "https://52.66.162.116/v1/publish";
+        await axios
+          .post(
+            url,
+            {},
+            {
+              headers,
+              httpsAgent: new https.Agent({
+                rejectUnauthorized: false,
+              }),
+            }
+          )
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+        return {
+          success: true,
+          message: "Post scheduled successfully",
+          state: 200,
+        };
+      } catch (err) {
         return {
           success: false,
           message: "Error scheduling post",

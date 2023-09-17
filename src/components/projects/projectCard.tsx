@@ -61,7 +61,7 @@ export default function GithubCard({
           ripple={false}
           fullWidth={true}
           onClick={() => {
-            router.push(`/project/${projectId}/context`);
+            router.push(`/project/${projectId}/drafts`);
           }}
           className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
         >

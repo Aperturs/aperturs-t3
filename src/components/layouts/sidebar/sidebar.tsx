@@ -53,7 +53,7 @@ const AccordanceMenu = [
       {
         subText: "Connected Projects",
         subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
-        url: "/projects",
+        url: "/project",
       },
     ],
   },

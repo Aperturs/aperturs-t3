@@ -2,8 +2,6 @@ import type { User } from "@clerk/nextjs/api";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Webhook } from "svix";
 import { env } from "~/env.mjs";
-import { appRouter } from "~/server/api/root";
-import cronJobServer from "~/server/cronjob";
 import { prisma } from "~/server/db";
 
 type UnwantedKeys =
@@ -55,17 +53,12 @@ export default async function handler(
   let evt: Event | null = null;
   try {
     evt = wh.verify(payloadString, svixHeaders) as Event;
-  } catch (_) {
+  } catch (err) {
     console.log("error");
     return new Response("Error occured", {
       status: 400,
     });
   }
-  const caller = appRouter.createCaller({
-    prisma: prisma,
-    cronJobServer: cronJobServer,
-    currentUser: "",
-  });
 
   const { id } = evt.data;
   // Handle the webhook
@@ -81,8 +74,53 @@ export default async function handler(
     if (!emailObject) {
       return res.status(500).json({ message: "no email found" });
     }
-    await caller.user.createUser({
-      clerkId: id,
+
+    const details = {
+      primaryEmail: emailObject.email_address,
+      firstName: evt.data.first_name,
+      lastName: evt.data.last_name,
+      phoneNumber: evt.data.phone_numbers,
+      emails: evt.data.email_addresses,
+      birthday: evt.data.birthday,
+    };
+    // await caller.user.createUser({
+    //   clerkId: id,
+    //   details: attributes
+    // });
+    await prisma.user.create({
+      data: {
+        clerkUserId: id,
+        userDetails: details,
+      },
+    });
+  }
+  if (eventType === "user.updated") {
+    const { email_addresses, primary_email_address_id } = evt.data;
+    const emailObject = email_addresses?.find((email) => {
+      return email.id === primary_email_address_id;
+    });
+    const userDetails = {
+      primaryEmail: emailObject?.email_address || "",
+      firstName: evt.data.first_name,
+      lastName: evt.data.last_name,
+      phoneNumber: evt.data.phone_numbers,
+      emails: evt.data.email_addresses,
+      birthday: evt.data.birthday,
+    };
+    await prisma.user.update({
+      where: {
+        clerkUserId: id,
+      },
+      data: {
+        userDetails: userDetails,
+      },
+    });
+  }
+  if (eventType === "user.deleted") {
+    await prisma.user.delete({
+      where: {
+        clerkUserId: id,
+      },
     });
   }
   return res.status(200).json({ message: "ok" });
@@ -94,4 +132,4 @@ type Event = {
   type: EventType;
 };
 
-type EventType = "user.created";
+type EventType = "user.created" | "user.updated" | "user.deleted";

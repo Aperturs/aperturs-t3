@@ -1,4 +1,4 @@
-import { getAuth } from "@clerk/nextjs/dist/server";
+import { auth } from "@clerk/nextjs";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { Client } from "twitter-api-sdk";
 import { env } from "~/env.mjs";
@@ -25,7 +25,7 @@ export default async function handler(
   const [clientId, clientSecret] = State.split("-");
   const formattedClientId = clientId ? clientId.trim() : "";
   const formattedClientSecret = clientSecret ? clientSecret.trim() : "";
-  const { userId } = getAuth(req);
+  const { userId } = auth();
 
   const codeAuth = code as string;
 

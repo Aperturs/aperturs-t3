@@ -1,9 +1,9 @@
-import { Switch } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
 import ContentPostCreation from "./textarea";
 import { SocialType } from "~/types/post-enums";
+import { Switch } from "@material-tailwind/react";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
@@ -32,7 +32,6 @@ function ContentPostCard({ id }: { id: string }) {
   const [sync, setSync] = useState(false);
 
   const onChangeContent = (textContent: string) => {
-
     if (id === SocialType.Default) {
       setDefaultContent(textContent);
     }
@@ -43,14 +42,14 @@ function ContentPostCard({ id }: { id: string }) {
       return item;
     });
     setContent(updatedContent);
-  }
+  };
 
   useEffect(() => {
     if (sync) {
       onChangeContent(defaultContent);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sync,defaultContent]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sync, defaultContent]);
 
   return (
     <div className="w-full rounded-lg bg-white p-4 shadow-md">
@@ -69,6 +68,7 @@ function ContentPostCard({ id }: { id: string }) {
           color="blue"
           defaultChecked={sync}
           onChange={(e) => setSync(e.target.checked)}
+          crossOrigin=""
         />
       )}
     </div>
