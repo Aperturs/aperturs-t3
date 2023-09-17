@@ -2,8 +2,6 @@ import type { User } from "@clerk/nextjs/api";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Webhook } from "svix";
 import { env } from "~/env.mjs";
-import { appRouter } from "~/server/api/root";
-import cronJobServer from "~/server/cronjob";
 import { prisma } from "~/server/db";
 
 type UnwantedKeys =
@@ -61,13 +59,8 @@ export default async function handler(
       status: 400,
     });
   }
-  const caller = appRouter.createCaller({
-    prisma: prisma,
-    cronJobServer: cronJobServer,
-    currentUser: "",
-  });
 
-  const { id,...attributes } = evt.data;
+  const { id } = evt.data;
   // Handle the webhook
   const eventType: EventType = evt.type;
   if (
@@ -81,9 +74,36 @@ export default async function handler(
     if (!emailObject) {
       return res.status(500).json({ message: "no email found" });
     }
-    await caller.user.createUser({
-      clerkId: id,
-      details: attributes
+
+    const details = {
+      primaryEmail: emailObject.email_address,
+      firstName: evt.data.first_name,
+      lastName: evt.data.last_name,
+      phoneNumber: evt.data.phone_numbers,
+      emails: evt.data.email_addresses,
+      externalsAccounts: evt.data.birthday,
+    };
+    // await caller.user.createUser({
+    //   clerkId: id,
+    //   details: attributes
+    // });
+    await prisma.user.create({
+      data: {
+        clerkUserId: id,
+        userDetails: details,
+      },
+    });
+  }
+  // if(eventType === "user.updated"){
+  //   const userDetails = {
+  //     primaryEmail: 
+  //     firstName: evt.data.first_name,
+  // }
+  if (eventType === "user.deleted") {
+    await prisma.user.delete({
+      where: {
+        clerkUserId: id,
+      },
     });
   }
   return res.status(200).json({ message: "ok" });
@@ -95,4 +115,4 @@ type Event = {
   type: EventType;
 };
 
-type EventType = "user.created";
+type EventType = "user.created" | "user.updated" | "user.deleted";
