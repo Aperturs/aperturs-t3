@@ -6,25 +6,31 @@ import {
   publicProcedure,
 } from "../../trpc";
 import { savePostInputSchema } from "../../types";
+import { limitWrapper } from "../../helpers/limitWrapper";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
     .input(savePostInputSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const savedPost = await ctx.prisma.post.create({
-          data: {
-            clerkUserId: ctx.currentUser,
-            status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-            scheduledAt: input.scheduledTime
-              ? new Date(input.scheduledTime)
-              : null,
-            defaultContent: input.defaultContent,
-            content: input.postContent,
-            socialSelected: input.selectedSocials,
-            projectId: input.projectId,
-          },
-        });
+        const savedPost = await limitWrapper(
+          () =>
+            ctx.prisma.post.create({
+              data: {
+                clerkUserId: ctx.currentUser,
+                status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+                scheduledAt: input.scheduledTime
+                  ? new Date(input.scheduledTime)
+                  : null,
+                defaultContent: input.defaultContent,
+                content: input.postContent,
+                socialSelected: input.selectedSocials,
+                projectId: input.projectId,
+              },
+            }),
+          ctx.currentUser,
+          "drafts"
+        );
         return {
           data: savedPost.id,
           success: true,

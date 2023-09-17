@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ProjectQnASchema } from "~/types/project";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { limitWrapper } from "../../helpers/limitWrapper";
 
 export const githubProject = createTRPCRouter({
   addProject: protectedProcedure
@@ -15,17 +16,22 @@ export const githubProject = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const project = await ctx.prisma.project.create({
-        data: {
-          repoName: input.repoName,
-          repoDescription: input.repoDescription,
-          repoUrl: input.repoUrl,
-          repoId: input.repoId,
-          questionsAnswersJsonString: input.questionsAnswersJsonString,
-          commitCount: input.commitCount,
-          user: { connect: { clerkUserId: ctx.currentUser } },
-        },
-      });
+      const project = await limitWrapper(
+        () =>
+          ctx.prisma.project.create({
+            data: {
+              repoName: input.repoName,
+              repoDescription: input.repoDescription,
+              repoUrl: input.repoUrl,
+              repoId: input.repoId,
+              questionsAnswersJsonString: input.questionsAnswersJsonString,
+              commitCount: input.commitCount,
+              user: { connect: { clerkUserId: ctx.currentUser } },
+            },
+          }),
+        ctx.currentUser,
+        "projects"
+      );
       return project;
     }),
 
