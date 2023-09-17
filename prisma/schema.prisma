@@ -17,6 +17,7 @@ datasource db {
 
 model User {
   clerkUserId    String          @unique
+  userDetails     Json?          
   posts          Post[]
   ideas          Idea[]
   transactions   Transaction[]
@@ -24,11 +25,12 @@ model User {
   linkedInTokens LinkedInToken[]
   twitterTokens  TwitterToken[]
   projects       Project[]
+  currentPlan    SubscriptionPlans     @default(FREE)
   subscritpion   Subscription?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   Queue          Queue?
-  userUsage     UserUsage?
+  userUsage      UserUsage?
 
   @@index([clerkUserId])
 }
@@ -72,7 +74,7 @@ model TwitterToken {
 }
 
 model GithubToken {
-  id            String  @id @default(cuid()) 
+  id            String  @id @default(cuid())
   access_token  String  @unique
   refresh_token String? @unique
   user          User    @relation(fields: [clerkUserId], references: [clerkUserId])
@@ -204,6 +206,13 @@ model QueueItem {
   queueId String
 
   @@index([queueId])
+}
+
+enum SubscriptionPlans {
+  FREE
+  PRO
+  PRO2
+  PRO3
 }
 
 enum Platform {
