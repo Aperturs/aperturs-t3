@@ -80,7 +80,6 @@ export default async function handler(
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
-      emails: evt.data.email_addresses,
       birthday: evt.data.birthday,
     };
     // await caller.user.createUser({
@@ -104,7 +103,6 @@ export default async function handler(
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
-      emails: evt.data.email_addresses,
       birthday: evt.data.birthday,
     };
     await prisma.user.update({
