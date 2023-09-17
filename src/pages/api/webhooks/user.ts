@@ -81,7 +81,7 @@ export default async function handler(
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
       emails: evt.data.email_addresses,
-      externalsAccounts: evt.data.birthday,
+      birthday: evt.data.birthday,
     };
     // await caller.user.createUser({
     //   clerkId: id,
@@ -94,11 +94,28 @@ export default async function handler(
       },
     });
   }
-  // if(eventType === "user.updated"){
-  //   const userDetails = {
-  //     primaryEmail: 
-  //     firstName: evt.data.first_name,
-  // }
+  if (eventType === "user.updated") {
+    const { email_addresses, primary_email_address_id } = evt.data;
+    const emailObject = email_addresses?.find((email) => {
+      return email.id === primary_email_address_id;
+    });
+    const userDetails = {
+      primaryEmail: emailObject?.email_address || "",
+      firstName: evt.data.first_name,
+      lastName: evt.data.last_name,
+      phoneNumber: evt.data.phone_numbers,
+      emails: evt.data.email_addresses,
+      birthday: evt.data.birthday,
+    };
+    await prisma.user.update({
+      where: {
+        clerkUserId: id,
+      },
+      data: {
+        userDetails: userDetails,
+      },
+    });
+  }
   if (eventType === "user.deleted") {
     await prisma.user.delete({
       where: {
