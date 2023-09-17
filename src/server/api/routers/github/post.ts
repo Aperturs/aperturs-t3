@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { AIGenerated } from "../../helpers/ai";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import { limitWrapper } from "../../helpers/limitWrapper";
 
 export const githubPost = createTRPCRouter({
   generatePost: protectedProcedure
@@ -14,15 +15,21 @@ export const githubPost = createTRPCRouter({
         website: z.string().optional(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       try {
-        const data = await AIGenerated({
-          ProjectName: input.ProjectName,
-          ProjectContext: input.ProjectContext,
-          ProjectDescription: input.ProjectDescription,
-          CommitInformation: input.CommitInformation,
-          website: input.website,
-        });
+        const data = await limitWrapper(
+          () =>
+            AIGenerated({
+              ProjectName: input.ProjectName,
+              ProjectContext: input.ProjectContext,
+              ProjectDescription: input.ProjectDescription,
+              CommitInformation: input.CommitInformation,
+              website: input.website,
+            }),
+          ctx.currentUser,
+          "generatedposts"
+        );
+
         return {
           data: data,
           success: true,

@@ -110,13 +110,13 @@ model LinkedInToken {
 model UserUsage {
   clerkUserId    String   @unique
   user           User     @relation(fields: [clerkUserId], references: [clerkUserId])
-  scheduledposts Int      @default(0)
-  scheduledtime  Int      @default(0)
-  projects       Int      @default(0)
+  scheduledposts Int      @default(10)
+  scheduledtime  Int      @default(8)
+  projects       Int      @default(3)
   socialaccounts Int      @default(0)
-  generatedposts Int      @default(0)
-  drafts         Int      @default(0)
-  ideas          Int      @default(0)
+  generatedposts Int      @default(50)
+  drafts         Int      @default(15)
+  ideas          Int      @default(10)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

@@ -49,7 +49,7 @@ export default authMiddleware({
     "/api/lens/upload",
     "/api/post/schedule",
   ],
-  debug: process.env.NODE_ENV === "development",  
+  // debug: process.env.NODE_ENV === "development",  
 });
 
 export const config = {
