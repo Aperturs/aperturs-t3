@@ -1,12 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "../../trpc";
+import { limitDown, limitWrapper } from "../../helpers/limitWrapper";
+import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { savePostInputSchema } from "../../types";
-import { limitWrapper } from "../../helpers/limitWrapper";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
@@ -136,24 +132,19 @@ export const posting = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.prisma.post.delete({
-          where: { id: input.id },
-        });
+        await limitDown(
+          () =>
+            ctx.prisma.post.delete({
+              where: { id: input.id },
+            }),
+          ctx.currentUser,
+          "drafts"
+        );
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Error deleting post",
         });
       }
-    }),
-
-  hello: publicProcedure
-    .input(
-      z.object({
-        id: z.string(),
-      })
-    )
-    .mutation(({ input }) => {
-      return input.id;
     }),
 });

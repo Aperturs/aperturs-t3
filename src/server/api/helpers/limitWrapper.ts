@@ -42,3 +42,25 @@ export async function limitWrapper<T>(
 
   return result;
 }
+
+export async function limitDown<T>(
+  func: () => Promise<T>,
+  clerkUserId: string,
+  limitType: LimitType
+): Promise<T> {
+  const userUsage = await prisma.userUsage.findUnique({
+    where: { clerkUserId },
+  });
+  if (!userUsage) {
+    throw new TRPCError({ code: "NOT_FOUND" });
+  }
+
+  const result = func();
+
+  await prisma.userUsage.update({
+    where: { clerkUserId },
+    data: { [limitType]: { increment: 1 } },
+  });
+
+  return result;
+}
