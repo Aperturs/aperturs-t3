@@ -67,7 +67,7 @@ export default async function handler(
     currentUser: "",
   });
 
-  const { id } = evt.data;
+  const { id,...attributes } = evt.data;
   // Handle the webhook
   const eventType: EventType = evt.type;
   if (
@@ -83,6 +83,7 @@ export default async function handler(
     }
     await caller.user.createUser({
       clerkId: id,
+      details: attributes
     });
   }
   return res.status(200).json({ message: "ok" });
