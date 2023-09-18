@@ -61,7 +61,7 @@ function BottomMenu() {
         onClick={() =>
           signOut()
             .then(async () => {
-              await router.push("/");
+              await router.push("/sign-in");
               toast.success("Signed Out");
             })
             .catch(() => {

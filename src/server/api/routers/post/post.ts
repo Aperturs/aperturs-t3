@@ -97,7 +97,7 @@ export const post = createTRPCRouter({
         const headers = {
           Accept: "/",
           url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
-          delay: `900 seconds`,
+          delay: `${input.date.toDateString()}`,
           Authorization: env.CRONJOB_AUTH,
         };
         const url = "https://52.66.162.116/v1/publish";

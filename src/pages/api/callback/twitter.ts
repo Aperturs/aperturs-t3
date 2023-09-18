@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { getAuth } from "@clerk/nextjs/server";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { Client } from "twitter-api-sdk";
 import { env } from "~/env.mjs";
@@ -10,13 +10,17 @@ interface Response {
   expires_in: number;
 }
 
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { userId } = getAuth(req);
   const { state, code } = req.query;
-
+  console.log("working twitter");
+  console.log(userId, "userId");
+  if (!userId) {
+    console.log("I dont have user");
+  }
 
   if (!state || !code) {
     return res.status(400).send("You denied the app or your session expired!");
@@ -25,11 +29,12 @@ export default async function handler(
   const [clientId, clientSecret] = State.split("-");
   const formattedClientId = clientId ? clientId.trim() : "";
   const formattedClientSecret = clientSecret ? clientSecret.trim() : "";
-  const { userId } = auth();
 
   const codeAuth = code as string;
 
-  const bearerToken = Buffer.from(`${formattedClientId}:${formattedClientSecret}`).toString("base64");
+  const bearerToken = Buffer.from(
+    `${formattedClientId}:${formattedClientSecret}`
+  ).toString("base64");
 
   await fetch("https://api.twitter.com/2/oauth2/token", {
     method: "POST",
@@ -44,7 +49,7 @@ export default async function handler(
     }),
   })
     .then(async (data) => {
-     await  data.json().then(async (response:Response) => {
+      await data.json().then(async (response: Response) => {
         if (
           response.access_token &&
           response.refresh_token &&
@@ -79,7 +84,6 @@ export default async function handler(
             console.log("I dont have user");
           }
         }
-        
       });
     })
     .catch((err) => {

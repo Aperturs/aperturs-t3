@@ -1,7 +1,6 @@
 import OpenAI from "openai";
-import { prompt as myPrompt, systemPrompt, type IPrompt, prompting, promptuser } from "./prompt";
 import { env } from "~/env.mjs";
-
+import { promptuser, type IPrompt } from "./prompt";
 
 function convertStringToArray(input: string): string[] {
   // Find the starting "[" and ending "]" positions
@@ -41,11 +40,12 @@ export async function AIGenerated({
   });
 
   const openai = new OpenAI({
-    apiKey: env.OPENAI_API_KEY
+    apiKey: env.OPENAI_API_KEY,
   });
   // const promptTemp = PromptTemplate.fromTemplate(promptMessage);
   // const chainA = new LLMChain({ llm: model, prompt: promptTemp });
   // const resA = await chainA.run({ maxTokens: 100, stop: ["\n"] });
+
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -62,8 +62,6 @@ export async function AIGenerated({
   console.log(response.usage, "total tokens");
   const endResponse = response.choices[0]?.message.content;
   console.log(endResponse);
-
-
 
   return convertStringToArray(endResponse || "");
 }
