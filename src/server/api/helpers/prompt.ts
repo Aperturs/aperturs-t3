@@ -72,7 +72,8 @@ export const promptuser = ({
    mentioning their brilliant feature request.
    5. Ensure each tweet is divided into two to three paragraphs with no more than one sentence per paragraph.
    dont use hashtags, just dont add any hashtags please in the generated tweets or any tweet.
-   for line breaks use whitespaces
+   for line breaks use \\n
+   make sure you break lines
 
 Output Format:
 - Provide four distinct variations as an array: ["result1", "result2", "result3", "result4"]. This is crucial.
