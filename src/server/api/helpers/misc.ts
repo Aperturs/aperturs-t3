@@ -16,15 +16,17 @@ export const ConnectSocial = async ({
         linkedInTokens: true,
       },
     });
+    console.log(accounts, "accounts")
     if (accounts) {
       const number =
         accounts.linkedInTokens.length + accounts.twitterTokens.length;
+        console.log(number,"number")
       if (number < 2) {
         return true;
       }
       return false;
     }
-    return false;
+    return true;
   } catch (error) {
     throw error; // or handle it in some other way
   }

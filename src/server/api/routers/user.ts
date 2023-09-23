@@ -30,6 +30,7 @@ export const userRouter = createTRPCRouter({
     
   addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
     const canConnect = await ConnectSocial({ user: ctx.currentUser });
+    console.log(canConnect, "canConnect")
     if (canConnect) {
       const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
       return { url };
