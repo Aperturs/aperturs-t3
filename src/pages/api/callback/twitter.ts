@@ -19,7 +19,7 @@ export default async function handler(
   console.log("working twitter");
   console.log(userId, "userId");
   if (!userId) {
-    console.log("I dont have user");
+    return res.status(400).send("You denied the app or your session expired!");
   }
 
   if (!state || !code) {

@@ -2,6 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import InfoContainer from "./container";
+import { api } from "~/utils/api";
 
 const WishingGoodDay = () => {
   const date = new Date();
@@ -21,6 +22,7 @@ const WishingGoodDay = () => {
 
 const ContentPage = () => {
   const { user } = useUser();
+  const {data:recentDrafts} = api.savepost.getRecentDrafts.useQuery();
 
   return (
     <div className="flex w-full flex-col justify-start gap-7">
@@ -35,17 +37,23 @@ const ContentPage = () => {
         </p>
       </div>
       <div className="mt-10 grid grid-cols-2 gap-4">
-        <InfoContainer title="Your Tasks" infoBlocks={[
-          {
-            title: "Create a new task",
-            link: "/dashboard/create-task",
-          },
-          {
-            title: "View all tasks",
-            link: "/dashboard/tasks",
-          },
-        ]} />
-        <InfoContainer title="Your Tasks" infoBlocks={[]} />
+        <InfoContainer
+          title="Recent Drafts"
+          infoBlocks={recentDrafts?.map((draft) => ({
+            title: `${draft.defaultContent.slice(0, 60)|| ''}...`,
+            // title: 'test',
+            link: `post/${draft.id}`,
+          })) || []}
+        />
+        <InfoContainer
+          title="Your Tasks"
+          infoBlocks={[]}
+          emptyInfo={{
+            emptyText: "You have no tasks yet.",
+            buttonText: "Create a task",
+            buttonLink: "/dashboard/create-task",
+          }}
+        />
       </div>
 
       {/* <CreateButton text="Create" /> */}
