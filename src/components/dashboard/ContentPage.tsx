@@ -56,7 +56,7 @@ const ContentPage = () => {
           infoBlocks={
             recentProjects?.map((project) => ({
               title: project.projectName || project.repoName,
-              link: `/project/${project.id}`
+              link: `/project/${project.id}/commits`
             })) ||
              []
           }
