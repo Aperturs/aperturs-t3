@@ -1,6 +1,7 @@
 // import { CreateButton } from "~/components";
 
 import { useUser } from "@clerk/nextjs";
+import InfoContainer from "./container";
 
 const WishingGoodDay = () => {
   const date = new Date();
@@ -24,7 +25,7 @@ const ContentPage = () => {
 
 
   return (
-    <div className="flex w-full justify-between">
+    <div className="flex flex-col w-full justify-start gap-7">
     <div className="flex flex-col gap-1 justify-items-start px-5">
       <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-left">
         {user?.firstName ? `${WishingGoodDay()}, ${user.firstName} 😀` : `${WishingGoodDay()}`}
@@ -33,6 +34,11 @@ const ContentPage = () => {
         Welcome to your dashboard. Quickly access your most important
       </p>
     </div>
+    <div className="grid grid-cols-2 gap-4 mt-10">
+      <InfoContainer title="Your Tasks" />
+      <InfoContainer title="Your Tasks" />
+    </div>
+
     {/* <CreateButton text="Create" /> */}
   </div>
   
