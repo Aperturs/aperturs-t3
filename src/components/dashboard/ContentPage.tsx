@@ -16,32 +16,40 @@ const WishingGoodDay = () => {
     timeOfDay = "evening";
   }
 
-  return `Good ${timeOfDay}`
-}
+  return `Good ${timeOfDay}`;
+};
 
 const ContentPage = () => {
-  const {user} = useUser();
-
-
+  const { user } = useUser();
 
   return (
-    <div className="flex flex-col w-full justify-start gap-7">
-    <div className="flex flex-col gap-1 justify-items-start px-5">
-      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-left">
-        {user?.firstName ? `${WishingGoodDay()}, ${user.firstName} 😀` : `${WishingGoodDay()}`}
-      </h2>
-      <p className="text-sm md:text-base lg:text-lg text-left">
-        Welcome to your dashboard. Quickly access your most important
-      </p>
-    </div>
-    <div className="grid grid-cols-2 gap-4 mt-10">
-      <InfoContainer title="Your Tasks" />
-      <InfoContainer title="Your Tasks" />
-    </div>
+    <div className="flex w-full flex-col justify-start gap-7">
+      <div className="flex flex-col justify-items-start gap-1 px-5">
+        <h2 className="text-left text-2xl font-bold md:text-3xl lg:text-4xl">
+          {user?.firstName
+            ? `${WishingGoodDay()}, ${user.firstName} 😀`
+            : `${WishingGoodDay()}`}
+        </h2>
+        <p className="text-left text-sm md:text-base lg:text-lg">
+          Welcome to your dashboard. Quickly access your most important
+        </p>
+      </div>
+      <div className="mt-10 grid grid-cols-2 gap-4">
+        <InfoContainer title="Your Tasks" infoBlocks={[
+          {
+            title: "Create a new task",
+            link: "/dashboard/create-task",
+          },
+          {
+            title: "View all tasks",
+            link: "/dashboard/tasks",
+          },
+        ]} />
+        <InfoContainer title="Your Tasks" infoBlocks={[]} />
+      </div>
 
-    {/* <CreateButton text="Create" /> */}
-  </div>
-  
+      {/* <CreateButton text="Create" /> */}
+    </div>
   );
 };
 
