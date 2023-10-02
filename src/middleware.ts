@@ -56,6 +56,7 @@ export default authMiddleware({
     "/api/callback/linkedin",
     "/api/callback/twitter",
   ],
+  ignoredRoutes: ["/api/trigger"]
   // debug: process.env.NODE_ENV === "development",
 });
 
