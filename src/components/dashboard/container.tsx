@@ -17,7 +17,7 @@ interface EmptyInfoProps {
 interface InfoContainerProps {
   title: string;
   infoBlocks: SingleInfoProps[];
-  emptyInfo?: EmptyInfoProps;
+  emptyInfo: EmptyInfoProps;
 }
 
 export default function InfoContainer({
@@ -33,9 +33,9 @@ export default function InfoContainer({
       </CardHeader>
       {infoBlocks.length === 0 && (
         <div className="flex flex-1 flex-col w-full items-center justify-center px-5">
-          <p className="text-lg font-medium">{emptyInfo?.emptyText}</p>
-          <Link href={emptyInfo?.buttonLink || '' } className="btn my-2">
-            {emptyInfo?.buttonText}
+          <p className="text-lg font-medium">{emptyInfo.emptyText}</p>
+          <Link href={emptyInfo.buttonLink} className="btn my-2">
+            {emptyInfo.buttonText}
           </Link>
         </div>
       )}

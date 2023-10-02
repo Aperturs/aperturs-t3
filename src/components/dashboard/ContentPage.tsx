@@ -23,6 +23,7 @@ const WishingGoodDay = () => {
 const ContentPage = () => {
   const { user } = useUser();
   const {data:recentDrafts} = api.savepost.getRecentDrafts.useQuery();
+  const {data:recentProjects} = api.github.project.getRecentProjects.useQuery();
 
   return (
     <div className="flex w-full flex-col justify-start gap-7">
@@ -44,14 +45,25 @@ const ContentPage = () => {
             // title: 'test',
             link: `post/${draft.id}`,
           })) || []}
+          emptyInfo={{
+            emptyText: "You have no drafts yet.",
+            buttonText: "Create a draft",
+            buttonLink: "/post",
+          }}
         />
         <InfoContainer
-          title="Your Tasks"
-          infoBlocks={[]}
+          title="Your Recent Projects"
+          infoBlocks={
+            recentProjects?.map((project) => ({
+              title: project.projectName || project.repoName,
+              link: `/project/${project.id}`
+            })) ||
+             []
+          }
           emptyInfo={{
-            emptyText: "You have no tasks yet.",
-            buttonText: "Create a task",
-            buttonLink: "/dashboard/create-task",
+            emptyText: "You have no projects yet.",
+            buttonText: "Add a project",
+            buttonLink: "/projects",
           }}
         />
       </div>

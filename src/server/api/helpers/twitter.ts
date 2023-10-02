@@ -6,6 +6,7 @@ import { type TwitterToken } from "@prisma/client";
 import Client from "twitter-api-sdk";
 import { prisma } from "~/server/db";
 import { type PostTweetInput } from "../types";
+import { TRPCError } from "@trpc/server";
 
 interface TwitterAccountDetails
   extends Pick<TwitterToken, "access_token" | "refresh_token" | "profileId"> {
@@ -148,5 +149,10 @@ export const postToTwitter = async (input: PostTweetInput) => {
     }
   } catch (err) {
     console.log(err);
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Error posting to twitter",
+      cause: err,
+    });
   }
 };

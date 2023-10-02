@@ -12,10 +12,13 @@ export const twitterData = createTRPCRouter({
     .input(postTweetInputSchema)
     .mutation(async ({ input }) => {
       try {
-        await postToTwitter( input);
+        await postToTwitter(input);
         return { success: true, message: "Tweeted successfully" };
       } catch (error) {
-        return { success: false, message: "Error tweeting" };
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error tweeting",
+        });
       }
     }),
 

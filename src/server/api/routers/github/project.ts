@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ProjectQnASchema } from "~/types/project";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { limitWrapper } from "../../helpers/limitWrapper";
+import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const githubProject = createTRPCRouter({
   addProject: protectedProcedure
@@ -63,6 +63,15 @@ export const githubProject = createTRPCRouter({
   getAllProjects: protectedProcedure.query(async ({ ctx }) => {
     const projects = await ctx.prisma.project.findMany({
       where: { clerkUserId: ctx.currentUser },
+    });
+    return projects;
+  }),
+
+  getRecentProjects: protectedProcedure.query(async ({ ctx }) => {
+    const projects = await ctx.prisma.project.findMany({
+      where: { clerkUserId: ctx.currentUser },
+      orderBy: { createdAt: "desc" },
+      take: 5,
     });
     return projects;
   }),
