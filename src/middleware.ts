@@ -41,6 +41,8 @@ import { authMiddleware } from "@clerk/nextjs";
 // };
 
 export default authMiddleware({
+
+  
   // "/" will be accessible to all users
   publicRoutes: [
     "/login",
@@ -56,7 +58,7 @@ export default authMiddleware({
     "/api/callback/linkedin",
     "/api/callback/twitter",
   ],
-  ignoredRoutes: ["/api/trigger"]
+  ignoredRoutes: ["/api/trigger"],
   // debug: process.env.NODE_ENV === "development",
 });
 

@@ -30,6 +30,7 @@ const Login = () => {
           signUpUrl="/sign-up"
           afterSignInUrl="/dashboard"
           routing="path"
+          redirectUrl="/dashboard"
         />
       </div>
     </div>
