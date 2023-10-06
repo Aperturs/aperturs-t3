@@ -51,6 +51,7 @@ export default authMiddleware({
     "/api/callback/twitter",
     "/api/lens/upload",
     "/api/post/schedule",
+    "/api/test"
   ],
   // ignoredRoutes: ["/api/callback/twitter"],
   apiRoutes: [
