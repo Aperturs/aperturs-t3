@@ -1,4 +1,5 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
+import { json } from "stream/consumers";
 import { prisma } from "~/server/db";
 
 export default async function handler(
@@ -15,7 +16,7 @@ export default async function handler(
     await prisma.test.create({
         data: {
            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-           data: `${params}`
+           data: JSON.stringify(params)
         },
     })}catch(e){
         console.log(e)
