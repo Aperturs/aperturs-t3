@@ -73,6 +73,11 @@ model TwitterToken {
   @@index([id])
 }
 
+model Test {
+  id   Int  @unique @default(autoincrement())
+  data String 
+}
+
 model GithubToken {
   id            String  @id @default(cuid())
   access_token  String  @unique
