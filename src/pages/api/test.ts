@@ -8,12 +8,14 @@ export default async function handler(
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const seomthing = req.body;
+    const params = req.query;
+
     console.log(seomthing,"test")
     try{
     await prisma.test.create({
         data: {
            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-           data: `${seomthing}`
+           data: `${params}`
         },
     })}catch(e){
         console.log(e)
