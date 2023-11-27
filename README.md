@@ -1,6 +1,5 @@
 # Aperturs: Social Media Automation Software
 
-is vercel not working ?
 
 ## Introduction
 Aperturs is a social media automation software that simplifies the process of managing and posting content on various social media platforms. This README file provides an overview of the features and functionality offered by Aperturs.
