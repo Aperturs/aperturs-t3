@@ -1,5 +1,5 @@
 // import { CreateButton } from "~/components";
-
+'use client'
 import { useUser } from "@clerk/nextjs";
 import InfoContainer from "./container";
 import { api } from "~/utils/api";

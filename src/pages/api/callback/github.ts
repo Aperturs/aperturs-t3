@@ -5,15 +5,15 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
-interface TokenData {
-  access_token: string;
-  // add other properties you expect in the response
-}
+// interface TokenData {
+//   access_token: string;
+//   // add other properties you expect in the response
+// }
 
-interface UserObject {
-  login: string;
-  // add other properties you expect in the response
-}
+// interface UserObject {
+//   login: string;
+//   // add other properties you expect in the response
+// }
 
 export default async function handler(
   req: NextApiRequest,
