@@ -28,4 +28,3 @@ interface PostContent {
   socialType: string;
   content: string;
 }
-

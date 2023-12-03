@@ -73,7 +73,13 @@ export default function SideBar() {
   return (
     <Card className=" mt-2 w-full overflow-scroll bg-neutral p-4 shadow-xl shadow-blue-gray-900/5 lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
       <div className="mb-2 flex items-center gap-4 p-4">
-        <Image src="/logo.svg" alt="brand" className="h-8 w-8" width={8} height={8} />
+        <Image
+          src="/logo.svg"
+          alt="brand"
+          className="h-8 w-8"
+          width={8}
+          height={8}
+        />
         <Typography variant="h5" color="blue-gray">
           Aperturs
         </Typography>

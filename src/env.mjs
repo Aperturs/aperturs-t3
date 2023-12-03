@@ -60,7 +60,6 @@ const processEnv = {
   CRONJOB_SCHEDULE_URL: process.env.CRONJOB_SCHEDULE_URL,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 
-
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

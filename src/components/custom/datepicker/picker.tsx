@@ -100,7 +100,7 @@ export default function Picker() {
   return (
     <>
       <span
-        className="btn-primary btn bg-primary font-medium  normal-case  text-white"
+        className="btn btn-primary bg-primary font-medium  normal-case  text-white"
         onClick={handleOpen}
       >
         {date ? formatDate(date) : "Pick Date"}

@@ -50,7 +50,7 @@ const CommitsPage = ({ id }: { id: string }) => {
         .then((res) => {
           if (res) {
             console.log(res, "commmits");
-            
+
             const newTablesRows: TableRow[] = res.data.map((commit, index) => {
               return {
                 id: index,

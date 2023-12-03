@@ -22,8 +22,9 @@ const WishingGoodDay = () => {
 
 const ContentPage = () => {
   const { user } = useUser();
-  const {data:recentDrafts} = api.savepost.getRecentDrafts.useQuery();
-  const {data:recentProjects} = api.github.project.getRecentProjects.useQuery();
+  const { data: recentDrafts } = api.savepost.getRecentDrafts.useQuery();
+  const { data: recentProjects } =
+    api.github.project.getRecentProjects.useQuery();
 
   return (
     <div className="flex w-full flex-col justify-start gap-7">
@@ -40,11 +41,13 @@ const ContentPage = () => {
       <div className="mt-10 grid grid-cols-2 gap-4">
         <InfoContainer
           title="Recent Drafts"
-          infoBlocks={recentDrafts?.map((draft) => ({
-            title: `${draft.defaultContent.slice(0, 60)|| ''}...`,
-            // title: 'test',
-            link: `post/${draft.id}`,
-          })) || []}
+          infoBlocks={
+            recentDrafts?.map((draft) => ({
+              title: `${draft.defaultContent.slice(0, 60) || ""}...`,
+              // title: 'test',
+              link: `post/${draft.id}`,
+            })) || []
+          }
           emptyInfo={{
             emptyText: "You have no drafts yet.",
             buttonText: "Create a draft",
@@ -56,9 +59,8 @@ const ContentPage = () => {
           infoBlocks={
             recentProjects?.map((project) => ({
               title: project.projectName || project.repoName,
-              link: `/project/${project.id}/commits`
-            })) ||
-             []
+              link: `/project/${project.id}/commits`,
+            })) || []
           }
           emptyInfo={{
             emptyText: "You have no projects yet.",

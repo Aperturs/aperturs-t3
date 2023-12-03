@@ -1,10 +1,14 @@
-import { useWalletLogin } from '@lens-protocol/react-web';
-import { toast } from 'react-hot-toast';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
+import { useWalletLogin } from "@lens-protocol/react-web";
+import { toast } from "react-hot-toast";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 
 export function LensLoginButton() {
-  const { execute: login, error: loginError, isPending: isLoginPending } = useWalletLogin();
+  const {
+    execute: login,
+    error: loginError,
+    isPending: isLoginPending,
+  } = useWalletLogin();
   const { isConnected } = useAccount();
   const { disconnectAsync } = useDisconnect();
 
@@ -25,15 +29,20 @@ export function LensLoginButton() {
       });
     }
 
-    if(loginError) {
+    if (loginError) {
       toast.error(loginError.message);
     }
   };
   return (
     <div>
       {/* {loginError && <p>{loginError.message}</p>} */}
-      <button  className='btn btn-primary text-white w-full'
-      disabled={isLoginPending} onClick={onLoginClick}>Log in</button>
+      <button
+        className="btn btn-primary w-full text-white"
+        disabled={isLoginPending}
+        onClick={onLoginClick}
+      >
+        Log in
+      </button>
     </div>
   );
 }

@@ -7,7 +7,7 @@ interface SideBarButtonProps {
 
 const BasicButton: FC<SideBarButtonProps> = ({ onClick, text }) => {
   return (
-    <button onClick={onClick} className="btn-primary btn ml-1 w-44 text-white">
+    <button onClick={onClick} className="btn btn-primary ml-1 w-44 text-white">
       {text}
     </button>
   );

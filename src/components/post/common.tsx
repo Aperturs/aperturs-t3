@@ -16,7 +16,7 @@ export const SimpleButton = ({
 }: SimpleButtonProps) => {
   return (
     <button
-      className={`btn-outline btn-primary btn w-full px-4 text-sm capitalize text-white ${
+      className={`btn btn-outline btn-primary w-full px-4 text-sm capitalize text-white ${
         isLoading ? "loading" : ""
       } `}
       {...buttonProps}

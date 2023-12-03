@@ -47,8 +47,7 @@ function BottomMenu() {
   return (
     <div>
       <ListItem>
-       <OrganizationSwitcher
-        />
+        <OrganizationSwitcher />
       </ListItem>
       {bottomMenu.map((item, index) => (
         <div key={index}>

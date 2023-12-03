@@ -24,8 +24,9 @@ export default function CommitDescriptionSettingsCard() {
         <Typography
           variant="h5"
           color="white"
-          className="grid h-24 place-items-center">
-          Commit Description 
+          className="grid h-24 place-items-center"
+        >
+          Commit Description
         </Typography>
       </CardHeader>
       <CardBody>
@@ -36,7 +37,8 @@ export default function CommitDescriptionSettingsCard() {
           label="Commit Info"
           value={commitDescription}
           onChange={handleCommitDescriptionChange}
-          className="mb-4 w-full">
+          className="mb-4 w-full"
+        >
           <Option value="simple">Simple</Option>
           <Option value="vague">Vague</Option>
           <Option value="descriptive">Descriptive</Option>
@@ -44,11 +46,12 @@ export default function CommitDescriptionSettingsCard() {
       </CardBody>
       <CardFooter>
         <button
-          className="btn-primary btn w-full text-white"
+          className="btn btn-primary w-full text-white"
           onClick={() => {
             // Your logic to generate posts based on commits
             console.log(`${commitDescription}`);
-          }}>
+          }}
+        >
           Save
         </button>
       </CardFooter>

@@ -19,6 +19,6 @@ export default function Home() {
         console.error("Error while redirecting:", error);
       });
     }
-  }, );
+  });
   return null;
 }
