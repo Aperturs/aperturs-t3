@@ -12,7 +12,6 @@ interface IThreadVersions {
 }
 
 interface SelectedSocial {
-  lensProfile?: ProfileOwnedByMe;
   id: string;
   type: string;
   name: string;

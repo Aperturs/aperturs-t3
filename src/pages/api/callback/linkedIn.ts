@@ -11,6 +11,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // const code = new URLSearchParams(req.query).get("code");
+  console.log("here")
   const code = req.query.code;
   const { userId } = getAuth(req);
   const response = await fetch(
@@ -60,6 +61,8 @@ export default async function handler(
     //   refresh_token: data.refresh_token ?? undefined,
     //   refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
     // });
+  }else{
+    console.log("no user object");
   }
 
   return res.redirect("/settings");
