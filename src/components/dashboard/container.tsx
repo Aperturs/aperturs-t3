@@ -25,14 +25,14 @@ export default function InfoContainer({
   infoBlocks,
   emptyInfo,
 }: InfoContainerProps) {
-    console.log(infoBlocks)
+  console.log(infoBlocks);
   return (
     <Card className="py-5">
       <CardHeader color="gray" className="mb-4 grid h-16 place-items-center">
         {title}
       </CardHeader>
       {infoBlocks.length === 0 && (
-        <div className="flex flex-1 flex-col w-full items-center justify-center px-5">
+        <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
           <p className="text-lg font-medium">{emptyInfo.emptyText}</p>
           <Link href={emptyInfo.buttonLink} className="btn my-2">
             {emptyInfo.buttonText}

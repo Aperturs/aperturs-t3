@@ -51,6 +51,8 @@ export default async function handler(
         profileId: userObject.login,
       },
     });
+  } else {
+    console.log("no user object");
   }
   return res.redirect("/settings");
 }

@@ -11,7 +11,7 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
- 
+
 export function TabsWithIcon() {
   const data = [
     {

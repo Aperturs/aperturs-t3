@@ -1,22 +1,22 @@
 .react-calendar {
-  width: 450px  !important;
-  max-width: 100%  !important;
-  background: white  !important;
-  border-radius: 15px  !important;
-  border: 0px solid rgb(209 213 219)  !important;
+  width: 450px !important;
+  max-width: 100% !important;
+  background: white !important;
+  border-radius: 15px !important;
+  border: 0px solid rgb(209 213 219) !important;
   font-family: Manrope, Helvetica, sans-serif;
-  line-height: 1.125em  !important;
+  line-height: 1.125em !important;
 }
 .react-calendar--doubleView {
   width: 700px !important;
 }
 .react-calendar--doubleView .react-calendar__viewContainer {
-  display: flex  !important;
-  margin: -0.5em  !important;
+  display: flex !important;
+  margin: -0.5em !important;
 }
 .react-calendar--doubleView .react-calendar__viewContainer > * {
   width: 50% !important;
-  margin: 0.5em  !important;
+  margin: 0.5em !important;
 }
 .react-calendar,
 .react-calendar *,
@@ -57,19 +57,19 @@
   background: none;
 }
 .react-calendar__navigation button:disabled {
-  visibility: hidden  !important;
-  background-color: #f0f0f0  !important;
+  visibility: hidden !important;
+  background-color: #f0f0f0 !important;
 }
 .react-calendar__navigation button:enabled:hover,
 .react-calendar__navigation button:enabled:focus {
-  background-color: #e6e6e6  !important;
+  background-color: #e6e6e6 !important;
 }
 .react-calendar__month-view__weekdays {
-  color: #4f46e5  !important;
-  text-align: center  !important;
-  text-transform: uppercase  !important;
-  font-weight: 700  !important;
-  font-size: 0.8em  !important;
+  color: #4f46e5 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  font-size: 0.8em !important;
 }
 /* Each day should be round when hovered */
 .react-calendar__month-view__days__day {
@@ -87,7 +87,7 @@
 }
 
 .react-calendar__navigation__arrow {
-  background-color: #fff  !important;
+  background-color: #fff !important;
   padding: 7px !important;
   background-clip: content-box !important;
   border-radius: 50px;
@@ -117,7 +117,7 @@
 */
 
 .react-calendar__month-view__weekdays__weekday {
-  padding: 0.75em ;
+  padding: 0.75em;
 }
 .react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none;

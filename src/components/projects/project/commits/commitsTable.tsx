@@ -5,7 +5,7 @@ import {
   Dialog,
   DialogBody,
   DialogHeader,
-  Typography
+  Typography,
 } from "@material-tailwind/react";
 import { LineWobble } from "@uiball/loaders";
 import { AnimatePresence, motion } from "framer-motion";
@@ -26,10 +26,10 @@ function isPullRequestMergeCommit(commit: string): boolean {
     message.includes("merge pull request") || message.includes("merge branch")
   );
 }
-function formatedSavePost(text:string) {
+function formatedSavePost(text: string) {
   // Use the regular expression /\n+/g to match one or more consecutive line breaks
   // and replace them with a single space character " "
-  return text.replace(/\\n+/g, '\n');
+  return text.replace(/\\n+/g, "\n");
 }
 
 // function getPullRequestId(commit: string): string | null {
@@ -112,10 +112,11 @@ export default function CommitsTable({
           {
             loading: "Generating Posts...",
             success: "Generated Posts",
-            error: `${generationError?.message
-              ? generationError?.message
-              : "Something went wrong"
-              }`,
+            error: `${
+              generationError?.message
+                ? generationError?.message
+                : "Something went wrong"
+            }`,
           }
         )
         .catch((err) => {
@@ -182,10 +183,11 @@ export default function CommitsTable({
                   <Chip
                     variant="ghost"
                     className="bg-secondary "
-                    value={`${isPullRequestMergeCommit(row.message)
-                      ? "Pull Request"
-                      : "Commit"
-                      }`}
+                    value={`${
+                      isPullRequestMergeCommit(row.message)
+                        ? "Pull Request"
+                        : "Commit"
+                    }`}
                   />
                 </div>
               </Card>
@@ -204,12 +206,8 @@ export default function CommitsTable({
         <DialogHeader>Generated Posts</DialogHeader>
         <DialogBody className="max-h-[40rem] overflow-scroll">
           {isLoading ? (
-            <div className="h-24 grid place-items-center w-full">
-              <LineWobble
-                size={80}
-                lineWeight={5}
-                speed={1.75}
-              />
+            <div className="grid h-24 w-full place-items-center">
+              <LineWobble size={80} lineWeight={5} speed={1.75} />
             </div>
           ) : generatedPosts?.data ? (
             <GeneratedPostsCard posts={generatedPosts.data || []} />
@@ -231,8 +229,7 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
   } = api.savepost.savePost.useMutation();
 
   const router = useRouter();
-  console.log(selectedPost)
-
+  console.log(selectedPost);
 
   const handleSavePost = () => {
     const projectId = router.query.id as string;
@@ -268,15 +265,18 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
     <div className="flex flex-col gap-2">
       {posts.map((post) => (
         <Card
-          className={`cursor-pointer border-gray-800 p-4 shadow-md  hover:shadow-md ${selectedPost === formatedSavePost(post) ? "border-2 " : ""
-            }`}
+          className={`cursor-pointer border-gray-800 p-4 shadow-md  hover:shadow-md ${
+            selectedPost === formatedSavePost(post) ? "border-2 " : ""
+          }`}
           key={post}
           onClick={() => setSelectedPost(formatedSavePost(post))}
         >
           {/* {post.split('\\n').map((paragraph, index) => (
             <p className="py-1" key={index}>{paragraph}</p>
           ))} */}
-          <Typography className="whitespace-pre-line">{formatedSavePost(post)}</Typography>
+          <Typography className="whitespace-pre-line">
+            {formatedSavePost(post)}
+          </Typography>
         </Card>
       ))}
       <button

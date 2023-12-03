@@ -26,9 +26,7 @@ const DraftPage = () => {
               unmount: { scale: 0, y: 25 },
             }}
           >
-            <button
-              className="btn-primary btn gap-2 px-4 py-2 text-white"
-            >
+            <button className="btn btn-primary gap-2 px-4 py-2 text-white">
               Add to Queue
               <BsFillCalendarFill className="ml-2" />
             </button>

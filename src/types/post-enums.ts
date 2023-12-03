@@ -5,4 +5,3 @@ export enum SocialType {
   Lens = "LENS",
   Github = "Github",
 }
-

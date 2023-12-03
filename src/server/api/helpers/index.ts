@@ -1,4 +1,3 @@
 import { getAccessToken } from "./twitter";
 
-
-export { getAccessToken}
+export { getAccessToken };

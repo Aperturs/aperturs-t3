@@ -7,10 +7,11 @@ import { api } from "~/utils/api";
 const DraftPage = () => {
   const router = useRouter();
   const { id } = router.query;
-  const {data,isLoading,error,refetch} = api.savepost.getSavedPostsByProjectId.useQuery(id as string);
+  const { data, isLoading, error, refetch } =
+    api.savepost.getSavedPostsByProjectId.useQuery(id as string);
 
   if (isLoading) {
-    return <LogoLoad size="24"/>;
+    return <LogoLoad size="24" />;
   }
 
   if (error) {
@@ -20,7 +21,7 @@ const DraftPage = () => {
   return (
     <div className="flex w-full flex-col">
       <div className="flex justify-between">
-        <h2 className="text-2xl mt-2 font-bold">Drafts</h2>
+        <h2 className="mt-2 text-2xl font-bold">Drafts</h2>
         {/* <div className="flex gap-2">
           <button className="btn-primary btn gap-2 px-4 py-2 text-white">
             Add all to Queue
@@ -34,7 +35,12 @@ const DraftPage = () => {
         "
       >
         {data?.map((post) => (
-          <DraftCard key={post.id} id={post.id} content={post.defaultContent} refetch={refetch} />
+          <DraftCard
+            key={post.id}
+            id={post.id}
+            content={post.defaultContent}
+            refetch={refetch}
+          />
         ))}
         {/* <DraftCard id={1} />
         <DraftCard id={2} />

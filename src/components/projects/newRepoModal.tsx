@@ -114,10 +114,12 @@ const NewRepoFormModal = () => {
         addProject({
           repoId: option.value.id.toString(),
           commitCount: commitsCount,
-          questionsAnswersJsonString: [{
-            question: "description",
-            answer: description,
-          }],
+          questionsAnswersJsonString: [
+            {
+              question: "description",
+              answer: description,
+            },
+          ],
           repoDescription: tagline || option.value.description || "",
           repoName: option.value.name,
           repoUrl: option.value.html_url,
@@ -184,9 +186,7 @@ const NewRepoFormModal = () => {
                   before making a post
                 </Typography> */}
                 <div>
-                  <span>
-                    Tagline
-                  </span>
+                  <span>Tagline</span>
                   <Input
                     crossOrigin={undefined}
                     value={tagline}
@@ -195,14 +195,11 @@ const NewRepoFormModal = () => {
                   />
                 </div>
                 <div>
-                  <span>
-                    Description
-                  </span>
+                  <span>Description</span>
                   <Textarea
                     value={description}
                     onChange={(event) => setDescription(event.target.value)}
                     placeholder="short description about your project"
-
                   />
                 </div>
               </div>
@@ -216,7 +213,11 @@ const NewRepoFormModal = () => {
           >
             <span>Cancel</span>
           </button>
-          <Button className="!btn !btn-success ml-1" color="green" onClick={onConfirm}>
+          <Button
+            className="!btn !btn-success ml-1"
+            color="green"
+            onClick={onConfirm}
+          >
             {projectLoading ? <Spinner className="h-6 w-6" /> : "Confirm"}
           </Button>
         </DialogFooter>

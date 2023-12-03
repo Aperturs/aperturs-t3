@@ -98,7 +98,7 @@ function ApiBox() {
 
       <div className="flex w-full justify-end">
         <button
-          className="btn-primary btn mt-4 w-24  rounded-xl px-4 py-2 text-white sm:w-56"
+          className="btn btn-primary mt-4 w-24  rounded-xl px-4 py-2 text-white sm:w-56"
           onClick={connectHandler}
           disabled={isLoading}
         >

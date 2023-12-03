@@ -15,7 +15,6 @@ export default function Post() {
     if (shouldReset) reset();
 
     setShouldReset(false);
-
   }, [reset, router, setShouldReset, shouldReset]);
 
   return (

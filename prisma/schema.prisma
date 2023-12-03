@@ -84,7 +84,7 @@ model GithubToken {
   refresh_token String? @unique
   user          User    @relation(fields: [clerkUserId], references: [clerkUserId])
   clerkUserId   String  @unique
-  profileId     String? @unique
+  profileId     String? 
 
   expires_in               DateTime?
   refresh_token_expires_in DateTime?

@@ -48,7 +48,7 @@ export function Composer({
   return (
     <div>
       <button
-        className={`btn-outline btn-primary btn w-full ${
+        className={`btn btn-outline btn-primary w-full ${
           isPending ? "loading" : ""
         }`}
         disabled={isPending}
