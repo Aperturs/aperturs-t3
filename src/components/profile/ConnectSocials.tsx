@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import { AiOutlineTwitter } from "react-icons/ai";
+import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import useLensProfile from "~/hooks/lens-profile";
@@ -152,10 +152,6 @@ const Socials = () => {
         <AiOutlineTwitter className="text-2xl " />
         <p>Twitter</p>
       </button>
-      {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
-        <AiFillInstagram className="text-2xl " />
-        <p>Insta</p>
-      </button> */}
       <button
         className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
         onClick={async () => {
@@ -182,6 +178,10 @@ const Socials = () => {
       >
         <FaGithub className="text-2xl " />
         <p>Github </p>
+      </button>
+      <button className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white">
+        <AiFillInstagram className="text-2xl " />
+        <p>Insta</p>
       </button>
     </div>
   );
