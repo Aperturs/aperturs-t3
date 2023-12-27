@@ -7,11 +7,11 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "format": "prettier . --write"
   },
   "dependencies": {
-    "@bundlr-network/client": "^0.11.9",
-    "@clerk/nextjs": "^4.27.2",
+    "@clerk/nextjs": "^4.29.1",
     "@heroicons/react": "^2.0.18",
     "@lens-protocol/react-web": "^1.2.1",
     "@lens-protocol/wagmi": "^2.0.1",
