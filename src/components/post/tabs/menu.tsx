@@ -12,12 +12,15 @@ import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 
 function SocialsMenu() {
-  const { selectedSocials } = useStore((state) => ({
-    selectedSocials: state.selectedSocials,
+  const { content } = useStore((state) => ({
+    content: state.content,
   }));
   const [menuOpen, setMenuOpen] = useState<boolean>();
 
-  if (!selectedSocials.length) return null;
+  // const uniqueSocials = content.filter((item) => item.unique);
+
+  if (!content.length) return null;
+
   return (
     <Menu open={menuOpen} dismiss={{ enabled: !menuOpen, outsidePress: true }}>
       <MenuHandler>
@@ -31,10 +34,15 @@ function SocialsMenu() {
         </IconButton>
       </MenuHandler>
       <MenuList>
-        {selectedSocials.map((item) => {
+        {content.map((item) => {
           return (
             <MenuItem key={item.id}>
-              <MenuItems type={item.type} name={item.name} id={item.id} />
+              <MenuItems
+                type={item.socialType}
+                name={item.name}
+                id={item.id}
+                unique={item.unique}
+              />
             </MenuItem>
           );
         })}
@@ -52,10 +60,12 @@ const MenuItems = ({
   type,
   name,
   id,
+  unique,
 }: {
   type: string;
   name: string;
   id: string;
+  unique: boolean;
 }) => {
   const { setContent, content, defaultContent } = useStore((state) => ({
     setContent: state.setContent,
@@ -63,24 +73,33 @@ const MenuItems = ({
     defaultContent: state.defaultContent,
     selectedSocials: state.selectedSocials,
   }));
-  const checkChecked = (id: string) => {
-    return content.some((contentItem) => contentItem.id === id);
-  };
-  const [checked, setChecked] = useState<boolean>(checkChecked(id));
+
+  const [checked, setChecked] = useState<boolean>(unique);
+
   const handleChange = () => {
     let updatedContent = [...content];
-    if (content.some((contentItem) => contentItem.id === id)) {
+    if (unique) {
       setChecked(false);
-      updatedContent = content.filter(
-        (contentItem) => !(contentItem.id === id)
-      );
+      updatedContent = content.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            unique: false,
+          };
+        }
+        return item;
+      });
     } else {
       setChecked(true);
-      updatedContent.push({
-        id: id,
-        socialType: type,
-        name: name,
-        content: defaultContent,
+      updatedContent = content.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            content: defaultContent,
+            unique: true,
+          };
+        }
+        return item;
       });
     }
     setContent(updatedContent);

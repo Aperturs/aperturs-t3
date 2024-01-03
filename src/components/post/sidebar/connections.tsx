@@ -11,26 +11,27 @@ interface IConnection {
 }
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
-  // const [selected, setSelected] = useState([{ type: "twitter", id: 0 }]);
-  const { setSelectedSocials, selectedSocial } = useStore(
+  const { setSelectedSocials, selectedSocial, setContent, content } = useStore(
     (state) => ({
       setSelectedSocials: state.setSelectedSocials,
       selectedSocial: state.selectedSocials,
+      setContent: state.setContent,
+      content: state.content,
     }),
     shallow
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  const isSelected = selectedSocial?.some((item) => item.id === id);
+  const isSelected = content.some((item) => item.id === id);
 
   const handleClick = () => {
     if (selectedSocial) {
       if (isSelected) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        setSelectedSocials(selectedSocial.filter((item) => item.id !== id));
+        setContent(content.filter((item) => item.id !== id));
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setSelectedSocials([...selectedSocial, { type: type, id, name }]);
+        setContent([
+          ...content,
+          { socialType: type, id, name, unique: false, content: "" },
+        ]);
       }
     }
   };

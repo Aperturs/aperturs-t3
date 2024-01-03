@@ -81,20 +81,6 @@ function Publish() {
               error: "Failed to post to Twitter",
             }
           );
-          // await createTweet({
-          //   tokenId: item.id,
-          //   tweets: [
-          //     {
-          //       id: 0,
-          //       text: PostContent,
-          //     },
-          //   ],
-          // });
-          // if (twitterError) {
-          //   toast.error(`Failed to post to Twitter: ${twitterError.message}`);
-          // } else {
-          //   toast.success("Posted to Twitter");
-          // }
           break;
         case `${SocialType.Linkedin}`:
           await toast.promise(

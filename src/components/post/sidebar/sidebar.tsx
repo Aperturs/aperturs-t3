@@ -6,7 +6,6 @@ import Publish from "./publish";
 
 const SideBar = () => {
   const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
-  //TODO: Add lens profile for both backend and frontend ( proper integration )
 
   return (
     <div className="z-20 w-full rounded-lg bg-white p-4 px-8 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">

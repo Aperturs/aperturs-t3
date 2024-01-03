@@ -27,4 +27,5 @@ interface PostContent {
   name: string;
   socialType: string;
   content: string;
+  unique: boolean;
 }
