@@ -10,26 +10,19 @@ import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 
 function Publish() {
-  const {
-    tweets,
-    defaultContent,
-    content,
-    date,
-    time,
-    reset,
-    shouldReset,
-  } = useStore(
-    (state) => ({
-      tweets: state.tweets,
-      defaultContent: state.defaultContent,
-      content: state.content,
-      date: state.date,
-      time: state.time,
-      reset: state.reset,
-      shouldReset: state.shouldReset,
-    }),
-    shallow
-  );
+  const { tweets, defaultContent, content, date, time, reset, shouldReset } =
+    useStore(
+      (state) => ({
+        tweets: state.tweets,
+        defaultContent: state.defaultContent,
+        content: state.content,
+        date: state.date,
+        time: state.time,
+        reset: state.reset,
+        shouldReset: state.shouldReset,
+      }),
+      shallow
+    );
   const {
     mutateAsync: createTweet,
     error: twitterError,
@@ -127,7 +120,8 @@ function Publish() {
           success: "Saved to drafts",
           error: "Failed to save to drafts",
         }
-      ).then(async (response) => {
+      )
+      .then(async (response) => {
         if (response.success) {
           if (!isScheduling) {
             reset();

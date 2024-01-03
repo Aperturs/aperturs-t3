@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const savePostInputSchema = z.object({
-  
   postContent: z.array(
     z.object({
       id: z.string(),

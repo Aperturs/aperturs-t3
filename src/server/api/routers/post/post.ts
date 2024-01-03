@@ -51,8 +51,7 @@ export const post = createTRPCRouter({
               default:
                 break;
             }
-          }
-          );
+          });
         }
         await ctx.prisma.post.update({
           where: { id: input.postId },

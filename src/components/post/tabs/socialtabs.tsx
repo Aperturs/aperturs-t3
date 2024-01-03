@@ -16,7 +16,6 @@ export default function SocialTabs() {
     content: state.content,
   }));
 
-
   return (
     <div className="w-full">
       <Tabs value={SocialType.Default}>
@@ -27,37 +26,39 @@ export default function SocialTabs() {
               Default
             </div>
           </Tab>
-          {content.map((item) => item.unique && (
-            <Tab value={item.id} key={item.id}>
-              <div className="flex items-center gap-2 capitalize">
-                <SocialIcon type={item.socialType} />
-                {typeof item.socialType === "string"
-                  ? item.socialType.toLowerCase()
-                  : ""}
-              </div>
-            </Tab>
-          
-          ))}
+          {content.map(
+            (item) =>
+              item.unique && (
+                <Tab value={item.id} key={item.id}>
+                  <div className="flex items-center gap-2 capitalize">
+                    <SocialIcon type={item.socialType} />
+                    {typeof item.socialType === "string"
+                      ? item.socialType.toLowerCase()
+                      : ""}
+                  </div>
+                </Tab>
+              )
+          )}
           <SocialsMenu />
         </TabsHeader>
         <TabsBody>
-          {content.map((item) => item.unique && (
-            <TabPanel key={item.id} value={item.id}>
-              {/* {item.socialType === SocialType.Twitter ? (
+          {content.map(
+            (item) =>
+              item.unique && (
+                <TabPanel key={item.id} value={item.id}>
+                  {/* {item.socialType === SocialType.Twitter ? (
                 <TweetPost />
               ) : ( */}
-              <ContentPostCard id={item.id} />
-              {/* )} */}
-            </TabPanel>
-          ))}
+                  <ContentPostCard id={item.id} />
+                  {/* )} */}
+                </TabPanel>
+              )
+          )}
           <TabPanel value={SocialType.Default}>
-            <ContentPostCard id={SocialType.Default} 
-            />
+            <ContentPostCard id={SocialType.Default} />
           </TabPanel>
         </TabsBody>
       </Tabs>
     </div>
   );
 }
-
-
