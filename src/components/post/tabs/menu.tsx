@@ -71,7 +71,6 @@ const MenuItems = ({
     setContent: state.setContent,
     content: state.content,
     defaultContent: state.defaultContent,
-    selectedSocials: state.selectedSocials,
   }));
 
   const [checked, setChecked] = useState<boolean>(unique);
@@ -126,7 +125,7 @@ const MenuItems = ({
         </div>
         <Switch
           checked={checked}
-          onClick={() => {
+          onChange={() => {
             handleChange();
           }}
           className="text-primary"

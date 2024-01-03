@@ -15,13 +15,12 @@ export default function Post() {
   //   id as string
   // );
   const [loading, setLoading] = useState(true);
-  const { setContent, setDefaultContent, setSelectedSocials, setShouldReset } =
+  const { setContent, setDefaultContent, setShouldReset } =
     useStore(
       (state) => ({
         setDefaultContent: state.setDefaultContent,
         defaultContent: state.defaultContent,
         setContent: state.setContent,
-        setSelectedSocials: state.setSelectedSocials,
         setShouldReset: state.setShouldReset,
       }),
       shallow
@@ -36,9 +35,6 @@ export default function Post() {
         if (!data) return;
         const defaultContent = data.defaultContent;
         setDefaultContent(defaultContent);
-        const localSocialsSelected =
-          data.socialSelected as unknown as SelectedSocial[];
-        setSelectedSocials(localSocialsSelected);
         const localContent = data.content as unknown as PostContent[];
         setContent(localContent);
         setShouldReset(true);
@@ -49,7 +45,6 @@ export default function Post() {
   }, [
     getData.data,
     setDefaultContent,
-    setSelectedSocials,
     setContent,
     setShouldReset,
   ]);

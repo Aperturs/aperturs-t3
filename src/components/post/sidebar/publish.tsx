@@ -13,7 +13,6 @@ function Publish() {
   const {
     tweets,
     defaultContent,
-    selectedSocials,
     content,
     date,
     time,
@@ -23,7 +22,6 @@ function Publish() {
     (state) => ({
       tweets: state.tweets,
       defaultContent: state.defaultContent,
-      selectedSocials: state.selectedSocials,
       content: state.content,
       date: state.date,
       time: state.time,
@@ -58,12 +56,9 @@ function Publish() {
 
   const router = useRouter();
 
-  const handlePublish = async (tweets: Tweet[], defaultContent: string) => {
-    for (const item of selectedSocials) {
-      const PostContent =
-        content.find((post) => post.id === item.id)?.content || defaultContent;
-      if (!item.id) continue;
-      switch (item.type) {
+  const handlePublish = () => {
+    content.forEach(async (item) => {
+      switch (item.socialType) {
         case `${SocialType.Twitter}`:
           await toast.promise(
             createTweet({
@@ -71,7 +66,7 @@ function Publish() {
               tweets: [
                 {
                   id: 0,
-                  text: PostContent,
+                  text: item.content,
                 },
               ],
             }),
@@ -86,7 +81,7 @@ function Publish() {
           await toast.promise(
             createLinkedinPost({
               tokenId: item.id,
-              content: PostContent,
+              content: item.content,
             }),
             {
               loading: "Posting to LinkedIn...",
@@ -98,7 +93,7 @@ function Publish() {
         default:
           toast.error("Please select a social media platform");
       }
-    }
+    });
     if (!twitterError || !linkedinError) {
       reset();
     }
@@ -114,7 +109,6 @@ function Publish() {
       date && hours !== undefined && minutes !== undefined
         ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
         : undefined;
-
     if (isScheduling && !scheduledTime) {
       return toast.error("Please select a date and time");
     }
@@ -123,16 +117,7 @@ function Publish() {
     await toast
       .promise(
         saveToDrafts({
-          selectedSocials: selectedSocials.map((social) => ({
-            id: social.id,
-            type: social.type,
-            name: social.name,
-          })),
-          postContent: content.map((post) => ({
-            id: post.id,
-            socialType: post.socialType,
-            content: post.content,
-          })),
+          postContent: content,
           defaultContent: defaultContent,
           scheduledTime:
             isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
@@ -142,8 +127,7 @@ function Publish() {
           success: "Saved to drafts",
           error: "Failed to save to drafts",
         }
-      )
-      .then(async (response) => {
+      ).then(async (response) => {
         if (response.success) {
           if (!isScheduling) {
             reset();
@@ -170,7 +154,6 @@ function Publish() {
         .promise(
           updatePost({
             postId: id,
-            selectedSocials: selectedSocials,
             postContent: content,
             defaultContent: defaultContent,
             scheduledTime:
@@ -249,6 +232,7 @@ function Publish() {
       toast.error(`Failed to schedule post`);
     }
   };
+
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       <div className="grid grid-cols-2 gap-1">
@@ -256,7 +240,7 @@ function Publish() {
         <SimpleButton
           text="Schedule"
           isLoading={scheduling || saving}
-          disabled={selectedSocials.length === 0}
+          disabled={content.length === 0}
           onClick={async () => {
             await handleSchedule();
           }}
@@ -265,9 +249,9 @@ function Publish() {
       <SimpleButton
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
-        disabled={selectedSocials.length === 0}
-        onClick={async () => {
-          await handlePublish(tweets, defaultContent);
+        disabled={content.length === 0}
+        onClick={() => {
+          handlePublish();
         }}
       />
       {/* <PostWeb content={defaultContent} /> */}
@@ -293,7 +277,7 @@ function Publish() {
         onClick={() => {
           // console.log("onClick event is triggered");
         }}
-        disabled={selectedSocials.length === 0}
+        disabled={content.length === 0}
       />
     </div>
   );

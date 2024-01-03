@@ -11,28 +11,26 @@ interface IConnection {
 }
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
-  const { setSelectedSocials, selectedSocial, setContent, content } = useStore(
+  const { setContent, content, defaultContent } = useStore(
     (state) => ({
-      setSelectedSocials: state.setSelectedSocials,
-      selectedSocial: state.selectedSocials,
       setContent: state.setContent,
       content: state.content,
+      defaultContent: state.defaultContent,
     }),
     shallow
   );
+  console.log(content);
 
   const isSelected = content.some((item) => item.id === id);
 
   const handleClick = () => {
-    if (selectedSocial) {
-      if (isSelected) {
-        setContent(content.filter((item) => item.id !== id));
-      } else {
-        setContent([
-          ...content,
-          { socialType: type, id, name, unique: false, content: "" },
-        ]);
-      }
+    if (isSelected) {
+      setContent(content.filter((item) => item.id !== id));
+    } else {
+      setContent([
+        ...content,
+        { socialType: type, id, name, unique: false, content: defaultContent },
+      ]);
     }
   };
 

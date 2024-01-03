@@ -51,7 +51,8 @@ export default function SocialTabs() {
             </TabPanel>
           ))}
           <TabPanel value={SocialType.Default}>
-            <ContentPostCard id={SocialType.Default} />
+            <ContentPostCard id={SocialType.Default} 
+            />
           </TabPanel>
         </TabsBody>
       </Tabs>

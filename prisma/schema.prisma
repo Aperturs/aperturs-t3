@@ -168,10 +168,10 @@ model Post {
   clerkUserId    String
   status         Status
   scheduledAt    DateTime?
+  organizationId String?
   // content     Content[]
   content        Json
   defaultContent String    @db.Text
-  socialSelected Json
   projectId      String?
   project        Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt      DateTime  @default(now())

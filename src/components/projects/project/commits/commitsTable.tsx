@@ -241,7 +241,6 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
       .promise(
         savePost({
           defaultContent: selectedPost,
-          selectedSocials: [],
           projectId: projectId,
           postContent: [],
         }),
