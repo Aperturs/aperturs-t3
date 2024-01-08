@@ -2,7 +2,6 @@ import SideBar from "./sidebar/sidebar";
 import SocialTabs from "./tabs/socialtabs";
 
 function PostView() {
-
   return (
     <div className="flex  justify-center gap-5">
       <SocialTabs />

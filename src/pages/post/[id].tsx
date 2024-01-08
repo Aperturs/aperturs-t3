@@ -15,16 +15,15 @@ export default function Post() {
   //   id as string
   // );
   const [loading, setLoading] = useState(true);
-  const { setContent, setDefaultContent, setShouldReset } =
-    useStore(
-      (state) => ({
-        setDefaultContent: state.setDefaultContent,
-        defaultContent: state.defaultContent,
-        setContent: state.setContent,
-        setShouldReset: state.setShouldReset,
-      }),
-      shallow
-    );
+  const { setContent, setDefaultContent, setShouldReset } = useStore(
+    (state) => ({
+      setDefaultContent: state.setDefaultContent,
+      defaultContent: state.defaultContent,
+      setContent: state.setContent,
+      setShouldReset: state.setShouldReset,
+    }),
+    shallow
+  );
 
   const getData = api.savepost.getSavedPostById.useQuery(id as string);
 
@@ -42,12 +41,7 @@ export default function Post() {
         console.error("Error fetching data:", error);
       }
     };
-  }, [
-    getData.data,
-    setDefaultContent,
-    setContent,
-    setShouldReset,
-  ]);
+  }, [getData.data, setDefaultContent, setContent, setShouldReset]);
 
   useEffect(() => {
     fetchData();

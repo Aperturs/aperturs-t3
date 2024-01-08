@@ -11,8 +11,6 @@ interface IThreadVersions {
   threadVersions: Thread[];
 }
 
-
-
 interface PostContent {
   id: string;
   name: string;

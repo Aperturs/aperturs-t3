@@ -20,16 +20,13 @@ model User {
   userDetails    Json?
   posts          Post[]
   ideas          Idea[]
-  transactions   Transaction[]
   githubTokens   GithubToken[]
   linkedInTokens LinkedInToken[]
   twitterTokens  TwitterToken[]
   projects       Project[]
   currentPlan    SubscriptionPlans @default(FREE)
-  subscritpion   Subscription?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
-  Queue          Queue?
   userUsage      UserUsage?
 
   @@index([clerkUserId])
@@ -39,6 +36,7 @@ model Project {
   id                         String   @id @default(cuid())
   clerkUserId                String
   user                       User     @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId             String   @default("")
   projectName                String?
   repoName                   String
   repoDescription            String   @default("")
@@ -57,6 +55,7 @@ model Project {
 model TwitterToken {
   id            String    @id @default(cuid())
   user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId String  @default("")
   clerkUserId   String
   client_id     String
   client_secret String
@@ -73,16 +72,12 @@ model TwitterToken {
   @@index([id])
 }
 
-model Test {
-  id   Int  @unique @default(autoincrement())
-  data String 
-}
-
 model GithubToken {
   id            String  @id @default(cuid())
   access_token  String  @unique
   refresh_token String? @unique
   user          User    @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId String  @default("")
   clerkUserId   String  @unique
   profileId     String? 
 
@@ -101,6 +96,7 @@ model LinkedInToken {
   access_token             String    @db.Text
   refresh_token            String?   @db.Text
   user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId           String    @default("")
   clerkUserId              String
   expires_in               DateTime?
   refresh_token_expires_in DateTime?
@@ -128,39 +124,6 @@ model UserUsage {
   @@index([clerkUserId])
 }
 
-enum SubscriptionType {
-  FREE
-  PRO
-  ENTERPRISE
-}
-
-model Subscription {
-  id             String           @id @default(cuid())
-  user           User             @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId    String           @unique
-  customerUserId String
-  transaction    Transaction      @relation(fields: [transactionId], references: [clerkUserId])
-  transactionId  String
-  type           SubscriptionType @default(FREE)
-
-  @@index([clerkUserId])
-  @@index([transactionId])
-}
-
-model Transaction {
-  id               String            @id @default(cuid())
-  user             User              @relation(fields: [clerkUserId], references: [clerkUserId])
-  clerkUserId      String            @unique
-  amount           Int
-  subscription     Subscription[]
-  status           TransactionStatus @default(PENDING)
-  paymentDetails   Json?
-  type             TransactionType
-  refundStatus     RefundStatus?     @default(NOT_APPLICABLE)
-  paymentGatewayId String
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-}
 
 model Post {
   id             String    @id @default(cuid())
@@ -168,8 +131,7 @@ model Post {
   clerkUserId    String
   status         Status
   scheduledAt    DateTime?
-  organizationId String?
-  // content     Content[]
+  organizationId String  @default("")
   content        Json
   defaultContent String    @db.Text
   projectId      String?
@@ -195,24 +157,6 @@ model Idea {
   @@index([clerkUserId])
 }
 
-model Queue {
-  id          String      @id @default(cuid())
-  user        User        @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
-  clerkUserId String      @unique
-  day         String
-  items       QueueItem[]
-}
-
-model QueueItem {
-  id      String @id @default(cuid())
-  time    String
-  type    String
-  queue   Queue  @relation(fields: [queueId], references: [id], onDelete: Cascade)
-  queueId String
-
-  @@index([queueId])
-}
-
 enum SubscriptionPlans {
   FREE
   PRO
@@ -229,16 +173,6 @@ enum Platform {
   FARCASTER
 }
 
-enum TransactionStatus {
-  PENDING
-  FAILED
-  SUCCESSFUL
-}
-
-enum TransactionType {
-  SUBSCRIPTION_PURCHASE
-  REFUND
-}
 
 enum RefundStatus {
   NOT_APPLICABLE
