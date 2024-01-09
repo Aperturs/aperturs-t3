@@ -7,7 +7,6 @@ import { Router } from "next/router";
 import { useEffect, useState, type ReactElement, type ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import LogoLoad from "~/components/custom/loading/logoLoad";
-import Lenswrapper from "~/components/wrappers/lenswrapper";
 import "~/styles/calendar.css";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
@@ -82,25 +81,23 @@ const MyApp: AppType = ({
   }
 
   return (
-    <Lenswrapper>
-      <ClerkProvider
-        {...pageProps}
-        appearance={{
-          elements: {
-            formButtonPrimary: "bg-primary",
-          },
-        }}
-      >
-        <ThemeProvider>
-          <Toaster position="top-left" reverseOrder={false} />
-          {getLayout(
-            <Comp />
-            //  <Component {...pageProps} />
-          )}
-          <Analytics />
-        </ThemeProvider>
-      </ClerkProvider>
-    </Lenswrapper>
+    <ClerkProvider
+      {...pageProps}
+      appearance={{
+        elements: {
+          formButtonPrimary: "bg-primary",
+        },
+      }}
+    >
+      <ThemeProvider>
+        <Toaster position="top-left" reverseOrder={false} />
+        {getLayout(
+          <Comp />
+          //  <Component {...pageProps} />
+        )}
+        <Analytics />
+      </ThemeProvider>
+    </ClerkProvider>
   );
 };
 

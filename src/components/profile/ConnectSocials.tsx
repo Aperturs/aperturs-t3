@@ -7,7 +7,6 @@ import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
-import useLensProfile from "~/hooks/lens-profile";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 
@@ -25,12 +24,6 @@ const SocialIcon = ({ type }: { type: string }) => {
 
 const ConnectSocials = () => {
   const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
-  const {
-    profile: lensProfile,
-    // loading: lensLoading,
-    // error: lensError,
-    LensData: profile,
-  } = useLensProfile();
 
   return (
     <Card className="min-h-[50vh] w-full rounded-xl p-6">
@@ -55,15 +48,6 @@ const ConnectSocials = () => {
               />
             ))
           )}
-
-          {profile && (
-            <AfterConnect
-              name={lensProfile.name}
-              icon={<Image src="/lens.svg" alt="lens" height={40} width={40} />}
-              profilePic={lensProfile.imageUrl}
-            />
-          )}
-          {/* </Suspense> */}
           <AddSocial />
         </div>
       </div>
@@ -166,13 +150,13 @@ const Socials = () => {
         <FaLinkedinIn className="text-2xl " />
         <p>Linkedin</p>
       </button>
-      <button
+      {/* <button
         className="btn gap-2 hover:border-0 hover:bg-[#DACCF3]  hover:text-black"
         onClick={() => router.push("/socials/lens")}
       >
         <Image src="/lens.svg" alt="lens" width={40} height={40} />
         <p>Lens </p>
-      </button>
+      </button> */}
       <button
         className={`btn gap-2 hover:border-0 hover:bg-primary  hover:text-white `}
         onClick={async () => {

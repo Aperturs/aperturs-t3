@@ -47,7 +47,6 @@ export const saveDraft = async ({
         scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
         defaultContent: input.defaultContent,
         content: input.postContent,
-        socialSelected: input.selectedSocials,
       },
     });
     return savedPost.id;

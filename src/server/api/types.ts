@@ -1,18 +1,12 @@
 import { z } from "zod";
 
 export const savePostInputSchema = z.object({
-  selectedSocials: z.array(
-    z.object({
-      id: z.string(),
-      type: z.string(),
-      name: z.string(),
-    })
-  ),
   postContent: z.array(
     z.object({
       id: z.string(),
       socialType: z.string(),
       content: z.string(),
+      unique: z.boolean(),
     })
   ),
   defaultContent: z.string(),
