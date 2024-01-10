@@ -14,6 +14,7 @@
   "dependencies": {
     "@clerk/nextjs": "^4.29.1",
     "@heroicons/react": "^2.0.18",
+    "@lemonsqueezy/lemonsqueezy.js": "^1.2.5",
     "@material-tailwind/react": "^2.0.3",
     "@octokit/plugin-paginate-rest": "8.0.0",
     "@prisma/client": "^5.1.1",
@@ -66,13 +67,13 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^8.36.0",
     "eslint-config-next": "^14.0.3",
+    "husky": "^8.0.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
     "prettier-plugin-tailwindcss": "^0.2.6",
     "prisma": "^5.1.1",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.2",
-    "husky": "^8.0.0"
+    "typescript": "^5.0.2"
   },
   "ct3aMetadata": {
     "initVersion": "7.10.2"

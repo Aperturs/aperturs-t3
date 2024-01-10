@@ -20,7 +20,11 @@ export async function limitWrapper<T>(
   });
 
   if (!userUsage) {
-    throw new TRPCError({ code: "NOT_FOUND" });
+    // If the user doesn't have any usage data, create it
+    await prisma.userUsage.create({
+      data: { clerkUserId },
+    });
+    return limitWrapper(func, clerkUserId, limitType);
   }
 
   // Check if the user has reached their limit
