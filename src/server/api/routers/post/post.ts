@@ -13,7 +13,7 @@ import {
 } from "../../trpc";
 
 export const post = createTRPCRouter({
-  postbyid: publicProcedure
+  postByPostId: publicProcedure
     .input(
       z.object({
         postId: z.string(),
@@ -26,25 +26,17 @@ export const post = createTRPCRouter({
             id: input.postId,
           },
         });
-
         if (post) {
           const content = post.content as unknown as PostContent[];
-          const selectedSocials =
-            post.socialSelected as unknown as SelectedSocial[];
-          const defaultContent = post.defaultContent;
-          for (const item of selectedSocials) {
-            const PostContent =
-              content.find((post) => post.id === item.id)?.content ||
-              defaultContent;
-            if (!item.id) continue;
-            switch (item.type) {
+          content.forEach(async (item) => {
+            switch (item.socialType) {
               case `${SocialType.Twitter}`:
                 await postToTwitter({
                   tokenId: item.id,
                   tweets: [
                     {
                       id: 0,
-                      text: PostContent,
+                      text: item.content,
                     },
                   ],
                 });
@@ -52,17 +44,14 @@ export const post = createTRPCRouter({
               case `${SocialType.Linkedin}`:
                 await postToLinkedin({
                   tokenId: item.id,
-                  content: PostContent,
+                  content: item.content,
                 });
                 //post to linkedin
                 break;
               default:
                 break;
             }
-          }
-          // if (!twitterError || !linkedinError) {
-          //   reset();
-          // }
+          });
         }
         await ctx.prisma.post.update({
           where: { id: input.postId },

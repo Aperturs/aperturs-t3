@@ -149,7 +149,7 @@ const ProjectContext = () => {
         onClick={async () => {
           await submit();
         }}
-        className=" btn-primary btn mt-4 rounded-lg px-6 py-2 text-white"
+        className=" btn btn-primary mt-4 rounded-lg px-6 py-2 text-white"
       >
         Submit
       </button>

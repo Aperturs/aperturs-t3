@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import React from "react";
 import UserProfilePage from "./userprofile";
+import BillingTab from "./billingTab";
 
 const Test = () => {
   return <div className="w-full py-5">comming soon..</div>;
@@ -29,7 +30,7 @@ export default function AccountTabs() {
       label: "Billing",
       value: "billing",
       icon: Square3Stack3DIcon,
-      element: Test,
+      element: BillingTab,
     },
     {
       label: "Settings",

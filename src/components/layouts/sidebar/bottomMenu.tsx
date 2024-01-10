@@ -6,8 +6,8 @@ import {
   ListItemSuffix,
 } from "@material-tailwind/react";
 import Link from "next/link";
-import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { OrganizationSwitcher, useClerk } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { MdCircleNotifications } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -45,6 +45,9 @@ function BottomMenu() {
 
   return (
     <div>
+      <ListItem>
+        <OrganizationSwitcher />
+      </ListItem>
       {bottomMenu.map((item, index) => (
         <div key={index}>
           <Link href={item.url}>

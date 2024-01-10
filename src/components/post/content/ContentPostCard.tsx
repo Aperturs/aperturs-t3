@@ -1,9 +1,9 @@
+import { Switch } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
-import ContentPostCreation from "./textarea";
 import { SocialType } from "~/types/post-enums";
-import { Switch } from "@material-tailwind/react";
+import ContentPostCreation from "./textarea";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
@@ -17,8 +17,6 @@ import { Switch } from "@material-tailwind/react";
 // }
 
 function ContentPostCard({ id }: { id: string }) {
-  // const {setLinkedinPost,linkedinPost,sync,tweets,setSync } = useContext(PostContext)
-
   const { setContent, content, setDefaultContent, defaultContent } = useStore(
     (state) => ({
       content: state.content,
@@ -34,14 +32,23 @@ function ContentPostCard({ id }: { id: string }) {
   const onChangeContent = (textContent: string) => {
     if (id === SocialType.Default) {
       setDefaultContent(textContent);
+      const updatedContent = content.map((item) => {
+        if (!item.unique) {
+          return { ...item, content: textContent };
+        }
+        return item;
+      });
+      setContent(updatedContent);
+    } else {
+      const updatedContent = content.map((item) => {
+        if (item.id === id) {
+          return { ...item, content: textContent };
+        }
+        return item;
+      });
+      setContent(updatedContent);
+      console.log(content);
     }
-    const updatedContent = content.map((item) => {
-      if (item.id === id) {
-        return { ...item, content: textContent };
-      }
-      return item;
-    });
-    setContent(updatedContent);
   };
 
   useEffect(() => {

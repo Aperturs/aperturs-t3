@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { ContentPage } from "~/components";
 
 const Dashboard = () => {

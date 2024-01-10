@@ -9,7 +9,7 @@ function AddSocial() {
         <ConnectSocials />
         <div className="flex justify-between">
           <button
-            className="btn-primary btn-wide btn my-3 text-white"
+            className="btn btn-primary btn-wide my-3 text-white"
             onClick={async () => {
               await router.push("/onboarding");
             }}
@@ -17,7 +17,7 @@ function AddSocial() {
             Back
           </button>
           <button
-            className="btn-primary btn-wide btn my-3 text-white"
+            className="btn btn-primary btn-wide my-3 text-white"
             onClick={async () => {
               await router.push("/dashboard");
             }}

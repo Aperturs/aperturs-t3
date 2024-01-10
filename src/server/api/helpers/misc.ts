@@ -16,11 +16,11 @@ export const ConnectSocial = async ({
         linkedInTokens: true,
       },
     });
-    console.log(accounts, "accounts")
+    console.log(accounts, "accounts");
     if (accounts) {
       const number =
         accounts.linkedInTokens.length + accounts.twitterTokens.length;
-        console.log(number,"number")
+      console.log(number, "number");
       if (number < 2) {
         return true;
       }
@@ -47,7 +47,6 @@ export const saveDraft = async ({
         scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
         defaultContent: input.defaultContent,
         content: input.postContent,
-        socialSelected: input.selectedSocials,
       },
     });
     return savedPost.id;

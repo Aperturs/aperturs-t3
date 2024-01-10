@@ -20,7 +20,6 @@ export const posting = createTRPCRouter({
                   : null,
                 defaultContent: input.defaultContent,
                 content: input.postContent,
-                socialSelected: input.selectedSocials,
                 projectId: input.projectId,
               },
             }),
@@ -54,13 +53,6 @@ export const posting = createTRPCRouter({
     .input(
       z.object({
         postId: z.string(),
-        selectedSocials: z.array(
-          z.object({
-            id: z.string(),
-            type: z.string(),
-            name: z.string(),
-          })
-        ),
         postContent: z.array(
           z.object({
             id: z.string(),
@@ -83,7 +75,6 @@ export const posting = createTRPCRouter({
               : null,
             defaultContent: input.defaultContent,
             content: input.postContent,
-            socialSelected: input.selectedSocials,
           },
         });
 

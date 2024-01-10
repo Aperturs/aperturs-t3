@@ -51,8 +51,8 @@ Important Notes:
 
 Please adhere to all the instructions mentioned in this prompt to ensure successful completion.
 Failure to follow the instructions may result in an unsatisfactory output.
-Ensure that you maintain the structure and organization provided in this prompt to get the desired results`
-}
+Ensure that you maintain the structure and organization provided in this prompt to get the desired results`;
+};
 export const promptuser = ({
   ProjectName,
   ProjectDescription,
@@ -93,8 +93,8 @@ Output Format:
   
   Ensure that you maintain the structure and organization provided in this prompt to get the desired results.
 
-  `
-}
+  `;
+};
 
 export const prompt = ({
   ProjectName,
@@ -136,5 +136,5 @@ Please adhere to all the instructions mentioned in this prompt to ensure success
 Failure to follow the instructions may result in an unsatisfactory output.
 Ensure that you maintain the structure and organization provided in this prompt to get the desired results.
 
-  `
-}
+  `;
+};

@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .glassMorphism {
   background: rgba(255, 255, 255, 0.35);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.09);
@@ -24,21 +23,20 @@
   box-shadow: 2px 2px 10px #e0e0e0, -2px -2px 10px #ffffff;
 }
 
-.cl-internal-1gi467n{
+.cl-internal-1gi467n {
   width: 100% !important;
   will-change: height !important;
-  margin: 0px  !important;
+  margin: 0px !important;
 }
-  
-.cl-internal-phfxlr{
+
+.cl-internal-phfxlr {
   width: 100% !important;
 }
-.cl-internal-17ydaof{
+.cl-internal-17ydaof {
   /* max-width: 500px; */
   width: 100%;
   will-change: height !important;
   /* padding: 50px  !important; */
-  margin: 0px 0px  !important;
+  margin: 0px 0px !important;
   margin-right: 0px !important;
-
 }

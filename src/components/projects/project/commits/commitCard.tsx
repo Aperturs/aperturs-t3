@@ -1,5 +1,5 @@
 // components/CommitCard.tsx
-'use client'
+"use client";
 
 import { motion } from "framer-motion";
 import { Card, Typography } from "@material-tailwind/react";
@@ -12,18 +12,22 @@ interface CommitCardProps {
   onToggle: (id: number) => void;
 }
 
-
-
-const CommitCard: React.FC<CommitCardProps> = ({ id, title, description, checked, onToggle }) => {
+const CommitCard: React.FC<CommitCardProps> = ({
+  id,
+  title,
+  description,
+  checked,
+  onToggle,
+}) => {
   return (
     <motion.div
       layout
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="w-4/5 mx-auto my-2"
+      className="mx-auto my-2 w-4/5"
     >
-      <Card className="p-4"  onClick={()=>onToggle(id)}>
+      <Card className="p-4" onClick={() => onToggle(id)}>
         <div className="flex items-center">
           <input
             type="checkbox"

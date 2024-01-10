@@ -1,7 +1,7 @@
 import { UserProfile } from "@clerk/nextjs";
 
 const UserProfilePage = () => (
-  <div className="flex justify-center w-full">
+  <div className="flex w-full justify-center">
     <UserProfile
       appearance={{
         baseTheme: undefined,

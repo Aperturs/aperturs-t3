@@ -26,8 +26,8 @@ import { prisma } from "~/server/db";
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (opts: {headers: Headers}) => {
-  const user = auth()
+const createInnerTRPCContext = (opts: { headers: Headers }) => {
+  const user = auth();
   const clerkId = user.userId;
   return {
     ...opts,
@@ -44,7 +44,7 @@ const createInnerTRPCContext = (opts: {headers: Headers}) => {
  * @see https://trpc.io/docs/context
  */
 // eslint-disable-next-line @typescript-eslint/require-await
-export const createTRPCContext = async (opts: {headers: Headers}) => {
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   // const session =  getAuth(req);
   // const user =  session.user;
   // Get the session from the server using the getServerSession wrapper function

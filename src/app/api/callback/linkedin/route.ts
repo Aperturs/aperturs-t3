@@ -63,4 +63,3 @@ export default async function GET(req: NextRequest) {
 
   return NextResponse.redirect("/settings");
 }
-

@@ -1,6 +1,6 @@
 interface ICommit {
-    id: number;
-    message: string;
-    author: string;
-    date: string;
-  }
+  id: number;
+  message: string;
+  author: string;
+  date: string;
+}

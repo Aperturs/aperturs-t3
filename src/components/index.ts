@@ -4,7 +4,6 @@ import DraftCard from "./drafts/darfCard";
 import DraftPage from "./drafts/draft";
 import ProjectLayout from "./layouts/projectnavbar/projectLayout";
 import SideBar from "./layouts/sidebar/sidebar";
-import { LensLoginButton } from "./lens/lens-login";
 import LinkedinPostCard from "./post/content/ContentPostCard";
 import PostView from "./post/postWrapper";
 import SocialTabs from "./post/tabs/socialtabs";
@@ -17,7 +16,7 @@ import QuestionCard from "./projects/project/context/questionCard";
 import CommitDescriptionSettingsCard from "./projects/project/settings/commitInfo";
 import CommitSettings from "./projects/project/settings/commitSettings";
 import GithubCard from "./projects/projectCard";
-import  AccountTabs  from "./profile/account/tabs";
+import AccountTabs from "./profile/account/tabs";
 
 export {
   CommitDescriptionSettingsCard,
@@ -29,7 +28,6 @@ export {
   DraftPage,
   GithubCard,
   Layout,
-  LensLoginButton,
   LinkedinPostCard,
   NewRepoFormModal,
   PostView,
