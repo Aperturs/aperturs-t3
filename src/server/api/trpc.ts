@@ -14,8 +14,7 @@
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { getAuth } from "@clerk/nextjs/server";
+
 import { prisma } from "~/server/db";
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -27,11 +26,11 @@ import { prisma } from "~/server/db";
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
-  const { req } = opts;
-  const sesh = getAuth(req);
-  const clerkId = sesh.userId;
+const createInnerTRPCContext = (opts: { headers: Headers }) => {
+  const user = auth();
+  const clerkId = user.userId;
   return {
+    ...opts,
     prisma,
     cronJobServer: cronJobServer,
     currentUser: clerkId,
@@ -44,16 +43,16 @@ const createInnerTRPCContext = (opts: CreateNextContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (opts: CreateNextContextOptions) => {
-  const { req, res } = opts;
+// eslint-disable-next-line @typescript-eslint/require-await
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   // const session =  getAuth(req);
   // const user =  session.user;
   // Get the session from the server using the getServerSession wrapper function
   // const session = await getServerAuthSession({ req, res });
 
   return createInnerTRPCContext({
-    req,
-    res,
+    ...opts,
+    // session,
   });
 };
 
@@ -68,6 +67,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 import cronJobServer from "../cronjob";
+import { auth } from "@clerk/nextjs";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,

@@ -6,9 +6,8 @@ import {
   ListItemSuffix,
 } from "@material-tailwind/react";
 import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 import { OrganizationSwitcher, useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { MdCircleNotifications } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -63,8 +62,8 @@ function BottomMenu() {
       <ListItem
         onClick={() =>
           signOut()
-            .then(async () => {
-              await router.push("/sign-in");
+            .then(() => {
+              router.push("/sign-in");
               toast.success("Signed Out");
             })
             .catch(() => {

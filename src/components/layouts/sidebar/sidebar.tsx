@@ -7,6 +7,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import AccordianMenu from "./accordianMenu";
 import BottomMenu from "./bottomMenu";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const AccordanceMenu = [
   {
@@ -69,6 +70,14 @@ export default function SideBar() {
       () => window.innerWidth >= 960 && setIsNavOpen(false)
     );
   }, []);
+
+  const pathName = usePathname();
+
+  useEffect(() => {
+    if (isNavOpen) {
+      setIsNavOpen(false);
+    }
+  }, [pathName]);
 
   return (
     <Card className=" mt-2 w-full overflow-scroll bg-neutral p-4 shadow-xl shadow-blue-gray-900/5 lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">

@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 interface AccordanceProps {
@@ -31,10 +31,10 @@ export default function AccordionMenu(props: MenuProps) {
   const { list } = props;
 
   const [openItems, setOpenItems] = React.useState<number[]>([1, 2]);
-  const router = useRouter();
+  const pathName = usePathname();
 
   const currentPath = (url: string) => {
-    return url === router.asPath;
+    return url === pathName;
   };
 
   const handleOpen = (value: number) => {
