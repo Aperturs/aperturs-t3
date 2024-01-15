@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
+import { openNotificationDialog } from "~/hooks/useModelConfirmation";
 import { api } from "~/utils/api";
 
 interface IDarfCard {
@@ -22,6 +23,22 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
   const router = useRouter();
   const { mutateAsync: DeleteDraft, isLoading: deleting } =
     api.savepost.deleteSavedPostById.useMutation();
+
+  const handleOpen = () => {
+    openNotificationDialog({
+      title: "Delete Draft",
+      content: (
+        <>
+          <Typography color="blue-gray">
+            Are you sure you want to delete this draft?
+          </Typography>
+        </>
+      ),
+      labels: { confirm: "Delete It", cancel: "Close" },
+      onCancel: () => console.log("canceled"),
+      onConfirm: () => handleDelete(),
+    });
+  };
 
   const handleDelete = async () => {
     await toast.promise(DeleteDraft({ id }), {
@@ -94,7 +111,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
           <button
             disabled={deleting}
             className="btn w-full hover:bg-red-200"
-            onClick={handleDelete}
+            onClick={handleOpen}
           >
             <TbTrashFilled />
           </button>
