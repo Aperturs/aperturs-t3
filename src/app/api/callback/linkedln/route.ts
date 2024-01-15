@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
   // const body = req.body;
-
   try {
     const response = await fetch(
       // eslint-disable-next-line @typescript-eslint/restrict-plus-operands

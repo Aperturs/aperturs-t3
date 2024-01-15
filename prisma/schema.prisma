@@ -53,19 +53,19 @@ model Project {
 }
 
 model TwitterToken {
-  id            String    @id @default(cuid())
-  user          User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  organizationId String  @default("")
-  clerkUserId   String
-  client_id     String
-  client_secret String
-  access_token  String?   @unique
-  refresh_token String?   @unique
-  expires_in    DateTime?
-  profileId     String?   @unique
-  username      String?
-  fullname      String?
-  profile_image String?
+  id             String    @id @default(cuid())
+  user           User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId String    @default("")
+  clerkUserId    String
+  client_id      String
+  client_secret  String
+  access_token   String?   @unique
+  refresh_token  String?   @unique
+  expires_in     DateTime?
+  profileId      String?   @unique
+  username       String?
+  fullname       String?
+  profile_image  String?
 
   @@index([profileId])
   @@index([clerkUserId])
@@ -73,14 +73,13 @@ model TwitterToken {
 }
 
 model GithubToken {
-  id            String  @id @default(cuid())
-  access_token  String  @unique
-  refresh_token String? @unique
-  user          User    @relation(fields: [clerkUserId], references: [clerkUserId])
-  organizationId String  @default("")
-  clerkUserId   String  @unique
-  profileId     String? 
-
+  id                       String    @id @default(cuid())
+  access_token             String    @unique
+  refresh_token            String?   @unique
+  user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId           String    @default("")
+  clerkUserId              String    @unique
+  profileId                String?
   expires_in               DateTime?
   refresh_token_expires_in DateTime?
   createdAt                DateTime  @default(now())
@@ -124,14 +123,13 @@ model UserUsage {
   @@index([clerkUserId])
 }
 
-
 model Post {
   id             String    @id @default(cuid())
   user           User      @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   clerkUserId    String
   status         Status
   scheduledAt    DateTime?
-  organizationId String  @default("")
+  organizationId String    @default("")
   content        Json
   defaultContent String    @db.Text
   projectId      String?
@@ -172,7 +170,6 @@ enum Platform {
   LENS_PROTOCOL
   FARCASTER
 }
-
 
 enum RefundStatus {
   NOT_APPLICABLE
