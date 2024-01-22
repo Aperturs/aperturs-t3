@@ -58,17 +58,17 @@ const NotificationDialog: React.FC<NotificationDialogProps> = ({
   );
 };
 
-export const openNotificationDialog = (props: NotificationDialogProps) => {
-  const container = document.createElement("div");
-  document.body.appendChild(container);
+// export const openNotificationDialog = (props: NotificationDialogProps) => {
+//   const container = document.createElement("div");
+//   document.body.appendChild(container);
 
-  const closeDialog = () => {
-    ReactDOM.unmountComponentAtNode(container);
-    document.body.removeChild(container);
-  };
+//   const closeDialog = () => {
+//     ReactDOM.unmountComponentAtNode(container);
+//     document.body.removeChild(container);
+//   };
 
-  ReactDOM.render(
-    <NotificationDialog {...props} onCancel={closeDialog} />,
-    container
-  );
-};
+//   ReactDOM.render(
+//     <NotificationDialog {...props} onCancel={closeDialog} />,
+//     container
+//   );
+// };
