@@ -1,4 +1,3 @@
-import million from "million/compiler";
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
@@ -10,22 +9,28 @@ const config = {
   reactStrictMode: true,
 
   images: {
-    domains: [
-      "images.unsplash.com",
-      "pbs.twimg.com",
-      "ik.imagekit.io",
-      "avatars.githubusercontent.com",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ik.imagekit.io",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
     ],
   },
-  // eslint: {
-  //   // Warning: This allows production builds to successfully complete even if
-  //   // your project has ESLint errors.
-  //   ignoreDuringBuilds: true,
-  // },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  transpilePackages: ["@lens-protocol"],
   async redirects() {
     return [
       {
@@ -47,4 +52,4 @@ const config = {
     defaultLocale: "en",
   },
 };
-export default million.next(config, { auto: { rsc: true } });
+export default config;

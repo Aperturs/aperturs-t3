@@ -1,5 +1,6 @@
 import { type ReactElement } from "react";
 import { DraftPage, Layout } from "~/components";
+import { ModalProvider } from "~/components/custom/modals/modalContext";
 
 const DraftPost = () => {
   return (

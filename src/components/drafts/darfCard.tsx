@@ -2,15 +2,19 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Dialog,
   Tooltip,
   Typography,
 } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
-import { openNotificationDialog } from "~/hooks/useModelConfirmation";
+import ConfirmationModal, {
+  type HandleOpenRef,
+} from "~/components/custom/modals/modal";
 import { api } from "~/utils/api";
 
 interface IDarfCard {
@@ -24,21 +28,9 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
   const { mutateAsync: DeleteDraft, isLoading: deleting } =
     api.savepost.deleteSavedPostById.useMutation();
 
-  const handleOpen = () => {
-    openNotificationDialog({
-      title: "Delete Draft",
-      content: (
-        <>
-          <Typography color="blue-gray">
-            Are you sure you want to delete this draft?
-          </Typography>
-        </>
-      ),
-      labels: { confirm: "Delete It", cancel: "Close" },
-      onCancel: () => console.log("canceled"),
-      onConfirm: () => handleDelete(),
-    });
-  };
+  const [open, setOpen] = useState(false);
+
+  // const handleDialogOpenRef = useRef<HandleConfirmModalOpen>(null);
 
   const handleDelete = async () => {
     await toast.promise(DeleteDraft({ id }), {
@@ -48,6 +40,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
     });
     refetch();
   };
+
   return (
     <Card className="mt-6 ">
       {/* <CardHeader color="blue-gray" className="relative ">
@@ -61,6 +54,20 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
           />
         )}
       </CardHeader> */}
+      <Dialog open={open} handler={setOpen}>
+        <ConfirmationModal
+          DialogBodyContent="Are you sure you want to delete this draft?"
+          DialogHeaderContent="Delete Draft"
+          onConfirm={() => {
+            void handleDelete();
+            setOpen(false);
+          }}
+          onClose={() => {
+            toast.success("Your Draft is Safe");
+            setOpen(false);
+          }}
+        />
+      </Dialog>
       <CardBody>
         <div className="h-20 overflow-auto">
           <Typography className="whitespace-pre-line">{content}</Typography>
@@ -111,7 +118,9 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
           <button
             disabled={deleting}
             className="btn w-full hover:bg-red-200"
-            onClick={handleOpen}
+            onClick={() => {
+              setOpen(true);
+            }}
           >
             <TbTrashFilled />
           </button>
