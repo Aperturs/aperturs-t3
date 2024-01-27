@@ -25,7 +25,7 @@ export default function BillingCard({
   return (
     <Card
       className={`max-w-sm p-6 ${
-        name === currentPlan ? "border-2 border-blue-gray-900" : ""
+        name === currentPlan ? "border-blue-gray-900 border-2" : ""
       }`}
     >
       <h5 className="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">

@@ -41,7 +41,7 @@ export default function AccountTabs() {
   ];
   return (
     <Tabs value="account">
-      <TabsHeader className="w-full text-center">
+      <TabsHeader className="w-full  text-center">
         {data.map(({ label, value, icon }) => (
           <Tab key={value} value={value}>
             <div className="flex w-full items-center gap-2">

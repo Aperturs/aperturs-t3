@@ -80,7 +80,7 @@ export default function SideBar() {
   }, [pathName]);
 
   return (
-    <Card className=" mt-2 w-full overflow-scroll bg-neutral p-4 shadow-xl shadow-blue-gray-900/5 lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
+    <Card className=" bg-neutral shadow-blue-gray-900/5 mt-2 w-full overflow-scroll p-4 shadow-xl lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
       <div className="mb-2 flex items-center gap-4 p-4">
         <Image
           src="/logo.svg"
@@ -105,7 +105,7 @@ export default function SideBar() {
       <div className="hidden lg:block">
         <List>
           <AccordianMenu list={AccordanceMenu} />
-          <hr className="my-2 border-blue-gray-50" />
+          <hr className="border-blue-gray-50 my-2" />
           <BottomMenu />
         </List>
       </div>
@@ -120,7 +120,7 @@ export default function SideBar() {
           >
             <List>
               <AccordianMenu list={AccordanceMenu} />
-              <hr className="my-2 border-blue-gray-50" />
+              <hr className="border-blue-gray-50 my-2" />
               <BottomMenu />
             </List>
           </motion.div>

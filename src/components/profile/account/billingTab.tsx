@@ -68,7 +68,7 @@ export default function BillingTab() {
         lsCurrentPeriodEnd={getSubscription?.lsCurrentPeriodEnd ?? 0}
         updatePaymentMethodURL={getSubscription?.updatePaymentMethodURL ?? ""}
       />
-      <div className="gird-cols-1 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <div className="gird-cols-1 grid w-full gap-3 md:grid-cols-2 xl:grid-cols-3">
         {billingPlans?.data
           .slice()
           .reverse()

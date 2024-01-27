@@ -19,7 +19,7 @@ export default function ProjectNavBar() {
 
   return (
     <Navbar className="mx-auto max-w-screen-xl px-6 py-3">
-      <div className="flex items-center justify-center text-blue-gray-900">
+      <div className="text-blue-gray-900 flex items-center justify-center">
         <div className="hidden lg:block">
           <NavList />
         </div>
