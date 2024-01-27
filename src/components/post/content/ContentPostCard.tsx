@@ -59,7 +59,7 @@ function ContentPostCard({ id }: { id: string }) {
   }, [sync, defaultContent]);
 
   return (
-    <div className="w-full rounded-lg bg-white p-4 shadow-md">
+    <div className="w-full rounded-lg  p-4 shadow-md">
       <ContentPostCreation
         content={
           id === SocialType.Default

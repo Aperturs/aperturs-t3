@@ -19,6 +19,15 @@ const config = {
     },
     extend: {
       colors: {
+        // primary: "#132da0",
+        // secondary: "#e3f2ff",
+        // accent: "#2d68ff",
+        neutral: "#f7f7fc",
+        "base-100": "#ffffff",
+        info: "#3ABFF8",
+        success: "#22c55e",
+        warning: "#ffa800",
+        error: "#dc2c2b",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -69,8 +78,8 @@ const config = {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+        "accordion-down": "accordion-down 1s ease-out",
+        "accordion-up": "accordion-up 1s ease-out",
       },
     },
   },

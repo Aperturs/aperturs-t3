@@ -9,8 +9,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ThemeProvider>
-      <Layout>{children}</Layout>
-    </ThemeProvider>
+    // <ThemeProvider>
+    <Layout>{children}</Layout>
+    // </ThemeProvider>
   );
 }
