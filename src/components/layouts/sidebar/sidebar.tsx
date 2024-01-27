@@ -1,5 +1,5 @@
 import { Bars2Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { Card, IconButton, List, Typography } from "@material-tailwind/react";
+import { IconButton, List, Typography } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
@@ -8,6 +8,7 @@ import AccordianMenu from "./accordianMenu";
 import BottomMenu from "./bottomMenu";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { Card } from "~/components/ui/card";
 
 const AccordanceMenu = [
   {
