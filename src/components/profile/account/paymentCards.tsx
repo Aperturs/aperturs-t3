@@ -10,6 +10,8 @@ interface iFeatureList {
   pricing: number;
   onClick: () => void;
   features: iFeature[];
+  id: string;
+  currentPlan?: string;
 }
 
 export default function BillingCard({
@@ -17,9 +19,15 @@ export default function BillingCard({
   pricing,
   onClick,
   features,
+  id,
+  currentPlan,
 }: iFeatureList) {
   return (
-    <Card className="max-w-sm p-6">
+    <Card
+      className={`max-w-sm p-6 ${
+        name === currentPlan ? "border-2 border-blue-gray-900" : ""
+      }`}
+    >
       <h5 className="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
         {name}
       </h5>

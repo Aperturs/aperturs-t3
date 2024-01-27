@@ -24,15 +24,13 @@ export async function POST(request: Request) {
     "utf8"
   );
 
-  console.log("checking");
-
   // Check if the webhook event was for this product or not
-  if (
-    parseInt(payload.data.attributes.product_id) !==
-    parseInt(process.env.LEMONS_SQUEEZY_PRODUCT_ID as string)
-  ) {
-    return NextResponse.json({ message: "Invalid product" }, { status: 403 });
-  }
+  // if (
+  //   parseInt(payload.data.attributes.product_id) !==
+  //   parseInt(process.env.LEMONS_SQUEEZY_PRODUCT_ID as string)
+  // ) {
+  //   return NextResponse.json({ message: "Invalid product" }, { status: 403 });
+  // }
 
   // validate signature
   if (!crypto.timingSafeEqual(digest, signature)) {
