@@ -29,14 +29,14 @@ const initialState: StateValues = {
   date: null,
   time: "00:00",
   content: [
-    // {
-    //   id: SocialType.Default,
-    //   name: "Default",
-    //   socialType: SocialType.Default,
-    //   content: "",
-    //   unique: false,
-    //   files: null,
-    // },
+    {
+      id: SocialType.Default,
+      name: "Default",
+      socialType: SocialType.Default,
+      content: "",
+      unique: true,
+      files: [],
+    },
   ],
 };
 

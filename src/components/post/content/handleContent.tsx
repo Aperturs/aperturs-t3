@@ -4,11 +4,9 @@ import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 
 function usePostUpdate(id: string) {
-  const { setContent, content, setDefaultContent, defaultContent } = useStore(
+  const { setContent, content } = useStore(
     (state) => ({
       content: state.content,
-      setDefaultContent: state.setDefaultContent,
-      defaultContent: state.defaultContent,
       setContent: state.setContent,
     }),
     shallow
@@ -18,10 +16,12 @@ function usePostUpdate(id: string) {
   const updateContent = useCallback(
     (newContent: string) => {
       if (id === SocialType.Default) {
-        setDefaultContent(newContent);
         const updatedContent = content.map((item) =>
-          !item.unique ? { ...item, content: newContent } : item
+          !item.unique || item.socialType === SocialType.Default
+            ? { ...item, content: newContent }
+            : item
         );
+        console.log(updatedContent, id);
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
@@ -30,7 +30,7 @@ function usePostUpdate(id: string) {
         setContent(updatedContent);
       }
     },
-    [content, id, setContent, setDefaultContent]
+    [content, id, setContent]
   );
 
   const updateFiles = useCallback(
@@ -63,10 +63,8 @@ function usePostUpdate(id: string) {
   );
 
   const contentValue = useMemo(() => {
-    return id === SocialType.Default
-      ? defaultContent
-      : content.find((item) => item.id === id)?.content || "";
-  }, [id, content, defaultContent]);
+    return content.find((item) => item.id === id)?.content || "";
+  }, [id, content]);
 
   return {
     contentValue,

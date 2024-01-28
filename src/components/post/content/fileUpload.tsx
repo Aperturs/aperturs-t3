@@ -13,8 +13,8 @@ export default function FileUpload({ id }: { id: string }) {
 
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
+      // console.log(contentValue)
       const files = event.target.files;
-
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
         const fileSizeExceeded = newFiles.some(
@@ -25,6 +25,7 @@ export default function FileUpload({ id }: { id: string }) {
           return;
         }
         setSelectedFiles([...selectedFiles, ...newFiles]);
+        console.log("for 2", id);
         const newPreviewUrls = newFiles.map((file) => {
           const reader = new FileReader();
           reader.readAsDataURL(file);
@@ -34,15 +35,18 @@ export default function FileUpload({ id }: { id: string }) {
             };
           });
         });
-
         void Promise.all(newPreviewUrls).then((urls) => {
           setPreviewUrls([...previewUrls, ...urls]);
           updateFiles(newFiles);
         });
       }
+      console.log(previewUrls, "urls");
     },
-    [previewUrls, selectedFiles, updateFiles]
+
+    [previewUrls, selectedFiles, id, updateFiles]
   );
+
+  const inputId = `fileInput${id}`;
 
   // ...
 
@@ -56,7 +60,7 @@ export default function FileUpload({ id }: { id: string }) {
       setPreviewUrls(newPreviewUrls);
       removeFiles(index);
     },
-    [previewUrls, removeFiles, selectedFiles]
+    [previewUrls, selectedFiles, removeFiles]
   );
 
   return (
@@ -65,13 +69,15 @@ export default function FileUpload({ id }: { id: string }) {
         {previewUrls.map((url, index) => (
           <div key={url} className="group relative cursor-pointer">
             {selectedFiles[index]?.type?.startsWith("image/") ? (
-              <Image
-                src={url}
-                alt={`File Preview ${index + 1}`}
-                style={{ maxWidth: "100%", maxHeight: "100px" }}
-                width={100}
-                height={100}
-              />
+              <>
+                <Image
+                  src={url}
+                  alt={`File Preview ${index + 1}`}
+                  style={{ maxWidth: "100%", maxHeight: "100px" }}
+                  width={100}
+                  height={100}
+                />
+              </>
             ) : (
               <video controls style={{ maxWidth: "100%", maxHeight: "100px" }}>
                 <source src={url} type={selectedFiles[index]?.type} />
@@ -87,12 +93,15 @@ export default function FileUpload({ id }: { id: string }) {
           </div>
         ))}
       </div>
-      <label htmlFor="fileInput" className="my-2 block w-fit cursor-pointer">
+      <label htmlFor={inputId} className="my-2  cursor-pointer">
         <input
           type="file"
-          id="fileInput"
-          className="hidden w-14"
-          onChange={handleFileChange}
+          id={inputId}
+          className="hidden"
+          onChange={
+            handleFileChange
+            // updateFiles(selectedFiles);
+          }
           multiple
           accept="image/*,video/*"
         />

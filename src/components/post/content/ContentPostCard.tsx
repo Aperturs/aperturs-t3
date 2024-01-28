@@ -1,5 +1,6 @@
-import { shallow } from "zustand/shallow";
-import { useStore } from "~/store/post-store";
+import { useCallback, useEffect, useState, type ChangeEvent } from "react";
+import toast from "react-hot-toast";
+import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";
 import usePostUpdate from "./handleContent";
 import ContentPostCreation from "./textarea";
@@ -16,15 +17,19 @@ import ContentPostCreation from "./textarea";
 // }
 
 function ContentPostCard({ id }: { id: string }) {
-  const { defaultContent } = useStore(
-    (state) => ({
-      defaultContent: state.defaultContent,
-    }),
-    shallow
-  );
   // const [sync, setSync] = useState(false);
 
   const { updateContent, contentValue } = usePostUpdate(id);
+  const [content, setContent] = useState<string>(contentValue);
+  const debounceContent = useDebounce(content, 1000);
+
+  useEffect(
+    () => {
+      updateContent(debounceContent);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [debounceContent]
+  );
 
   // const onChangeContent = (textContent: string) => {
   //   if (id === SocialType.Default) {
@@ -58,8 +63,8 @@ function ContentPostCard({ id }: { id: string }) {
   return (
     <div className="w-full rounded-lg bg-white p-4 shadow-md">
       <ContentPostCreation
-        content={contentValue}
-        onContentChange={updateContent}
+        content={content}
+        onContentChange={setContent}
         // sync={sync}
       />
       <FileUpload id={id} />

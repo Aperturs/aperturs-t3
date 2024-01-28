@@ -20,12 +20,12 @@ export default function SocialTabs() {
     <div className="w-full">
       <Tabs value={SocialType.Default}>
         <TabsHeader className="h-10">
-          <Tab value={SocialType.Default}>
+          {/* <Tab value={SocialType.Default}>
             <div className="flex items-center gap-2">
-              {/* <AiOutlineTwitter /> */}
+              <AiOutlineTwitter />
               Default
             </div>
-          </Tab>
+          </Tab> */}
           {content.map(
             (item) =>
               item.unique && (
@@ -39,7 +39,7 @@ export default function SocialTabs() {
                 </Tab>
               )
           )}
-          <SocialsMenu />
+          {content.length > 2 && <SocialsMenu />}
         </TabsHeader>
         <TabsBody>
           {content.map(
@@ -54,9 +54,9 @@ export default function SocialTabs() {
                 </TabPanel>
               )
           )}
-          <TabPanel value={SocialType.Default}>
+          {/* <TabPanel value={SocialType.Default}>
             <ContentPostCard id={SocialType.Default} />
-          </TabPanel>
+          </TabPanel> */}
         </TabsBody>
       </Tabs>
     </div>
