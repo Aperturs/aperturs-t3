@@ -4,7 +4,7 @@ import React from "react";
 interface ContentCreationProps {
   content: string;
   onContentChange: (newContent: string) => void;
-  sync: boolean;
+  sync?: boolean;
 }
 
 const ContentCreation: React.FC<ContentCreationProps> = ({

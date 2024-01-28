@@ -1,46 +1,63 @@
 import Image from "next/image";
-import { useState, type ChangeEvent } from "react";
+import { useCallback, useState, type ChangeEvent } from "react";
+import toast from "react-hot-toast";
 import { FaCamera } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import usePostUpdate from "./handleContent";
 
-export default function FileUpload() {
+export default function FileUpload({ id }: { id: string }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
+  const { updateFiles, removeFiles } = usePostUpdate(id);
 
-    if (files && files.length > 0) {
-      // Set the selected files
-      const newFiles = Array.from(files);
-      setSelectedFiles([...selectedFiles, ...newFiles]);
+  const handleFileChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
 
-      // Create a FileReader for each file to generate a preview
-      const newPreviewUrls = newFiles.map((file) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        return new Promise<string>((resolve) => {
-          reader.onloadend = () => {
-            resolve(reader.result as string);
-          };
+      if (files && files.length > 0) {
+        const newFiles = Array.from(files);
+        const fileSizeExceeded = newFiles.some(
+          (file) => file.size > 50 * 1024 * 1024
+        ); // 30MB
+        if (fileSizeExceeded) {
+          toast.error("Maximum file size is 50MB");
+          return;
+        }
+        setSelectedFiles([...selectedFiles, ...newFiles]);
+        const newPreviewUrls = newFiles.map((file) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          return new Promise<string>((resolve) => {
+            reader.onloadend = () => {
+              resolve(reader.result as string);
+            };
+          });
         });
-      });
 
-      void Promise.all(newPreviewUrls).then((urls) => {
-        setPreviewUrls([...previewUrls, ...urls]);
-      });
-    }
-  };
+        void Promise.all(newPreviewUrls).then((urls) => {
+          setPreviewUrls([...previewUrls, ...urls]);
+          updateFiles(newFiles);
+        });
+      }
+    },
+    [previewUrls, selectedFiles, updateFiles]
+  );
 
-  const handleRemove = (index: number) => {
-    const newSelectedFiles = [...selectedFiles];
-    newSelectedFiles.splice(index, 1);
-    setSelectedFiles(newSelectedFiles);
+  // ...
 
-    const newPreviewUrls = [...previewUrls];
-    newPreviewUrls.splice(index, 1);
-    setPreviewUrls(newPreviewUrls);
-  };
+  const handleRemove = useCallback(
+    (index: number) => {
+      const newSelectedFiles = [...selectedFiles];
+      newSelectedFiles.splice(index, 1);
+      setSelectedFiles(newSelectedFiles);
+      const newPreviewUrls = [...previewUrls];
+      newPreviewUrls.splice(index, 1);
+      setPreviewUrls(newPreviewUrls);
+      removeFiles(index);
+    },
+    [previewUrls, removeFiles, selectedFiles]
+  );
 
   return (
     <div>
@@ -62,7 +79,7 @@ export default function FileUpload() {
               </video>
             )}
             <button
-              className="absolute right-0 top-0 z-10 hidden place-content-center bg-opacity-25  p-1 text-xl  text-white transition-all ease-in-out group-hover:grid"
+              className="absolute right-0 top-0 z-10 hidden place-content-center p-1 text-xl  text-red-400 transition-all ease-in-out group-hover:grid"
               onClick={() => handleRemove(index)}
             >
               <MdDelete />
@@ -70,16 +87,16 @@ export default function FileUpload() {
           </div>
         ))}
       </div>
-      <label htmlFor="fileInput" className="cursor-pointer">
+      <label htmlFor="fileInput" className="my-2 block w-fit cursor-pointer">
         <input
           type="file"
           id="fileInput"
-          className="hidden"
+          className="hidden w-14"
           onChange={handleFileChange}
           multiple
           accept="image/*,video/*"
         />
-        <FaCamera />
+        <FaCamera className="text-xl" />
       </label>
     </div>
   );

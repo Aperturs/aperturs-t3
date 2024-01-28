@@ -17,4 +17,5 @@ interface PostContent {
   socialType: string;
   content: string;
   unique: boolean;
+  files: File[] | null;
 }

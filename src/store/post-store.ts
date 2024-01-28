@@ -1,5 +1,6 @@
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
+import { SocialType } from "~/types/post-enums";
 
 type StateValues = {
   defaultContent: string;
@@ -27,7 +28,16 @@ const initialState: StateValues = {
   tweets: [{ id: 0, text: "" }],
   date: null,
   time: "00:00",
-  content: [],
+  content: [
+    // {
+    //   id: SocialType.Default,
+    //   name: "Default",
+    //   socialType: SocialType.Default,
+    //   content: "",
+    //   unique: false,
+    //   files: null,
+    // },
+  ],
 };
 
 export const useStore = createWithEqualityFn<State>(
