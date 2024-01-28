@@ -1,11 +1,11 @@
 import { Spinner } from "@material-tailwind/react";
 import { SocialType } from "~/types/post-enums";
-import { api } from "~/utils/api";
 import ConnectedAccount from "./connections";
 import Publish from "./publish";
 
 const SideBar = () => {
-  const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
+  // const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
+  const isLoading = false;
 
   return (
     <div className="z-20 w-full rounded-lg bg-white p-4 px-8 shadow-xl  shadow-blue-gray-900/5 lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
@@ -17,7 +17,7 @@ const SideBar = () => {
           <Publish />
           <span className="my-2 text-xl">Publish Post</span>
           <div className="grid grid-cols-3 place-items-start gap-3">
-            {data?.map((item) =>
+            {/* {data?.map((item) =>
               item.type === SocialType.Github ? null : (
                 <ConnectedAccount
                   key={item.data.tokenId}
@@ -27,7 +27,7 @@ const SideBar = () => {
                   id={item.data.tokenId}
                 />
               )
-            )}
+            )} */}
             {/* TODO: Add lens profile */}
             {/* {profile && (
             <ConnectedAccount
@@ -37,7 +37,7 @@ const SideBar = () => {
               profilePic={lensProfile.imageUrl}
             />
           )} */}
-            {/* <ConnectedAccount
+            <ConnectedAccount
             id="2"
             name="Swaraj"
             type={SocialType.Twitter}
@@ -54,7 +54,7 @@ const SideBar = () => {
             name="Swaraj"
             type={SocialType.Twitter}
             profilePic={"/user.png"}
-          /> */}
+          />
           </div>
         </div>
       )}

@@ -4,6 +4,7 @@ import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import ContentPostCreation from "./textarea";
+import FileUpload from "./fileUpload";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
@@ -78,6 +79,7 @@ function ContentPostCard({ id }: { id: string }) {
           crossOrigin=""
         />
       )}
+      <FileUpload />
     </div>
   );
 }
