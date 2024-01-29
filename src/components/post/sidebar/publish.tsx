@@ -10,19 +10,22 @@ import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 
 function Publish() {
-  const { tweets, defaultContent, content, date, time, reset, shouldReset } =
-    useStore(
-      (state) => ({
-        tweets: state.tweets,
-        defaultContent: state.defaultContent,
-        content: state.content,
-        date: state.date,
-        time: state.time,
-        reset: state.reset,
-        shouldReset: state.shouldReset,
-      }),
-      shallow
-    );
+  const {
+    content,
+    date,
+    time,
+    reset,
+    shouldReset: isUploaded,
+  } = useStore(
+    (state) => ({
+      content: state.content,
+      date: state.date,
+      time: state.time,
+      reset: state.reset,
+      shouldReset: state.shouldReset,
+    }),
+    shallow
+  );
   const {
     mutateAsync: createTweet,
     error: twitterError,
@@ -105,13 +108,11 @@ function Publish() {
     if (isScheduling && !scheduledTime) {
       return toast.error("Please select a date and time");
     }
-    if (!defaultContent || !content)
-      return toast.error("Please add a post content");
+    if (!content) return toast.error("Please add a post content");
     await toast
       .promise(
         saveToDrafts({
           postContent: content,
-          defaultContent: defaultContent,
           scheduledTime:
             isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
         }),
@@ -149,7 +150,6 @@ function Publish() {
           updatePost({
             postId: id,
             postContent: content,
-            defaultContent: defaultContent,
             scheduledTime:
               isScheduling && scheduledTime
                 ? new Date(scheduledTime)
@@ -195,7 +195,7 @@ function Publish() {
     }
     try {
       let id = "";
-      if (shouldReset) {
+      if (isUploaded) {
         await handleUpdate({ isScheduling: true });
         id = router.query.id as string;
       } else {
@@ -249,7 +249,7 @@ function Publish() {
         }}
       />
       {/* <PostWeb content={defaultContent} /> */}
-      {shouldReset ? (
+      {isUploaded ? (
         <SimpleButton
           text="Update Post"
           isLoading={updating}

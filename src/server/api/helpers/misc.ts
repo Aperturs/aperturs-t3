@@ -1,5 +1,5 @@
 import { prisma } from "~/server/db";
-import { type SavePostInput } from "../types";
+import { type SavePostInput } from "../../../types/post-types";
 
 export const ConnectSocial = async ({
   user,
@@ -45,7 +45,7 @@ export const saveDraft = async ({
         clerkUserId: user,
         status: input.scheduledTime ? "SCHEDULED" : "SAVED",
         scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
-        defaultContent: input.defaultContent,
+        defaultContent: "",
         content: input.postContent,
       },
     });

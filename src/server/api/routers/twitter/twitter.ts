@@ -5,7 +5,7 @@ import { env } from "~/env.mjs";
 import { ConnectSocial } from "../../helpers/misc";
 import { postToTwitter } from "../../helpers/twitter";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { postTweetInputSchema } from "../../types";
+import { postTweetInputSchema } from "../../../../types/post-types";
 
 export const twitterData = createTRPCRouter({
   postTweet: protectedProcedure

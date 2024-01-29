@@ -1,31 +1,29 @@
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
 import { SocialType } from "~/types/post-enums";
+import { type PostContentType } from "~/types/post-types";
 
 type StateValues = {
-  defaultContent: string;
-  tweets: Tweet[];
+  // tweets: Tweet[];
   date: Date | null;
   time: string | null;
-  content: PostContent[];
+  content: PostContentType[];
 };
 
 type StateSetters = {
   shouldReset: boolean;
   setShouldReset: (shouldReset: boolean) => void;
-  setDefaultContent: (defaultContent: string) => void;
-  setTweets: (tweet: Tweet[]) => void;
+  // setTweets: (tweet: Tweet[]) => void;
   setDate: (date: Date | null) => void;
   setTime: (time: string | null) => void;
   reset: () => void;
-  setContent: (content: PostContent[]) => void;
+  setContent: (content: PostContentType[]) => void;
 };
 
 type State = StateValues & StateSetters;
 
 const initialState: StateValues = {
-  defaultContent: "",
-  tweets: [{ id: 0, text: "" }],
+  // tweets: [{ id: 0, text: "" }],
   date: null,
   time: "00:00",
   content: [
@@ -46,9 +44,7 @@ export const useStore = createWithEqualityFn<State>(
     shouldReset: false,
     setShouldReset: (shouldReset) =>
       set((state) => ({ ...state, shouldReset })),
-    setDefaultContent: (defaultContent) =>
-      set((state) => ({ ...state, defaultContent: defaultContent })),
-    setTweets: (tweets) => set((state) => ({ ...state, tweets })),
+    // setTweets: (tweets) => set((state) => ({ ...state, tweets })),
     setDate: (date) => set((state) => ({ ...state, date })),
     setTime: (time) => set((state) => ({ ...state, time })),
     setContent: (content) => set((state) => ({ ...state, content })),

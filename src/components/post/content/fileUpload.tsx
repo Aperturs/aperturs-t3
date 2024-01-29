@@ -13,7 +13,6 @@ export default function FileUpload({ id }: { id: string }) {
 
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      // console.log(contentValue)
       const files = event.target.files;
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
@@ -27,20 +26,14 @@ export default function FileUpload({ id }: { id: string }) {
         setSelectedFiles([...selectedFiles, ...newFiles]);
         console.log("for 2", id);
         const newPreviewUrls = newFiles.map((file) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          return new Promise<string>((resolve) => {
-            reader.onloadend = () => {
-              resolve(reader.result as string);
-            };
-          });
+          const url = URL.createObjectURL(file);
+          return url;
         });
         void Promise.all(newPreviewUrls).then((urls) => {
           setPreviewUrls([...previewUrls, ...urls]);
           updateFiles(newFiles);
         });
       }
-      console.log(previewUrls, "urls");
     },
 
     [previewUrls, selectedFiles, id, updateFiles]
@@ -67,7 +60,10 @@ export default function FileUpload({ id }: { id: string }) {
     <div>
       <div className="flex gap-2 overflow-x-auto">
         {previewUrls.map((url, index) => (
-          <div key={url} className="group relative cursor-pointer">
+          <div
+            key={url}
+            className="group relative cursor-pointer transition ease-in-out"
+          >
             {selectedFiles[index]?.type?.startsWith("image/") ? (
               <>
                 <Image
@@ -85,7 +81,7 @@ export default function FileUpload({ id }: { id: string }) {
               </video>
             )}
             <button
-              className="absolute right-0 top-0 z-10 hidden place-content-center p-1 text-xl  text-red-400 transition-all ease-in-out group-hover:grid"
+              className="transition-opacityy absolute right-0 top-0 z-10 hidden place-content-center p-1  text-xl  text-red-400 group-hover:grid"
               onClick={() => handleRemove(index)}
             >
               <MdDelete />

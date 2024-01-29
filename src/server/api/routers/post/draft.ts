@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { savePostInputSchema } from "../../../../types/post-types";
 import { limitDown, limitWrapper } from "../../helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { savePostInputSchema } from "../../types";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
@@ -18,7 +18,7 @@ export const posting = createTRPCRouter({
                 scheduledAt: input.scheduledTime
                   ? new Date(input.scheduledTime)
                   : null,
-                defaultContent: input.defaultContent,
+                defaultContent: "",
                 content: input.postContent,
                 projectId: input.projectId,
               },
@@ -60,7 +60,6 @@ export const posting = createTRPCRouter({
             content: z.string(),
           })
         ),
-        defaultContent: z.string(),
         scheduledTime: z.date().optional(),
       })
     )
@@ -73,7 +72,7 @@ export const posting = createTRPCRouter({
             scheduledAt: input.scheduledTime
               ? new Date(input.scheduledTime)
               : null,
-            defaultContent: input.defaultContent,
+            defaultContent: "",
             content: input.postContent,
           },
         });

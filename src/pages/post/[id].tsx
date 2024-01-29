@@ -4,6 +4,7 @@ import { shallow } from "zustand/shallow";
 import { Layout, PostView } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
 import { useStore } from "~/store/post-store";
+import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
 
 export default function Post() {
@@ -15,10 +16,8 @@ export default function Post() {
   //   id as string
   // );
   const [loading, setLoading] = useState(true);
-  const { setContent, setDefaultContent, setShouldReset } = useStore(
+  const { setContent, setShouldReset } = useStore(
     (state) => ({
-      setDefaultContent: state.setDefaultContent,
-      defaultContent: state.defaultContent,
       setContent: state.setContent,
       setShouldReset: state.setShouldReset,
     }),
@@ -32,16 +31,14 @@ export default function Post() {
       try {
         const data = getData.data;
         if (!data) return;
-        const defaultContent = data.defaultContent;
-        setDefaultContent(defaultContent);
-        const localContent = data.content as unknown as PostContent[];
+        const localContent = data.content as unknown as PostContentType[];
         setContent(localContent);
         setShouldReset(true);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  }, [getData.data, setDefaultContent, setContent, setShouldReset]);
+  }, [getData.data, setContent, setShouldReset]);
 
   useEffect(() => {
     fetchData();
