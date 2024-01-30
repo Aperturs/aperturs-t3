@@ -18,6 +18,12 @@ export const savePostInputSchema = z.object({
   projectId: z.string().optional(),
 });
 
+export const updatePostInputSchema = z.object({
+  postContent: z.array(postSchema.omit({ files: true })),
+  scheduledTime: z.date().optional(),
+  postId: z.string(),
+});
+
 export type SavePostInput = z.infer<typeof savePostInputSchema>;
 
 export const postTweetInputSchema = z.object({

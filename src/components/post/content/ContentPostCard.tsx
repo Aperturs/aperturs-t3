@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState, type ChangeEvent } from "react";
-import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";
 import usePostUpdate from "./handleContent";
@@ -19,7 +18,7 @@ import ContentPostCreation from "./textarea";
 function ContentPostCard({ id }: { id: string }) {
   // const [sync, setSync] = useState(false);
 
-  const { updateContent, contentValue } = usePostUpdate(id);
+  const { updateContent, contentValue, currentFiles } = usePostUpdate(id);
   const [content, setContent] = useState<string>(contentValue);
   const debounceContent = useDebounce(content, 1000);
 
@@ -67,7 +66,7 @@ function ContentPostCard({ id }: { id: string }) {
         onContentChange={setContent}
         // sync={sync}
       />
-      <FileUpload id={id} />
+      <FileUpload id={id} uploadedFiles={currentFiles} />
       {/* {id != SocialType.Default && (
         <Switch
           label="Sync with Default"

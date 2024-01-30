@@ -172,6 +172,7 @@ function Publish() {
             if (!isScheduling) {
               reset();
               await router.push("/drafts");
+              console.log(response, "response");
             }
           }
         });
@@ -233,8 +234,8 @@ function Publish() {
         <Picker />
         <SimpleButton
           text="Schedule"
-          isLoading={scheduling || saving}
-          disabled={content.length === 0}
+          isLoading={scheduling}
+          disabled={content.length === 0 || saving || updating}
           onClick={async () => {
             await handleSchedule();
           }}
@@ -243,7 +244,7 @@ function Publish() {
       <SimpleButton
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
-        disabled={content.length === 0}
+        disabled={content.length === 0 || saving || updating || scheduling}
         onClick={() => {
           handlePublish();
         }}
@@ -253,6 +254,13 @@ function Publish() {
         <SimpleButton
           text="Update Post"
           isLoading={updating}
+          disabled={
+            content.length === 0 ||
+            saving ||
+            scheduling ||
+            tweeting ||
+            linkedinPosting
+          }
           onClick={async () => {
             await handleUpdate({ isScheduling: false });
           }}
@@ -261,18 +269,22 @@ function Publish() {
         <SimpleButton
           isLoading={saving}
           text="Save to drafts"
+          disabled={
+            content.length === 0 || scheduling || tweeting || linkedinPosting
+          }
           onClick={async () => {
             await handleSave({ isScheduling: false });
           }}
         />
       )}
-      <SimpleButton
+      {/* <SimpleButton
         text="Add to Queue"
+        
         onClick={() => {
           // console.log("onClick event is triggered");
         }}
         disabled={content.length === 0}
-      />
+      /> */}
     </div>
   );
 }

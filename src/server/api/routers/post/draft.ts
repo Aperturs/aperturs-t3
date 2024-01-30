@@ -1,6 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { savePostInputSchema } from "../../../../types/post-types";
+import {
+  savePostInputSchema,
+  updatePostInputSchema,
+} from "../../../../types/post-types";
 import { limitDown, limitWrapper } from "../../helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
@@ -18,7 +21,6 @@ export const posting = createTRPCRouter({
                 scheduledAt: input.scheduledTime
                   ? new Date(input.scheduledTime)
                   : null,
-                defaultContent: "",
                 content: input.postContent,
                 projectId: input.projectId,
               },
@@ -50,19 +52,7 @@ export const posting = createTRPCRouter({
   }),
 
   updatePost: protectedProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-        postContent: z.array(
-          z.object({
-            id: z.string(),
-            socialType: z.string(),
-            content: z.string(),
-          })
-        ),
-        scheduledTime: z.date().optional(),
-      })
-    )
+    .input(updatePostInputSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         await ctx.prisma.post.update({
@@ -72,7 +62,6 @@ export const posting = createTRPCRouter({
             scheduledAt: input.scheduledTime
               ? new Date(input.scheduledTime)
               : null,
-            defaultContent: "",
             content: input.postContent,
           },
         });

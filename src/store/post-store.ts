@@ -34,6 +34,10 @@ const initialState: StateValues = {
       content: "",
       unique: true,
       files: [],
+      uploadedFiles: [
+        "https://images.unsplash.com/photo-1706313296876-ba53e6c1670b?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1706498133899-f1cf5a6af53e?q=80&w=3542&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      ],
     },
   ],
 };

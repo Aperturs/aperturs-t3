@@ -29,6 +29,7 @@ function usePostUpdate(id: string) {
         );
         setContent(updatedContent);
       }
+      console.log(content);
     },
     [content, id, setContent]
   );
@@ -62,8 +63,29 @@ function usePostUpdate(id: string) {
     [content, id, setContent]
   );
 
+  const removeUpdatedFiles = useCallback(
+    (index: number) => {
+      const updatedContent = content.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              uploadedFiles: (item.uploadedFiles || []).filter(
+                (_, i) => i !== index
+              ),
+            }
+          : item
+      );
+      setContent(updatedContent);
+    },
+    [content, id, setContent]
+  );
+
   const contentValue = useMemo(() => {
     return content.find((item) => item.id === id)?.content || "";
+  }, [id, content]);
+
+  const currentFiles = useMemo(() => {
+    return content.find((item) => item.id === id)?.uploadedFiles || [];
   }, [id, content]);
 
   return {
@@ -73,6 +95,8 @@ function usePostUpdate(id: string) {
     removeFiles,
     sync,
     setSync,
+    currentFiles,
+    removeUpdatedFiles,
   };
 }
 

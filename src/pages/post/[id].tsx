@@ -16,10 +16,11 @@ export default function Post() {
   //   id as string
   // );
   const [loading, setLoading] = useState(true);
-  const { setContent, setShouldReset } = useStore(
+  const { setContent, setShouldReset, content } = useStore(
     (state) => ({
       setContent: state.setContent,
       setShouldReset: state.setShouldReset,
+      content: state.content,
     }),
     shallow
   );
@@ -30,9 +31,12 @@ export default function Post() {
     return () => {
       try {
         const data = getData.data;
+        console.log(data, "data");
         if (!data) return;
         const localContent = data.content as unknown as PostContentType[];
+        console.log(localContent, "localContent");
         setContent(localContent);
+        console.log(content, "setContent");
         setShouldReset(true);
       } catch (error) {
         console.error("Error fetching data:", error);
