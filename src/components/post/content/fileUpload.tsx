@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import usePostUpdate from "./handleContent";
+import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
   const fileExtension = url.split(".");
@@ -24,8 +24,6 @@ export default function FileUpload({
 }) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-
-  console.log(previewUrls, "urls");
 
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
 
@@ -48,8 +46,8 @@ export default function FileUpload({
         });
         void Promise.all(newPreviewUrls).then((urls) => {
           setPreviewUrls([...previewUrls, ...urls]);
-          updateFiles(newFiles);
         });
+        updateFiles(newFiles);
       }
     },
 

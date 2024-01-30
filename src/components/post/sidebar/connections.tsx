@@ -34,6 +34,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           unique: false,
           content: content[0]?.content || "",
           files: [],
+          uploadedFiles: [],
         },
       ]);
     }

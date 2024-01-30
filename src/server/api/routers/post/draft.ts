@@ -54,6 +54,7 @@ export const posting = createTRPCRouter({
   updatePost: protectedProcedure
     .input(updatePostInputSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log(input.postContent);
       try {
         await ctx.prisma.post.update({
           where: { id: input.postId },

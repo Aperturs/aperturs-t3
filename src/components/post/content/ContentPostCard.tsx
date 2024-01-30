@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";
-import usePostUpdate from "./handleContent";
+import usePostUpdate from "./use-post-update";
 import ContentPostCreation from "./textarea";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {

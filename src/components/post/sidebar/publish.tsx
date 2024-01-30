@@ -8,6 +8,8 @@ import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
+import usePost from "../content/use-post";
+import { unknown } from "zod";
 
 function Publish() {
   const {
@@ -51,6 +53,12 @@ function Publish() {
     api.post.schedule.useMutation();
 
   const router = useRouter();
+
+  const {
+    uploadFilesAndModifyContent,
+    error: uploadingFilesError,
+    loading: uploadingFiles,
+  } = usePost();
 
   const handlePublish = () => {
     content.forEach(async (item) => {
@@ -109,20 +117,19 @@ function Publish() {
       return toast.error("Please select a date and time");
     }
     if (!content) return toast.error("Please add a post content");
-    await toast
-      .promise(
-        saveToDrafts({
-          postContent: content,
+
+    await toast.promise(
+      (async () => {
+        // Upload files and modify content
+        const newContent = await uploadFilesAndModifyContent();
+
+        // Save to drafts
+        const response = await saveToDrafts({
+          postContent: newContent,
           scheduledTime:
             isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
-        }),
-        {
-          loading: "Saving to drafts...",
-          success: "Saved to drafts",
-          error: "Failed to save to drafts",
-        }
-      )
-      .then(async (response) => {
+        });
+
         if (response.success) {
           if (!isScheduling) {
             reset();
@@ -130,7 +137,13 @@ function Publish() {
           }
           postId = response.data;
         }
-      });
+      })(),
+      {
+        loading: "Saving to drafts...",
+        success: "Saved to drafts",
+        error: "Failed to save to drafts",
+      }
+    );
     return postId;
   };
 
@@ -145,29 +158,22 @@ function Publish() {
         : undefined;
     try {
       const id = router.query.id as string;
-      await toast
-        .promise(
-          updatePost({
+      await toast.promise(
+        (async () => {
+          // Update post
+          console.log("updating files");
+          const newContent = await uploadFilesAndModifyContent();
+          console.log("files updated", newContent);
+
+          const response = await updatePost({
             postId: id,
-            postContent: content,
+            postContent: newContent,
             scheduledTime:
               isScheduling && scheduledTime
                 ? new Date(scheduledTime)
                 : undefined,
-          }),
-          {
-            loading: `${
-              isScheduling
-                ? "saving and is getting ready to schedule"
-                : "Updating post..."
-            }`,
-            success: `${
-              isScheduling ? "saved and is ready to schedule" : "Updated post"
-            }`,
-            error: `Failed to update post`,
-          }
-        )
-        .then(async (response) => {
+          });
+
           if (response.success) {
             if (!isScheduling) {
               reset();
@@ -175,9 +181,21 @@ function Publish() {
               console.log(response, "response");
             }
           }
-        });
+        })(),
+        {
+          loading: `${
+            isScheduling
+              ? "saving and is getting ready to schedule"
+              : "Updating post..."
+          }`,
+          success: `${
+            isScheduling ? "saved and is ready to schedule" : "Updated post"
+          }`,
+          error: `Failed to update post`,
+        }
+      );
     } catch (err) {
-      toast.error(`Failed to update post`);
+      toast.error(`Failed to update post ${err as string}`);
     }
   };
 
@@ -253,7 +271,7 @@ function Publish() {
       {isUploaded ? (
         <SimpleButton
           text="Update Post"
-          isLoading={updating}
+          isLoading={updating || uploadingFiles}
           disabled={
             content.length === 0 ||
             saving ||
@@ -267,7 +285,7 @@ function Publish() {
         />
       ) : (
         <SimpleButton
-          isLoading={saving}
+          isLoading={saving || uploadingFiles}
           text="Save to drafts"
           disabled={
             content.length === 0 || scheduling || tweeting || linkedinPosting

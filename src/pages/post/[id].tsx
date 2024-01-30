@@ -16,11 +16,10 @@ export default function Post() {
   //   id as string
   // );
   const [loading, setLoading] = useState(true);
-  const { setContent, setShouldReset, content } = useStore(
+  const { setContent, setShouldReset } = useStore(
     (state) => ({
       setContent: state.setContent,
       setShouldReset: state.setShouldReset,
-      content: state.content,
     }),
     shallow
   );
@@ -31,30 +30,26 @@ export default function Post() {
     return () => {
       try {
         const data = getData.data;
-        console.log(data, "data");
         if (!data) return;
         const localContent = data.content as unknown as PostContentType[];
-        console.log(localContent, "localContent");
         setContent(localContent);
-        console.log(content, "setContent");
-        setShouldReset(true);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  }, [getData.data, setContent, setShouldReset]);
+  }, [getData.data, setContent]);
 
   useEffect(() => {
+    setShouldReset(true);
     fetchData();
-
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 2-second delay
+    }, 1000); // 2-second delay
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [fetchData]);
+  }, [fetchData, setShouldReset]);
 
   if (loading || getData.isLoading) return <LogoLoad size="24" />;
   if (getData.error) return <div>{getData.error.message}</div>;

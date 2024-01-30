@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, type ReactElement } from "react";
+import { useLayoutEffect, type ReactElement } from "react";
 import { Layout, PostView } from "~/components";
 import { useStore } from "~/store/post-store";
 
@@ -11,7 +11,7 @@ export default function Post() {
   }));
   const router = useRouter();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (shouldReset) reset();
 
     setShouldReset(false);

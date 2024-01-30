@@ -11,6 +11,7 @@ function usePostUpdate(id: string) {
     }),
     shallow
   );
+
   const [sync, setSync] = useState(false);
 
   const updateContent = useCallback(
@@ -36,10 +37,16 @@ function usePostUpdate(id: string) {
 
   const updateFiles = useCallback(
     (newFiles: File[]) => {
+      console.log(newFiles, "from updateFiles");
       if (id === SocialType.Default) {
         const updatedContent = content.map((item) =>
-          !item.unique ? { ...item, files: newFiles } : item
+          !item.unique
+            ? { ...item, files: newFiles }
+            : item.id === SocialType.Default
+            ? { ...item, files: newFiles }
+            : item
         );
+        console.log(updatedContent, "updated");
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
@@ -47,6 +54,7 @@ function usePostUpdate(id: string) {
         );
         setContent(updatedContent);
       }
+      console.log(content, "from updateFiles");
     },
     [content, id, setContent]
   );
@@ -55,7 +63,7 @@ function usePostUpdate(id: string) {
     (index: number) => {
       const updatedContent = content.map((item) =>
         item.id === id
-          ? { ...item, files: item.files?.filter((_, i) => i !== index) || [] }
+          ? { ...item, files: item.files.filter((_, i) => i !== index) || [] }
           : item
       );
       setContent(updatedContent);
@@ -69,9 +77,7 @@ function usePostUpdate(id: string) {
         item.id === id
           ? {
               ...item,
-              uploadedFiles: (item.uploadedFiles || []).filter(
-                (_, i) => i !== index
-              ),
+              uploadedFiles: item.uploadedFiles.filter((_, i) => i !== index),
             }
           : item
       );

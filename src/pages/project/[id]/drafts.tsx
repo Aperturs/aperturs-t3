@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { type ReactElement } from "react";
 import { DraftCard, Layout, ProjectLayout } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
-import { PostContentType } from "~/types/post-types";
+import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
 
 const DraftPage = () => {
