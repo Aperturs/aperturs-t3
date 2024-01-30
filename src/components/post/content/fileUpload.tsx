@@ -1,7 +1,9 @@
+import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
 import { useCallback, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
+import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import usePostUpdate from "./handleContent";
 
@@ -121,32 +123,59 @@ export default function FileUpload({
           </div>
         ))}
       </div>
-      <label htmlFor={inputId} className="my-2  cursor-pointer">
-        <input
-          type="file"
-          id={inputId}
-          className="hidden"
-          onChange={handleFileChange}
-          accept="image/*,video/*"
-        />
-        <BsFillImageFill className="text-xl" />
-      </label>
+      <Tooltip placement="top" content="Add Image/Video">
+        <label htmlFor={inputId} className="my-2  block w-8 cursor-pointer">
+          <input
+            type="file"
+            id={inputId}
+            className="hidden w-8"
+            onChange={handleFileChange}
+            accept="image/*,video/*"
+          />
+          <BsFillImageFill className="text-xl" />
+        </label>
+      </Tooltip>
     </div>
   );
 }
 
-interface deleteImageProps {
+interface DeleteImageProps {
   handleRemove: (index: number) => void;
   index: number;
 }
 
-function DeleteImage({ handleRemove, index }: deleteImageProps) {
+function DeleteImage({ handleRemove, index }: DeleteImageProps) {
+  const [clickedOnce, setClickedOnce] = useState(false);
+
+  const handleClick = () => {
+    if (clickedOnce) {
+      // If already clicked once, perform the removal
+      handleRemove(index);
+    } else {
+      // If not clicked once, set the state to indicate the first click
+      setClickedOnce(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    // Reset the state when the mouse leaves, so it goes back to the initial state
+    setClickedOnce(false);
+  };
+
   return (
-    <button
-      className="absolute right-1 top-1 z-10 grid -translate-y-1 transform place-content-center rounded-2xl bg-secondary p-1 text-sm text-red-400 opacity-0 transition-all delay-100 duration-100 group-hover:opacity-100"
-      onClick={() => handleRemove(index)}
+    <Tooltip
+      placement="top"
+      content={clickedOnce ? "Click again to remove" : "Remove"}
     >
-      <MdDelete />
-    </button>
+      <button
+        className={`absolute right-1 top-1 z-10 grid  place-content-center rounded-2xl p-1 text-sm ${
+          clickedOnce ? "bg-red-400 text-white" : "bg-secondary text-red-400"
+        } opacity-0 transition-all delay-100 duration-100 group-hover:opacity-100`}
+        onClick={handleClick}
+        onMouseLeave={handleMouseLeave}
+      >
+        {clickedOnce ? <FaCheck /> : <MdDelete />}
+      </button>
+    </Tooltip>
   );
 }
