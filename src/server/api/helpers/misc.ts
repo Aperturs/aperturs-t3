@@ -45,7 +45,6 @@ export const saveDraft = async ({
         clerkUserId: user,
         status: input.scheduledTime ? "SCHEDULED" : "SAVED",
         scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
-        defaultContent: "",
         content: input.postContent,
       },
     });

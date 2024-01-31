@@ -10,6 +10,7 @@ export function defaultContent(content: string): PostContentType[] {
       content: content,
       unique: true,
       files: [],
+      uploadedFiles: [],
     },
   ];
 }
