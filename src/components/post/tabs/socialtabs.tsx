@@ -18,47 +18,38 @@ export default function SocialTabs() {
 
   return (
     <div className="w-full">
-      <Tabs value={SocialType.Default}>
-        <TabsHeader className="h-10">
-          {/* <Tab value={SocialType.Default}>
-            <div className="flex items-center gap-2">
-              <AiOutlineTwitter />
-              Default
-            </div>
-          </Tab> */}
-          {content.map(
-            (item) =>
-              item.unique && (
-                <Tab value={item.id} key={item.id}>
-                  <div className="flex items-center gap-2 capitalize">
-                    <SocialIcon type={item.socialType} />
-                    {typeof item.socialType === "string"
-                      ? item.socialType.toLowerCase()
-                      : ""}
-                  </div>
-                </Tab>
-              )
-          )}
-          {content.length > 2 && <SocialsMenu />}
-        </TabsHeader>
-        <TabsBody>
-          {content.map(
-            (item) =>
-              item.unique && (
-                <TabPanel key={item.id} value={item.id}>
-                  {/* {item.socialType === SocialType.Twitter ? (
-                <TweetPost />
-              ) : ( */}
-                  <ContentPostCard id={item.id} />
-                  {/* )} */}
-                </TabPanel>
-              )
-          )}
-          {/* <TabPanel value={SocialType.Default}>
-            <ContentPostCard id={SocialType.Default} />
-          </TabPanel> */}
-        </TabsBody>
-      </Tabs>
+      {content.length > 2 ? (
+        <Tabs value={SocialType.Default}>
+          <TabsHeader className="h-10">
+            {content.map(
+              (item) =>
+                item.unique && (
+                  <Tab value={item.id} key={item.id}>
+                    <div className="flex items-center gap-2 capitalize">
+                      <SocialIcon type={item.socialType} />
+                      {typeof item.socialType === "string"
+                        ? item.socialType.toLowerCase()
+                        : ""}
+                    </div>
+                  </Tab>
+                )
+            )}
+            <SocialsMenu />
+          </TabsHeader>
+          <TabsBody>
+            {content.map(
+              (item) =>
+                item.unique && (
+                  <TabPanel key={item.id} value={item.id}>
+                    <ContentPostCard id={item.id} />
+                  </TabPanel>
+                )
+            )}
+          </TabsBody>
+        </Tabs>
+      ) : (
+        <ContentPostCard id={SocialType.Default} />
+      )}
     </div>
   );
 }
