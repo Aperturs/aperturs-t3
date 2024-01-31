@@ -20,6 +20,11 @@ module.exports = withMT({
       },
     },
   },
+  variants: {
+    extend: {
+      animation: ["group-hover"],
+    },
+  },
   daisyui: {
     themes: [
       {

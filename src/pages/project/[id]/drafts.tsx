@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { type ReactElement } from "react";
 import { DraftCard, Layout, ProjectLayout } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
+import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
 
 const DraftPage = () => {
@@ -38,7 +39,9 @@ const DraftPage = () => {
           <DraftCard
             key={post.id}
             id={post.id}
-            content={post.defaultContent}
+            content={
+              (post.content as any as PostContentType[])[0]?.content || ""
+            }
             refetch={refetch}
           />
         ))}

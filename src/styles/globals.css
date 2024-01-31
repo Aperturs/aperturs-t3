@@ -40,3 +40,7 @@
   margin: 0px 0px !important;
   margin-right: 0px !important;
 }
+
+.transition-opacityy {
+  transition: opacity 0.3s ease-in-out;
+}

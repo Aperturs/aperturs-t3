@@ -4,6 +4,7 @@ import https from "https";
 import { z } from "zod";
 import { env } from "~/env.mjs";
 import { SocialType } from "~/types/post-enums";
+import { type PostContentType } from "~/types/post-types";
 import { postToLinkedin } from "../../helpers/linkedln";
 import { postToTwitter } from "../../helpers/twitter";
 import {
@@ -27,7 +28,7 @@ export const post = createTRPCRouter({
           },
         });
         if (post) {
-          const content = post.content as unknown as PostContent[];
+          const content = post.content as unknown as PostContentType[];
           content.forEach(async (item) => {
             switch (item.socialType) {
               case `${SocialType.Twitter}`:

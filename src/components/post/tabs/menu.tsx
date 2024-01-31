@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { useStore } from "~/store/post-store";
+import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
 
 function SocialsMenu() {
@@ -35,6 +36,7 @@ function SocialsMenu() {
       </MenuHandler>
       <MenuList>
         {content.map((item) => {
+          if (item.socialType === SocialType.Default) return null;
           return (
             <MenuItem key={item.id}>
               <MenuItems
@@ -67,10 +69,9 @@ const MenuItems = ({
   id: string;
   unique: boolean;
 }) => {
-  const { setContent, content, defaultContent } = useStore((state) => ({
+  const { setContent, content } = useStore((state) => ({
     setContent: state.setContent,
     content: state.content,
-    defaultContent: state.defaultContent,
   }));
 
   const [checked, setChecked] = useState<boolean>(unique);
@@ -90,11 +91,12 @@ const MenuItems = ({
       });
     } else {
       setChecked(true);
+      console.log(content[0]?.content);
       updatedContent = content.map((item) => {
         if (item.id === id) {
           return {
             ...item,
-            content: defaultContent,
+            content: content[0]?.content || "",
             unique: true,
           };
         }
