@@ -9,7 +9,6 @@ import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 import usePost from "../content/use-post";
-import { unknown } from "zod";
 
 function Publish() {
   const {
@@ -253,7 +252,9 @@ function Publish() {
         <SimpleButton
           text="Schedule"
           isLoading={scheduling}
-          disabled={content.length === 0 || saving || updating}
+          disabled={
+            content.length === 0 || saving || updating || uploadingFiles
+          }
           onClick={async () => {
             await handleSchedule();
           }}
@@ -288,7 +289,11 @@ function Publish() {
           isLoading={saving || uploadingFiles}
           text="Save to drafts"
           disabled={
-            content.length === 0 || scheduling || tweeting || linkedinPosting
+            content.length === 0 ||
+            scheduling ||
+            tweeting ||
+            linkedinPosting ||
+            uploadingFiles
           }
           onClick={async () => {
             await handleSave({ isScheduling: false });

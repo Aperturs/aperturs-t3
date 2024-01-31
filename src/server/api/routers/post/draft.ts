@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   savePostInputSchema,
   updatePostInputSchema,
+  type PostContentType,
 } from "../../../../types/post-types";
 import { limitDown, limitWrapper } from "../../helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
@@ -94,7 +95,18 @@ export const posting = createTRPCRouter({
       const post = await ctx.prisma.post.findUnique({
         where: { id: input },
       });
-      return post;
+
+      const localPost = post?.content as unknown as PostContentType[];
+      const contentWithEmptyFiles = localPost.map((post) => ({
+        ...post,
+        files: post.files ?? [],
+      }));
+
+      return {
+        scheduledAt: post?.scheduledAt,
+        organizationId: post?.organizationId,
+        content: contentWithEmptyFiles,
+      };
     }),
 
   getSavedPostsByProjectId: protectedProcedure

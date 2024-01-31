@@ -29,15 +29,17 @@ export default function Post() {
   const fetchData = useMemo(() => {
     return () => {
       try {
+        console.log("runing fetchData");
         const data = getData.data;
         if (!data) return;
-        const localContent = data.content as unknown as PostContentType[];
+        const localContent = data.content;
+
         setContent(localContent);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  }, [getData.data, setContent]);
+  }, [getData.data]);
 
   useEffect(() => {
     setShouldReset(true);

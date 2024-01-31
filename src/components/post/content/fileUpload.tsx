@@ -166,8 +166,8 @@ function DeleteImage({ handleRemove, index }: DeleteImageProps) {
       content={clickedOnce ? "Click again to remove" : "Remove"}
     >
       <button
-        className={`absolute right-1 top-1 z-10 grid  place-content-center rounded-2xl p-1 text-sm ${
-          clickedOnce ? "bg-red-400 text-white" : "bg-secondary text-red-400"
+        className={`absolute right-1 top-1 z-10 grid  place-content-center rounded-2xl bg-blue-gray-800 p-2 text-sm ${
+          clickedOnce ? " text-yellow-700" : " text-red-700"
         } opacity-0 transition-all delay-100 duration-100 group-hover:opacity-100`}
         onClick={handleClick}
         onMouseLeave={handleMouseLeave}

@@ -6,7 +6,7 @@ const postSchema = z.object({
   socialType: z.string(),
   content: z.string(),
   unique: z.boolean(),
-  files: z.array(z.instanceof(File)),
+  files: z.array(z.instanceof(File)).default([]),
   uploadedFiles: z.array(z.string()),
 });
 

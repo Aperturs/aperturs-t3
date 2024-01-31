@@ -30,20 +30,21 @@ export default function usePost() {
           console.log("inside updatedContent");
           for (const file of post.files) {
             // Check if a similar file has already been uploaded
-            if (localUploadedFiles[file.name]) {
+            const fileName = file.name;
+            if (localUploadedFiles[fileName]) {
               // File already uploaded, use the existing URL
               console.log(
                 "pusing existing file",
-                localUploadedFiles[file.name] as string
+                localUploadedFiles[fileName] as string
               );
-              postUploadedFiles.push(localUploadedFiles[file.name] as string);
+              postUploadedFiles.push(localUploadedFiles[fileName] as string);
             } else {
               // File not uploaded yet, upload it
               const { url } = await uploadToS3(file);
               console.log("pusing new file", url);
               postUploadedFiles.push(url);
-
-              localUploadedFiles[file.name] = url;
+              localUploadedFiles[fileName] = url;
+              console.log("localUploadedFiles", localUploadedFiles);
             }
           }
 
