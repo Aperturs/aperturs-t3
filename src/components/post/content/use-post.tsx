@@ -20,51 +20,47 @@ export default function usePost() {
     setLoading(true);
     console.log("uploading files");
 
-    const updatedContent = await Promise.all(
-      content.map(async (post) => {
-        console.log("inside promise all", post.files?.length);
-        if (post.files && post.files.length > 0) {
-          const postUploadedFiles: string[] = post.uploadedFiles
-            ? [...post.uploadedFiles]
-            : [];
-          console.log("inside updatedContent");
-          for (const file of post.files) {
-            // Check if a similar file has already been uploaded
-            const fileName = file.name;
-            if (localUploadedFiles[fileName]) {
-              // File already uploaded, use the existing URL
-              console.log(
-                "pusing existing file",
-                localUploadedFiles[fileName] as string
-              );
-              postUploadedFiles.push(localUploadedFiles[fileName] as string);
-            } else {
-              // File not uploaded yet, upload it
-              const { url } = await uploadToS3(file);
-              console.log("pusing new file", url);
-              postUploadedFiles.push(url);
-              localUploadedFiles[fileName] = url;
-              console.log("localUploadedFiles", localUploadedFiles);
-            }
-          }
+    const updatedContent = [];
 
-          setLoading(false);
-          // Update the post with uploaded files and remove the files array
-          return {
-            ...post,
-            uploadedFiles: postUploadedFiles,
-            files: [],
-          };
-        } else {
-          // No files to upload, keep the post as is
-          return post;
+    for (const post of content) {
+      console.log("inside for loop", post.files?.length);
+      if (post.files && post.files.length > 0) {
+        const postUploadedFiles: string[] = post.uploadedFiles
+          ? [...post.uploadedFiles]
+          : [];
+        console.log("inside updatedContent");
+        for (const file of post.files) {
+          // Check if a similar file has already been uploaded
+          const fileName = file.name;
+          if (!localUploadedFiles[fileName]) {
+            // File not uploaded yet, upload it
+            const { url } = await uploadToS3(file);
+            console.log("pusing new file", url);
+            postUploadedFiles.push(url);
+            localUploadedFiles[fileName] = url;
+            console.log("localUploadedFiles", localUploadedFiles);
+          } else {
+            // File already uploaded, use the existing URL
+            console.log(
+              "pusing existing file",
+              localUploadedFiles[fileName] as string
+            );
+            postUploadedFiles.push(localUploadedFiles[fileName] as string);
+          }
         }
-      })
-    ).catch((error) => {
-      setError(error as Error);
-      setLoading(false);
-      return content;
-    });
+
+        setLoading(false);
+        // Update the post with uploaded files and remove the files array
+        updatedContent.push({
+          ...post,
+          uploadedFiles: postUploadedFiles,
+          files: [],
+        });
+      } else {
+        // No files to upload, keep the post as is
+        updatedContent.push(post);
+      }
+    }
 
     // Update the global state with the modified content
     return updatedContent;
