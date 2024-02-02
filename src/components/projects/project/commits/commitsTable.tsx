@@ -14,6 +14,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/utils/api";
+import { defaultContent } from "~/utils/basic-functions";
 
 const staggerVariants = {
   hidden: { opacity: 0 },
@@ -240,9 +241,8 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
     toast
       .promise(
         savePost({
-          defaultContent: selectedPost,
           projectId: projectId,
-          postContent: [],
+          postContent: defaultContent(selectedPost),
         }),
         {
           loading: "Saving Post",

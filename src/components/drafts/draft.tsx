@@ -1,6 +1,7 @@
 import { Tooltip } from "@material-tailwind/react";
 import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
+import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
 import LogoLoad from "../custom/loading/logoLoad";
 import PostCard from "./darfCard";
@@ -11,6 +12,8 @@ const DraftPage = () => {
 
   if (isLoading) return <LogoLoad size="100" />;
   if (error) return <div>Something Went Wrong</div>;
+
+  console.log(data, "data");
 
   return (
     <div className=" relative flex w-full flex-col">
@@ -44,7 +47,9 @@ const DraftPage = () => {
             <PostCard
               key={item.id}
               id={item.id}
-              content={item.defaultContent}
+              content={
+                (item.content as any as PostContentType[])[0]?.content || ""
+              }
               refetch={refetch}
             />
           ))

@@ -11,15 +11,13 @@ interface IConnection {
 }
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
-  const { setContent, content, defaultContent } = useStore(
+  const { setContent, content } = useStore(
     (state) => ({
       setContent: state.setContent,
       content: state.content,
-      defaultContent: state.defaultContent,
     }),
     shallow
   );
-  console.log(content);
 
   const isSelected = content.some((item) => item.id === id);
 
@@ -29,7 +27,15 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
     } else {
       setContent([
         ...content,
-        { socialType: type, id, name, unique: false, content: defaultContent },
+        {
+          socialType: type,
+          id,
+          name,
+          unique: false,
+          content: content[0]?.content || "",
+          files: [],
+          uploadedFiles: [],
+        },
       ]);
     }
   };

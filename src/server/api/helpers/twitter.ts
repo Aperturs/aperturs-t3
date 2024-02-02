@@ -5,7 +5,7 @@
 import { type TwitterToken } from "@prisma/client";
 import Client from "twitter-api-sdk";
 import { prisma } from "~/server/db";
-import { type PostTweetInput } from "../types";
+import { type PostTweetInput } from "../../../types/post-types";
 import { TRPCError } from "@trpc/server";
 
 interface TwitterAccountDetails

@@ -4,6 +4,7 @@ import { shallow } from "zustand/shallow";
 import { Layout, PostView } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
 import { useStore } from "~/store/post-store";
+import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
 
 export default function Post() {
@@ -15,10 +16,8 @@ export default function Post() {
   //   id as string
   // );
   const [loading, setLoading] = useState(true);
-  const { setContent, setDefaultContent, setShouldReset } = useStore(
+  const { setContent, setShouldReset } = useStore(
     (state) => ({
-      setDefaultContent: state.setDefaultContent,
-      defaultContent: state.defaultContent,
       setContent: state.setContent,
       setShouldReset: state.setShouldReset,
     }),
@@ -30,30 +29,29 @@ export default function Post() {
   const fetchData = useMemo(() => {
     return () => {
       try {
+        console.log("runing fetchData");
         const data = getData.data;
         if (!data) return;
-        const defaultContent = data.defaultContent;
-        setDefaultContent(defaultContent);
-        const localContent = data.content as unknown as PostContent[];
+        const localContent = data.content;
+
         setContent(localContent);
-        setShouldReset(true);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  }, [getData.data, setDefaultContent, setContent, setShouldReset]);
+  }, [getData.data]);
 
   useEffect(() => {
+    setShouldReset(true);
     fetchData();
-
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 2-second delay
+    }, 1000); // 2-second delay
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [fetchData]);
+  }, [fetchData, setShouldReset]);
 
   if (loading || getData.isLoading) return <LogoLoad size="24" />;
   if (getData.error) return <div>{getData.error.message}</div>;

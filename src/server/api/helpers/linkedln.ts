@@ -1,7 +1,7 @@
 import { type LinkedInToken } from "@prisma/client";
 import axios from "axios";
 import { prisma } from "~/server/db";
-import { type PostToLinkedInInput } from "../types";
+import { type PostToLinkedInInput } from "../../../types/post-types";
 interface LinkedInTokenDetails
   extends Pick<LinkedInToken, "access_token" | "refresh_token" | "profileId"> {
   full_name: string;

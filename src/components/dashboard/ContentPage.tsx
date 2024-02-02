@@ -1,8 +1,9 @@
 // import { CreateButton } from "~/components";
 "use client";
 import { useUser } from "@clerk/nextjs";
-import InfoContainer from "./container";
+import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
+import InfoContainer from "./container";
 
 const WishingGoodDay = () => {
   const date = new Date();
@@ -43,7 +44,12 @@ const ContentPage = () => {
           title="Recent Drafts"
           infoBlocks={
             recentDrafts?.map((draft) => ({
-              title: `${draft.defaultContent.slice(0, 60) || ""}...`,
+              title: `${
+                (draft.content as any as PostContentType[])[0]?.content?.slice(
+                  0,
+                  60
+                ) || ""
+              }...`,
               // title: 'test',
               link: `post/${draft.id}`,
             })) || []

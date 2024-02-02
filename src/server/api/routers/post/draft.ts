@@ -1,8 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import {
+  savePostInputSchema,
+  updatePostInputSchema,
+  type PostContentType,
+} from "../../../../types/post-types";
 import { limitDown, limitWrapper } from "../../helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { savePostInputSchema } from "../../types";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
@@ -18,7 +22,6 @@ export const posting = createTRPCRouter({
                 scheduledAt: input.scheduledTime
                   ? new Date(input.scheduledTime)
                   : null,
-                defaultContent: input.defaultContent,
                 content: input.postContent,
                 projectId: input.projectId,
               },
@@ -50,21 +53,9 @@ export const posting = createTRPCRouter({
   }),
 
   updatePost: protectedProcedure
-    .input(
-      z.object({
-        postId: z.string(),
-        postContent: z.array(
-          z.object({
-            id: z.string(),
-            socialType: z.string(),
-            content: z.string(),
-          })
-        ),
-        defaultContent: z.string(),
-        scheduledTime: z.date().optional(),
-      })
-    )
+    .input(updatePostInputSchema)
     .mutation(async ({ ctx, input }) => {
+      console.log(input.postContent);
       try {
         await ctx.prisma.post.update({
           where: { id: input.postId },
@@ -73,7 +64,6 @@ export const posting = createTRPCRouter({
             scheduledAt: input.scheduledTime
               ? new Date(input.scheduledTime)
               : null,
-            defaultContent: input.defaultContent,
             content: input.postContent,
           },
         });
@@ -105,7 +95,18 @@ export const posting = createTRPCRouter({
       const post = await ctx.prisma.post.findUnique({
         where: { id: input },
       });
-      return post;
+
+      const localPost = post?.content as unknown as PostContentType[];
+      const contentWithEmptyFiles = localPost.map((post) => ({
+        ...post,
+        files: post.files ?? [],
+      }));
+
+      return {
+        scheduledAt: post?.scheduledAt,
+        organizationId: post?.organizationId,
+        content: contentWithEmptyFiles,
+      };
     }),
 
   getSavedPostsByProjectId: protectedProcedure

@@ -57,3 +57,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.transition-opacityy {
+  transition: opacity 0.3s ease-in-out;
+}

@@ -7,7 +7,6 @@ import SideBar from "./layouts/sidebar/sidebar";
 import LinkedinPostCard from "./post/content/ContentPostCard";
 import PostView from "./post/postWrapper";
 import SocialTabs from "./post/tabs/socialtabs";
-import TweetPost from "./post/tweets/tweetsPost";
 import ConnectSocials from "./profile/ConnectSocials";
 import ProfileHeader from "./profile/header";
 import NewRepoFormModal from "./projects/newRepoModal";
@@ -16,7 +15,6 @@ import QuestionCard from "./projects/project/context/questionCard";
 import CommitDescriptionSettingsCard from "./projects/project/settings/commitInfo";
 import CommitSettings from "./projects/project/settings/commitSettings";
 import GithubCard from "./projects/projectCard";
-import AccountTabs from "./profile/account/tabs";
 
 export {
   CommitDescriptionSettingsCard,
@@ -36,5 +34,4 @@ export {
   QuestionCard,
   SideBar,
   SocialTabs,
-  TweetPost,
 };
