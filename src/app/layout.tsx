@@ -27,11 +27,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
         <ClerkProvider
-        // appearance={{
-        //   elements: {
-        //     formButtonPrimary: "bg-primary",
-        //   },
-        // }}
+          appearance={{
+            elements: {
+              formButtonPrimary: "bg-primary",
+            },
+          }}
         >
           <TRPCReactProvider cookies={cookies().toString()}>
             <ThemeProvider

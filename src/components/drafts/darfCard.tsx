@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  Dialog,
-  Tooltip,
-  Typography,
-} from "@material-tailwind/react";
+import { Dialog, Tooltip, Typography } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { toast } from "react-hot-toast";
@@ -16,6 +9,7 @@ import ConfirmationModal, {
   type HandleOpenRef,
 } from "~/components/custom/modals/modal";
 import { api } from "~/utils/api";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
 interface IDarfCard {
   id: string;
@@ -43,17 +37,9 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
 
   return (
     <Card className="mt-6 ">
-      {/* <CardHeader color="blue-gray" className="relative ">
-        {id !== "1" && (
-          <Image
-            src="https://images.unsplash.com/photo-1540553016722-983e48a2cd10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-            alt="img-blur-shadow"
-            width={400}
-            height={400}
-            className="rounded-lg object-cover"
-          />
-        )}
-      </CardHeader> */}
+      <CardHeader className="relative ">
+        <Typography>Draft</Typography>
+      </CardHeader>
       <Dialog open={open} handler={setOpen}>
         <ConfirmationModal
           DialogBodyContent="Are you sure you want to delete this draft?"
@@ -68,11 +54,11 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
           }}
         />
       </Dialog>
-      <CardBody>
+      <CardContent>
         <div className="h-20 overflow-auto">
           <Typography className="whitespace-pre-line">{content}</Typography>
         </div>
-      </CardBody>
+      </CardContent>
       <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
         {/* <button className="btn btn-primary text-white"
         

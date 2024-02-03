@@ -23,10 +23,12 @@ const AccordanceMenu = [
       },
       {
         subText: "New Post",
+        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
         url: "/post",
       },
       {
         subText: "Queue",
+        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
         url: "/queue",
       },
     ],
@@ -38,10 +40,12 @@ const AccordanceMenu = [
     items: [
       {
         subText: "Drafts",
+        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
         url: "/drafts",
       },
       {
         subText: "Ideas",
+        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
         url: "/ideas",
       },
     ],

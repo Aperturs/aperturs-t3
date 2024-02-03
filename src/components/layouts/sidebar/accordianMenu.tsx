@@ -1,7 +1,14 @@
-import { Typography } from "@material-tailwind/react";
-import { AccordionContent, AccordionItem } from "@radix-ui/react-accordion";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import React from "react";
-import { Accordion, AccordionTrigger } from "~/components/ui/accordion";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
 
 interface AccordanceProps {
   open: number;
@@ -97,33 +104,41 @@ interface MenuProps {
 // }
 
 export default function AccordanceMenu(props: MenuProps) {
+  const pathName = usePathname();
+  const currentPath = (url: string) => {
+    return url.includes(pathName || "");
+  };
+
   return (
     <>
-      {props.list.map((item, index) => {
-        return (
-          <Accordion key={item.text} type="single" collapsible>
-            <AccordionItem value={item.text}>
-              <AccordionTrigger>
-                <Typography color="blue-gray" className="mr-auto font-normal">
-                  {item.text}
-                </Typography>
-                {item.icon}
-              </AccordionTrigger>
-              <AccordionContent>
-                <ul>
-                  {item.items.map((subItem, subIndex) => {
-                    return (
-                      <li key={subIndex}>
-                        <a href={subItem.url}>{subItem.subText}</a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        );
-      })}
+      <Command>
+        <CommandInput placeholder="Type a command or search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          {props.list.map((item, index) => {
+            return (
+              <CommandGroup key={index} heading={item.text} className="py-3">
+                {item.items.map((subItem, subIndex) => (
+                  <CommandItem
+                    key={subItem.url}
+                    className={`${
+                      currentPath(subItem.url) ? "bg-primary" : ""
+                    }`}
+                  >
+                    <Link
+                      href={subItem.url}
+                      className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent md:w-full"
+                    >
+                      {subItem.subIcon}
+                      <span>{subItem.subText}</span>
+                    </Link>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            );
+          })}
+        </CommandList>
+      </Command>
     </>
   );
 }
