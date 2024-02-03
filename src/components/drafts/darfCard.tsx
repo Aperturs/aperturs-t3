@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, Tooltip, Typography } from "@material-tailwind/react";
+import { Dialog, Typography } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -15,7 +15,7 @@ import ToolTipSimple from "../ui/tooltip-final";
 interface IDarfCard {
   id: string;
   content: string;
-  refetch: () => void;
+  refetch?: () => void;
 }
 
 export default function DraftCard({ id, content, refetch }: IDarfCard) {
@@ -25,15 +25,13 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
 
   const [open, setOpen] = useState(false);
 
-  // const handleDialogOpenRef = useRef<HandleConfirmModalOpen>(null);
-
   const handleDelete = async () => {
     await toast.promise(DeleteDraft({ id }), {
       loading: "Deleting...",
       success: "Deleted",
       error: "Failed to delete",
     });
-    refetch();
+    refetch?.();
   };
 
   return (
@@ -77,26 +75,16 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
             <IoPencilSharp />
           </button>
         </div>
-        <ToolTipSimple
-          content="Comming Soon..."
-          // className="bg-secondary"
-        >
+        <ToolTipSimple content="Comming Soon...">
           <button className="btn w-full">
             <HiPaperAirplane />
           </button>
         </ToolTipSimple>
-        <Tooltip
-          content="Comming Soon..."
-          className="bg-secondary text-black"
-          animate={{
-            mount: { scale: 1, y: 0 },
-            unmount: { scale: 0, y: 25 },
-          }}
-        >
+        <ToolTipSimple content="Comming Soon...">
           <button className="btn w-full">
             <HiQueueList />
           </button>
-        </Tooltip>
+        </ToolTipSimple>
         <div className="tooltip" data-tip="delete">
           <button
             disabled={deleting}

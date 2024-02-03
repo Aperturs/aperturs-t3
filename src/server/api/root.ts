@@ -19,7 +19,7 @@ export const appRouter = createTRPCRouter({
   github: github,
   savepost: posting,
   post: post,
-  subscription: subscriptionData,
+  subscriptions: subscriptionData,
 });
 
 // export type definition of API

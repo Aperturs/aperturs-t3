@@ -1,9 +1,6 @@
 // import { CreateButton } from "~/components";
 "use client";
 import { useUser } from "@clerk/nextjs";
-import { type PostContentType } from "~/types/post-types";
-import { api } from "~/utils/api";
-import InfoContainer from "./container";
 
 const WishingGoodDay = () => {
   const date = new Date();

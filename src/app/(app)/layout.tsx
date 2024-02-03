@@ -1,6 +1,4 @@
-"use client";
-
-import { Layout } from "~/components";
+import Layout from "~/components/layouts/Layout";
 
 export default function RootLayout({
   children,

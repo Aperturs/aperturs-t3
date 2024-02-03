@@ -1,11 +1,12 @@
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import { shallow } from "zustand/shallow";
-import { Layout, PostView } from "~/components";
+import Layout from "~/components/layouts/Layout";
 import LogoLoad from "~/components/custom/loading/logoLoad";
 import { useStore } from "~/store/post-store";
 import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
+import PostView from "~/components/post/postWrapper";
 
 export default function Post() {
   // const router = useRouter()
