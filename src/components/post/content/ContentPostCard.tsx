@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";

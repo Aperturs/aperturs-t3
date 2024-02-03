@@ -1,19 +1,20 @@
-import { Tooltip } from "@material-tailwind/react";
+"use client";
+
 import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
 import { type PostContentType } from "~/types/post-types";
-import { api } from "~/utils/api";
 import LogoLoad from "../custom/loading/logoLoad";
 import PostCard from "./darfCard";
+import { api } from "~/trpc/react";
+import { Tooltip } from "@material-tailwind/react";
 
 const DraftPage = () => {
-  const { data, isLoading, error, refetch } =
-    api.savepost.getSavedPosts.useQuery();
+  // const {data, isLoading, error, refetch} = api.savepost.getSavedPosts.useQuery();
 
-  if (isLoading) return <LogoLoad size="100" />;
-  if (error) return <div>Something Went Wrong</div>;
+  // if (isLoading) return <LogoLoad size="100" />;
+  // if (error) return <div>Something Went Wrong</div>;
 
-  console.log(data, "data");
+  // console.log(data, "data");
 
   return (
     <div className=" relative flex w-full flex-col">
@@ -41,7 +42,7 @@ const DraftPage = () => {
         xl:grid-cols-3
         "
       >
-        {data.length > 0 ? (
+        {/* {data.length > 0 ? (
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           data.map((item) => (
             <PostCard
@@ -62,7 +63,14 @@ const DraftPage = () => {
               Create New Draft
             </Link>
           </div>
-        )}
+        )} */}
+
+        <PostCard
+          id="1"
+          content="This is a test content"
+          refetch={() => console.log("refetch")}
+          // refetch={refetch}
+        />
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+'use client';
+
 import { Spinner } from "@material-tailwind/react";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";

@@ -1,15 +1,16 @@
+"use client";
+
 import { Dialog, Tooltip, Typography } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
-import ConfirmationModal, {
-  type HandleOpenRef,
-} from "~/components/custom/modals/modal";
+import ConfirmationModal from "~/components/custom/modals/modal";
 import { api } from "~/utils/api";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import ToolTipSimple from "../ui/tooltip-final";
 
 interface IDarfCard {
   id: string;
@@ -38,7 +39,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
   return (
     <Card className="mt-6 ">
       <CardHeader className="relative ">
-        <Typography>Draft</Typography>
+        <p>Draft</p>
       </CardHeader>
       <Dialog open={open} handler={setOpen}>
         <ConfirmationModal
@@ -76,18 +77,14 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
             <IoPencilSharp />
           </button>
         </div>
-        <Tooltip
+        <ToolTipSimple
           content="Comming Soon..."
-          className="bg-secondary text-black"
-          animate={{
-            mount: { scale: 1, y: 0 },
-            unmount: { scale: 0, y: 25 },
-          }}
+          // className="bg-secondary"
         >
           <button className="btn w-full">
             <HiPaperAirplane />
           </button>
-        </Tooltip>
+        </ToolTipSimple>
         <Tooltip
           content="Comming Soon..."
           className="bg-secondary text-black"

@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "@clerk/nextjs";
 import { Card, Spinner } from "@material-tailwind/react";
 import Image from "next/image";

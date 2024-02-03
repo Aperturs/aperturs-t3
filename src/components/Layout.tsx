@@ -1,8 +1,10 @@
+"use client";
+
 import { SideBar } from ".";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <section className="min-h-screen">
       <div className="relative gap-8 lg:flex">
         <div className="w-full lg:max-w-[18rem]">
           <SideBar />
@@ -11,6 +13,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

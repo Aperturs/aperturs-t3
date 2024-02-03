@@ -23,8 +23,8 @@ const config = {
         // primary: "#132da0",
         // secondary: "#e3f2ff",
         // accent: "#2d68ff",
-        neutral: "#f7f7fc",
-        "base-100": "#ffffff",
+        // neutral: "#f7f7fc",
+        // "base-100": "#ffffff",
         info: "#3ABFF8",
         success: "#22c55e",
         warning: "#ffa800",
@@ -96,7 +96,11 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("daisyui"),
+    require("@tailwindcss/container-queries"),
+  ],
 } satisfies Config;
 
 export default config;

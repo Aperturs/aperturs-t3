@@ -1,3 +1,5 @@
+"use client";
+
 import Layout from "./Layout";
 import ContentPage from "./dashboard/ContentPage";
 import DraftCard from "./drafts/darfCard";

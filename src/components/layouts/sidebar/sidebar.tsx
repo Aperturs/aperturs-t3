@@ -1,3 +1,5 @@
+"use client";
+
 import { Bars2Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { IconButton, List, Typography } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
