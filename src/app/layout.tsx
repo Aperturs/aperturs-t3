@@ -1,9 +1,9 @@
 import "~/styles/globals.css";
 
-import { Inter } from "next/font/google";
-import { cookies } from "next/headers";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -24,27 +24,34 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${inter.variable}`}>
-        <ClerkProvider
-          appearance={{
-            elements: {
-              formButtonPrimary: "bg-primary",
-            },
-            baseTheme: dark,
-          }}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <TRPCReactProvider cookies={cookies().toString()}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-          </TRPCReactProvider>
-        </ClerkProvider>
+          <ClerkProvider
+            appearance={{
+              elements: {
+                formButtonPrimary: "bg-primary",
+              },
+              baseTheme: dark,
+            }}
+          >
+            <TRPCReactProvider cookies={cookies().toString()}>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </TRPCReactProvider>
+          </ClerkProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

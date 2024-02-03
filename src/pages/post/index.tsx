@@ -1,6 +1,7 @@
 import { useEffect, type ReactElement, useState } from "react";
-import { Layout, PostView } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
+import Layout from "~/components/layouts/Layout";
+import PostView from "~/components/post/postWrapper";
 import { useStore } from "~/store/post-store";
 
 const PostContent = () => {

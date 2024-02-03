@@ -52,7 +52,7 @@ function BottomMenu() {
             <OrganizationSwitcher />
           </CommandItem>
           {bottomMenu.map((item, index) => (
-            <CommandItem key={index} className="my-1">
+            <CommandItem key={index} className="my-1 py-3">
               <Link
                 href={item.url}
                 className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent md:w-full"
@@ -64,6 +64,7 @@ function BottomMenu() {
             </CommandItem>
           ))}
           <CommandItem
+            className="cursor-pointer py-3"
             onClick={() =>
               signOut()
                 .then(() => {
