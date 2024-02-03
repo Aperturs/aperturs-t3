@@ -35,15 +35,6 @@ const config = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/dashboard",
-        permanent: true,
-      },
-    ];
-  },
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
