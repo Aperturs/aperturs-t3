@@ -96,9 +96,7 @@ export default function SideBar() {
           width={8}
           height={8}
         />
-        <Typography variant="h5" color="blue-gray">
-          Aperturs
-        </Typography>
+        <h5>Aperturs</h5>
         <IconButton
           size="sm"
           color="blue-gray"
@@ -110,11 +108,9 @@ export default function SideBar() {
         </IconButton>
       </div>
       <div className="hidden lg:block">
-        <List>
-          <AccordianMenu list={AccordanceMenu} />
-          <hr className="border-blue-gray-50 my-2" />
-          <BottomMenu />
-        </List>
+        <AccordianMenu list={AccordanceMenu} />
+        <hr className="border-blue-gray-50 my-2" />
+        <BottomMenu />
       </div>
       <AnimatePresence>
         {isNavOpen && (

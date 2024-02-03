@@ -2,8 +2,8 @@ import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-
 import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
 
@@ -31,6 +31,7 @@ export default function RootLayout({
             elements: {
               formButtonPrimary: "bg-primary",
             },
+            baseTheme: dark,
           }}
         >
           <TRPCReactProvider cookies={cookies().toString()}>
