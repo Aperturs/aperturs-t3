@@ -61,7 +61,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           <SocialIcon type={type} />
         </div>
       </div>
-      <p className="break-words text-center text-sm font-light leading-5 ">
+      <p className="mt-2 break-words text-center text-sm font-light leading-5">
         {name}
       </p>
     </div>

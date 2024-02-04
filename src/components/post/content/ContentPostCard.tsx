@@ -63,7 +63,7 @@ function ContentPostCard({ id }: { id: string }) {
   // }, [sync, defaultContent]);
 
   return (
-    <Card className="w-full p-4">
+    <Card className="w-full p-3">
       <ContentPostCreation
         content={content}
         onContentChange={setContent}

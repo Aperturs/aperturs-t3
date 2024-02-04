@@ -3,6 +3,7 @@ import Image from "next/image";
 import { type ButtonHTMLAttributes } from "react";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
+import { cn } from "~/lib/utils";
 import { SocialType } from "~/types/post-enums";
 import { Button } from "../ui/button";
 
@@ -27,11 +28,28 @@ export const SimpleButton = ({
     </Button>
   );
 };
-export const SocialIcon = ({ type }: { type: string }) => {
+
+interface SocialIconProps {
+  type: string;
+  className?: string;
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
+}
+
+const sizeClasses = {
+  xs: "h-3 w-3",
+  sm: "h-4 w-4",
+  md: "h-5 w-5",
+  lg: "h-6 w-6",
+  xl: "h-7 w-7",
+};
+
+export const SocialIcon = ({ type, className, size }: SocialIconProps) => {
+  const sizeClass = size ? sizeClasses[size] : "";
+
   if (type === SocialType.Twitter) {
-    return <AiOutlineTwitter className="h-3 w-3" />;
+    return <AiOutlineTwitter className={cn("h-3 w-3", className, sizeClass)} />;
   } else if (type === SocialType.Linkedin) {
-    return <FaLinkedinIn className="h-3 w-3" />;
+    return <FaLinkedinIn className={cn("h-3 w-3", className, sizeClass)} />;
   } else if (type === SocialType.Lens) {
     return <Image src="/lens.svg" width={30} height={30} alt="lens" />;
   } else {

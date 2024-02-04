@@ -5,6 +5,11 @@ import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
@@ -144,6 +149,7 @@ interface DeleteImageProps {
 
 function DeleteImage({ handleRemove, index }: DeleteImageProps) {
   const [clickedOnce, setClickedOnce] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     if (clickedOnce) {
@@ -158,22 +164,26 @@ function DeleteImage({ handleRemove, index }: DeleteImageProps) {
   const handleMouseLeave = () => {
     // Reset the state when the mouse leaves, so it goes back to the initial state
     setClickedOnce(false);
+    setIsHovered(false);
   };
 
   return (
-    <Tooltip
-      placement="top"
-      content={clickedOnce ? "Click again to remove" : "Remove"}
-    >
-      <button
-        className={`bg-blue-gray-800 absolute right-1 top-1 z-10  grid place-content-center rounded-2xl p-2 text-sm ${
-          clickedOnce ? " text-yellow-700" : " text-red-700"
-        } opacity-0 transition-all delay-100 duration-100 group-hover:opacity-100`}
-        onClick={handleClick}
-        onMouseLeave={handleMouseLeave}
+    <Popover open={clickedOnce}>
+      <PopoverContent className="w-fit py-2 text-xs">
+        Click again to Delete
+      </PopoverContent>
+      <PopoverTrigger
+        className={`delay-50 absolute right-1 top-1 z-10  grid place-content-center rounded-2xl bg-secondary p-2  text-sm opacity-0 transition-all duration-100 group-hover:opacity-100`}
       >
-        {clickedOnce ? <FaCheck /> : <MdDelete />}
-      </button>
-    </Tooltip>
+        <button
+          // size="icon"
+          // variant="secondary"
+          onClick={handleClick}
+          onMouseLeave={handleMouseLeave}
+        >
+          {clickedOnce ? <FaCheck /> : <MdDelete />}
+        </button>
+      </PopoverTrigger>
+    </Popover>
   );
 }
