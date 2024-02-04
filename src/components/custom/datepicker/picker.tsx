@@ -1,5 +1,4 @@
 import {
-  Button,
   Dialog,
   DialogBody,
   DialogFooter,
@@ -10,6 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
+import { Button } from "~/components/ui/button";
 
 function formatDate(date: Date): string {
   return format(date, "dd MMMM yyyy");
@@ -99,12 +99,9 @@ export default function Picker() {
 
   return (
     <>
-      <span
-        className="btn btn-primary bg-primary font-medium  normal-case  text-white"
-        onClick={handleOpen}
-      >
+      <Button onClick={handleOpen}>
         {date ? formatDate(date) : "Pick Date"}
-      </span>
+      </Button>
       <Dialog open={open} handler={handleOpen} className="w-auto">
         <DialogHeader className="text-xs sm:text-sm">
           Scheduled for {date ? formatDate(date) : ""} at {time}
@@ -124,19 +121,14 @@ export default function Picker() {
         </DialogBody>
         <DialogFooter>
           <Button
-            variant="text"
+            variant="outline"
             color="red"
             onClick={handleCancel}
             className="mr-1"
           >
             <span>Cancel</span>
           </Button>
-          <Button
-            variant="gradient"
-            color="green"
-            disabled={!canConfirm}
-            onClick={handleConfirm}
-          >
+          <Button color="green" disabled={!canConfirm} onClick={handleConfirm}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>

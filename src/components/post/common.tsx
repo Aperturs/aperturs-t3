@@ -1,8 +1,10 @@
+import { ReloadIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { type ButtonHTMLAttributes } from "react";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { SocialType } from "~/types/post-enums";
+import { Button } from "../ui/button";
 
 interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -15,22 +17,21 @@ export const SimpleButton = ({
   ...buttonProps
 }: SimpleButtonProps) => {
   return (
-    <button
-      className={`btn btn-outline btn-primary w-full px-4 text-sm capitalize text-white ${
-        isLoading ? "loading" : ""
-      } `}
+    <Button
       {...buttonProps}
       disabled={isLoading || buttonProps.disabled}
+      className="py-4 font-normal"
     >
+      {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
       {text}
-    </button>
+    </Button>
   );
 };
 export const SocialIcon = ({ type }: { type: string }) => {
   if (type === SocialType.Twitter) {
-    return <AiOutlineTwitter className="h-4 w-4" />;
+    return <AiOutlineTwitter className="h-3 w-3" />;
   } else if (type === SocialType.Linkedin) {
-    return <FaLinkedinIn className="h-4 w-4" />;
+    return <FaLinkedinIn className="h-3 w-3" />;
   } else if (type === SocialType.Lens) {
     return <Image src="/lens.svg" width={30} height={30} alt="lens" />;
   } else {
