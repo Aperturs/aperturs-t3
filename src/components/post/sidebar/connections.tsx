@@ -54,7 +54,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           withBorder={true}
           className="border border-transparent p-0.5 ring-4 ring-indigo-300 "
         />
-        <div className=" absolute bottom-0 left-[-15px] flex h-8 w-8 items-center justify-center rounded-full bg-neutral shadow-md ">
+        <div className=" bg-neutral absolute bottom-0 left-[-15px] flex h-8 w-8 items-center justify-center rounded-full shadow-md ">
           <SocialIcon type={type} />
         </div>
       </div>

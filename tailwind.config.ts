@@ -98,7 +98,6 @@ const config = {
   },
   plugins: [
     require("tailwindcss-animate"),
-    require("daisyui"),
     require("@tailwindcss/container-queries"),
   ],
 } satisfies Config;

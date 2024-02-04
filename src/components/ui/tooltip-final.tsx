@@ -9,15 +9,17 @@ interface ToolTipSimpleProps {
   children: React.ReactNode;
   content: string;
   className?: string;
+  duration?: number;
 }
 
 export default function ToolTipSimple({
   children,
   content,
   className,
+  duration = 100,
 }: ToolTipSimpleProps) {
   return (
-    <TooltipProvider delayDuration={100}>
+    <TooltipProvider delayDuration={duration}>
       <Tooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent className={className}>

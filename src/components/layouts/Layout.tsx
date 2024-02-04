@@ -2,7 +2,7 @@ import SideBar from "./sidebar/sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="min-h-screen">
+    <section>
       <div className="relative gap-8 lg:flex">
         <div className="w-full lg:max-w-[18rem]">
           <SideBar />

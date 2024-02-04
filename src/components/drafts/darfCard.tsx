@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, Typography } from "@material-tailwind/react";
+import { Dialog } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -9,6 +9,7 @@ import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
 import ConfirmationModal from "~/components/custom/modals/modal";
 import { api } from "~/utils/api";
+import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import ToolTipSimple from "../ui/tooltip-final";
 
@@ -55,7 +56,7 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
       </Dialog>
       <CardContent>
         <div className="h-20 overflow-auto">
-          <Typography className="whitespace-pre-line">{content}</Typography>
+          <p className="whitespace-pre-line">{content}</p>
         </div>
       </CardContent>
       <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
@@ -65,37 +66,40 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
             router.push("/post/1");
         }}
         >Edit</button> */}
-        <div className="tooltip" data-tip="edit">
-          <button
+        <ToolTipSimple content="Edit" duration={30}>
+          <Button
+            variant="secondary"
             className="btn w-full"
             onClick={() => {
               router.push(`/post/${id}`);
             }}
           >
             <IoPencilSharp />
-          </button>
-        </div>
+          </Button>
+        </ToolTipSimple>
         <ToolTipSimple content="Comming Soon...">
-          <button className="btn w-full">
+          <Button variant="secondary" className="btn w-full">
             <HiPaperAirplane />
-          </button>
+          </Button>
         </ToolTipSimple>
         <ToolTipSimple content="Comming Soon...">
-          <button className="btn w-full">
+          <Button variant="secondary" className="w-full">
             <HiQueueList />
-          </button>
+          </Button>
         </ToolTipSimple>
-        <div className="tooltip" data-tip="delete">
-          <button
+        <ToolTipSimple content="Delete draft" duration={30}>
+          <Button
+            size="icon"
+            variant="secondary"
             disabled={deleting}
-            className="btn w-full hover:bg-red-200"
+            className="w-full hover:bg-red-600 hover:text-white"
             onClick={() => {
               setOpen(true);
             }}
           >
             <TbTrashFilled />
-          </button>
-        </div>
+          </Button>
+        </ToolTipSimple>
       </CardFooter>
     </Card>
   );
