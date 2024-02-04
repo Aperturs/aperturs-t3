@@ -1,4 +1,5 @@
-import { Button, Card } from "@material-tailwind/react";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
 
 export default function ManageSubscription({
   isCanceled,
@@ -10,7 +11,7 @@ export default function ManageSubscription({
   updatePaymentMethodURL: string;
 }) {
   return (
-    <Card className="my-6 w-full shadow-md">
+    <Card className="my-6 w-full">
       <div className="flex items-center justify-between gap-2 p-5">
         <div>
           <h1 className="text-2xl font-semibold">Manage Subscription</h1>
@@ -23,7 +24,6 @@ export default function ManageSubscription({
           </p>
         </div>
         <Button
-          className="btn btn-primary"
           onClick={() => {
             window.location.href = updatePaymentMethodURL;
           }}

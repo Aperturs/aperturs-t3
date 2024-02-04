@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="w-full lg:max-w-[18rem]">
           <SideBar />
         </div>
-        <div className="relative mt-8 flex w-full justify-center px-2 lg:block  lg:p-12">
+        <div className="relative mt-8 grid w-full items-center px-2 lg:block  lg:p-12">
           {children}
         </div>
       </div>

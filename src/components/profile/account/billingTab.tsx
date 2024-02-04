@@ -46,9 +46,9 @@ function extractPrice(priceRange: string, position: 1 | 2): number | null {
 }
 
 export default function BillingTab() {
-  const { data: billingPlans } = api.subscription.getProducts.useQuery();
+  const { data: billingPlans } = api.subscriptions.getProducts.useQuery();
   const { mutateAsync: subscribe } =
-    api.subscription.createCheckout.useMutation();
+    api.subscriptions.createCheckout.useMutation();
 
   console.log(billingPlans);
 
@@ -59,10 +59,10 @@ export default function BillingTab() {
     });
   };
   const { data: getSubscription } =
-    api.subscription.getSubscriptions.useQuery();
+    api.subscriptions.getSubscriptions.useQuery();
 
   return (
-    <div>
+    <div className="w-full flex-1">
       <ManageSubscription
         isCanceled={getSubscription?.isCanceled ?? false}
         lsCurrentPeriodEnd={getSubscription?.lsCurrentPeriodEnd ?? 0}

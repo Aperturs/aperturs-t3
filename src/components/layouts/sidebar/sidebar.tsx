@@ -39,7 +39,7 @@ export default function SideBar() {
           <Image
             src="/logo.svg"
             alt="brand"
-            className="h-8 w-8 dark:invert"
+            className="h-8 w-8 dark:brightness-0 dark:invert"
             width={8}
             height={8}
           />

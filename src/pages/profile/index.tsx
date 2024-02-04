@@ -1,5 +1,5 @@
 import { type ReactElement } from "react";
-import { Layout } from "~/components";
+import Layout from "~/components/layouts/Layout";
 import AccountTabs from "~/components/profile/account/tabs";
 
 const UserProfilePage = () => (

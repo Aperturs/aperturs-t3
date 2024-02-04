@@ -3,16 +3,10 @@ import {
   Square3Stack3DIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
-import {
-  Tab,
-  TabPanel,
-  Tabs,
-  TabsBody,
-  TabsHeader,
-} from "@material-tailwind/react";
 import React from "react";
-import UserProfilePage from "./userprofile";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import BillingTab from "./billingTab";
+import UserProfilePage from "./userprofile";
 
 const Test = () => {
   return <div className="w-full py-5">comming soon..</div>;
@@ -40,24 +34,22 @@ export default function AccountTabs() {
     },
   ];
   return (
-    <Tabs value="account">
-      <TabsHeader className="w-full  text-center">
+    <Tabs defaultValue="account">
+      <TabsList className="w-full text-center">
         {data.map(({ label, value, icon }) => (
-          <Tab key={value} value={value}>
+          <TabsTrigger key={value} value={value}>
             <div className="flex w-full items-center gap-2">
               {React.createElement(icon, { className: "w-5 h-5" })}
               {label}
             </div>
-          </Tab>
+          </TabsTrigger>
         ))}
-      </TabsHeader>
-      <TabsBody className="w-full">
-        {data.map(({ value, element }) => (
-          <TabPanel key={value} value={value}>
-            <div className="w-full">{React.createElement(element)}</div>
-          </TabPanel>
-        ))}
-      </TabsBody>
+      </TabsList>
+      {data.map(({ value, element }) => (
+        <TabsContent key={value} value={value}>
+          <div className="w-full">{React.createElement(element)}</div>
+        </TabsContent>
+      ))}
     </Tabs>
   );
 }

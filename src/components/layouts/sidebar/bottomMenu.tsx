@@ -63,20 +63,22 @@ function BottomMenu() {
               </Link>
             </CommandItem>
           ))}
-          <CommandItem
-            className="cursor-pointer py-3"
-            onClick={() =>
-              signOut()
-                .then(() => {
-                  router.push("/sign-in");
-                  toast.success("Signed Out");
-                })
-                .catch(() => {
-                  toast.error("Error Signing Out");
-                })
-            }
-          >
-            <div className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent md:w-full">
+          <CommandItem className="cursor-pointer py-3">
+            <div
+              className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent md:w-full"
+              onClick={(e) => {
+                e.preventDefault();
+                console.log("signing out");
+                signOut()
+                  .then(() => {
+                    router.push("/sign-in");
+                    toast.success("Signed Out");
+                  })
+                  .catch(() => {
+                    toast.error("Error Signing Out");
+                  });
+              }}
+            >
               <PowerIcon className="h-5 w-5" />
               <span>SignOut</span>
             </div>

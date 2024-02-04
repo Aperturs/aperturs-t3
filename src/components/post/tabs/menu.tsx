@@ -24,7 +24,7 @@ function SocialsMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button size="icon" className="my-1 ml-2 max-h-fit">
+        <Button size="icon" className="my-1 ml-2 max-h-7">
           <IoIosArrowDown />
         </Button>
       </DropdownMenuTrigger>

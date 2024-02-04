@@ -99,7 +99,7 @@ export default function Picker() {
 
   return (
     <>
-      <Button onClick={handleOpen}>
+      <Button onClick={handleOpen} className="py-6">
         {date ? formatDate(date) : "Pick Date"}
       </Button>
       <Dialog open={open} handler={handleOpen} className="w-auto">

@@ -21,7 +21,7 @@ export const SimpleButton = ({
     <Button
       {...buttonProps}
       disabled={isLoading || buttonProps.disabled}
-      className="py-4 font-normal"
+      className="py-6 font-normal"
     >
       {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
       {text}
