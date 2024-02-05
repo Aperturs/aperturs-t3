@@ -10,7 +10,7 @@ function projectLayout({
 }) {
   console.log(params, "params from projectLayout");
   return (
-    <div className="w-full px-3">
+    <div className="px-3">
       <ProjectNavBar params={params} />
       <div className="my-3 ">{children}</div>
     </div>

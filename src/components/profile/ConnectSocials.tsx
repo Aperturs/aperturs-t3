@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuth } from "@clerk/nextjs";
-import { Card, Spinner } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -11,6 +10,10 @@ import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
+import SimpleLoader from "../custom/loading/simple-loading";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 const SocialIcon = ({ type }: { type: string }) => {
   if (type === SocialType.Twitter) {
@@ -37,7 +40,7 @@ const ConnectSocials = () => {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
           {/* <Suspense fallback={<div>Loading...</div>}> */}
           {isLoading ? (
-            <Spinner className="h-8 w-8 text-blue-500/10" />
+            <SimpleLoader />
           ) : (
             data &&
             data.map((item, key) => (
@@ -59,31 +62,18 @@ const ConnectSocials = () => {
 
 const AddSocial = () => {
   return (
-    <div>
-      <label
-        htmlFor="my-modal-3"
-        className="btn btn-primary h-full w-full text-white shadow-md"
-      >
-        <div className="flex h-full w-full items-center justify-center gap-3 whitespace-nowrap py-6	">
+    <Dialog>
+      <DialogTrigger className="">
+        <Button className="h-full w-full  whitespace-nowrap">
           <IoIosAddCircle className="text-2xl" />
           Add Socials
-        </div>
-      </label>
-
-      <input type="checkbox" id="my-modal-3" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box relative">
-          <label
-            htmlFor="my-modal-3"
-            className="btn btn-circle btn-sm absolute right-2 top-2"
-          >
-            ✕
-          </label>
-          <h3 className="text-lg font-bold">Add Socials to Aperturs</h3>
-          <Socials />
-        </div>
-      </div>
-    </div>
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <h2 className="text-lg font-bold">Add Socials to Aperturs</h2>
+        <Socials />
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -131,27 +121,29 @@ const Socials = () => {
         <FaFacebookSquare className="text-2xl " />
         <p>Facebook</p>
       </button> */}
-      <button
-        className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
+      <Button
+        variant="secondary"
+        className="h-12"
         onClick={() => router.push("/socials/twitter")}
       >
-        <AiOutlineTwitter className="text-2xl " />
+        <AiOutlineTwitter className="mr-2 text-2xl " />
         <p>Twitter</p>
-      </button>
+      </Button>
       {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
         <AiFillInstagram className="text-2xl " />
         <p>Insta</p>
       </button> */}
-      <button
-        className="btn gap-2 hover:border-0 hover:bg-primary  hover:text-white"
+      <Button
+        variant="secondary"
+        className="h-12"
         onClick={async () => {
           if (userId) await handleLinkedln();
         }}
         disabled={localLoading}
       >
-        <FaLinkedinIn className="text-2xl " />
+        <FaLinkedinIn className="mr-2 text-2xl" />
         <p>Linkedin</p>
-      </button>
+      </Button>
       {/* <button
         className="btn gap-2 hover:border-0 hover:bg-[#DACCF3]  hover:text-black"
         onClick={() => router.push("/socials/lens")}
@@ -159,16 +151,17 @@ const Socials = () => {
         <Image src="/lens.svg" alt="lens" width={40} height={40} />
         <p>Lens </p>
       </button> */}
-      <button
-        className={`btn gap-2 hover:border-0 hover:bg-primary  hover:text-white `}
+      <Button
+        variant="secondary"
+        className="h-12"
         onClick={async () => {
           if (userId) await handleGithub();
         }}
         disabled={githubLoading || localLoading}
       >
-        <FaGithub className="text-2xl " />
+        <FaGithub className="mr-2 text-2xl" />
         <p>Github </p>
-      </button>
+      </Button>
     </div>
   );
 };

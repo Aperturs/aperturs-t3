@@ -102,10 +102,7 @@ const Settings = ({ params }: { params: { id: string } }) => {
           <Button
             disabled={isLoading}
             className="w-full"
-            onClick={() =>
-              // Your logic to generate posts based on commits
-              submit()
-            }
+            onClick={async () => await submit()}
           >
             Save Changes
           </Button>

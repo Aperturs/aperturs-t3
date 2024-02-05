@@ -22,7 +22,7 @@ export default function ProjectNavBar({ params }: { params: { id: string } }) {
   }, []);
 
   return (
-    <Card className="px-6 py-3">
+    <Card className="max-w-fit px-6 py-3">
       <div className="flex items-start justify-center">
         <div className="hidden lg:block">
           <NavList params={params} />

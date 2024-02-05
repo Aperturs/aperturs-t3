@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 import { TRPCReactProvider } from "~/trpc/react";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster position="top-left" reverseOrder={false} />
           <ClerkProvider
             appearance={{
               elements: {
@@ -41,14 +43,7 @@ export default function RootLayout({
             }}
           >
             <TRPCReactProvider cookies={cookies().toString()}>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                {children}
-              </ThemeProvider>
+              {children}
             </TRPCReactProvider>
           </ClerkProvider>
         </ThemeProvider>
