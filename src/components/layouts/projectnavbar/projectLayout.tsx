@@ -8,6 +8,7 @@ function projectLayout({
   children: React.ReactNode;
   params: { id: string };
 }) {
+  console.log(params, "params from projectLayout");
   return (
     <div className="w-full px-3">
       <ProjectNavBar params={params} />

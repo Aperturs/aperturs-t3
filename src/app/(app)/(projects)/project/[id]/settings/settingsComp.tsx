@@ -1,25 +1,21 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Button } from "~/components/ui/button";
 import {
   Card,
-  CardBody,
+  CardContent,
   CardFooter,
   CardHeader,
-  Input,
-  Textarea,
-  Typography,
-} from "@material-tailwind/react";
-import { useRouter } from "next/router";
-import { useEffect, useState, type ReactElement } from "react";
-import toast from "react-hot-toast";
-import { Layout, ProjectLayout } from "~/components";
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
 import { type ProjectQnA } from "~/types/project";
 import { api } from "~/utils/api";
 
-const Settings = () => {
-  const router = useRouter();
-
-  const { data } = api.github.project.getProject.useQuery(
-    router.query.id as string
-  );
+const Settings = ({ params }: { params: { id: string } }) => {
+  const { data } = api.github.project.getProject.useQuery(params.id);
 
   console.log(data);
   const [description, setDescription] = useState("");
@@ -47,7 +43,7 @@ const Settings = () => {
   }, [data]);
 
   const submit = async () => {
-    const id = router.query.id as string;
+    const id = params.id;
     if (!id) {
       toast.error("Something went wrong");
       return;
@@ -73,67 +69,49 @@ const Settings = () => {
   return (
     <div className="mt-4 grid grid-cols-1 gap-11 sm:grid-cols-1">
       {/* <CommitSettings />
-      <CommitDescriptionSettingsCard /> */}
+        <CommitDescriptionSettingsCard /> */}
       <Card className="mt-6">
         <CardHeader color="blue-gray">
-          <Typography
-            variant="h5"
-            color="white"
-            className=" grid h-24 place-items-center"
-          >
-            Project Info
-          </Typography>
+          <h5 className=" grid h-24 place-items-center">Project Info</h5>
         </CardHeader>
-        <CardBody className="flex flex-col gap-3">
-          <Typography color="blue-gray" className="mb-4">
+        <CardContent className="flex flex-col gap-3">
+          <p className="mb-4">
             Add some information about your project. This will be used to
             generate better the post.
-          </Typography>
+          </p>
           <Input
-            label="Name"
+            placeholder="Name"
             className="mb-4"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            crossOrigin={undefined}
           />
           <Input
-            label="Tagline or one line description about your project"
+            placeholder="Tagline or one line description about your project"
             className="mb-4"
             value={tagline}
             onChange={(e) => setTagline(e.target.value)}
-            crossOrigin={undefined}
           />
           <Textarea
-            label="Project Descripton"
+            placeholder="Project Descripton"
             value={description}
-            size="lg"
+            // size="lg"
             onChange={(e) => setDescription(e.target.value)}
           />
-        </CardBody>
+        </CardContent>
         <CardFooter>
-          <button
+          <Button
             disabled={isLoading}
-            className={`btn btn-primary w-full text-white ${
-              isLoading ? "loading" : ""
-            }`}
+            className="w-full"
             onClick={() =>
               // Your logic to generate posts based on commits
               submit()
             }
           >
             Save Changes
-          </button>
+          </Button>
         </CardFooter>
       </Card>
     </div>
-  );
-};
-
-Settings.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout>
-      <ProjectLayout>{page}</ProjectLayout>
-    </Layout>
   );
 };
 

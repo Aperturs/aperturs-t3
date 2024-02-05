@@ -8,5 +8,6 @@ export default function Layout({
   children: React.ReactNode;
   params: { id: string };
 }) {
+  console.log(params, "params");
   return <ProjectLayout params={params}>{children}</ProjectLayout>;
 }

@@ -4,8 +4,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import { useEffect, useState, type ReactElement } from "react";
-import { CommitsTable, Layout, ProjectLayout } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
+import Layout from "~/components/layouts/Layout";
+import ProjectLayout from "~/components/layouts/projectnavbar/projectLayout";
+import CommitsTable from "~/components/projects/project/commits/commitsTable";
 import { useGithub } from "~/hooks/useGithub";
 import { api } from "~/utils/api";
 
@@ -90,10 +92,13 @@ const CommitsPage = ({ id }: { id: string }) => {
   );
 };
 
-CommitsPage.getLayout = function getLayout(page: ReactElement) {
+CommitsPage.getLayout = function getLayout(
+  page: ReactElement,
+  params: { id: string }
+) {
   return (
     <Layout>
-      <ProjectLayout>{page}</ProjectLayout>
+      <ProjectLayout params={params}>{page}</ProjectLayout>
     </Layout>
   );
 };
