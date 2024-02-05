@@ -35,10 +35,10 @@ export default function AccountTabs() {
   ];
   return (
     <Tabs defaultValue="account">
-      <TabsList className="w-full text-center">
+      <TabsList className="text-center">
         {data.map(({ label, value, icon }) => (
           <TabsTrigger key={value} value={value}>
-            <div className="flex w-full items-center gap-2">
+            <div className="flex items-center gap-2">
               {React.createElement(icon, { className: "w-5 h-5" })}
               {label}
             </div>

@@ -1,6 +1,6 @@
+import { z } from "zod";
 import ls from "~/utils/lemonSqueezy";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { z } from "zod";
 
 export const subscriptionData = createTRPCRouter({
   getProducts: protectedProcedure.query(async ({}) => {
@@ -59,17 +59,21 @@ export const subscriptionData = createTRPCRouter({
 
       return checkout.data.attributes;
     }),
-  getSubscriptions: protectedProcedure.query(async ({ ctx }) => {
-    const user = await ctx.prisma.user.findUnique({
-      where: { clerkUserId: ctx.currentUser },
-      select: {
-        lsSubscriptionId: true,
-        lsCurrentPeriodEnd: true,
-        lsCustomerId: true,
-        lsVariantId: true,
-      },
-    });
 
+  getSubscriptions: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.prisma.user
+      .findUnique({
+        where: { clerkUserId: ctx.currentUser },
+        select: {
+          lsSubscriptionId: true,
+          lsCurrentPeriodEnd: true,
+          lsCustomerId: true,
+          lsVariantId: true,
+        },
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     if (!user) throw new Error("User not found");
 
     // Check if user is on a pro plan.
@@ -77,6 +81,16 @@ export const subscriptionData = createTRPCRouter({
       user.lsVariantId &&
       user.lsCurrentPeriodEnd &&
       user.lsCurrentPeriodEnd.getTime() + 86_400_000 > Date.now();
+
+    if (!user.lsSubscriptionId) {
+      return {
+        isPro: false,
+        isCanceled: false,
+        lsCurrentPeriodEnd: null,
+        subscription: null,
+        updatePaymentMethodURL: null,
+      };
+    }
 
     const subscription = await ls.getSubscription({
       id: parseInt(user.lsSubscriptionId ?? "0"),

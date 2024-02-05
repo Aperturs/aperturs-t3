@@ -1,6 +1,13 @@
-import { CardFooter } from "@material-tailwind/react";
+"use client";
+
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardFooter,
+} from "~/components/ui/card";
+import { api } from "~/trpc/react";
 
 interface iFeature {
   name: string;
@@ -10,7 +17,7 @@ interface iFeature {
 interface iFeatureList {
   name: string;
   pricing: number;
-  onClick: () => void;
+  onClick?: () => void;
   features: iFeature[];
   id: string;
   currentPlan?: string;
@@ -24,9 +31,17 @@ export default function BillingCard({
   id,
   currentPlan,
 }: iFeatureList) {
+  const subscribe = api.subscriptions.createCheckout.useMutation();
+
+  // const handleSubscribe = async (productId: string) => {
+  //   await subscribe({ productId: parseInt(productId) }).then((res) => {
+  //     console.log(res);
+  //     // window.location.href = res;
+  //   });
+  // };
   return (
     <Card
-      className={`max-w-sm ${
+      className={` ${
         name === currentPlan ? "border-blue-gray-900 border-2" : ""
       }`}
     >
@@ -90,7 +105,12 @@ export default function BillingCard({
         </ul>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" onClick={onClick}>
+        <Button
+          className="w-full"
+          onClick={async () => {
+            await subscribe.mutateAsync({ productId: parseInt(id) });
+          }}
+        >
           Choose plan
         </Button>
       </CardFooter>

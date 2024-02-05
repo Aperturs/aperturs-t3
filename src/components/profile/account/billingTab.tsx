@@ -1,4 +1,4 @@
-import { api } from "~/utils/api";
+import { api } from "~/trpc/server";
 import ManageSubscription from "./manageSubscription";
 import BillingCard from "./paymentCards";
 
@@ -45,21 +45,9 @@ function extractPrice(priceRange: string, position: 1 | 2): number | null {
   return parsedPrice;
 }
 
-export default function BillingTab() {
-  const { data: billingPlans } = api.subscriptions.getProducts.useQuery();
-  const { mutateAsync: subscribe } =
-    api.subscriptions.createCheckout.useMutation();
-
-  console.log(billingPlans);
-
-  const handleSubscribe = async (productId: string) => {
-    await subscribe({ productId: parseInt(productId) }).then((res) => {
-      console.log(res);
-      // window.location.href = res;
-    });
-  };
-  const { data: getSubscription } =
-    api.subscriptions.getSubscriptions.useQuery();
+export default async function BillingTab() {
+  const billingPlans = await api.subscriptions.getProducts.query();
+  const getSubscription = await api.subscriptions.getSubscriptions.query();
 
   return (
     <div className="w-full flex-1">
@@ -70,7 +58,7 @@ export default function BillingTab() {
       />
       <div className="gird-cols-1 grid w-full gap-3 md:grid-cols-2 xl:grid-cols-3">
         {billingPlans?.data
-          .slice()
+          ?.slice()
           .reverse()
           .map((plan) => (
             <BillingCard
@@ -78,10 +66,10 @@ export default function BillingTab() {
               features={soloCreatorFeatures}
               name={plan.attributes.name}
               pricing={extractPrice(plan.attributes.price_formatted, 1) ?? 0}
-              onClick={() => handleSubscribe(plan.id)}
+              // onClick={() => handleSubscribe(plan.id)}
               id={plan.id}
               currentPlan={
-                getSubscription?.subscription.data.attributes.product_name
+                getSubscription?.subscription?.data?.attributes?.product_name
               }
             />
           ))}

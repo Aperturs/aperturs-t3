@@ -91,6 +91,11 @@
 
 .cl-internal-phfxlr {
   width: 100% !important;
+  will-change: height !important;
+}
+
+.cl-internal-13iim0d {
+  display: none;
 }
 .cl-internal-17ydaof {
   /* max-width: 500px; */
