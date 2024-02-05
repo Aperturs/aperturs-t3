@@ -1,6 +1,4 @@
-import { MenuItem, Typography } from "@material-tailwind/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FaCodeBranch } from "react-icons/fa";
 import { GiPaperTray } from "react-icons/gi";
 import { IoMdSettings } from "react-icons/io";

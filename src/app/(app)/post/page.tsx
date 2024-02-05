@@ -1,10 +1,11 @@
-import { useEffect, type ReactElement, useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import LogoLoad from "~/components/custom/loading/logoLoad";
-import Layout from "~/components/layouts/Layout";
 import PostView from "~/components/post/postWrapper";
 import { useStore } from "~/store/post-store";
 
-const PostContent = () => {
+export default function PostContent({ params }: { params: { id: string } }) {
   const { reset, shouldReset, setShouldReset } = useStore((state) => ({
     reset: state.reset,
     shouldReset: state.shouldReset,
@@ -35,17 +36,9 @@ const PostContent = () => {
 
   if (loading) return <LogoLoad size="24" />;
 
-  return <PostView />;
-};
-
-export default function Post() {
   return (
     <div className="container mx-auto p-4">
-      <PostContent />
+      <PostView params={params} />{" "}
     </div>
   );
 }
-
-Post.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
-};

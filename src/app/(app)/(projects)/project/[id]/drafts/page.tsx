@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import DraftCard from "~/components/drafts/darfCard";
 import { api } from "~/trpc/server";
 import { type PostContentType } from "~/types/post-types";

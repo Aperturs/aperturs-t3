@@ -51,6 +51,7 @@ export default async function CommitsPage({
       projectDescription={
         project?.project?.questionsAnswersJsonString?.toString() ?? ""
       }
+      params={params}
     />
   );
 }

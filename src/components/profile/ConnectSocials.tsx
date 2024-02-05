@@ -2,7 +2,7 @@
 
 import { useAuth } from "@clerk/nextjs";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";

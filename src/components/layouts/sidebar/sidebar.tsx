@@ -1,17 +1,16 @@
 "use client";
 
 import { Bars2Icon } from "@heroicons/react/24/outline";
-import { IconButton, List } from "@material-tailwind/react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { ModeToggle } from "../theme-toggle";
 import AccordianMenu from "./accordianMenu";
 import BottomMenu from "./bottomMenu";
 import { CommandMenu } from "./command-menu";
-import { Button } from "~/components/ui/button";
 
 export default function SideBar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -30,6 +29,7 @@ export default function SideBar() {
     if (isNavOpen) {
       setIsNavOpen(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
   return (
@@ -77,11 +77,11 @@ export default function SideBar() {
             transition={{ duration: 0.5 }}
             className="overflow-scroll"
           >
-            <List>
+            <div>
               <AccordianMenu />
               <hr className="border-blue-gray-50 my-2" />
               <BottomMenu />
-            </List>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

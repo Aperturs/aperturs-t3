@@ -5,9 +5,8 @@ const LogoLoad = ({ size }: { size?: string }) => {
         <object
           type="image/svg+xml"
           data="/loader.svg"
-          className="bg-transparent dark:brightness-0 dark:invert"
+          // className="bg-transparent"
         />
-        {/* <Image src='/load1.gif' alt='loader' width={parseInt( '100',10)} height={parseInt( '100',10)}  /> */}
       </div>
     </div>
   );

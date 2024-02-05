@@ -2,7 +2,7 @@
 
 import { LineWobble } from "@uiball/loaders";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Badge } from "~/components/ui/badge";
@@ -53,6 +53,7 @@ interface CommitTableProps {
   ProjectTagline: string;
   projectDescription: string;
   // accessToken: string;
+  params: { id: string };
 }
 
 export default function CommitsTable({
@@ -60,6 +61,7 @@ export default function CommitsTable({
   projectDescription,
   projectName,
   ProjectTagline,
+  params,
 }: CommitTableProps) {
   // const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -67,6 +69,7 @@ export default function CommitsTable({
     commits: state.commits,
     setCommits: state.setCommits,
   }));
+
   const {
     data: generatedPosts,
     mutateAsync: generatePosts,
@@ -194,7 +197,10 @@ export default function CommitsTable({
               <LineWobble size={80} lineWeight={5} speed={1.75} />
             </div>
           ) : generatedPosts?.data ? (
-            <GeneratedPostsCard posts={generatedPosts.data || []} />
+            <GeneratedPostsCard
+              posts={generatedPosts.data || []}
+              params={params}
+            />
           ) : (
             <p color="red">{generationError?.message}</p>
           )}
@@ -204,7 +210,13 @@ export default function CommitsTable({
   );
 }
 
-function GeneratedPostsCard({ posts }: { posts: string[] }) {
+function GeneratedPostsCard({
+  posts,
+  params,
+}: {
+  posts: string[];
+  params: { id: string };
+}) {
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const {
     mutateAsync: savePost,
@@ -213,10 +225,11 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
   } = api.savepost.savePost.useMutation();
 
   const router = useRouter();
+  const { id } = params;
   console.log(selectedPost);
 
   const handleSavePost = () => {
-    const projectId = router.query.id as string;
+    const projectId = id;
     if (!selectedPost) {
       toast.error("Please select a post");
       return;
@@ -233,9 +246,9 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
           error: `${error?.message ? error?.message : "Something went wrong"}`,
         }
       )
-      .then(async (res) => {
+      .then((res) => {
         if (res.success) {
-          await router.push(`/project/${projectId}/drafts`);
+          router.push(`/project/${projectId}/drafts`);
         }
       })
       .catch((err) => {

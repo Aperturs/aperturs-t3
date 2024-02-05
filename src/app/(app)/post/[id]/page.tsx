@@ -1,18 +1,16 @@
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState, type ReactElement } from "react";
-import { shallow } from "zustand/shallow";
-import Layout from "~/components/layouts/Layout";
-import LogoLoad from "~/components/custom/loading/logoLoad";
-import { useStore } from "~/store/post-store";
-import { type PostContentType } from "~/types/post-types";
-import { api } from "~/utils/api";
-import PostView from "~/components/post/postWrapper";
+"use client";
 
-export default function Post() {
+import { useEffect, useMemo, useState } from "react";
+import { shallow } from "zustand/shallow";
+import LogoLoad from "~/components/custom/loading/logoLoad";
+import PostView from "~/components/post/postWrapper";
+import { useStore } from "~/store/post-store";
+import { api } from "~/trpc/react";
+
+export default function Post({ params }: { params: { id: string } }) {
   // const router = useRouter()
 
-  const router = useRouter();
-  const { id } = router.query;
+  const { id } = params;
   // const { data, isLoading, error } = api.userPost.getSavedPostById.useQuery(
   //   id as string
   // );
@@ -25,7 +23,7 @@ export default function Post() {
     shallow
   );
 
-  const getData = api.savepost.getSavedPostById.useQuery(id as string);
+  const getData = api.savepost.getSavedPostById.useQuery(id);
 
   const fetchData = useMemo(() => {
     return () => {
@@ -40,6 +38,7 @@ export default function Post() {
         console.error("Error fetching data:", error);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getData.data]);
 
   useEffect(() => {
@@ -59,11 +58,7 @@ export default function Post() {
 
   return (
     <div>
-      <PostView />
+      <PostView params={params} />
     </div>
   );
 }
-
-Post.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
-};

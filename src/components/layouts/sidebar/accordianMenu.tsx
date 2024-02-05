@@ -82,18 +82,18 @@ export default function AccordanceMenu() {
         {AccordanceMenuList.map((item, index) => {
           return (
             <CommandGroup key={index} heading={item.text} className="py-3">
-              {item.items.map((subItem, subIndex) => (
+              {item.items.map((subItem) => (
                 <CommandItem
                   key={subItem.url}
                   className={`${
                     currentPath(subItem.url)
                       ? "bg-primary text-white dark:text-primary-foreground"
                       : ""
-                  } my-1 cursor-pointer py-3`}
+                  } group my-1 cursor-pointer py-3`}
                 >
                   <Link
                     href={subItem.url}
-                    className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent hover:font-semibold md:w-full"
+                    className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent group-hover:font-semibold md:w-full"
                   >
                     {subItem.subIcon}
                     <span>{subItem.subText}</span>
