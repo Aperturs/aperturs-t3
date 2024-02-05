@@ -38,17 +38,16 @@ const menuItems = [
 ];
 
 export default function NavList({ params }: { params: { id: string } }) {
-  const router = useRouter();
   return (
     <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
       {menuItems.map(({ text, icon, url }) => (
         <Link href={`/project/${params.id}${url}`} key={text}>
-          <Typography variant="small" color="blue-gray" className="font-normal">
-            <MenuItem className="flex items-center gap-2 lg:rounded-lg">
+          <p className="font-normal">
+            <li className="flex items-center gap-2 lg:rounded-lg">
               {icon}
               {text}
-            </MenuItem>
-          </Typography>
+            </li>
+          </p>
         </Link>
       ))}
     </ul>

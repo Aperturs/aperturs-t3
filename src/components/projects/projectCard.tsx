@@ -1,13 +1,7 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Typography,
-} from "@material-tailwind/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
 type Props = {
   repoName: string;
@@ -24,11 +18,10 @@ export default function GithubCard({
   repoImage,
   projectId,
 }: Props) {
-  const router = useRouter();
   return (
-    <Card className="w-auto">
+    <Card className="w-full">
       {repoImage && (
-        <CardHeader shadow={false} floated={false} className="h-56">
+        <CardHeader className="h-56">
           <Image
             src={repoImage}
             className="h-full w-full object-cover"
@@ -39,33 +32,20 @@ export default function GithubCard({
           />
         </CardHeader>
       )}
-      <CardBody>
-        <div className="mb-2 flex items-center justify-between">
-          <Typography color="blue-gray" className="font-medium">
-            {repoName}
-          </Typography>
-          <Typography color="blue-gray" className="text-xs">
-            Updated At {lastUpdated}
-          </Typography>
-        </div>
-        <Typography
-          variant="small"
-          color="gray"
-          className="font-normal opacity-75"
-        >
+      <CardHeader>
+        <div className="mb-2 flex flex-col gap-2">
+          <h3 className="font-medium">{repoName}</h3>
+          <h5 className="text-xs">Updated At {lastUpdated}</h5>
+        </div>{" "}
+      </CardHeader>
+      <CardContent>
+        <p color="gray" className="font-normal opacity-75">
           {repoDescription}
-        </Typography>
-      </CardBody>
+        </p>
+      </CardContent>
       <CardFooter className="pt-0">
-        <Button
-          ripple={false}
-          fullWidth={true}
-          onClick={() => {
-            router.push(`/project/${projectId}/drafts`);
-          }}
-          className="bg-blue-gray-900/10 text-blue-gray-900 shadow-none hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100"
-        >
-          Overview
+        <Button className="w-full hover:scale-105 hover:shadow-none focus:scale-105 focus:shadow-none active:scale-100">
+          <Link href={`/project/${projectId}/drafts`}>Overview</Link>
         </Button>
       </CardFooter>
     </Card>

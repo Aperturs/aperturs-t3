@@ -1,10 +1,16 @@
 import React from "react";
 import ProjectNavBar from "./projectnavbar";
 
-function projectLayout({ children }: { children: React.ReactNode }) {
+function projectLayout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: { id: string };
+}) {
   return (
-    <div className="flex w-full flex-col items-center">
-      <ProjectNavBar />
+    <div className="w-full px-3">
+      <ProjectNavBar params={params} />
       <div className="my-3 ">{children}</div>
     </div>
   );

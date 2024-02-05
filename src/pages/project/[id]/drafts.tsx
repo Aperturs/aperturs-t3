@@ -1,15 +1,15 @@
-import { useRouter } from "next/router";
 import { type ReactElement } from "react";
-import { DraftCard, Layout, ProjectLayout } from "~/components";
 import LogoLoad from "~/components/custom/loading/logoLoad";
+import DraftCard from "~/components/drafts/darfCard";
+import Layout from "~/components/layouts/Layout";
+import ProjectLayout from "~/components/layouts/projectnavbar/projectLayout";
 import { type PostContentType } from "~/types/post-types";
 import { api } from "~/utils/api";
 
-const DraftPage = () => {
-  const router = useRouter();
-  const { id } = router.query;
+const DraftPage = ({ params }: { params: { id: string } }) => {
+  const { id } = params;
   const { data, isLoading, error, refetch } =
-    api.savepost.getSavedPostsByProjectId.useQuery(id as string);
+    api.savepost.getSavedPostsByProjectId.useQuery(id);
 
   if (isLoading) {
     return <LogoLoad size="24" />;

@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { type ReactElement } from "react";
-import { GithubCard, Layout, NewRepoFormModal } from "~/components";
-import LogoLoad from "~/components/custom/loading/logoLoad";
-import { api } from "~/utils/api";
+import NewRepoFormModal from "~/components/projects/newRepoModal";
+import GithubCard from "~/components/projects/projectCard";
+import { api } from "~/trpc/server";
 
-function Projects() {
-  const { data, isLoading } = api.github.project.getAllProjects.useQuery();
-  const { data: githubTokens, isLoading: tokensLoading } =
-    api.user.getGithubAccounts.useQuery();
+async function Projects() {
+  //TODO: moving them into separate components and add suspense and skeleton loading
+  const data = await api.github.project.getAllProjects.query();
+  const githubTokens = await api.user.getGithubAccounts.query();
 
-  if (isLoading || tokensLoading) return <LogoLoad size="24" />;
+  //   if (isLoading || tokensLoading) return <LogoLoad size="24" />;
   if (!githubTokens || githubTokens.length <= 0)
     return (
       <div className="flex h-screen items-center justify-center">
@@ -27,7 +26,9 @@ function Projects() {
         </h3>
         <NewRepoFormModal />
       </div>
-      <div className={`grid-col-1  grid gap-6  xl:grid-cols-2 2xl:grid-cols-3`}>
+      <div
+        className={`grid-col-1 grid w-full gap-6  md:grid-cols-2 2xl:grid-cols-3`}
+      >
         {/* <GithubCard
           projectId="test"
           repoName="test"
@@ -53,9 +54,5 @@ function Projects() {
     </div>
   );
 }
-
-Projects.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
-};
 
 export default Projects;

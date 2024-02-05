@@ -15,7 +15,7 @@ import {
   Textarea,
   Typography,
 } from "@material-tailwind/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
@@ -97,8 +97,8 @@ const NewRepoFormModal = () => {
 
   const { mutateAsync: addProject, isLoading: projectLoading } =
     api.github.project.addProject.useMutation({
-      onSuccess: async (data) => {
-        await router.push(`/project/${data.id}/commits`);
+      onSuccess: (data) => {
+        router.push(`/project/${data.id}/commits`);
       },
     });
 
