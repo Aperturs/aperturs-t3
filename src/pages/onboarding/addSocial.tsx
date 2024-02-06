@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import ConnectSocials from "~/components/profile/ConnectSocials";
 
 function AddSocial() {

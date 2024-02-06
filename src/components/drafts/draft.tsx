@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
-import { type PostContentType } from "~/types/post-types";
-import PostCard from "./darfCard";
 import { api } from "~/trpc/server";
-import ToolTipSimple from "../ui/tooltip-final";
+import { type PostContentType } from "~/types/post-types";
 import { Button } from "../ui/button";
+import ToolTipSimple from "../ui/tooltip-final";
+import PostCard from "./darfCard";
 
 async function DraftPage() {
   const getSavedPosts = await api.savepost.getSavedPosts.query();
@@ -44,8 +44,8 @@ async function DraftPage() {
             <h1 className="mb-2 text-center text-xl font-semibold">
               No Drafts Available
             </h1>
-            <Link href="/post" className="btn">
-              Create New Draft
+            <Link href="/post">
+              <Button>Create New Draft</Button>
             </Link>
           </div>
         )}

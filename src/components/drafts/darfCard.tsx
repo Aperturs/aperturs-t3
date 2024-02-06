@@ -1,6 +1,5 @@
 "use client";
-
-import { Dialog } from "@material-tailwind/react";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -11,6 +10,7 @@ import ConfirmationModal from "~/components/custom/modals/modal";
 import { api } from "~/utils/api";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Dialog } from "../ui/dialog";
 import ToolTipSimple from "../ui/tooltip-final";
 
 interface IDarfCard {
@@ -36,11 +36,11 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
   };
 
   return (
-    <Card className="mt-6 ">
-      <CardHeader className="relative ">
-        <p>Draft</p>
-      </CardHeader>
-      <Dialog open={open} handler={setOpen}>
+    <Dialog>
+      <Card className="mt-6 ">
+        <CardHeader className="relative ">
+          <p>Draft</p>
+        </CardHeader>
         <ConfirmationModal
           DialogBodyContent="Are you sure you want to delete this draft?"
           DialogHeaderContent="Delete Draft"
@@ -53,54 +53,56 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
             setOpen(false);
           }}
         />
-      </Dialog>
-      <CardContent>
-        <div className="h-20 overflow-auto">
-          <p className="whitespace-pre-line">{content}</p>
-        </div>
-      </CardContent>
-      <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
-        {/* <button className="btn btn-primary text-white"
+        <CardContent>
+          <div className="h-20 overflow-auto">
+            <p className="whitespace-pre-line">{content}</p>
+          </div>
+        </CardContent>
+        <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
+          {/* <button className="btn btn-primary text-white"
         
         onClick={() => {
             router.push("/post/1");
         }}
         >Edit</button> */}
-        <ToolTipSimple content="Edit" duration={30}>
-          <Button
-            variant="secondary"
-            className="btn w-full"
-            onClick={() => {
-              router.push(`/post/${id}`);
-            }}
-          >
-            <IoPencilSharp />
-          </Button>
-        </ToolTipSimple>
-        <ToolTipSimple content="Comming Soon...">
-          <Button variant="secondary" className="btn w-full">
-            <HiPaperAirplane />
-          </Button>
-        </ToolTipSimple>
-        <ToolTipSimple content="Comming Soon...">
-          <Button variant="secondary" className="w-full">
-            <HiQueueList />
-          </Button>
-        </ToolTipSimple>
-        <ToolTipSimple content="Delete draft" duration={30}>
-          <Button
-            size="icon"
-            variant="secondary"
-            disabled={deleting}
-            className="w-full hover:bg-red-600 hover:text-white"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            <TbTrashFilled />
-          </Button>
-        </ToolTipSimple>
-      </CardFooter>
-    </Card>
+          <ToolTipSimple content="Edit" duration={30}>
+            <Button
+              variant="secondary"
+              className="btn w-full"
+              onClick={() => {
+                router.push(`/post/${id}`);
+              }}
+            >
+              <IoPencilSharp />
+            </Button>
+          </ToolTipSimple>
+          <ToolTipSimple content="Comming Soon...">
+            <Button variant="secondary" className="btn w-full">
+              <HiPaperAirplane />
+            </Button>
+          </ToolTipSimple>
+          <ToolTipSimple content="Comming Soon...">
+            <Button variant="secondary" className="w-full">
+              <HiQueueList />
+            </Button>
+          </ToolTipSimple>
+          <ToolTipSimple content="Delete draft" duration={30}>
+            <DialogTrigger asChild>
+              <Button
+                size="icon"
+                variant="secondary"
+                disabled={deleting}
+                className="w-full hover:bg-red-600 hover:text-white"
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                <TbTrashFilled />
+              </Button>
+            </DialogTrigger>
+          </ToolTipSimple>
+        </CardFooter>
+      </Card>
+    </Dialog>
   );
 }

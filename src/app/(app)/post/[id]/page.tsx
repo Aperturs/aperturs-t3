@@ -46,7 +46,7 @@ export default function Post({ params }: { params: { id: string } }) {
     fetchData();
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 1000); // 2-second delay
+    }, 2000); // 2-second delay
 
     return () => {
       clearTimeout(timeout);

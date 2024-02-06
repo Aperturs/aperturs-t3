@@ -1,9 +1,10 @@
+import { Button } from "~/components/ui/button";
 import {
-  Button,
-  DialogBody,
+  DialogClose,
+  DialogContent,
   DialogFooter,
   DialogHeader,
-} from "@material-tailwind/react";
+} from "~/components/ui/dialog";
 
 export type HandleOpenRef = {
   handleOpen: () => void;
@@ -23,18 +24,22 @@ function ConfirmationDialog({
   DialogHeaderContent,
 }: ConfirmationDialogProps) {
   return (
-    <>
+    <DialogContent>
       <DialogHeader>{DialogHeaderContent}</DialogHeader>
-      <DialogBody>{DialogBodyContent}</DialogBody>
+      <div>{DialogBodyContent}</div>
       <DialogFooter>
-        <Button variant="text" color="red" onClick={onClose} className="mr-1">
-          <span>Cancel</span>
-        </Button>
-        <Button variant="gradient" color="black" onClick={onConfirm}>
-          <span>Confirm</span>
-        </Button>
+        <DialogClose asChild>
+          <Button variant="secondary" onClick={onClose} className="mr-1">
+            <span>Cancel</span>
+          </Button>
+        </DialogClose>
+        <DialogClose asChild>
+          <Button variant="destructive" onClick={onConfirm}>
+            <span>Confirm</span>
+          </Button>
+        </DialogClose>
       </DialogFooter>
-    </>
+    </DialogContent>
   );
 }
 
