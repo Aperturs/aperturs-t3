@@ -1,5 +1,3 @@
-"use client";
-
 import ContentPage from "~/components/dashboard/ContentPage";
 
 const Dashboard = () => {
