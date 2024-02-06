@@ -36,9 +36,9 @@ export default function InfoContainer({
         {infoBlocks.length === 0 && (
           <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
             <p className="text-lg font-medium">{emptyInfo.emptyText}</p>
-            <Link href={emptyInfo.buttonLink} className="btn my-2">
-              {emptyInfo.buttonText}
-            </Link>
+            <Button variant="link">
+              <Link href={emptyInfo.buttonLink}>{emptyInfo.buttonText}</Link>
+            </Button>
           </div>
         )}
         {infoBlocks.map((block) => {
