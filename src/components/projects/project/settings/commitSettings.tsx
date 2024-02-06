@@ -1,12 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import {
   Card,
-  CardBody,
+  CardContent,
   CardFooter,
   CardHeader,
-  Input,
-  Typography,
-} from "@material-tailwind/react";
-import { useState } from "react";
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
 
 export default function CommitSettings() {
   const [commits, setCommits] = useState(0);
@@ -18,28 +19,21 @@ export default function CommitSettings() {
   return (
     <Card className="mt-6">
       <CardHeader color="blue-gray">
-        <Typography
-          variant="h5"
-          color="white"
-          className=" grid h-24 place-items-center"
-        >
-          Number of Commits
-        </Typography>
+        <h5 className=" grid h-24 place-items-center">Number of Commits</h5>
       </CardHeader>
-      <CardBody>
-        <Typography color="blue-gray" className="mb-4">
+      <CardContent>
+        <p className="mb-4">
           Select the number of commits for which you want us to generate posts
           for you.
-        </Typography>
+        </p>
         <Input
           type="number"
-          label="Number of commits"
+          placeholder="Number of commits"
           value={commits}
           onChange={handleCommitsChange}
           className="mb-4"
-          crossOrigin={undefined}
         />
-      </CardBody>
+      </CardContent>
       <CardFooter>
         <button
           className="btn btn-primary w-full text-white"

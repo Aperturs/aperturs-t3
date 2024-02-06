@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactElement } from "react";
 import toast from "react-hot-toast";
-import { Layout, ProjectLayout, QuestionCard } from "~/components";
+import Layout from "~/components/layouts/Layout";
+import ProjectLayout from "~/components/layouts/projectnavbar/projectLayout";
+import QuestionCard from "~/components/projects/project/context/questionCard";
 import { api } from "~/utils/api";
 
 const ProjectContext = () => {
@@ -160,7 +162,13 @@ const ProjectContext = () => {
 ProjectContext.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout>
-      <ProjectLayout>{page}</ProjectLayout>
+      <ProjectLayout
+        params={{
+          id: "",
+        }}
+      >
+        {page}
+      </ProjectLayout>
     </Layout>
   );
 };

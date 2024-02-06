@@ -31,7 +31,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
   };
 
   return (
-    <div className=" border-l-2  border-blue-gray-500 pl-3">
+    <div className=" border-blue-gray-500  border-l-2 pl-3">
       {/* <Avatar src="/user.png" size="md" className="border-2 border-white" /> */}
       <textarea
         ref={textareaRef}

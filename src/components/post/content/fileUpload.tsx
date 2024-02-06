@@ -1,11 +1,16 @@
-import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
 import { useCallback, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
 import usePostUpdate from "./use-post-update";
+import ToolTipSimple from "~/components/ui/tooltip-final";
 
 function isImage(url: string): boolean {
   const fileExtension = url.split(".");
@@ -121,7 +126,7 @@ export default function FileUpload({
           </div>
         ))}
       </div>
-      <Tooltip placement="top" content="Add Image/Video">
+      <ToolTipSimple content="Add Image/Video">
         <label htmlFor={inputId} className="my-2  block w-8 cursor-pointer">
           <input
             type="file"
@@ -132,7 +137,7 @@ export default function FileUpload({
           />
           <BsFillImageFill className="text-xl" />
         </label>
-      </Tooltip>
+      </ToolTipSimple>
     </div>
   );
 }
@@ -144,6 +149,7 @@ interface DeleteImageProps {
 
 function DeleteImage({ handleRemove, index }: DeleteImageProps) {
   const [clickedOnce, setClickedOnce] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     if (clickedOnce) {
@@ -158,22 +164,26 @@ function DeleteImage({ handleRemove, index }: DeleteImageProps) {
   const handleMouseLeave = () => {
     // Reset the state when the mouse leaves, so it goes back to the initial state
     setClickedOnce(false);
+    setIsHovered(false);
   };
 
   return (
-    <Tooltip
-      placement="top"
-      content={clickedOnce ? "Click again to remove" : "Remove"}
-    >
-      <button
-        className={`absolute right-1 top-1 z-10 grid  place-content-center rounded-2xl bg-blue-gray-800 p-2 text-sm ${
-          clickedOnce ? " text-yellow-700" : " text-red-700"
-        } opacity-0 transition-all delay-100 duration-100 group-hover:opacity-100`}
-        onClick={handleClick}
-        onMouseLeave={handleMouseLeave}
+    <Popover open={clickedOnce}>
+      <PopoverContent className="w-fit py-2 text-xs">
+        Click again to Delete
+      </PopoverContent>
+      <PopoverTrigger
+        className={`delay-50 absolute right-1 top-1 z-10  grid place-content-center rounded-2xl bg-secondary p-2  text-sm opacity-0 transition-all duration-100 group-hover:opacity-100`}
       >
-        {clickedOnce ? <FaCheck /> : <MdDelete />}
-      </button>
-    </Tooltip>
+        <button
+          // size="icon"
+          // variant="secondary"
+          onClick={handleClick}
+          onMouseLeave={handleMouseLeave}
+        >
+          {clickedOnce ? <FaCheck /> : <MdDelete />}
+        </button>
+      </PopoverTrigger>
+    </Popover>
   );
 }

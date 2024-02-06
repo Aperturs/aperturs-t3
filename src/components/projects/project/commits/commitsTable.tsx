@@ -1,17 +1,20 @@
-import {
-  Card,
-  Checkbox,
-  Chip,
-  Dialog,
-  DialogBody,
-  DialogHeader,
-  Typography,
-} from "@material-tailwind/react";
+"use client";
+
 import { LineWobble } from "@uiball/loaders";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/utils/api";
 import { defaultContent } from "~/utils/basic-functions";
@@ -49,7 +52,8 @@ interface CommitTableProps {
   projectName: string;
   ProjectTagline: string;
   projectDescription: string;
-  accessToken: string;
+  // accessToken: string;
+  params: { id: string };
 }
 
 export default function CommitsTable({
@@ -57,6 +61,7 @@ export default function CommitsTable({
   projectDescription,
   projectName,
   ProjectTagline,
+  params,
 }: CommitTableProps) {
   // const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -64,7 +69,7 @@ export default function CommitsTable({
     commits: state.commits,
     setCommits: state.setCommits,
   }));
-  const [open, setOpen] = useState(false);
+
   const {
     data: generatedPosts,
     mutateAsync: generatePosts,
@@ -73,10 +78,12 @@ export default function CommitsTable({
   } = api.github.post.generatePost.useMutation();
 
   const toggleSelectAll = () => {
+    console.log(commits.length, rows.length);
     if (commits.length === rows.length) {
       setCommits([]);
     } else {
       setCommits([...rows]);
+      console.log(commits);
     }
   };
 
@@ -97,131 +104,119 @@ export default function CommitsTable({
     const CommitInformation = commits.map((commit) => {
       return `${commit.message}`;
     });
-
     const combinedMessages = CommitInformation.join(" + ");
-    console.log(combinedMessages);
-    setOpen(!open);
-    if (!open) {
-      toast
-        .promise(
-          generatePosts({
-            ProjectName: projectName,
-            ProjectDescription: projectDescription + "",
-            ProjectContext: ProjectTagline,
-            CommitInformation: combinedMessages,
-          }),
-          {
-            loading: "Generating Posts...",
-            success: "Generated Posts",
-            error: `${
-              generationError?.message
-                ? generationError?.message
-                : "Something went wrong"
-            }`,
-          }
-        )
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    console.log(combinedMessages, "combinedMessages");
+    toast
+      .promise(
+        generatePosts({
+          ProjectName: projectName,
+          ProjectDescription: projectDescription + "",
+          ProjectContext: ProjectTagline,
+          CommitInformation: combinedMessages,
+        }),
+        {
+          loading: "Generating Posts...",
+          success: "Generated Posts",
+          error: `${
+            generationError?.message
+              ? generationError?.message
+              : "Something went wrong"
+          }`,
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+
     console.log("generate post");
   };
+
   return (
-    <Card className="w-[90vw] p-4 shadow-sm lg:w-[70vw] ">
-      <div className="flex items-center justify-between">
-        <Typography variant="h5">Commits</Typography>
-        <button
-          className="btn btn-primary text-white"
-          disabled={isLoading}
-          onClick={generatePost}
-        >
-          Generate Post
-        </button>
-      </div>
-      <div className="mb-4 flex items-center">
-        <Checkbox
-          color="blue"
-          checked={commits.length === rows.length}
-          onChange={toggleSelectAll}
-          crossOrigin={undefined}
-        />
-        <Typography variant="h6" className="ml-2">
-          {commits.length} row (s) selected
-        </Typography>
-      </div>
-      <div className="max-h-[80dvh] overflow-y-auto">
-        <AnimatePresence>
-          {rows.map((row, index) => (
-            <motion.div
-              key={row.id}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              variants={staggerVariants}
-              custom={index}
-            >
-              <Card
-                className="mx-2 my-3 cursor-pointer p-4 shadow-md transition-all duration-200 hover:shadow-sm"
-                onClick={() => toggleRowSelection(row.id)}
+    <Dialog>
+      <Card className="w-[90vw] p-4 lg:w-[70vw] ">
+        <div className="flex items-center justify-between">
+          <h5>Commits</h5>
+          <DialogTrigger asChild>
+            <Button disabled={isLoading} onClick={generatePost}>
+              Generate Post
+            </Button>
+          </DialogTrigger>
+        </div>
+
+        <div className="mb-4 flex items-center">
+          <Checkbox
+            color="blue"
+            checked={commits.length === rows.length}
+            onCheckedChange={toggleSelectAll}
+          />
+          <h6 className="ml-2">{commits.length} row (s) selected</h6>
+        </div>
+        <div className="max-h-[80dvh] overflow-y-auto">
+          <AnimatePresence>
+            {rows.map((row, index) => (
+              <motion.div
+                key={row.id}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={staggerVariants}
+                custom={index}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Checkbox
-                      color="blue"
-                      checked={commits.some((commit) => commit.id === row.id)}
-                      onChange={() => toggleRowSelection(row.id)}
-                      crossOrigin={undefined}
-                    />
-                    <div>
-                      <Typography variant="h6" className="text-blue-gray-800 ">
-                        {row.message}
-                      </Typography>
-                      <Typography>
-                        Created on {row.date} by {row.author}
-                      </Typography>
+                <Card
+                  className="mx-2 my-3 cursor-pointer p-4 shadow-md transition-all duration-200 hover:shadow-sm"
+                  onClick={() => toggleRowSelection(row.id)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        checked={commits.some((commit) => commit.id === row.id)}
+                        onCheckedChange={() => toggleRowSelection(row.id)}
+                      />
+                      <div>
+                        <h6 className="text-blue-gray-800 ">{row.message}</h6>
+                        <p>
+                          Created on {row.date} by {row.author}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <Chip
-                    variant="ghost"
-                    className="bg-secondary "
-                    value={`${
-                      isPullRequestMergeCommit(row.message)
+                    <Badge>
+                      {isPullRequestMergeCommit(row.message)
                         ? "Pull Request"
-                        : "Commit"
-                    }`}
-                  />
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-      <Dialog
-        open={open}
-        handler={generatePost}
-        animate={{
-          mount: { scale: 1, y: 0 },
-          unmount: { scale: 0.9, y: -100 },
-        }}
-      >
-        <DialogHeader>Generated Posts</DialogHeader>
-        <DialogBody className="max-h-[40rem] overflow-scroll">
+                        : "Commit"}
+                    </Badge>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+        <DialogContent className="max-h-[40rem] overflow-scroll">
+          <DialogHeader>Generated Posts</DialogHeader>
           {isLoading ? (
             <div className="grid h-24 w-full place-items-center">
               <LineWobble size={80} lineWeight={5} speed={1.75} />
             </div>
           ) : generatedPosts?.data ? (
-            <GeneratedPostsCard posts={generatedPosts.data || []} />
+            <GeneratedPostsCard
+              posts={generatedPosts.data || []}
+              params={params}
+            />
           ) : (
-            <Typography color="red">{generationError?.message}</Typography>
+            <p color="red">{generationError?.message}</p>
           )}
-        </DialogBody>
-      </Dialog>
-    </Card>
+        </DialogContent>
+      </Card>
+    </Dialog>
   );
 }
 
-function GeneratedPostsCard({ posts }: { posts: string[] }) {
+function GeneratedPostsCard({
+  posts,
+  params,
+}: {
+  posts: string[];
+  params: { id: string };
+}) {
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const {
     mutateAsync: savePost,
@@ -230,10 +225,11 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
   } = api.savepost.savePost.useMutation();
 
   const router = useRouter();
+  const { id } = params;
   console.log(selectedPost);
 
   const handleSavePost = () => {
-    const projectId = router.query.id as string;
+    const projectId = id;
     if (!selectedPost) {
       toast.error("Please select a post");
       return;
@@ -250,9 +246,9 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
           error: `${error?.message ? error?.message : "Something went wrong"}`,
         }
       )
-      .then(async (res) => {
+      .then((res) => {
         if (res.success) {
-          await router.push(`/project/${projectId}/drafts`);
+          router.push(`/project/${projectId}/drafts`);
         }
       })
       .catch((err) => {
@@ -273,18 +269,12 @@ function GeneratedPostsCard({ posts }: { posts: string[] }) {
           {/* {post.split('\\n').map((paragraph, index) => (
             <p className="py-1" key={index}>{paragraph}</p>
           ))} */}
-          <Typography className="whitespace-pre-line">
-            {formatedSavePost(post)}
-          </Typography>
+          <p className="whitespace-pre-line">{formatedSavePost(post)}</p>
         </Card>
       ))}
-      <button
-        className={`btn btn-primary text-white ${isLoading ? "loading" : ""}`}
-        onClick={handleSavePost}
-        disabled={isLoading}
-      >
+      <Button onClick={handleSavePost} disabled={isLoading}>
         Save Post
-      </button>
+      </Button>
     </div>
   );
 }

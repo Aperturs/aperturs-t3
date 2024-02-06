@@ -1,5 +1,4 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { ThemeProvider } from "@material-tailwind/react";
 import { Analytics } from "@vercel/analytics/react";
 import { type Metadata, type NextPage } from "next";
 import { type AppProps, type AppType } from "next/app";
@@ -7,6 +6,7 @@ import { Router } from "next/router";
 import { useEffect, useState, type ReactElement, type ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import LogoLoad from "~/components/custom/loading/logoLoad";
+import { ThemeProvider } from "~/components/layouts/theme-provider";
 import "~/styles/calendar.css";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";
@@ -81,23 +81,29 @@ const MyApp: AppType = ({
   }
 
   return (
-    <ClerkProvider
-      {...pageProps}
-      appearance={{
-        elements: {
-          formButtonPrimary: "bg-primary",
-        },
-      }}
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
     >
-      <ThemeProvider>
+      <ClerkProvider
+        {...pageProps}
+        appearance={{
+          elements: {
+            formButtonPrimary: "bg-primary",
+          },
+        }}
+      >
         <Toaster position="top-left" reverseOrder={false} />
+
         {getLayout(
           <Comp />
           //  <Component {...pageProps} />
         )}
         <Analytics />
-      </ThemeProvider>
-    </ClerkProvider>
+      </ClerkProvider>
+    </ThemeProvider>
   );
 };
 

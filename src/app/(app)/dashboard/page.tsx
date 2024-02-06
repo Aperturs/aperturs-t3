@@ -1,5 +1,6 @@
 "use client";
-import { ContentPage } from "~/components";
+
+import ContentPage from "~/components/dashboard/ContentPage";
 
 const Dashboard = () => {
   return <ContentPage />;

@@ -1,5 +1,5 @@
 import { type ReactElement } from "react";
-import { Layout } from "~/components";
+import Layout from "~/components/layouts/Layout";
 
 function Notifications() {
   return (

@@ -1,13 +1,15 @@
-import {
-  IconButton,
-  Menu,
-  MenuHandler,
-  MenuItem,
-  MenuList,
-  Switch,
-} from "@material-tailwind/react";
+"use client";
+
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { Switch } from "~/components/ui/switch";
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
@@ -16,43 +18,32 @@ function SocialsMenu() {
   const { content } = useStore((state) => ({
     content: state.content,
   }));
-  const [menuOpen, setMenuOpen] = useState<boolean>();
-
-  // const uniqueSocials = content.filter((item) => item.unique);
 
   if (!content.length) return null;
 
   return (
-    <Menu open={menuOpen} dismiss={{ enabled: !menuOpen, outsidePress: true }}>
-      <MenuHandler>
-        <IconButton
-          className="ml-2 !h-[30px] w-36 rounded-full"
-          onClick={() => {
-            setMenuOpen(!menuOpen);
-          }}
-        >
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button size="icon" className="my-1 ml-2 max-h-7">
           <IoIosArrowDown />
-        </IconButton>
-      </MenuHandler>
-      <MenuList>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
         {content.map((item) => {
           if (item.socialType === SocialType.Default) return null;
           return (
-            <MenuItem key={item.id}>
+            <DropdownMenuItem key={item.id}>
               <MenuItems
                 type={item.socialType}
                 name={item.name}
                 id={item.id}
                 unique={item.unique}
               />
-            </MenuItem>
+            </DropdownMenuItem>
           );
         })}
-        {/* <MenuItem>Menu Item 1</MenuItem>
-        <MenuItem>Menu Item 2</MenuItem>
-        <MenuItem>Menu Item 3</MenuItem> */}
-      </MenuList>
-    </Menu>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -109,29 +100,24 @@ const MenuItems = ({
   return (
     <div key={type}>
       <div
-        className="flex justify-between gap-2 align-middle"
-        // onClick={(event) => {
-        //   // event.stopPropagation();
-        //   handleChange();
-        // }}
+        className="flex cursor-pointer items-center justify-between gap-2"
+        onClick={(event) => {
+          event.stopPropagation();
+          handleChange();
+        }}
       >
-        <div
-          className={`flex gap-2 align-middle ${
-            type === "LENS" ? " " : "py-1"
-          }`}
-        >
-          <div className={`${type === "LENS" ? "" : "pl-[7px]"}`}>
-            <SocialIcon type={type} />
+        <div className={`flex items-center gap-2 py-1`}>
+          <div className={`pl-[7px]`}>
+            <SocialIcon type={type} size="md" />
           </div>
-          <span className={`${type === "LENS" ? "mt-[5px]" : ""}`}>{name}</span>
+          <span className={`text-sm`}>{name}</span>
         </div>
         <Switch
           checked={checked}
-          onChange={() => {
-            handleChange();
-          }}
+          // onChange={() => {
+          //   handleChange();
+          // }}
           className="text-primary"
-          crossOrigin={undefined}
         />
       </div>
     </div>

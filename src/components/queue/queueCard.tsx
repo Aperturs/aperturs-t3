@@ -1,5 +1,5 @@
-import { Card } from "@material-tailwind/react";
 import React from "react";
+import { Card } from "../ui/card";
 
 interface CardProps {
   time: string;
@@ -8,10 +8,7 @@ interface CardProps {
 
 const QueueCard: React.FC<CardProps> = ({ time, type }) => {
   return (
-    <Card
-      shadow={false}
-      className="shadow-mdc group flex flex-row bg-secondary px-5 py-6 font-bold "
-    >
+    <Card className="shadow-mdc group flex flex-row bg-secondary px-5 py-6 font-bold ">
       <div className="time">{time}</div>
       <div className="mx-5 hidden ease-in-out group-hover:flex">{type}</div>
     </Card>

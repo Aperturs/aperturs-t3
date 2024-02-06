@@ -1,6 +1,4 @@
-import { MenuItem, Typography } from "@material-tailwind/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { FaCodeBranch } from "react-icons/fa";
 import { GiPaperTray } from "react-icons/gi";
 import { IoMdSettings } from "react-icons/io";
@@ -37,18 +35,17 @@ const menuItems = [
   },
 ];
 
-export default function NavList() {
-  const router = useRouter();
+export default function NavList({ params }: { params: { id: string } }) {
   return (
-    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
+    <ul className="mb-4 mt-2 flex flex-col gap-4 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center ">
       {menuItems.map(({ text, icon, url }) => (
-        <Link href={`/project/${router.query.id as string}${url}`} key={text}>
-          <Typography variant="small" color="blue-gray" className="font-normal">
-            <MenuItem className="flex items-center gap-2 lg:rounded-lg">
+        <Link href={`/project/${params.id}${url}`} key={text}>
+          <p className="font-normal">
+            <li className="flex items-center gap-2 lg:rounded-lg">
               {icon}
               {text}
-            </MenuItem>
-          </Typography>
+            </li>
+          </p>
         </Link>
       ))}
     </ul>

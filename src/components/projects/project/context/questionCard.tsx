@@ -18,7 +18,7 @@ export default function QuestionCard({
   };
 
   return (
-    <div className="rounded-lg p-4 shadow-xl shadow-blue-gray-900/5">
+    <div className="shadow-blue-gray-900/5 rounded-lg p-4 shadow-xl">
       <h2 className="mb-2 text-lg font-medium">{question}</h2>
       <p className="mb-4 text-gray-600">{description}</p>
       <form onSubmit={handleSubmit}>

@@ -16,18 +16,22 @@ datasource db {
 }
 
 model User {
-  clerkUserId    String            @unique
-  userDetails    Json?
-  posts          Post[]
-  ideas          Idea[]
-  githubTokens   GithubToken[]
-  linkedInTokens LinkedInToken[]
-  twitterTokens  TwitterToken[]
-  projects       Project[]
-  currentPlan    SubscriptionPlans @default(FREE)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  userUsage      UserUsage?
+  clerkUserId        String            @unique
+  userDetails        Json?
+  posts              Post[]
+  ideas              Idea[]
+  githubTokens       GithubToken[]
+  linkedInTokens     LinkedInToken[]
+  twitterTokens      TwitterToken[]
+  projects           Project[]
+  currentPlan        SubscriptionPlans @default(FREE)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  userUsage          UserUsage?
+  lsSubscriptionId   String?           @unique @map(name: "ls_subscription_id")
+  lsCustomerId       String?           @unique @map(name: "ls_customer_id")
+  lsVariantId        Int?
+  lsCurrentPeriodEnd DateTime?         @map(name: "ls_current_period_end")
 
   @@index([clerkUserId])
 }

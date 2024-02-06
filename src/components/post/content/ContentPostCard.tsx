@@ -1,8 +1,11 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";
-import usePostUpdate from "./use-post-update";
 import ContentPostCreation from "./textarea";
+import usePostUpdate from "./use-post-update";
+import { Card } from "~/components/ui/card";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
@@ -60,7 +63,7 @@ function ContentPostCard({ id }: { id: string }) {
   // }, [sync, defaultContent]);
 
   return (
-    <div className="w-full rounded-lg bg-white p-4 shadow-md">
+    <Card className="w-full p-3">
       <ContentPostCreation
         content={content}
         onContentChange={setContent}
@@ -75,7 +78,7 @@ function ContentPostCard({ id }: { id: string }) {
           crossOrigin=""
         />
       )} */}
-    </div>
+    </Card>
   );
 }
 

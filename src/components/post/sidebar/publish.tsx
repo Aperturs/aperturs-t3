@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 import Picker from "~/components/custom/datepicker/picker";
@@ -10,7 +10,8 @@ import { api } from "~/utils/api";
 import { SimpleButton } from "../common";
 import usePost from "../content/use-post";
 
-function Publish() {
+function Publish({ params }: { params: { id: string } }) {
+  const { id } = params;
   const {
     content,
     date,
@@ -132,7 +133,7 @@ function Publish() {
         if (response.success) {
           if (!isScheduling) {
             reset();
-            await router.push("/drafts");
+            router.push("/drafts");
           }
           postId = response.data;
         }
@@ -156,7 +157,6 @@ function Publish() {
         ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
         : undefined;
     try {
-      const id = router.query.id as string;
       await toast.promise(
         (async () => {
           // Update post
@@ -176,7 +176,7 @@ function Publish() {
           if (response.success) {
             if (!isScheduling) {
               reset();
-              await router.push("/drafts");
+              router.push("/drafts");
               console.log(response, "response");
             }
           }
@@ -215,7 +215,6 @@ function Publish() {
       let id = "";
       if (isUploaded) {
         await handleUpdate({ isScheduling: true });
-        id = router.query.id as string;
       } else {
         const postId = await handleSave({ isScheduling: true });
         id = postId;
@@ -234,10 +233,10 @@ function Publish() {
             error: "Failed to schedule post",
           }
         )
-        .then(async (response) => {
+        .then((response) => {
           if (response) {
             reset();
-            await router.push("/post");
+            router.push("/post");
           }
         });
     } catch (err) {

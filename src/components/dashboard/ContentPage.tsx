@@ -1,9 +1,6 @@
 // import { CreateButton } from "~/components";
 "use client";
 import { useUser } from "@clerk/nextjs";
-import { type PostContentType } from "~/types/post-types";
-import { api } from "~/utils/api";
-import InfoContainer from "./container";
 
 const WishingGoodDay = () => {
   const date = new Date();
@@ -23,9 +20,9 @@ const WishingGoodDay = () => {
 
 const ContentPage = () => {
   const { user } = useUser();
-  const { data: recentDrafts } = api.savepost.getRecentDrafts.useQuery();
-  const { data: recentProjects } =
-    api.github.project.getRecentProjects.useQuery();
+  // const { data: recentDrafts } = api.savepost.getRecentDrafts.useQuery();
+  // const { data: recentProjects } =
+  //   api.github.project.getRecentProjects.useQuery();
 
   return (
     <div className="flex w-full flex-col justify-start gap-7">
@@ -40,7 +37,7 @@ const ContentPage = () => {
         </p>
       </div>
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <InfoContainer
+        {/* <InfoContainer
           title="Recent Drafts"
           infoBlocks={
             recentDrafts?.map((draft) => ({
@@ -73,7 +70,7 @@ const ContentPage = () => {
             buttonText: "Add a project",
             buttonLink: "/projects",
           }}
-        />
+        /> */}
       </div>
 
       {/* <CreateButton text="Create" /> */}

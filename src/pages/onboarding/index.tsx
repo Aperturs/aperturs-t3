@@ -1,4 +1,3 @@
-import { Typography } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -15,12 +14,12 @@ export default function Example() {
           height={200}
           alt="logo"
         />
-        <Typography className="my-4" variant="h2" color="indigo" textGradient>
+        <h2 className="my-4" color="indigo">
           Welcome to Aperturs
-        </Typography>
-        <Typography className="text-center" variant="lead" color="gray">
+        </h2>
+        <h2 className="text-center" color="gray">
           Aperturs gives you marketing superpowers with powerful features
-        </Typography>
+        </h2>
         <button
           className="btn btn-primary btn-wide my-3 text-white"
           onClick={async () => {

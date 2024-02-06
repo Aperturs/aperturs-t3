@@ -1,13 +1,15 @@
-import {
-  Button,
-  Dialog,
-  DialogBody,
-  DialogFooter,
-  DialogHeader,
-} from "@material-tailwind/react";
+import { DialogClose } from "@radix-ui/react-dialog";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
 
@@ -68,6 +70,7 @@ export default function Picker() {
   }, [date, handleIsPastTime, time]);
 
   const handleOpen = () => {
+    console.log("open", open);
     if (!open) {
       setOpen(true);
     }
@@ -98,49 +101,49 @@ export default function Picker() {
   };
 
   return (
-    <>
-      <span
-        className="btn btn-primary bg-primary font-medium  normal-case  text-white"
-        onClick={handleOpen}
-      >
-        {date ? formatDate(date) : "Pick Date"}
-      </span>
-      <Dialog open={open} handler={handleOpen} className="w-auto">
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button onClick={handleOpen} className="py-6">
+          {date ? formatDate(date) : "Pick Date"}
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
         <DialogHeader className="text-xs sm:text-sm">
           Scheduled for {date ? formatDate(date) : ""} at {time}
         </DialogHeader>
-        <DialogBody divider>
-          <p className="w-full text-center text-xs font-bold text-red-700 sm:text-sm">
-            {displayMessage}
-          </p>
-          <CalendarComponent handleDate={setDate} />
-          <input
-            type="time"
-            value={time || ""}
-            onChange={onChange}
-            className="time-input rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </DialogBody>
+        <p className="w-full text-center text-xs font-bold text-red-700 sm:text-sm">
+          {displayMessage}
+        </p>
+        <CalendarComponent handleDate={setDate} />
+        <input
+          type="time"
+          value={time || ""}
+          onChange={onChange}
+          className="time-input rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
         <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleCancel}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button
-            variant="gradient"
-            color="green"
-            disabled={!canConfirm}
-            onClick={handleConfirm}
-          >
-            <span>Confirm</span>
-          </Button>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              color="red"
+              onClick={handleCancel}
+              className="mr-1"
+            >
+              <span>Cancel</span>
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              color="green"
+              disabled={!canConfirm}
+              onClick={handleConfirm}
+            >
+              <span>Confirm</span>
+            </Button>
+          </DialogClose>
         </DialogFooter>
-      </Dialog>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 }

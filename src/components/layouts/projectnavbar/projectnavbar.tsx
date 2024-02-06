@@ -1,9 +1,13 @@
+"use client";
+
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Collapse, IconButton, Navbar } from "@material-tailwind/react";
+import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
 import NavList from "./navList";
 
-export default function ProjectNavBar() {
+export default function ProjectNavBar({ params }: { params: { id: string } }) {
   const [openNav, setOpenNav] = React.useState(false);
 
   const handleWindowResize = () =>
@@ -18,15 +22,15 @@ export default function ProjectNavBar() {
   }, []);
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-6 py-3">
-      <div className="flex items-center justify-center text-blue-gray-900">
+    <Card className="max-w-fit px-6 py-3">
+      <div className="flex items-start justify-center">
         <div className="hidden lg:block">
-          <NavList />
+          <NavList params={params} />
         </div>
-        <IconButton
-          variant="text"
-          className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-          ripple={false}
+        <Button
+          size="icon"
+          className="ml-auto lg:hidden"
+          // ripple={false}
           onClick={() => setOpenNav(!openNav)}
         >
           {openNav ? (
@@ -34,11 +38,22 @@ export default function ProjectNavBar() {
           ) : (
             <Bars3Icon className="h-6 w-6" strokeWidth={2} />
           )}
-        </IconButton>
+        </Button>
       </div>
-      <Collapse open={openNav}>
-        <NavList />
-      </Collapse>
-    </Navbar>
+      {/* <Collapse open={openNav}></Collapse> */}
+      <AnimatePresence>
+        {openNav && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
+            transition={{ duration: 0.5 }}
+            className="overflow-scroll"
+          >
+            <NavList params={params} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Card>
   );
 }
