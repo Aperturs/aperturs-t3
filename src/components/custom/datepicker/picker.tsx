@@ -1,9 +1,15 @@
-import { DialogContent } from "@radix-ui/react-dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogFooter, DialogHeader } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
 
@@ -64,6 +70,7 @@ export default function Picker() {
   }, [date, handleIsPastTime, time]);
 
   const handleOpen = () => {
+    console.log("open", open);
     if (!open) {
       setOpen(true);
     }
@@ -95,9 +102,11 @@ export default function Picker() {
 
   return (
     <Dialog>
-      <Button onClick={handleOpen} className="py-6">
-        {date ? formatDate(date) : "Pick Date"}
-      </Button>
+      <DialogTrigger asChild>
+        <Button onClick={handleOpen} className="py-6">
+          {date ? formatDate(date) : "Pick Date"}
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader className="text-xs sm:text-sm">
           Scheduled for {date ? formatDate(date) : ""} at {time}
@@ -114,19 +123,27 @@ export default function Picker() {
           required
         />
         <DialogFooter>
-          <Button
-            variant="outline"
-            color="red"
-            onClick={handleCancel}
-            className="mr-1"
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button color="green" disabled={!canConfirm} onClick={handleConfirm}>
-            <span>Confirm</span>
-          </Button>
+          <DialogClose asChild>
+            <Button
+              variant="outline"
+              color="red"
+              onClick={handleCancel}
+              className="mr-1"
+            >
+              <span>Cancel</span>
+            </Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button
+              color="green"
+              disabled={!canConfirm}
+              onClick={handleConfirm}
+            >
+              <span>Confirm</span>
+            </Button>
+          </DialogClose>
         </DialogFooter>
-      </DialogContent>{" "}
+      </DialogContent>
     </Dialog>
   );
 }

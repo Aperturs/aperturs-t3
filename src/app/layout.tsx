@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import "~/styles/calendar.css";
 
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
