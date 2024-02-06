@@ -174,7 +174,7 @@ interface IConnection {
 
 const AfterConnect = ({ name, icon, profilePic }: IConnection) => {
   return (
-    <div className="flex w-full items-center justify-center rounded-lg px-10 py-6 shadow-md">
+    <Card className="flex w-full items-center justify-center  px-10 py-6 ">
       <Image
         className="mx-2 h-10 w-10 rounded-full object-cover"
         src={profilePic}
@@ -188,7 +188,7 @@ const AfterConnect = ({ name, icon, profilePic }: IConnection) => {
       <div className="flex w-full justify-center text-3xl text-black">
         {icon}
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -6,7 +6,7 @@ import { Router } from "next/router";
 import { useEffect, useState, type ReactElement, type ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
 import LogoLoad from "~/components/custom/loading/logoLoad";
-import { ThemeProvider } from "~/components/layouts/theme-provider";
+import { ThemeProvider } from "~/app/_provider/theme-provider";
 import "~/styles/calendar.css";
 import "~/styles/globals.css";
 import { api } from "~/utils/api";

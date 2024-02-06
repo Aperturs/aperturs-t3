@@ -1,13 +1,12 @@
-import "~/styles/globals.css";
 import "~/styles/calendar.css";
+import "~/styles/globals.css";
 
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
-import { ThemeProvider } from "~/components/ui/theme-provider";
-import { TRPCReactProvider } from "~/trpc/react";
 import { Toaster } from "react-hot-toast";
+import { TRPCReactProvider } from "~/trpc/react";
+import AuthProvider from "./_provider/auth-provider";
+import { ThemeProvider } from "./_provider/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,19 +33,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster position="top-left" reverseOrder={false} />
-          <ClerkProvider
-            appearance={{
-              elements: {
-                formButtonPrimary: "bg-primary",
-              },
-              baseTheme: dark,
-            }}
-          >
+          <AuthProvider>
+            <Toaster position="top-left" reverseOrder={false} />
             <TRPCReactProvider cookies={cookies().toString()}>
               {children}
             </TRPCReactProvider>
-          </ClerkProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
