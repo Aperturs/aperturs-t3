@@ -1,11 +1,11 @@
 import { OrganizationSwitcher, useClerk } from "@clerk/nextjs";
 import { PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import { Chip } from "@material-tailwind/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { MdCircleNotifications } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
+import { Badge } from "~/components/ui/badge";
 import {
   Command,
   CommandGroup,
@@ -17,15 +17,7 @@ const bottomMenu = [
   {
     text: "Notifications",
     icon: <MdCircleNotifications className="h-5 w-5" />,
-    suffix: (
-      <Chip
-        value="14"
-        size="sm"
-        variant="ghost"
-        color="blue-gray"
-        className="rounded-full"
-      />
-    ),
+    suffix: <Badge>14</Badge>,
     url: "/notifications",
   },
   {

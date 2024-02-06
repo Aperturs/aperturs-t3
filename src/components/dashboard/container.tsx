@@ -1,7 +1,8 @@
-import { Card, CardHeader, IconButton } from "@material-tailwind/react";
 import Link from "next/link";
 import React from "react";
 import { BsArrowUpRight } from "react-icons/bs";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
 
 interface SingleInfoProps {
   title: string;
@@ -31,30 +32,31 @@ export default function InfoContainer({
       <CardHeader color="gray" className="mb-4 grid h-16 place-items-center">
         {title}
       </CardHeader>
-      {infoBlocks.length === 0 && (
-        <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
-          <p className="text-lg font-medium">{emptyInfo.emptyText}</p>
-          <Link href={emptyInfo.buttonLink} className="btn my-2">
-            {emptyInfo.buttonText}
-          </Link>
-        </div>
-      )}
-      {infoBlocks.map((block) => {
-        return (
-          <React.Fragment key={block.title}>
-            <div className="flex w-full items-center justify-between px-5">
-              <p className="text-lg font-medium">{block.title}</p>
-              <Link href={block.link}>
-                <IconButton>
-                  <BsArrowUpRight />
-                </IconButton>
-              </Link>
-            </div>
-            <hr className="mx-5 my-3" />
-          </React.Fragment>
-        );
-      })}
-      {/* <div className="flex items-center justify-between px-5">
+      <CardContent>
+        {infoBlocks.length === 0 && (
+          <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
+            <p className="text-lg font-medium">{emptyInfo.emptyText}</p>
+            <Link href={emptyInfo.buttonLink} className="btn my-2">
+              {emptyInfo.buttonText}
+            </Link>
+          </div>
+        )}
+        {infoBlocks.map((block) => {
+          return (
+            <React.Fragment key={block.title}>
+              <div className="flex w-full items-center justify-between px-5">
+                <p className="text-lg font-medium">{block.title}</p>
+                <Link href={block.link}>
+                  <Button size="icon">
+                    <BsArrowUpRight />
+                  </Button>
+                </Link>
+              </div>
+              <hr className="mx-5 my-3" />
+            </React.Fragment>
+          );
+        })}
+        {/* <div className="flex items-center justify-between px-5">
         <p className="text-lg font-medium">some testing text</p>
         <Link href={link}>
           <IconButton>
@@ -62,6 +64,7 @@ export default function InfoContainer({
           </IconButton>
         </Link>
       </div> */}
+      </CardContent>
     </Card>
   );
 }

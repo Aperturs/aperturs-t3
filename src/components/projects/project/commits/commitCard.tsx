@@ -2,7 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Card, Typography } from "@material-tailwind/react";
+import { Card } from "~/components/ui/card";
 
 interface CommitCardProps {
   id: number;
@@ -36,10 +36,8 @@ const CommitCard: React.FC<CommitCardProps> = ({
             onChange={() => onToggle(id)}
           />
           <div className="ml-4">
-            <Typography variant="h5" className="mb-1">
-              {title}
-            </Typography>
-            <Typography variant="paragraph">{description}</Typography>
+            <h5 className="mb-1">{title}</h5>
+            <p>{description}</p>
           </div>
         </div>
       </Card>

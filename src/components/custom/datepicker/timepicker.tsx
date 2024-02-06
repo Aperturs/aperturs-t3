@@ -1,5 +1,11 @@
-import { Option, Select } from "@material-tailwind/react";
 import React, { useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 interface TimePickerProps {
   onHourChange: (time: number) => void;
@@ -34,22 +40,24 @@ const TimePicker: React.FC<TimePickerProps> = ({ onMinuteChange }) => {
   return (
     <div className="flex items-center space-x-4">
       <Select
-        // value={selectedHour}
-        variant="outlined"
-        label="Select Hour"
-        // onChange={(e) => {
-        //   if(e){
-        //   setSelectedHour(e.target || 0)
-        //   onHourChange(parseInt(e.target.value))
-        //   }
-        // }}
-        className=""
+      // value={selectedHour}
+      // onChange={(e) => {
+      //   if(e){
+      //   setSelectedHour(e.target || 0)
+      //   onHourChange(parseInt(e.target.value))
+      //   }
+      // }}
       >
-        {hours.map((hour, index) => (
-          <Option key={index} value={hour}>
-            {hour}
-          </Option>
-        ))}
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Theme" />
+        </SelectTrigger>
+        <SelectContent>
+          {hours.map((hour, index) => (
+            <SelectItem key={index} value={hour}>
+              {hour}
+            </SelectItem>
+          ))}
+        </SelectContent>
       </Select>
       <select
         value={selectedMinute}

@@ -1,4 +1,3 @@
-import { Tooltip } from "@material-tailwind/react";
 import Image from "next/image";
 import { useCallback, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
@@ -11,6 +10,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import usePostUpdate from "./use-post-update";
+import ToolTipSimple from "~/components/ui/tooltip-final";
 
 function isImage(url: string): boolean {
   const fileExtension = url.split(".");
@@ -126,7 +126,7 @@ export default function FileUpload({
           </div>
         ))}
       </div>
-      <Tooltip placement="top" content="Add Image/Video">
+      <ToolTipSimple content="Add Image/Video">
         <label htmlFor={inputId} className="my-2  block w-8 cursor-pointer">
           <input
             type="file"
@@ -137,7 +137,7 @@ export default function FileUpload({
           />
           <BsFillImageFill className="text-xl" />
         </label>
-      </Tooltip>
+      </ToolTipSimple>
     </div>
   );
 }

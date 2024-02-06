@@ -1,15 +1,11 @@
-import {
-  Dialog,
-  DialogBody,
-  DialogFooter,
-  DialogHeader,
-} from "@material-tailwind/react";
+import { DialogContent } from "@radix-ui/react-dialog";
 import { format } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { Button } from "~/components/ui/button";
+import { Dialog, DialogFooter, DialogHeader } from "~/components/ui/dialog";
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
-import { Button } from "~/components/ui/button";
 
 function formatDate(date: Date): string {
   return format(date, "dd MMMM yyyy");
@@ -98,27 +94,25 @@ export default function Picker() {
   };
 
   return (
-    <>
+    <Dialog>
       <Button onClick={handleOpen} className="py-6">
         {date ? formatDate(date) : "Pick Date"}
       </Button>
-      <Dialog open={open} handler={handleOpen} className="w-auto">
+      <DialogContent>
         <DialogHeader className="text-xs sm:text-sm">
           Scheduled for {date ? formatDate(date) : ""} at {time}
         </DialogHeader>
-        <DialogBody divider>
-          <p className="w-full text-center text-xs font-bold text-red-700 sm:text-sm">
-            {displayMessage}
-          </p>
-          <CalendarComponent handleDate={setDate} />
-          <input
-            type="time"
-            value={time || ""}
-            onChange={onChange}
-            className="time-input rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </DialogBody>
+        <p className="w-full text-center text-xs font-bold text-red-700 sm:text-sm">
+          {displayMessage}
+        </p>
+        <CalendarComponent handleDate={setDate} />
+        <input
+          type="time"
+          value={time || ""}
+          onChange={onChange}
+          className="time-input rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
         <DialogFooter>
           <Button
             variant="outline"
@@ -132,7 +126,7 @@ export default function Picker() {
             <span>Confirm</span>
           </Button>
         </DialogFooter>
-      </Dialog>
-    </>
+      </DialogContent>{" "}
+    </Dialog>
   );
 }
