@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { ModeToggle } from "../theme-toggle";
-import AccordianMenu from "./accordianMenu";
+import AccordianMenu from "./command-group";
 import BottomMenu from "./bottomMenu";
 import { CommandMenu } from "./command-menu";
 
