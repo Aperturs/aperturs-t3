@@ -8,9 +8,10 @@ import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { ModeToggle } from "../theme-toggle";
-import AccordianMenu from "./command-group";
 import BottomMenu from "./bottomMenu";
+import AccordianMenu from "./command-group";
 import { CommandMenu } from "./command-menu";
+import ProfileButton from "./profile-button";
 
 export default function SideBar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function SideBar() {
   }, [pathName]);
 
   return (
-    <Card className="mt-2 w-full overflow-scroll p-4 shadow-md lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
+    <Card className="mt-2 flex w-full flex-col overflow-scroll p-4 shadow-md lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
       <div className="mb-2 flex items-center justify-between p-4">
         <div className="flex items-center gap-4">
           <Image
@@ -63,10 +64,15 @@ export default function SideBar() {
           </Button>
         </div>
       </div>
-      <div className="hidden lg:block">
-        <AccordianMenu />
-        <hr className="border-blue-gray-50 my-2" />
-        <BottomMenu />
+      <div className="hidden flex-1 flex-col justify-between lg:flex">
+        <>
+          <AccordianMenu />
+          <hr className="border-blue-gray-50 my-2" />
+          <BottomMenu />
+        </>
+        <div className="flex w-full justify-center">
+          <ProfileButton />
+        </div>
       </div>
       <AnimatePresence>
         {isNavOpen && (
