@@ -30,6 +30,10 @@ const config = {
         protocol: "https",
         hostname: "aperturs-main.s3.us-east-2.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
     ],
   },
   compiler: {

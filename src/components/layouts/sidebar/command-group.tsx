@@ -77,7 +77,7 @@ export default function AccordanceMenu() {
   return (
     <Command>
       <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
+      <CommandList className="h-[500px] max-h-[400px]">
         <CommandEmpty>No results found.</CommandEmpty>
         {AccordanceMenuList.map((item, index) => {
           return (

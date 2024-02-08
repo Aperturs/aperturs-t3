@@ -24,6 +24,7 @@ model User {
   linkedInTokens     LinkedInToken[]
   twitterTokens      TwitterToken[]
   projects           Project[]
+  organizations      Organization[]
   currentPlan        SubscriptionPlans @default(FREE)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
@@ -36,91 +37,122 @@ model User {
   @@index([clerkUserId])
 }
 
+model Organization {
+  id            String          @id @default(cuid())
+  clerkUserId   String
+  user          User            @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
+  name          String
+  logo          String?
+  Project       Project[]
+  TwitterToken  TwitterToken[]
+  GithubToken   GithubToken[]
+  LinkedInToken LinkedInToken[]
+  Post          Post[]
+  Idea          Idea[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([clerkUserId])
+}
+
 model Project {
-  id                         String   @id @default(cuid())
-  clerkUserId                String
-  user                       User     @relation(fields: [clerkUserId], references: [clerkUserId])
-  organizationId             String   @default("")
+  id                         String        @id @default(nanoid(11))
+  clerkUserId                String?
+  user                       User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId             String?       @default("")
   projectName                String?
   repoName                   String
-  repoDescription            String   @default("")
-  repoUrl                    String   @unique
+  repoDescription            String        @default("")
+  repoUrl                    String        @unique
   repoId                     String
-  questionsAnswersJsonString Json     @default("{}")
+  questionsAnswersJsonString Json          @default("{}")
   commitCount                Int
   posts                      Post[]
-  createdAt                  DateTime @default(now())
-  updatedAt                  DateTime @default(now()) @updatedAt
+  createdAt                  DateTime      @default(now())
+  updatedAt                  DateTime      @default(now()) @updatedAt
+  Organization               Organization? @relation(fields: [organizationId], references: [id])
+
 
   @@index([clerkUserId])
   @@index([id])
+  @@index([organizationId])
 }
 
 model TwitterToken {
-  id             String    @id @default(cuid())
-  user           User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  organizationId String    @default("")
-  clerkUserId    String
+  id             String        @id @default(nanoid(11))
+  user           User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId String?
+  clerkUserId    String?
   client_id      String
   client_secret  String
-  access_token   String?   @unique
-  refresh_token  String?   @unique
+  access_token   String?       @unique
+  refresh_token  String?       @unique
   expires_in     DateTime?
-  profileId      String?   @unique
+  profileId      String?       @unique
   username       String?
   fullname       String?
   profile_image  String?
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+
 
   @@index([profileId])
   @@index([clerkUserId])
   @@index([id])
+  @@index([organizationId])
 }
 
 model GithubToken {
-  id                       String    @id @default(cuid())
-  access_token             String    @unique
-  refresh_token            String?   @unique
-  user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  organizationId           String    @default("")
-  clerkUserId              String    @unique
-  profileId                String?
-  expires_in               DateTime?
-  refresh_token_expires_in DateTime?
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
+  id                           String        @id @default(nanoid(11))
+  access_token                 String        @unique
+  refresh_token                String?       @unique
+  user                         User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId               String?
+  clerkUserId                  String?
+  profileId                    String?
+  expires_in                   DateTime?
+  refresh_token_expires_in     DateTime?
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  Organization                 Organization? @relation(fields: [organizationId], references: [id])
+  organizationLsSubscriptionId String?
+
 
   @@index([clerkUserId])
   @@index([id])
+  @@index([organizationId])
 }
 
 model LinkedInToken {
-  id                       String    @id @default(cuid())
+  id                       String        @id @default(nanoid(11))
   profileId                String?
-  access_token             String    @db.Text
-  refresh_token            String?   @db.Text
-  user                     User      @relation(fields: [clerkUserId], references: [clerkUserId])
-  organizationId           String    @default("")
-  clerkUserId              String
+  access_token             String        @db.Text
+  refresh_token            String?       @db.Text
+  user                     User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  organizationId           String?
+  clerkUserId              String?
   expires_in               DateTime?
   refresh_token_expires_in DateTime?
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime  @updatedAt
+  createdAt                DateTime      @default(now())
+  updatedAt                DateTime      @updatedAt
+  Organization             Organization? @relation(fields: [organizationId], references: [id])
+
 
   @@index([profileId])
   @@index([clerkUserId])
   @@index([id])
+  @@index([organizationId])
 }
 
 model UserUsage {
   clerkUserId    String   @unique
   user           User     @relation(fields: [clerkUserId], references: [clerkUserId])
-  scheduledposts Int      @default(10)
+  scheduledposts Int      @default(11)
   scheduledtime  Int      @default(8)
   projects       Int      @default(3)
   socialaccounts Int      @default(0)
   generatedposts Int      @default(50)
   drafts         Int      @default(15)
-  ideas          Int      @default(10)
+  ideas          Int      @default(11)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -128,34 +160,42 @@ model UserUsage {
 }
 
 model Post {
-  id             String    @id @default(cuid())
-  user           User      @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
-  clerkUserId    String
+  id             String        @id @default(nanoid(11))
+  user           User?          @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
+  clerkUserId    String?
   status         Status
   scheduledAt    DateTime?
-  organizationId String    @default("")
+  organizationId String?
   content        Json
   projectId      String?
-  project        Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  project        Project?      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+
+
 
   @@index([updatedAt])
   @@index([status])
   @@index([clerkUserId])
   @@index([id])
   @@index([projectId])
+  @@index([organizationId])
 }
 
 model Idea {
-  id          String   @id @default(cuid())
-  content     String
-  user        User     @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
-  clerkUserId String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String        @id @default(nanoid(11))
+  content        String
+  user           User?         @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
+  clerkUserId    String?       @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  organizationId String?
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+
 
   @@index([clerkUserId])
+  @@index([organizationId])
 }
 
 enum SubscriptionPlans {

@@ -29,7 +29,6 @@ async function DraftPage() {
         "
       >
         {getSavedPosts.length > 0 ? (
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           getSavedPosts.map((item) => (
             <PostCard
               key={item.id}
