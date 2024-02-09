@@ -4,9 +4,9 @@ import {
   savePostInputSchema,
   updatePostInputSchema,
   type PostContentType,
-} from "../../../../types/post-types";
-import { limitDown, limitWrapper } from "../../helpers/limitWrapper";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+} from "~/types/post-types";
+import { limitDown, limitWrapper } from "~/server/api/helpers/limitWrapper";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
