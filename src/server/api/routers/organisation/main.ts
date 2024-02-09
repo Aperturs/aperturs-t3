@@ -1,21 +1,6 @@
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { createOrganisation } from "~/server/functions/organisation/main";
-import { createOrganisationSchema } from "~/server/functions/organisation/organisation-types";
-import { limitWrapper } from "../../helpers/limitWrapper";
+import { createTRPCRouter } from "~/server/api/trpc";
+import { organisationBasic } from "./basics";
 
 export const organisationRouter = createTRPCRouter({
-  createOrganisation: protectedProcedure
-    .input(createOrganisationSchema.omit({ clerkID: true }))
-    .mutation(async ({ input, ctx }) => {
-      const res = await limitWrapper(
-        () =>
-          createOrganisation({
-            clerkID: ctx.currentUser,
-            ...input,
-          }),
-        ctx.currentUser,
-        "organisation"
-      );
-      return res;
-    }),
+  basics: organisationBasic,
 });

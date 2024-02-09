@@ -108,7 +108,7 @@ function CreateOrganisationDialog() {
     mutateAsync: createOrganisation,
     isLoading: creatingOrganisation,
     error,
-  } = api.organisation.createOrganisation.useMutation();
+  } = api.organisation.basics.createOrganisation.useMutation();
   const [name, setName] = useState("");
   const router = useRouter();
 

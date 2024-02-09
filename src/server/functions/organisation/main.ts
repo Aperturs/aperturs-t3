@@ -26,3 +26,13 @@ export async function createOrganisation({
 
   return res;
 }
+
+export async function getUserOrganisations(clerkID: string) {
+  const res = await prisma.organization.findMany({
+    where: {
+      clerkUserId: clerkID,
+    },
+  });
+
+  return res;
+}
