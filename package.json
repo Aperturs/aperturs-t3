@@ -66,6 +66,7 @@
     "react-icons": "^4.9.0",
     "react-select": "^5.7.4",
     "react-time-picker-typescript": "^1.2.3",
+    "resend": "^3.1.0",
     "superjson": "1.12.2",
     "svix": "^1.4.12",
     "tailwind-merge": "^2.2.1",

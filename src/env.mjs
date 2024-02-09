@@ -21,6 +21,7 @@ const server = z.object({
   CRONJOB_SCHEDULE_URL: z.string().url(),
   OPENAI_API_KEY: z.string(),
   NEXT_PRIVATE_LEMONSQUEEZY_KEY: z.string(),
+  RESEND_EMAIL_API: z.string(),
 });
 
 /**
@@ -62,7 +63,7 @@ const processEnv = {
   CRONJOB_SCHEDULE_URL: process.env.CRONJOB_SCHEDULE_URL,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   NEXT_PRIVATE_LEMONSQUEEZY_KEY: process.env.NEXT_PRIVATE_LEMONSQUEEZY_KEY,
-
+  RESEND_EMAIL_API: process.env.RESEND_EMAIL_API,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
