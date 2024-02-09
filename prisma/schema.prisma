@@ -39,7 +39,7 @@ model User {
 }
 
 model Organization {
-  id            String                @id @default(cuid())
+  id            String                @id @default(nanoid(11))
   clerkUserId   String
   user          User                  @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   name          String
@@ -61,7 +61,7 @@ model Organization {
 model OrganizationInvites {
   id             String       @id @default(nanoid(11))
   email          String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
   role           Role
   status         InviteStatus
@@ -73,9 +73,9 @@ model OrganizationInvites {
 
 model OrganizationUser {
   id             String       @id @default(nanoid(11))
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String
-  user           User         @relation(fields: [clerkUserId], references: [clerkUserId])
+  user           User         @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   clerkUserId    String
   role           Role
   createdAt      DateTime     @default(now())
@@ -88,7 +88,7 @@ model OrganizationUser {
 model Project {
   id                         String        @id @default(nanoid(11))
   clerkUserId                String?
-  user                       User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  user                       User?         @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   organizationId             String?       @default("")
   projectName                String?
   repoName                   String
@@ -100,7 +100,7 @@ model Project {
   posts                      Post[]
   createdAt                  DateTime      @default(now())
   updatedAt                  DateTime      @default(now()) @updatedAt
-  Organization               Organization? @relation(fields: [organizationId], references: [id])
+  Organization               Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([clerkUserId])
   @@index([id])
@@ -109,7 +109,7 @@ model Project {
 
 model TwitterToken {
   id             String        @id @default(nanoid(11))
-  user           User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  user           User?         @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   organizationId String?
   clerkUserId    String?
   client_id      String
@@ -121,7 +121,7 @@ model TwitterToken {
   username       String?
   fullname       String?
   profile_image  String?
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  Organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([profileId])
   @@index([clerkUserId])
@@ -133,7 +133,7 @@ model GithubToken {
   id                           String        @id @default(nanoid(11))
   access_token                 String        @unique
   refresh_token                String?       @unique
-  user                         User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  user                         User?         @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   organizationId               String?
   clerkUserId                  String?
   profileId                    String?
@@ -141,7 +141,7 @@ model GithubToken {
   refresh_token_expires_in     DateTime?
   createdAt                    DateTime      @default(now())
   updatedAt                    DateTime      @updatedAt
-  Organization                 Organization? @relation(fields: [organizationId], references: [id])
+  Organization                 Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationLsSubscriptionId String?
 
   @@index([clerkUserId])
@@ -154,14 +154,14 @@ model LinkedInToken {
   profileId                String?
   access_token             String        @db.Text
   refresh_token            String?       @db.Text
-  user                     User?         @relation(fields: [clerkUserId], references: [clerkUserId])
+  user                     User?         @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   organizationId           String?
   clerkUserId              String?
   expires_in               DateTime?
   refresh_token_expires_in DateTime?
   createdAt                DateTime      @default(now())
   updatedAt                DateTime      @updatedAt
-  Organization             Organization? @relation(fields: [organizationId], references: [id])
+  Organization             Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([profileId])
   @@index([clerkUserId])
@@ -171,14 +171,15 @@ model LinkedInToken {
 
 model UserUsage {
   clerkUserId    String   @unique
-  user           User     @relation(fields: [clerkUserId], references: [clerkUserId])
-  scheduledposts Int      @default(11)
-  scheduledtime  Int      @default(8)
+  user           User     @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
+  scheduledposts Int      @default(15)
+  scheduledtime  Int      @default(10)
   projects       Int      @default(3)
-  socialaccounts Int      @default(0)
+  socialaccounts Int      @default(4)
   generatedposts Int      @default(50)
   drafts         Int      @default(15)
-  ideas          Int      @default(11)
+  ideas          Int      @default(15)
+  organisation   Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
@@ -197,7 +198,7 @@ model Post {
   project        Project?      @relation(fields: [projectId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  Organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([updatedAt])
   @@index([status])
@@ -215,7 +216,7 @@ model Idea {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   organizationId String?
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  Organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@index([clerkUserId])
   @@index([organizationId])

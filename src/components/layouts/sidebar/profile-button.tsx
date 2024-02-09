@@ -1,7 +1,9 @@
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -20,39 +22,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import { api } from "~/trpc/react";
 
 export default function ProfileButton() {
-  //   const user = await currentUser();
   const { user } = useUser();
   console.log(user?.imageUrl, "user");
-  const slug = useParams();
 
   return (
     <Dialog>
       <Popover>
         <PopoverTrigger>
-          {/* <Card className="flex w-full cursor-pointer items-center gap-2 border-none bg-secondary p-3">
-            <Avatar>
-              <AvatarImage
-                src={user?.imageUrl || "/user.png"}
-                alt="avatar"
-                className="rounded-full"
-              />
-              <AvatarFallback>
-                {user?.firstName?.slice(0, 1).toUpperCase()}
-                {user?.lastName?.slice(0, 1).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="capitalize">
-                {user?.firstName} {user?.lastName}
-              </h3>
-              <p className="text-xs text-gray-500">
-                {user?.primaryEmailAddress?.emailAddress}
-              </p>
-            </div>
-            <LuChevronsUpDown className="text-base text-muted-foreground" />
-                    </Card> */}
           <CurrentOrganisation
             avatar={user?.imageUrl || "/user.png"}
             name={`${user?.firstName || ""} ${user?.lastName || ""}`}
@@ -125,6 +104,28 @@ function CurrentOrganisation({
 }
 
 function CreateOrganisationDialog() {
+  const {
+    mutateAsync: createOrganisation,
+    isLoading: creatingOrganisation,
+    error,
+  } = api.organisation.createOrganisation.useMutation();
+  const [name, setName] = useState("");
+  const router = useRouter();
+
+  const handleCreateOrganisation = async () => {
+    await toast
+      .promise(createOrganisation({ name }), {
+        loading: "Creating Organisation...",
+        success: "Organisation Created",
+        error: (err) =>
+          `Failed to create Organisation ${(err as unknown as string) || ""}`,
+      })
+      .then((res) => {
+        console.log(res, "res");
+        router.push(`/organisation/${res.id}/dashboard`);
+      });
+  };
+
   return (
     <DialogContent>
       <DialogHeader>Create Organisation</DialogHeader>
@@ -132,9 +133,15 @@ function CreateOrganisationDialog() {
         <Input
           type="text"
           placeholder="Organisation Name"
-          // className="rounded-md border-none bg-secondary p-3"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
-        <Button>Create</Button>
+        <Button
+          disabled={creatingOrganisation}
+          onClick={handleCreateOrganisation}
+        >
+          Create Organisation
+        </Button>
       </div>
     </DialogContent>
   );

@@ -31,7 +31,7 @@ export async function limitWrapper<T>(
   if (userUsage[limitType] <= 0) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "You have reached your daily limit",
+      message: "You have reached your limit",
     });
   }
 
