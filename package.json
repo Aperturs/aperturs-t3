@@ -17,7 +17,7 @@
     "@heroicons/react": "^2.0.18",
     "@lemonsqueezy/lemonsqueezy.js": "^1.2.5",
     "@octokit/plugin-paginate-rest": "8.0.0",
-    "@prisma/client": "^5.8.1",
+    "@prisma/client": "^5.9.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -94,7 +94,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
     "prettier-plugin-tailwindcss": "^0.2.6",
-    "prisma": "^5.1.1",
+    "prisma": "^5.9.1",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.0.2"
   },
