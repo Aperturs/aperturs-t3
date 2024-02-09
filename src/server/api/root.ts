@@ -6,6 +6,7 @@ import { twitterData } from "./routers/twitter/twitter";
 import { userRouter } from "./routers/user";
 import { github } from "./routers/github/github";
 import { subscriptionData } from "./routers/subscription/lemonSqueezy";
+import { organisationRouter } from "./routers/organisation/main";
 
 /**
  * This is the primary router for your server.
@@ -20,6 +21,7 @@ export const appRouter = createTRPCRouter({
   savepost: posting,
   post: post,
   subscriptions: subscriptionData,
+  organisation: organisationRouter,
 });
 
 // export type definition of API
