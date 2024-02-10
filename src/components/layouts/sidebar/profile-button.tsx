@@ -9,7 +9,12 @@ import { LuChevronsUpDown } from "react-icons/lu";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { Command, CommandItem, CommandList } from "~/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +32,8 @@ import { api } from "~/trpc/react";
 export default function ProfileButton() {
   const { user } = useUser();
   console.log(user?.imageUrl, "user");
+  const { data, isLoading } =
+    api.organisation.basics.getAllUserOrganisations.useQuery();
 
   return (
     <Dialog>
@@ -41,22 +48,36 @@ export default function ProfileButton() {
         <PopoverContent className="z-[200] pt-4">
           <Command>
             <CommandList>
-              <CommandItem className="broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2 text-primary transition-all hover:!bg-muted">
-                <Link href={`/agency`} className="flex h-full w-full gap-4">
-                  <div className="relative w-16">
-                    <Image
-                      src="/user.png"
-                      alt="Agency Logo"
-                      fill
-                      className="rounded-md object-contain"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col">
-                    AGENCY NAME
-                    <span className="text-muted-foreground">Your Agency</span>
-                  </div>
-                </Link>
-              </CommandItem>
+              <CommandEmpty>No results found.</CommandEmpty>
+              {data?.map((item) => {
+                return (
+                  <CommandItem
+                    key={item.id}
+                    className="broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2 text-primary transition-all hover:!bg-muted"
+                  >
+                    <Link
+                      href={`/organisation/${item.id}/dashboard`}
+                      className="flex h-full w-full items-center gap-4"
+                    >
+                      <div className="relative w-16">
+                        <Image
+                          src={item.logo || "/user.png"}
+                          alt={item.name}
+                          width={30}
+                          height={30}
+                          className="rounded-md object-contain"
+                        />
+                      </div>
+                      <div className="flex flex-1 flex-col">
+                        {item.name}
+                        {/* <span className="text-muted-foreground">
+                          Your Agency
+                        </span> */}
+                      </div>
+                    </Link>
+                  </CommandItem>
+                );
+              })}
               <DialogTrigger asChild>
                 <Button
                   className="my-2 flex w-full gap-3"
