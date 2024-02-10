@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState, type ReactElement } from "react";
 import toast from "react-hot-toast";
-import Layout from "~/components/layouts/Layout";
+import Layout from "~/components/layouts/final-layouts/personal-layout";
 import ProjectLayout from "~/components/layouts/projectnavbar/projectLayout";
 import QuestionCard from "~/components/projects/project/context/questionCard";
 import { api } from "~/utils/api";

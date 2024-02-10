@@ -1,8 +1,13 @@
 import React from "react";
 import { CommandDialog } from "~/components/ui/command";
+import { type MenuItem } from "./accordian-menu-type";
 import AccordanceMenu from "./command-group";
 
-export function CommandMenu() {
+export function CommandMenu({
+  accordanceMenuList,
+}: {
+  accordanceMenuList: MenuItem[];
+}) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -18,7 +23,7 @@ export function CommandMenu() {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <AccordanceMenu />
+      <AccordanceMenu accordanceMenuList={accordanceMenuList} />
     </CommandDialog>
   );
 }

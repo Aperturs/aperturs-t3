@@ -94,6 +94,9 @@ const config = {
         "accordion-down": "accordion-down 1s ease-out",
         "accordion-up": "accordion-up 1s ease-out",
       },
+      screens: {
+        xs: "400px",
+      },
     },
   },
   plugins: [

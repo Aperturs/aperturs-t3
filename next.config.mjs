@@ -8,6 +8,17 @@
 const config = {
   reactStrictMode: true,
 
+  experimental: {
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
+  },
+
   images: {
     remotePatterns: [
       {
