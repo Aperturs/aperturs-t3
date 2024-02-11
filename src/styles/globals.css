@@ -95,6 +95,7 @@
   margin: 0px !important;
 }
 
+/* css for profile page */
 .cl-internal-phfxlr {
   width: 100% !important;
   will-change: height !important;
@@ -106,9 +107,16 @@
   }
 }
 
+/* new signin css  removes logo */
 .cl-internal-13iim0d {
   display: none;
 }
+
+/* new signin css */
+.cl-internal-uy11u8 {
+  width: 90% !important;
+}
+
 .cl-internal-17ydaof {
   /* max-width: 500px; */
   width: 100%;
@@ -116,6 +124,10 @@
   /* padding: 50px  !important; */
   margin: 0px 0px !important;
   margin-right: 0px !important;
+}
+
+.cl-internal-b3fm6y {
+  display: none;
 }
 
 .transition-opacityy {

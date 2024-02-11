@@ -9,7 +9,7 @@ const Login = () => {
           <p className="mt-1 text-white">
             One Stop Social Media Management Software
           </p>
-          <button
+          {/* <button
             type="submit"
             onClick={() => {
               window.location.href = "/";
@@ -17,14 +17,14 @@ const Login = () => {
             className="mb-2 mt-4 block w-28 rounded-2xl bg-white py-2 font-bold text-indigo-800"
           >
             Read More
-          </button>
+          </button> */}
         </div>
         <div className="absolute -bottom-32 -left-40 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
         <div className="absolute -bottom-40 -left-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
         <div className="absolute -right-0 -top-40 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
       </div>
-      <div className="flex items-center justify-center bg-white px-8 py-10 md:w-1/2">
+      <div className="flex items-center justify-center  px-8 py-10 md:w-1/2">
         <SignIn
           path="/sign-in"
           signUpUrl="/sign-up"
