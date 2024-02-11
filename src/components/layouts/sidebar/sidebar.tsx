@@ -1,12 +1,18 @@
 "use client";
 
-import { Bars2Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  Bars2Icon,
+  ChevronRightIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
-import { MdSpaceDashboard } from "react-icons/md";
+import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
+import { TbSocial } from "react-icons/tb";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
@@ -71,6 +77,25 @@ const AccordanceMenuList = [
   },
 ];
 
+const bottomMenu = [
+  {
+    text: "Notifications",
+    icon: <MdCircleNotifications className="h-5 w-5" />,
+    suffix: <Badge>14</Badge>,
+    url: "/notifications",
+  },
+  {
+    text: "Profile",
+    icon: <UserCircleIcon className="h-5 w-5" />,
+    url: "/profile",
+  },
+  {
+    text: "Socials",
+    icon: <TbSocial className="h-5 w-5" />,
+    url: "/socials",
+  },
+];
+
 export default function SideBar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
@@ -129,7 +154,7 @@ export default function SideBar() {
           <>
             <AccordianMenu accordanceMenuList={AccordanceMenuList} />
             <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu />
+            <BottomMenu bottomMenu={bottomMenu} />
           </>
           <div className="flex w-full justify-center">
             <ProfileButton />
@@ -160,7 +185,7 @@ export default function SideBar() {
           <div>
             <AccordianMenu accordanceMenuList={AccordanceMenuList} />
             <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu />
+            <BottomMenu bottomMenu={bottomMenu} />
           </div>
         </SheetContent>
         {/* <UpgradeAlert /> */}

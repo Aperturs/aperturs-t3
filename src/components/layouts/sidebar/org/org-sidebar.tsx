@@ -1,10 +1,17 @@
 "use client";
 
-import { Bars2Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  Bars2Icon,
+  ChevronRightIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
 import Image from "next/image";
-import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
-import { MdSpaceDashboard } from "react-icons/md";
+import { useParams } from "next/navigation";
+import { BsFillClipboardDataFill } from "react-icons/bs";
+import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
+import { TbSocial } from "react-icons/tb";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
@@ -13,7 +20,6 @@ import BottomMenu from "../bottomMenu";
 import AccordanceMenu from "../command-group";
 import { CommandMenu } from "../command-menu";
 import ProfileButton from "../profile-button";
-import { useParams } from "next/navigation";
 
 function AccordanceMenuList(id: string) {
   return [
@@ -72,6 +78,27 @@ function AccordanceMenuList(id: string) {
   ];
 }
 
+function bottomMenuList(id: string) {
+  return [
+    {
+      text: "Notifications",
+      icon: <MdCircleNotifications className="h-5 w-5" />,
+      suffix: <Badge>14</Badge>,
+      url: `/organisation/${id}/notifications`,
+    },
+    {
+      text: "Team",
+      icon: <UserCircleIcon className="h-5 w-5" />,
+      url: `/organisation/${id}/team`,
+    },
+    {
+      text: "Socials",
+      icon: <TbSocial className="h-5 w-5" />,
+      url: `/organisation/${id}/socials`,
+    },
+  ];
+}
+
 export default function OrgSidebar() {
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
@@ -116,7 +143,7 @@ export default function OrgSidebar() {
               accordanceMenuList={AccordanceMenuList(orgId || "")}
             />
             <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu />
+            <BottomMenu bottomMenu={bottomMenuList(orgId || "")} />
           </>
           <div className="flex w-full justify-center">
             <ProfileButton />
@@ -149,7 +176,7 @@ export default function OrgSidebar() {
               accordanceMenuList={AccordanceMenuList(orgId || "")}
             />
             <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu />
+            <BottomMenu bottomMenu={bottomMenuList(orgId || "")} />
           </div>
         </SheetContent>
         {/* <UpgradeAlert /> */}

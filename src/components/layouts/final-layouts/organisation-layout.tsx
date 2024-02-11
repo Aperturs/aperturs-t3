@@ -1,4 +1,4 @@
-import OrgSidebar from "../sidebar/org-sidebar/org-sidebar";
+import OrgSidebar from "../sidebar/org/org-sidebar";
 
 export default function OrgLayout({ children }: { children: React.ReactNode }) {
   return (

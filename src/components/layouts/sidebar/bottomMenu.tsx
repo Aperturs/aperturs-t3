@@ -1,38 +1,17 @@
 import { useClerk } from "@clerk/nextjs";
-import { PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import { PowerIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { MdCircleNotifications } from "react-icons/md";
-import { TbSocial } from "react-icons/tb";
-import { Badge } from "~/components/ui/badge";
 import {
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
+import { type BottomMenuItem } from "./accordian-menu-type";
 
-const bottomMenu = [
-  {
-    text: "Notifications",
-    icon: <MdCircleNotifications className="h-5 w-5" />,
-    suffix: <Badge>14</Badge>,
-    url: "/notifications",
-  },
-  {
-    text: "Profile",
-    icon: <UserCircleIcon className="h-5 w-5" />,
-    url: "/profile",
-  },
-  {
-    text: "Socials",
-    icon: <TbSocial className="h-5 w-5" />,
-    url: "/socials",
-  },
-];
-
-function BottomMenu() {
+function BottomMenu({ bottomMenu }: { bottomMenu: BottomMenuItem[] }) {
   const { signOut } = useClerk();
   const router = useRouter();
 

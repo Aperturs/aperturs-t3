@@ -30,6 +30,7 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
+import { BusinessCategory } from "./business-catagories";
 
 export default function ProfileButton() {
   const { user } = useUser();
@@ -144,8 +145,11 @@ function CreateOrganisationDialog() {
   } = api.organisation.basics.createOrganisation.useMutation();
   const [name, setName] = useState("");
   const router = useRouter();
+  const [value, setValue] = useState("");
 
   const handleCreateOrganisation = async () => {
+    if (!name) return toast.error("Organisation name is required");
+    if (!value) return toast.error("Organisation category is required");
     await toast
       .promise(createOrganisation({ name }), {
         loading: "Creating Organisation...",
@@ -169,6 +173,7 @@ function CreateOrganisationDialog() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+        <BusinessCategory value={value} setValue={setValue} />
         <Button
           disabled={creatingOrganisation}
           onClick={handleCreateOrganisation}
