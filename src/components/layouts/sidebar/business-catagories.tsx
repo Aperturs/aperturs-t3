@@ -183,6 +183,7 @@ export function BusinessCategory({ value, setValue }: BusinessCategoryProps) {
       onValueChange={setValue}
       emptyMessage="No resulsts."
       allowCustomInput
+      placeholder="Search Category..."
     />
   );
 }

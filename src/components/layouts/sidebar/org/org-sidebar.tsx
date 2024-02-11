@@ -19,7 +19,7 @@ import { ModeToggle } from "../../theme-toggle";
 import BottomMenu from "../bottomMenu";
 import AccordanceMenu from "../command-group";
 import { CommandMenu } from "../command-menu";
-import ProfileButton from "../profile-button";
+import ProfileButton from "./profile-button";
 
 function AccordanceMenuList(id: string) {
   return [

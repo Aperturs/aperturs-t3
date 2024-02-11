@@ -3,7 +3,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
@@ -32,19 +32,27 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { BusinessCategory } from "./business-catagories";
+import { BusinessCategory } from "../business-catagories";
+import UploadImage from "./upload-image";
 
 export default function ProfileButton() {
   const { user } = useUser();
   console.log(user?.imageUrl, "user");
   const { data, isLoading } =
     api.organisation.basics.getAllUserOrganisations.useQuery();
+  const router = useRouter();
 
   const params = useParams<{ orgid: string }>();
 
   const orgId = params?.orgid;
-
   const currentOrg = data?.find((org) => org.id === orgId);
+
+  useEffect(() => {
+    if (orgId && !currentOrg) {
+      toast.error("Organisation not found");
+      router.push("/404");
+    }
+  }, [orgId]);
 
   return (
     <Dialog>
@@ -152,6 +160,7 @@ function CreateOrganisationDialog() {
   const [name, setName] = useState("");
   const router = useRouter();
   const [value, setValue] = useState<Option>();
+  const [image, setImage] = useState<File | undefined>();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
@@ -176,6 +185,7 @@ function CreateOrganisationDialog() {
     <DialogContent>
       <DialogHeader>Create Organisation</DialogHeader>
       <div className="flex flex-col gap-4">
+        <UploadImage image={image} setImage={setImage} />
         <Input
           type="text"
           placeholder="Organisation Name"

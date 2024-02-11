@@ -20,7 +20,7 @@ import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
 import AccordianMenu from "./command-group";
 import { CommandMenu } from "./command-menu";
-import ProfileButton from "./profile-button";
+import ProfileButton from "./org/profile-button";
 
 const AccordanceMenuList = [
   {
