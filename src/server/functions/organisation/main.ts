@@ -5,12 +5,14 @@ export async function createOrganisation({
   name,
   logo,
   clerkID,
+  category,
 }: CreateOrganisation) {
   const res = await prisma.organization
     .create({
       data: {
         name,
         logo,
+        category,
         clerkUserId: clerkID,
         users: {
           create: {

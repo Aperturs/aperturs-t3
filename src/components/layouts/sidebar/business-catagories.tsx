@@ -1,23 +1,7 @@
 "use client";
 
-import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
-
-import { Button } from "~/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "~/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { cn } from "~/lib/utils";
+import { AutoComplete, type Option } from "~/components/ui/auto-complete";
 
 const categories = [
   {
@@ -143,56 +127,62 @@ const categories = [
 ];
 
 interface BusinessCategoryProps {
-  value: string;
-  setValue: (value: string) => void;
+  value: Option | undefined;
+  setValue: (value: Option) => void;
 }
 
 export function BusinessCategory({ value, setValue }: BusinessCategoryProps) {
-  const [open, setOpen] = React.useState(false);
-
   return (
-    <Popover open={open} onOpenChange={setOpen} modal>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between"
-        >
-          {value
-            ? categories.find((category) => category.value === value)?.label
-            : "Select Catagory..."}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="p-0">
-        <Command>
-          <CommandInput placeholder="Search Category..." />
-          <ScrollArea className="h-56 overflow-y-scroll">
-            {/* <CommandEmpty>No framework found.</CommandEmpty> */}
-            <CommandGroup>
-              {categories.map((category) => (
-                <CommandItem
-                  key={category.value}
-                  value={category.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === category.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {category.label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </ScrollArea>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    // <Popover open={open} onOpenChange={setOpen} modal>
+    //   <PopoverTrigger asChild>
+    //     <Button
+    //       variant="outline"
+    //       role="combobox"
+    //       aria-expanded={open}
+    //       className="w-full justify-between"
+    //     >
+    //       {value
+    //         ? categories.find((category) => category.value === value)?.label
+    //         : "Select Catagory..."}
+    //       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+    //     </Button>
+    //   </PopoverTrigger>
+    //   <PopoverContent className="p-0">
+    //     <Command>
+    //       <CommandInput placeholder="Search Category..." />
+    //       <ScrollArea className="h-56 overflow-y-scroll">
+    //         {/* <CommandEmpty>No framework found.</CommandEmpty> */}
+    //         <CommandGroup>
+    //           {categories.map((category) => (
+    //             <CommandItem
+    //               key={category.value}
+    //               value={category.value}
+    //               onSelect={(currentValue) => {
+    //                 setValue(currentValue === value ? "" : currentValue);
+    //                 setOpen(false);
+    //               }}
+    //             >
+    //               <Check
+    //                 className={cn(
+    //                   "mr-2 h-4 w-4",
+    //                   value === category.value ? "opacity-100" : "opacity-0"
+    //                 )}
+    //               />
+    //               {category.label}
+    //             </CommandItem>
+    //           ))}
+    //         </CommandGroup>
+    //       </ScrollArea>
+    //     </Command>
+    //   </PopoverContent>
+    // </Popover>
+
+    <AutoComplete
+      options={categories}
+      value={value}
+      onValueChange={setValue}
+      emptyMessage="No resulsts."
+      allowCustomInput
+    />
   );
 }

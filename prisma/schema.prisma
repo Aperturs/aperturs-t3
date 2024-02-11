@@ -44,6 +44,7 @@ model Organization {
   user          User                  @relation(fields: [clerkUserId], references: [clerkUserId], onDelete: Cascade)
   name          String
   logo          String?
+  category      String                @default("personal")
   users         OrganizationUser[]
   Project       Project[]
   TwitterToken  TwitterToken[]

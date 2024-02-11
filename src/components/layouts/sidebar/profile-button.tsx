@@ -1,4 +1,5 @@
 import { useUser } from "@clerk/nextjs";
+import { DialogClose } from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -6,6 +7,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
+import { type Option } from "~/components/ui/auto-complete";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -52,7 +54,7 @@ export default function ProfileButton() {
             <CurrentOrganisation
               avatar={currentOrg.logo || "/user.png"}
               name={currentOrg.name}
-              email={""}
+              email={currentOrg.category}
             />
           ) : (
             <CurrentOrganisation
@@ -72,6 +74,7 @@ export default function ProfileButton() {
                   logo={user?.imageUrl || "/user.png"}
                   link="/dashboard"
                   current={!orgId}
+                  subheading={"personal"}
                 />
               </CommandGroup>
               <CommandGroup heading="Organisations">
@@ -83,6 +86,7 @@ export default function ProfileButton() {
                       logo={item.logo || undefined}
                       link={`/organisation/${item.id}/dashboard`}
                       current={item.id === orgId}
+                      subheading={item.category}
                     />
                   );
                 })}
@@ -123,13 +127,15 @@ function CurrentOrganisation({
         "flex w-full cursor-pointer items-center justify-between gap-2 border-none bg-secondary p-3 text-start"
       )}
     >
-      <Avatar>
-        <AvatarImage src={avatar} alt="avatar" className="rounded-full" />
-        <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
-      </Avatar>
-      <div>
-        <h3 className="capitalize">{name}</h3>
-        <p className="text-xs text-gray-500">{email}</p>
+      <div className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage src={avatar} alt="avatar" className="rounded-full" />
+          <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <div>
+          <h3 className="capitalize">{name}</h3>
+          <p className="text-xs text-gray-500">{email}</p>
+        </div>
       </div>
       <LuChevronsUpDown className="text-base text-muted-foreground" />
       {/* <AvatarFallback>U</AvatarFallback> */}
@@ -145,13 +151,13 @@ function CreateOrganisationDialog() {
   } = api.organisation.basics.createOrganisation.useMutation();
   const [name, setName] = useState("");
   const router = useRouter();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<Option>();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
     if (!value) return toast.error("Organisation category is required");
     await toast
-      .promise(createOrganisation({ name }), {
+      .promise(createOrganisation({ name, category: value.label }), {
         loading: "Creating Organisation...",
         success: "Organisation Created",
         error: (err) =>
@@ -160,6 +166,9 @@ function CreateOrganisationDialog() {
       .then((res) => {
         console.log(res, "res");
         router.push(`/organisation/${res.id}/dashboard`);
+        setTimeout(() => {
+          router.refresh();
+        }, 2000);
       });
   };
 
@@ -174,12 +183,14 @@ function CreateOrganisationDialog() {
           onChange={(e) => setName(e.target.value)}
         />
         <BusinessCategory value={value} setValue={setValue} />
-        <Button
-          disabled={creatingOrganisation}
-          onClick={handleCreateOrganisation}
-        >
-          Create Organisation
-        </Button>
+        <DialogClose asChild>
+          <Button
+            disabled={creatingOrganisation}
+            onClick={handleCreateOrganisation}
+          >
+            Create Organisation
+          </Button>
+        </DialogClose>
       </div>
     </DialogContent>
   );
@@ -201,12 +212,16 @@ function OrganisationItem({
   return (
     <CommandItem
       className={cn(
-        "broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2 text-primary text-white transition-all hover:!bg-muted",
-        current && "!bg-primary"
+        "broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2  transition-all hover:!bg-muted",
+        current &&
+          "!bg-primary !text-white  hover:!bg-primary aria-selected:bg-primary"
       )}
     >
-      <Link href={`${link}`} className="flex h-full w-full items-center gap-4">
-        <div className="relative w-16">
+      <Link
+        href={`${link}`}
+        className="flex h-full w-full items-center justify-between gap-4 px-6"
+      >
+        <div className="flex items-center gap-2">
           <Image
             src={logo || "/user.png"}
             alt={name}
@@ -214,19 +229,17 @@ function OrganisationItem({
             height={30}
             className="rounded-full object-contain"
           />
-        </div>
-        <div className="relative flex flex-1 flex-col">
-          <div className="flex items-center gap-5">
+          <div className="relative flex flex-1 flex-col">
             {name}
-            {current && (
-              <span className="relative flex h-3 w-3">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
-                <span className="relative inline-flex h-3 w-3 rounded-full bg-white "></span>
-              </span>
-            )}
+            <span className="text-muted-foreground">{subheading}</span>
           </div>
-          <span className="text-muted-foreground">{subheading}</span>
         </div>
+        {current && (
+          <span className="relative flex h-3 w-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-white "></span>
+          </span>
+        )}
       </Link>
     </CommandItem>
   );
