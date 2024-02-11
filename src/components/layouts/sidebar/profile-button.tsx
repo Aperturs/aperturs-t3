@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
@@ -12,6 +12,7 @@ import { Card } from "~/components/ui/card";
 import {
   Command,
   CommandEmpty,
+  CommandGroup,
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
@@ -27,6 +28,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
+import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 
 export default function ProfileButton() {
@@ -35,49 +37,55 @@ export default function ProfileButton() {
   const { data, isLoading } =
     api.organisation.basics.getAllUserOrganisations.useQuery();
 
+  const params = useParams<{ orgid: string }>();
+
+  const orgId = params?.orgid;
+
+  const currentOrg = data?.find((org) => org.id === orgId);
+
   return (
     <Dialog>
       <Popover>
-        <PopoverTrigger>
-          <CurrentOrganisation
-            avatar={user?.imageUrl || "/user.png"}
-            name={`${user?.firstName || ""} ${user?.lastName || ""}`}
-            email={user?.primaryEmailAddress?.emailAddress || ""}
-          />
+        <PopoverTrigger className="w-full">
+          {currentOrg ? (
+            <CurrentOrganisation
+              avatar={currentOrg.logo || "/user.png"}
+              name={currentOrg.name}
+              email={""}
+            />
+          ) : (
+            <CurrentOrganisation
+              avatar={user?.imageUrl || "/user.png"}
+              name={`${user?.firstName || ""} ${user?.lastName || ""}`}
+              email={user?.primaryEmailAddress?.emailAddress || ""}
+            />
+          )}
         </PopoverTrigger>
         <PopoverContent className="z-[200] pt-4">
           <Command>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
-              {data?.map((item) => {
-                return (
-                  <CommandItem
-                    key={item.id}
-                    className="broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2 text-primary transition-all hover:!bg-muted"
-                  >
-                    <Link
-                      href={`/organisation/${item.id}/dashboard`}
-                      className="flex h-full w-full items-center gap-4"
-                    >
-                      <div className="relative w-16">
-                        <Image
-                          src={item.logo || "/user.png"}
-                          alt={item.name}
-                          width={30}
-                          height={30}
-                          className="rounded-md object-contain"
-                        />
-                      </div>
-                      <div className="flex flex-1 flex-col">
-                        {item.name}
-                        {/* <span className="text-muted-foreground">
-                          Your Agency
-                        </span> */}
-                      </div>
-                    </Link>
-                  </CommandItem>
-                );
-              })}
+              <CommandGroup heading="Personal">
+                <OrganisationItem
+                  name={`${user?.firstName || ""} ${user?.lastName || ""}`}
+                  logo={user?.imageUrl || "/user.png"}
+                  link="/dashboard"
+                  current={!orgId}
+                />
+              </CommandGroup>
+              <CommandGroup heading="Organisations">
+                {data?.map((item) => {
+                  return (
+                    <OrganisationItem
+                      key={item.id}
+                      name={item.name}
+                      logo={item.logo || undefined}
+                      link={`/organisation/${item.id}/dashboard`}
+                      current={item.id === orgId}
+                    />
+                  );
+                })}
+              </CommandGroup>
               <DialogTrigger asChild>
                 <Button
                   className="my-2 flex w-full gap-3"
@@ -109,7 +117,11 @@ function CurrentOrganisation({
   email,
 }: CurrentOrganisationProps) {
   return (
-    <Card className="flex w-full cursor-pointer items-center gap-2 border-none bg-secondary p-3 text-start">
+    <Card
+      className={cn(
+        "flex w-full cursor-pointer items-center justify-between gap-2 border-none bg-secondary p-3 text-start"
+      )}
+    >
       <Avatar>
         <AvatarImage src={avatar} alt="avatar" className="rounded-full" />
         <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
@@ -165,5 +177,52 @@ function CreateOrganisationDialog() {
         </Button>
       </div>
     </DialogContent>
+  );
+}
+
+function OrganisationItem({
+  name,
+  logo,
+  subheading,
+  link,
+  current,
+}: {
+  name: string;
+  logo?: string;
+  subheading?: string;
+  link: string;
+  current: boolean;
+}) {
+  return (
+    <CommandItem
+      className={cn(
+        "broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2 text-primary text-white transition-all hover:!bg-muted",
+        current && "!bg-primary"
+      )}
+    >
+      <Link href={`${link}`} className="flex h-full w-full items-center gap-4">
+        <div className="relative w-16">
+          <Image
+            src={logo || "/user.png"}
+            alt={name}
+            width={30}
+            height={30}
+            className="rounded-full object-contain"
+          />
+        </div>
+        <div className="relative flex flex-1 flex-col">
+          <div className="flex items-center gap-5">
+            {name}
+            {current && (
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-white "></span>
+              </span>
+            )}
+          </div>
+          <span className="text-muted-foreground">{subheading}</span>
+        </div>
+      </Link>
+    </CommandItem>
   );
 }

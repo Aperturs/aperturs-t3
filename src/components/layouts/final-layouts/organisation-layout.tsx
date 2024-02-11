@@ -1,11 +1,11 @@
-import SideBar from "../sidebar/sidebar";
+import OrgSidebar from "../sidebar/org-sidebar/org-sidebar";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function OrgLayout({ children }: { children: React.ReactNode }) {
   return (
     <section>
       <div className="relative gap-8 lg:flex">
         <div className="w-full lg:max-w-[18rem]">
-          <SideBar />
+          <OrgSidebar />
         </div>
         <div className="relative mt-8 grid w-full items-center px-2 lg:block  lg:p-12">
           {children}

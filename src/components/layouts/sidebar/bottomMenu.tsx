@@ -1,4 +1,4 @@
-import { OrganizationSwitcher, useClerk } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 import { PowerIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -40,9 +40,9 @@ function BottomMenu() {
     <Command>
       <CommandList>
         <CommandGroup>
-          <CommandItem>
+          {/* <CommandItem>
             <OrganizationSwitcher />
-          </CommandItem>
+          </CommandItem> */}
           {bottomMenu.map((item, index) => (
             <CommandItem key={index} className="my-1 py-3">
               <Link
