@@ -14,7 +14,7 @@ export default function Home() {
         console.error("Error while redirecting:", error);
       });
     } else {
-      router.replace("/login").catch((error) => {
+      router.replace("/sign-in").catch((error) => {
         // Handle error here
         console.error("Error while redirecting:", error);
       });

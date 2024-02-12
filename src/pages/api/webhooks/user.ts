@@ -10,7 +10,8 @@ type UnwantedKeys =
   | "lastName"
   | "primaryEmailAddressId"
   | "primaryPhoneNumberId"
-  | "phoneNumbers";
+  | "phoneNumbers"
+  | "profileImageUrl";
 
 interface UserInterface extends Omit<User, UnwantedKeys> {
   email_addresses: {
@@ -25,6 +26,7 @@ interface UserInterface extends Omit<User, UnwantedKeys> {
     phone_number: string;
     id: string;
   }[];
+  profile_image_url: string;
 }
 
 const webhookSecret: string = env.WEBHOOK_SECRET || "";
@@ -81,6 +83,7 @@ export default async function handler(
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
       birthday: evt.data.birthday,
+      profileImageUrl: evt.data.profile_image_url,
     };
     // await caller.user.createUser({
     //   clerkId: id,
@@ -104,6 +107,7 @@ export default async function handler(
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
       birthday: evt.data.birthday,
+      profileImageUrl: evt.data.profile_image_url,
     };
     await prisma.user.update({
       where: {

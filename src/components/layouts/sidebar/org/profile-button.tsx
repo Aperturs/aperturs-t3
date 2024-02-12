@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/nextjs";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useS3Upload } from "next-s3-upload";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -46,13 +47,6 @@ export default function ProfileButton() {
 
   const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
-
-  useEffect(() => {
-    if (orgId && !currentOrg) {
-      toast.error("Organisation not found");
-      router.push("/404");
-    }
-  }, [orgId]);
 
   return (
     <Dialog>
@@ -142,7 +136,7 @@ function CurrentOrganisation({
         </Avatar>
         <div>
           <h3 className="capitalize">{name}</h3>
-          <p className="text-xs text-gray-500">{email}</p>
+          <p className="text-xs text-muted-foreground">{email}</p>
         </div>
       </div>
       <LuChevronsUpDown className="text-base text-muted-foreground" />
@@ -161,17 +155,33 @@ function CreateOrganisationDialog() {
   const router = useRouter();
   const [value, setValue] = useState<Option>();
   const [image, setImage] = useState<File | undefined>();
+  const { uploadToS3 } = useS3Upload();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
     if (!value) return toast.error("Organisation category is required");
     await toast
-      .promise(createOrganisation({ name, category: value.label }), {
-        loading: "Creating Organisation...",
-        success: "Organisation Created",
-        error: (err) =>
-          `Failed to create Organisation ${(err as unknown as string) || ""}`,
-      })
+      .promise(
+        (async () => {
+          let logo = undefined;
+          if (image) {
+            const { url } = await uploadToS3(image);
+            logo = url;
+          }
+          const res = await createOrganisation({
+            name,
+            category: value.label,
+            logo,
+          });
+          return res;
+        })(),
+        {
+          loading: "Creating Organisation...",
+          success: "Organisation Created",
+          error: (err) =>
+            `Failed to create Organisation ${(err as unknown as string) || ""}`,
+        }
+      )
       .then((res) => {
         console.log(res, "res");
         router.push(`/organisation/${res.id}/dashboard`);
@@ -241,7 +251,11 @@ function OrganisationItem({
           />
           <div className="relative flex flex-1 flex-col">
             {name}
-            <span className="text-muted-foreground">{subheading}</span>
+            <span
+              className={cn(current ? "text-muted" : "text-muted-foreground")}
+            >
+              {subheading}
+            </span>
           </div>
         </div>
         {current && (

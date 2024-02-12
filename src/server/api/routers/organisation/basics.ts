@@ -5,6 +5,7 @@ import {
 } from "~/server/functions/organisation/main";
 import { createOrganisationSchema } from "~/server/functions/organisation/organisation-types";
 import { limitWrapper } from "../../helpers/limitWrapper";
+import { clerkClient } from "@clerk/nextjs";
 
 export const organisationBasic = createTRPCRouter({
   createOrganisation: protectedProcedure
@@ -19,6 +20,15 @@ export const organisationBasic = createTRPCRouter({
         ctx.currentUser,
         "organisation"
       );
+      const orgId = res.id;
+      await clerkClient.users.updateUserMetadata(ctx.currentUser, {
+        privateMetadata: {
+          organisation: {
+            id: orgId,
+            role: "OWNER",
+          },
+        },
+      });
       return res;
     }),
 
