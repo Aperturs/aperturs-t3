@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
-import ConfirmationModal from "~/components/custom/modals/modal";
+import ConfirmationModal from "~/components/custom/modals/confirm-modal";
 import { api } from "~/utils/api";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";

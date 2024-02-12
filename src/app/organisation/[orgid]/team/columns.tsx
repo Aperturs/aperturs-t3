@@ -2,11 +2,13 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
-import Image from "next/image";
-
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import CustomModal from "~/components/custom/modals/custom-modal";
+import { useModal } from "~/components/custom/modals/modal-provider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +30,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { api } from "~/trpc/react";
 import { type OrganizationUser } from "~/types/user-type";
 
 export const columns: ColumnDef<OrganizationUser>[] = [
@@ -103,8 +114,8 @@ interface CellActionsProps {
 const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { setOpen } = useModal();
   if (!rowData) return;
-
   return (
     <AlertDialog>
       <DropdownMenu>
@@ -118,34 +129,40 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
             className="flex gap-2"
-            onClick={() => navigator.clipboard.writeText(rowData?.email)}
+            onClick={async () => {
+              await navigator.clipboard.writeText(rowData?.email);
+              toast.success("Email copied to clipboard");
+            }}
           >
             <Copy size={15} /> Copy Email
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          {/* <DialogTrigger asChild> */}
           <DropdownMenuItem
             className="flex gap-2"
-            // onClick={() => {
-            //   setOpen(
-            //     <CustomModal
-            //       subheading="You can change permissions only when the user has an owned subaccount"
-            //       title="Edit User Details"
-            //     >
-            //       <UserDetails
-            //         type="agency"
-            //         id={rowData?.Agency?.id || null}
-            //         subAccounts={rowData?.Agency?.SubAccount}
-            //       />
-            //     </CustomModal>,
-            //     async () => {
-            //       return { user: await getUser(rowData?.id) };
-            //     }
-            //   );
-            // }}
+            onClick={() => {
+              setOpen(
+                <CustomModal
+                  subheading="You can change user roles"
+                  title="Edit User Details"
+                >
+                  {/* <UserDetails
+                        type="agency"
+                        id={rowData?.Agency?.id || null}
+                        subAccounts={rowData?.Agency?.SubAccount}
+                      /> */}
+                  <EditDetails {...rowData} />
+                </CustomModal>
+                // async () => {
+                //   return { user: await getUser(rowData?.id) };
+                // }
+              );
+            }}
           >
             <Edit size={15} />
             Edit Details
           </DropdownMenuItem>
+          {/* </DialogTrigger> */}
           {rowData.role !== "OWNER" && (
             <AlertDialogTrigger asChild>
               <DropdownMenuItem className="flex gap-2">
@@ -189,3 +206,61 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
     </AlertDialog>
   );
 };
+
+type roles = "ADMIN" | "EDITOR" | "MEMBER";
+
+function EditDetails({ name, email, role, avatarUrl, id }: OrganizationUser) {
+  const { mutateAsync: updateRole } =
+    api.organisation.team.changeUserRole.useMutation();
+
+  const [newRole, setNewRole] = useState<roles>(role as roles);
+
+  return (
+    <div>
+      <div className="flex items-center gap-4 p-2">
+        <div className="relative h-20 w-20 flex-none">
+          <Image
+            src={avatarUrl || "/profile.jpeg"}
+            fill
+            className="rounded-full object-cover"
+            alt="avatar image"
+          />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold">{name}</h3>
+          <span className="text-sm text-muted-foreground">{email}</span>
+          <Select
+            value={role}
+            onValueChange={(value) => {
+              setNewRole(value as roles);
+            }}
+          >
+            <SelectTrigger className="my-2 w-[180px]">
+              <SelectValue placeholder="Select Role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="OWNER">OWNER</SelectItem>
+                <SelectItem value="ADMIN">Admin</SelectItem>
+                <SelectItem value="EDITOR">Editor</SelectItem>
+                <SelectItem value="MEMBER">Member</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <Button
+        className="w-full"
+        onClick={async () => {
+          await toast.promise(updateRole({ orgUserId: id, newRole }), {
+            loading: "Updating Role...",
+            success: "Role Updated",
+            error: "Failed to update role",
+          });
+        }}
+      >
+        Change Role
+      </Button>
+    </div>
+  );
+}

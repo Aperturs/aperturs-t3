@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import { TRPCReactProvider } from "~/trpc/react";
 import AuthProvider from "./_provider/auth-provider";
 import { ThemeProvider } from "./_provider/theme-provider";
+import ModalProvider from "~/components/custom/modals/modal-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,7 +37,7 @@ export default function RootLayout({
           <AuthProvider>
             <Toaster position="top-left" reverseOrder={false} />
             <TRPCReactProvider cookies={cookies().toString()}>
-              {children}
+              <ModalProvider>{children}</ModalProvider>
             </TRPCReactProvider>
           </AuthProvider>
         </ThemeProvider>

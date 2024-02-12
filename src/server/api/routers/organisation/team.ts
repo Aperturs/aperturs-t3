@@ -27,4 +27,23 @@ export const OrganizationTeam = createTRPCRouter({
 
       return final;
     }),
+
+  changeUserRole: protectedProcedure
+    .input(
+      z.object({
+        orgUserId: z.string(),
+        newRole: z.enum(["ADMIN", "MEMBER", "EDITOR"]),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const res = await ctx.prisma.organizationUser.update({
+        where: {
+          id: input.orgUserId,
+        },
+        data: {
+          role: input.newRole,
+        },
+      });
+      return res;
+    }),
 });
