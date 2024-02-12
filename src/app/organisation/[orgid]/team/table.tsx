@@ -19,6 +19,8 @@ import {
 import { Search } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import CustomModal from "~/components/custom/modals/custom-modal";
+import { useModal } from "~/components/custom/modals/modal-provider";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,6 +42,8 @@ export default function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
+
+  const { setOpen } = useModal();
   return (
     <>
       <div className="flex items-center justify-between">
@@ -58,18 +62,18 @@ export default function DataTable<TData, TValue>({
         </div>
         <Button
           className="flex gap-2"
-          //   onClick={() => {
-          //     if (modalChildren) {
-          //       setOpen(
-          //         <CustomModal
-          //           title="Add a team member"
-          //           subheading="Send an invitation"
-          //         >
-          //           {modalChildren}
-          //         </CustomModal>
-          //       )
-          //     }
-          //   }}
+          onClick={() => {
+            if (modalChildren) {
+              setOpen(
+                <CustomModal
+                  title="Add a team member"
+                  subheading="Send an invitation"
+                >
+                  {modalChildren}
+                </CustomModal>
+              );
+            }
+          }}
         >
           {actionButtonText}
         </Button>

@@ -15,6 +15,7 @@
     "@clerk/nextjs": "^4.29.5",
     "@clerk/themes": "^1.7.9",
     "@heroicons/react": "^2.0.18",
+    "@hookform/resolvers": "^3.3.4",
     "@lemonsqueezy/lemonsqueezy.js": "^1.2.5",
     "@octokit/plugin-paginate-rest": "8.0.0",
     "@prisma/client": "^5.9.1",

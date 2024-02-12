@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import { api } from "~/trpc/server";
 import { columns } from "./columns";
 import DataTable from "./table";
+import SendInvitation from "./send-invite";
 
 type Props = {
   params: { orgid: string };
@@ -22,7 +23,7 @@ async function TeamPage({ params }: Props) {
           Add
         </>
       }
-      // modalChildren={<SendInvitation agencyId={agencyDetails.id} />}
+      modalChildren={<SendInvitation agencyId={orgId} />}
       filterValue="name"
       columns={columns}
       data={team}
