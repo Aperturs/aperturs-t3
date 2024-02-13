@@ -172,6 +172,9 @@ export default function OrgSidebar() {
           )}
         >
           <div>
+            <div className="flex w-full justify-center">
+              <ProfileButton />
+            </div>
             <AccordanceMenu
               accordanceMenuList={AccordanceMenuList(orgId || "")}
             />

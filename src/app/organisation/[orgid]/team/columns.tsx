@@ -230,7 +230,7 @@ function EditDetails({ name, email, role, avatarUrl, id }: OrganizationUser) {
           <h3 className="text-lg font-semibold">{name}</h3>
           <span className="text-sm text-muted-foreground">{email}</span>
           <Select
-            value={role}
+            defaultValue={role}
             onValueChange={(value) => {
               setNewRole(value as roles);
             }}

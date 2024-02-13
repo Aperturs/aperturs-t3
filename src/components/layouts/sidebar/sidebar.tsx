@@ -183,6 +183,9 @@ export default function SideBar() {
           )}
         >
           <div>
+            <div className="flex w-full justify-center">
+              <ProfileButton />
+            </div>
             <AccordianMenu accordanceMenuList={AccordanceMenuList} />
             <hr className="border-blue-gray-50 my-2" />
             <BottomMenu bottomMenu={bottomMenu} />
