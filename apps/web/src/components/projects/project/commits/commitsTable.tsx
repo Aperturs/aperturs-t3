@@ -122,7 +122,7 @@ export default function CommitsTable({
               ? generationError?.message
               : "Something went wrong"
           }`,
-        }
+        },
       )
       .catch((err) => {
         console.log(err);
@@ -244,7 +244,7 @@ function GeneratedPostsCard({
           loading: "Saving Post",
           success: "Post Saved",
           error: `${error?.message ? error?.message : "Something went wrong"}`,
-        }
+        },
       )
       .then((res) => {
         if (res.success) {

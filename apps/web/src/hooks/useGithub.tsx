@@ -31,7 +31,7 @@ export const useGithub = (token: string) => {
   const getPullRequests = async (
     owner: string,
     repo: string,
-    type: "open" | "closed" | "all" = "all"
+    type: "open" | "closed" | "all" = "all",
   ) => {
     return await octokit.rest.pulls.list({
       owner,
@@ -42,7 +42,7 @@ export const useGithub = (token: string) => {
   const getPullRequestById = async (
     owner: string,
     repo: string,
-    id: number
+    id: number,
   ) => {
     return await octokit.rest.pulls.get({
       owner,

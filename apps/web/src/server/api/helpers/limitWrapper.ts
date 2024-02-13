@@ -12,7 +12,7 @@ type LimitType = keyof Omit<
 export async function limitWrapper<T>(
   func: () => Promise<T>,
   clerkUserId: string,
-  limitType: LimitType
+  limitType: LimitType,
 ): Promise<T> {
   // Fetch the user's usage data
   const userUsage = await prisma.userUsage.findUnique({
@@ -50,7 +50,7 @@ export async function limitWrapper<T>(
 export async function limitDown<T>(
   func: () => Promise<T>,
   clerkUserId: string,
-  limitType: LimitType
+  limitType: LimitType,
 ): Promise<T> {
   const userUsage = await prisma.userUsage.findUnique({
     where: { clerkUserId },

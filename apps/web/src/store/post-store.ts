@@ -51,5 +51,5 @@ export const useStore = createWithEqualityFn<State>(
     setContent: (content) => set((state) => ({ ...state, content })),
     reset: () => set(() => initialState),
   }),
-  shallow
+  shallow,
 );

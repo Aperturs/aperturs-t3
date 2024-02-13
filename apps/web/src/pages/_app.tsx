@@ -98,7 +98,7 @@ const MyApp: AppType = ({
         <Toaster position="top-left" reverseOrder={false} />
 
         {getLayout(
-          <Comp />
+          <Comp />,
           //  <Component {...pageProps} />
         )}
         <Analytics />

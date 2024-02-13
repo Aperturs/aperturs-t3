@@ -18,7 +18,7 @@ export const post = createTRPCRouter({
     .input(
       z.object({
         postId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -73,7 +73,7 @@ export const post = createTRPCRouter({
       z.object({
         id: z.string(),
         date: z.date(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const inputDate = new Date(input.date.toUTCString());
@@ -81,7 +81,7 @@ export const post = createTRPCRouter({
       console.log(inputDate, currentDate);
       try {
         const delay = Math.round(
-          (inputDate.getTime() - currentDate.getTime()) / 1000
+          (inputDate.getTime() - currentDate.getTime()) / 1000,
         );
         // console.log(de)
         const headers = {
@@ -100,7 +100,7 @@ export const post = createTRPCRouter({
               httpsAgent: new https.Agent({
                 rejectUnauthorized: false,
               }),
-            }
+            },
           )
           .catch((error) => {
             console.error("Error:", error);

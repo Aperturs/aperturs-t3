@@ -43,7 +43,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
 
   const setOpen = async (
     modal: React.ReactNode,
-    fetchData?: () => Promise<any>
+    fetchData?: () => Promise<any>,
   ) => {
     if (modal) {
       if (fetchData) {

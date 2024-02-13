@@ -17,7 +17,7 @@ import { prisma } from "~/server/db";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { code } = req.query;
   const tokenData = await (
@@ -28,7 +28,7 @@ export default async function handler(
           Accept: "application/json",
         },
         method: "POST",
-      }
+      },
     )
   ).json();
 

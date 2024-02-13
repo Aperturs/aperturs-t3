@@ -30,7 +30,7 @@ function ContentPostCard({ id }: { id: string }) {
       updateContent(debounceContent);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [debounceContent]
+    [debounceContent],
   );
 
   // const onChangeContent = (textContent: string) => {

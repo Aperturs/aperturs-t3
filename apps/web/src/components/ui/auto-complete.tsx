@@ -57,7 +57,7 @@ export const AutoComplete = ({
       // This is not a default behaviour of the <input /> field
       if (event.key === "Enter" && input.value !== "") {
         const optionToSelect = options.find(
-          (option) => option.label === input.value
+          (option) => option.label === input.value,
         );
         if (optionToSelect) {
           setSelected(optionToSelect);
@@ -69,7 +69,7 @@ export const AutoComplete = ({
         input.blur();
       }
     },
-    [isOpen, options, onValueChange]
+    [isOpen, options, onValueChange],
   );
 
   const handleBlur = useCallback(() => {
@@ -90,7 +90,7 @@ export const AutoComplete = ({
         inputRef?.current?.blur();
       }, 0);
     },
-    [onValueChange]
+    [onValueChange],
   );
 
   return (
@@ -133,7 +133,7 @@ export const AutoComplete = ({
                         onSelect={() => handleSelectOption(option)}
                         className={cn(
                           "flex w-full items-center gap-2",
-                          !isSelected ? "pl-8" : null
+                          !isSelected ? "pl-8" : null,
                         )}
                       >
                         {isSelected ? <Check className="w-4" /> : null}

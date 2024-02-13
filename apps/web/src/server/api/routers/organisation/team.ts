@@ -8,7 +8,7 @@ export const OrganizationTeam = createTRPCRouter({
     .input(
       z.object({
         orgId: z.string(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const res = await getOrgnanisationTeams(input.orgId);
@@ -33,7 +33,7 @@ export const OrganizationTeam = createTRPCRouter({
       z.object({
         orgUserId: z.string(),
         newRole: z.enum(["ADMIN", "MEMBER", "EDITOR"]),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const res = await ctx.prisma.organizationUser.update({

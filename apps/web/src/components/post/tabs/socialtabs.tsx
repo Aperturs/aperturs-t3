@@ -26,7 +26,7 @@ export default function SocialTabs() {
                         : ""}
                     </div>
                   </TabsTrigger>
-                )
+                ),
             )}
             <SocialsMenu />
           </TabsList>
@@ -36,7 +36,7 @@ export default function SocialTabs() {
                 <TabsContent key={item.id} value={item.id}>
                   <ContentPostCard id={item.id} />
                 </TabsContent>
-              )
+              ),
           )}
         </Tabs>
       ) : (

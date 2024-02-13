@@ -126,7 +126,7 @@ function CurrentOrganisation({
   return (
     <Card
       className={cn(
-        "flex w-full cursor-pointer items-center justify-between gap-2 border-none bg-secondary p-3 text-start"
+        "flex w-full cursor-pointer items-center justify-between gap-2 border-none bg-secondary p-3 text-start",
       )}
     >
       <div className="flex items-center gap-2">
@@ -180,7 +180,7 @@ function CreateOrganisationDialog() {
           success: "Organisation Created",
           error: (err) =>
             `Failed to create Organisation ${(err as unknown as string) || ""}`,
-        }
+        },
       )
       .then((res) => {
         console.log(res, "res");
@@ -234,7 +234,7 @@ function OrganisationItem({
       className={cn(
         "broder-[1px] my-2 cursor-pointer rounded-md border-border !bg-transparent p-2  transition-all hover:!bg-muted",
         current &&
-          "!bg-primary !text-white  hover:!bg-primary aria-selected:bg-primary"
+          "!bg-primary !text-white  hover:!bg-primary aria-selected:bg-primary",
       )}
     >
       <Link

@@ -26,7 +26,7 @@ function Publish({ params }: { params: { id: string } }) {
       reset: state.reset,
       shouldReset: state.shouldReset,
     }),
-    shallow
+    shallow,
   );
   const {
     mutateAsync: createTweet,
@@ -78,7 +78,7 @@ function Publish({ params }: { params: { id: string } }) {
               loading: "Posting to Twitter...",
               success: "Posted to Twitter",
               error: "Failed to post to Twitter",
-            }
+            },
           );
           break;
         case `${SocialType.Linkedin}`:
@@ -91,7 +91,7 @@ function Publish({ params }: { params: { id: string } }) {
               loading: "Posting to LinkedIn...",
               success: "Posted to LinkedIn",
               error: "Failed to post to LinkedIn",
-            }
+            },
           );
           break;
         default:
@@ -142,7 +142,7 @@ function Publish({ params }: { params: { id: string } }) {
         loading: "Saving to drafts...",
         success: "Saved to drafts",
         error: "Failed to save to drafts",
-      }
+      },
     );
     return postId;
   };
@@ -191,7 +191,7 @@ function Publish({ params }: { params: { id: string } }) {
             isScheduling ? "saved and is ready to schedule" : "Updated post"
           }`,
           error: `Failed to update post`,
-        }
+        },
       );
     } catch (err) {
       toast.error(`Failed to update post ${err as string}`);
@@ -231,7 +231,7 @@ function Publish({ params }: { params: { id: string } }) {
             loading: "Scheduling post...",
             success: "Scheduled post",
             error: "Failed to schedule post",
-          }
+          },
         )
         .then((response) => {
           if (response) {

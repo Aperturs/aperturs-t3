@@ -13,7 +13,7 @@ export const githubPost = createTRPCRouter({
         ProjectDescription: z.string(),
         CommitInformation: z.string(),
         website: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       try {
@@ -27,7 +27,7 @@ export const githubPost = createTRPCRouter({
               website: input.website,
             }),
           ctx.currentUser,
-          "generatedposts"
+          "generatedposts",
         );
 
         return {

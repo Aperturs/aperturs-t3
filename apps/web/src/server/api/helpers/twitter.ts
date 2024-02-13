@@ -24,7 +24,7 @@ export const getAccessToken = async (tokenId: string) => {
     if (token.expires_in && token.refresh_token && token.access_token) {
       if (token.expires_in < new Date()) {
         const bearerToken = Buffer.from(
-          `${token.client_id}:${token.client_secret}`
+          `${token.client_id}:${token.client_secret}`,
         ).toString("base64");
         try {
           const response = await fetch(
@@ -38,7 +38,7 @@ export const getAccessToken = async (tokenId: string) => {
                 grant_type: "refresh_token",
                 refresh_token: token.refresh_token,
               }),
-            }
+            },
           );
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const data = await response.json();
@@ -51,7 +51,7 @@ export const getAccessToken = async (tokenId: string) => {
                 access_token: data.access_token,
                 refresh_token: data.refresh_token,
                 expires_in: new Date(
-                  new Date().getTime() + data.expires_in * 1000
+                  new Date().getTime() + data.expires_in * 1000,
                 ),
               },
             });
@@ -67,7 +67,7 @@ export const getAccessToken = async (tokenId: string) => {
   }
 };
 export const getTwitterAccountDetails = async (
-  twitterTokens: TwitterToken[]
+  twitterTokens: TwitterToken[],
 ) => {
   const twitterDetails: TwitterAccountDetails[] = [];
 

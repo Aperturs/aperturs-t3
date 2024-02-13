@@ -11,7 +11,7 @@ export const subscriptionData = createTRPCRouter({
     .input(
       z.object({
         productId: z.number(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const attributes = {

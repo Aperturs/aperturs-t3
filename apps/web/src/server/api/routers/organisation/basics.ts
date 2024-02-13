@@ -18,7 +18,7 @@ export const organisationBasic = createTRPCRouter({
             ...input,
           }),
         ctx.currentUser,
-        "organisation"
+        "organisation",
       );
       const orgId = res.id;
       await clerkClient.users.updateUserMetadata(ctx.currentUser, {

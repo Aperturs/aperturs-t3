@@ -32,7 +32,7 @@ export const postTweetInputSchema = z.object({
     z.object({
       id: z.number(),
       text: z.string(),
-    })
+    }),
   ),
 });
 

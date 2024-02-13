@@ -70,7 +70,7 @@ export default function DataTable<TData, TValue>({
                   subheading="Send an invitation"
                 >
                   {modalChildren}
-                </CustomModal>
+                </CustomModal>,
               );
             }
           }}
@@ -90,7 +90,7 @@ export default function DataTable<TData, TValue>({
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -109,7 +109,7 @@ export default function DataTable<TData, TValue>({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

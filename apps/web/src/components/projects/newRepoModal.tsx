@@ -55,7 +55,7 @@ const NewRepoFormModal = () => {
     api.user.getGithubAccounts.useQuery();
 
   const { getRepositories } = useGithub(
-    githubTokens?.at(0)?.access_token as string
+    githubTokens?.at(0)?.access_token as string,
   );
 
   // useEffect(() => {
@@ -125,7 +125,7 @@ const NewRepoFormModal = () => {
           loading: "loading...",
           success: "connected",
           error: "there is some error",
-        }
+        },
       )
       .catch((err) => {
         console.log(err);

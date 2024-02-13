@@ -26,7 +26,7 @@ const ProjectContext = () => {
       ),
       {
         duration: 4000,
-      }
+      },
     );
   }, []);
 
@@ -127,7 +127,7 @@ const ProjectContext = () => {
           loading: "Submitting...",
           success: "Submitted successfully",
           error: "Something went wrong",
-        }
+        },
       )
       .then(async () => {
         await router.push(`/project/${router.query.id as string}/commits`);

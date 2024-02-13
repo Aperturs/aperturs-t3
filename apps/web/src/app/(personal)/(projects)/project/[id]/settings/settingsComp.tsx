@@ -63,7 +63,7 @@ const Settings = ({ params }: { params: { id: string } }) => {
         loading: "Saving Changes ...",
         success: "Saved Successfully",
         error: `Something went wrong ${error?.message as string}`,
-      }
+      },
     );
   };
   return (

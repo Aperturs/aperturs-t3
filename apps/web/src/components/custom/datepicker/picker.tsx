@@ -58,7 +58,7 @@ export default function Picker() {
       setCanConfirm(true);
       return true;
     },
-    [canConfirm]
+    [canConfirm],
   );
   useEffect(() => {
     if (date && time) {

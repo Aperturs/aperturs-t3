@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   const digest = Buffer.from(hmac.update(body).digest("hex"), "utf8");
   const signature = Buffer.from(
     Array.isArray(sigString) ? sigString.join("") : sigString || "",
-    "utf8"
+    "utf8",
   );
 
   // Check if the webhook event was for this product or not
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   if (!userId) {
     return NextResponse.json(
       { message: "No userId provided" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -60,14 +60,14 @@ export async function POST(request: Request) {
           lsCustomerId: `${payload.data.attributes.customer_id}`,
           lsVariantId: subscription.data.attributes.variant_id,
           lsCurrentPeriodEnd: new Date(
-            subscription.data.attributes.renews_at || ""
+            subscription.data.attributes.renews_at || "",
           ),
         },
       });
 
       return NextResponse.json(
         { message: "Success Subscription Created" },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { message: "Success Subscription Updated" },
-        { status: 200 }
+        { status: 200 },
       );
     }
   }

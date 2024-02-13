@@ -86,7 +86,7 @@ export const QueueNav = () => {
       if (queueDay) {
         const availablePosts = filterTodayPosts(
           queueDay.posts,
-          dayCount === 0 ? currentTime : "00:00"
+          dayCount === 0 ? currentTime : "00:00",
         );
         if (availablePosts.length > 0) {
           const nextDate = new Date(currentDate);
@@ -98,8 +98,8 @@ export const QueueNav = () => {
               dayCount === 0
                 ? `Today (${formattedDate})`
                 : dayCount === 1
-                ? `Tomorrow (${formattedDate})`
-                : `${queueDay.day} (${formattedDate})`,
+                  ? `Tomorrow (${formattedDate})`
+                  : `${queueDay.day} (${formattedDate})`,
             posts: availablePosts,
           };
           availableSlots.push(dayInfo);

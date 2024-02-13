@@ -14,7 +14,7 @@ export default function Page(): JSX.Element {
       inviteId: "1234",
       inviteFromIp: "string",
       inviteFromLocation: "India",
-    })
+    }),
   );
 
   return <div dangerouslySetInnerHTML={{ __html: emailHTML }} />;

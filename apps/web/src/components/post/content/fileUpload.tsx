@@ -38,7 +38,7 @@ export default function FileUpload({
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
         const fileSizeExceeded = newFiles.some(
-          (file) => file.size > 50 * 1024 * 1024
+          (file) => file.size > 50 * 1024 * 1024,
         ); // 30MB
         if (fileSizeExceeded) {
           toast.error("Maximum file size is 50MB");
@@ -56,7 +56,7 @@ export default function FileUpload({
       }
     },
 
-    [previewUrls, selectedFiles, updateFiles]
+    [previewUrls, selectedFiles, updateFiles],
   );
 
   const inputId = `fileInput${id}`;

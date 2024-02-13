@@ -21,7 +21,7 @@ export default function ManageSubscription({
             {isCanceled
               ? "Your subscription is cancelled"
               : `Your subscription will renew on ${new Date(
-                  lsCurrentPeriodEnd
+                  lsCurrentPeriodEnd,
                 ).toLocaleDateString()}`}
           </p>
         </div>

@@ -6,7 +6,7 @@ export const useAPICallWrapper = () => {
   const [isAPICallSuccess, setIsAPICallSuccess] = useState(false);
   const isAPICallFailure = useMemo(() => APICallError !== "", [APICallError]);
   const wrapAPICall = async <T,>(
-    apiCall: () => Promise<T>
+    apiCall: () => Promise<T>,
   ): Promise<T | undefined> => {
     setAPICallError("");
     setIsAPICallSuccess(false);

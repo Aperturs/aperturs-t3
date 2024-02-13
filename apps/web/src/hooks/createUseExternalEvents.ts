@@ -14,7 +14,7 @@ const useIsomorphicEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export function createUseExternalEvents<
-  Handlers extends Record<string, (detail: any) => void>
+  Handlers extends Record<string, (detail: any) => void>,
 >(prefix: string) {
   function _useExternalEvents(events: Handlers) {
     const handlers = Object.keys(events).reduce<any>((acc = {}, eventKey) => {

@@ -9,7 +9,7 @@ export default function usePost() {
       content: state.content,
       setContent: state.setContent,
     }),
-    shallow
+    shallow,
   );
   const { uploadToS3 } = useS3Upload();
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ export default function usePost() {
             // File already uploaded, use the existing URL
             console.log(
               "pusing existing file",
-              localUploadedFiles[fileName] as string
+              localUploadedFiles[fileName] as string,
             );
             postUploadedFiles.push(localUploadedFiles[fileName] as string);
           }

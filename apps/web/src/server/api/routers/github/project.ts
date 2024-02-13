@@ -13,7 +13,7 @@ export const githubProject = createTRPCRouter({
         repoId: z.string(),
         questionsAnswersJsonString: z.array(ProjectQnASchema).optional(),
         commitCount: z.number().positive(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const project = await limitWrapper(
@@ -30,7 +30,7 @@ export const githubProject = createTRPCRouter({
             },
           }),
         ctx.currentUser,
-        "projects"
+        "projects",
       );
       return project;
     }),
@@ -47,7 +47,7 @@ export const githubProject = createTRPCRouter({
           questionsAnswersJsonString: z.array(ProjectQnASchema).optional(),
           commitCount: z.number().positive().optional(),
         }),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const { id, data } = input;

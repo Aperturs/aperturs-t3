@@ -33,7 +33,7 @@ function extractPrice(priceRange: string, position: 1 | 2): number | null {
   }
 
   const parsedPrice = parseFloat(
-    selectedPrice.replace("$", "").replace(",", "")
+    selectedPrice.replace("$", "").replace(",", ""),
   );
 
   // Check if the parsed price is a valid number

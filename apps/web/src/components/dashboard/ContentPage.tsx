@@ -45,7 +45,7 @@ async function ContentPage() {
               title: `${
                 (draft.content as any as PostContentType[])[0]?.content?.slice(
                   0,
-                  60
+                  60,
                 ) || ""
               }...`,
               // title: 'test',

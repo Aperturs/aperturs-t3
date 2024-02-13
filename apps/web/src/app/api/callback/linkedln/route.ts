@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      }
+      },
     );
 
     console.log(response, "response");

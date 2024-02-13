@@ -12,7 +12,7 @@ interface Response {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const { userId } = getAuth(req);
   const { state, code } = req.query;
@@ -33,7 +33,7 @@ export default async function handler(
   const codeAuth = code as string;
 
   const bearerToken = Buffer.from(
-    `${formattedClientId}:${formattedClientSecret}`
+    `${formattedClientId}:${formattedClientSecret}`,
   ).toString("base64");
 
   await fetch("https://api.twitter.com/2/oauth2/token", {
@@ -68,7 +68,7 @@ export default async function handler(
                     access_token: response.access_token,
                     refresh_token: response.refresh_token,
                     expires_in: new Date(
-                      new Date().getTime() + response.expires_in * 1000
+                      new Date().getTime() + response.expires_in * 1000,
                     ),
                     profileId: userObject.id,
                     client_id: formattedClientId,

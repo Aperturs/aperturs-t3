@@ -5,6 +5,6 @@ export const onGithubConnect = () => {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID
   }&redirect_uri=${encodeURIComponent(
-    env.NEXT_PUBLIC_GITHUB_CALLBACK_URL
+    env.NEXT_PUBLIC_GITHUB_CALLBACK_URL,
   )}&scope=${encodeURIComponent("user repo")}`;
 };

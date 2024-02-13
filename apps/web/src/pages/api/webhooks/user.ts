@@ -33,7 +33,7 @@ const webhookSecret: string = env.WEBHOOK_SECRET || "";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await req.body;

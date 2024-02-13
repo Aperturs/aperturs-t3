@@ -9,7 +9,7 @@ function usePostUpdate(id: string) {
       content: state.content,
       setContent: state.setContent,
     }),
-    shallow
+    shallow,
   );
 
   const [sync, setSync] = useState(false);
@@ -20,19 +20,19 @@ function usePostUpdate(id: string) {
         const updatedContent = content.map((item) =>
           !item.unique || item.socialType === SocialType.Default
             ? { ...item, content: newContent }
-            : item
+            : item,
         );
         console.log(updatedContent, id);
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, content: newContent } : item
+          item.id === id ? { ...item, content: newContent } : item,
         );
         setContent(updatedContent);
       }
       console.log(content);
     },
-    [content, id, setContent]
+    [content, id, setContent],
   );
 
   const updateFiles = useCallback(
@@ -43,20 +43,20 @@ function usePostUpdate(id: string) {
           !item.unique
             ? { ...item, files: newFiles }
             : item.id === SocialType.Default
-            ? { ...item, files: newFiles }
-            : item
+              ? { ...item, files: newFiles }
+              : item,
         );
         console.log(updatedContent, "updated");
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, files: newFiles } : item
+          item.id === id ? { ...item, files: newFiles } : item,
         );
         setContent(updatedContent);
       }
       console.log(content, "from updateFiles");
     },
-    [content, id, setContent]
+    [content, id, setContent],
   );
 
   const removeFiles = useCallback(
@@ -64,11 +64,11 @@ function usePostUpdate(id: string) {
       const updatedContent = content.map((item) =>
         item.id === id
           ? { ...item, files: item.files.filter((_, i) => i !== index) || [] }
-          : item
+          : item,
       );
       setContent(updatedContent);
     },
-    [content, id, setContent]
+    [content, id, setContent],
   );
 
   const removeUpdatedFiles = useCallback(
@@ -79,11 +79,11 @@ function usePostUpdate(id: string) {
               ...item,
               uploadedFiles: item.uploadedFiles.filter((_, i) => i !== index),
             }
-          : item
+          : item,
       );
       setContent(updatedContent);
     },
-    [content, id, setContent]
+    [content, id, setContent],
   );
 
   const contentValue = useMemo(() => {

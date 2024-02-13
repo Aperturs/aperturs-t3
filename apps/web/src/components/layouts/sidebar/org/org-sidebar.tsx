@@ -168,7 +168,7 @@ export default function OrgSidebar() {
         </AnimatePresence> */}
         <SheetContent
           className={clsx(
-            "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]"
+            "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
           )}
         >
           <div>

@@ -20,7 +20,7 @@ export default function Post({ params }: { params: { id: string } }) {
       setContent: state.setContent,
       setShouldReset: state.setShouldReset,
     }),
-    shallow
+    shallow,
   );
 
   const getData = api.savepost.getSavedPostById.useQuery(id);

@@ -17,7 +17,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
       setContent: state.setContent,
       content: state.content,
     }),
-    shallow
+    shallow,
   );
 
   const isSelected = content.some((item) => item.id === id);

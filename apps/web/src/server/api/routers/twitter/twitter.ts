@@ -27,7 +27,7 @@ export const twitterData = createTRPCRouter({
       z.object({
         clientId: z.string(),
         clientSecret: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const canConnect = await ConnectSocial({ user: ctx.currentUser });
@@ -70,7 +70,7 @@ export const twitterData = createTRPCRouter({
     .input(
       z.object({
         tokenId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {

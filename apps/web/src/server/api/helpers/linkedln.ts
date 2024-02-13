@@ -10,7 +10,7 @@ interface LinkedInTokenDetails
   tokenId: string;
 }
 export const getLinkedinAccountDetails = async (
-  linkedinTokens: LinkedInToken[]
+  linkedinTokens: LinkedInToken[],
 ) => {
   const linkedinDetails: LinkedInTokenDetails[] = [];
   for (const linkedinToken of linkedinTokens) {

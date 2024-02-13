@@ -27,7 +27,7 @@ export const posting = createTRPCRouter({
               },
             }),
           ctx.currentUser,
-          "drafts"
+          "drafts",
         );
         return {
           data: savedPost.id,
@@ -129,7 +129,7 @@ export const posting = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       try {
@@ -139,7 +139,7 @@ export const posting = createTRPCRouter({
               where: { id: input.id },
             }),
           ctx.currentUser,
-          "drafts"
+          "drafts",
         );
       } catch (error) {
         throw new TRPCError({
