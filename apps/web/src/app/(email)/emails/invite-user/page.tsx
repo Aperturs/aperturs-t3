@@ -1,6 +1,7 @@
 import { render } from "@react-email/components";
 
 import VercelInviteUserEmail from "~/server/emails/teamplates/invite-to-org";
+// import { VercelInviteUserEmail } from '@aperturs/email/emails/vercel-invite-user';
 
 export default function Page(): JSX.Element {
   const emailHTML = render(

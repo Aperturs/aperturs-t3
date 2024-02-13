@@ -10,6 +10,8 @@
     "format": "prettier . --write"
   },
   "dependencies": {
+    "@aperturs/email": "workspace:*",
+    "@aperturs/ui": "workspace:*",
     "@clerk/nextjs": "^4.29.5",
     "@clerk/themes": "^1.7.9",
     "@heroicons/react": "^2.0.18",
@@ -17,7 +19,6 @@
     "@lemonsqueezy/lemonsqueezy.js": "^1.2.5",
     "@octokit/plugin-paginate-rest": "8.0.0",
     "@prisma/client": "^5.9.1",
-    "@aperturs/ui": "workspace:*",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
@@ -32,6 +33,7 @@
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@react-email/components": "0.0.14",
     "@react-email/tailwind": "^0.0.14",
     "@tanstack/react-query": "^4.36.1",
     "@tanstack/react-table": "^8.11.8",
