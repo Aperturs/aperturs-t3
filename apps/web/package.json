@@ -17,6 +17,7 @@
     "@lemonsqueezy/lemonsqueezy.js": "^1.2.5",
     "@octokit/plugin-paginate-rest": "8.0.0",
     "@prisma/client": "^5.9.1",
+    "@aperturs/ui": "workspace:*",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
