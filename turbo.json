@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalDotEnv": [".env"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -10,8 +11,13 @@
       "dependsOn": ["^lint"]
     },
     "dev": {
+      "dotEnv": [".env"],
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": [
+    "VERCEL_URL"
+  ]
 }

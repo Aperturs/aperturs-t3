@@ -15,9 +15,8 @@ import {
   Text,
 } from "@react-email/components";
 import { Tailwind } from "@react-email/tailwind";
-import * as React from "react";
 
-interface VercelInviteUserEmailProps {
+interface InviteUserEmailProps {
   fullName: string;
   userImage?: string;
   invitedByName: string;
@@ -43,7 +42,7 @@ export const InviteUserEmail = ({
   inviteId,
   inviteFromIp,
   inviteFromLocation,
-}: VercelInviteUserEmailProps) => {
+}: InviteUserEmailProps) => {
   const previewText = `Join ${invitedByName} on Aperturs `;
 
   return (
@@ -77,7 +76,7 @@ export const InviteUserEmail = ({
                 {invitedByEmail}
               </Link>
               ) has invited you to the <strong>{teamName}</strong> team on{" "}
-              <strong>Vercel</strong>.
+              <strong>Aperutrs</strong>.
             </Text>
             <Section>
               <Row>
@@ -147,11 +146,11 @@ InviteUserEmail.PreviewProps = {
   userImage: `${baseUrl}/static/vercel-user.png`,
   invitedByName: "Alan",
   invitedByEmail: "alan.turing@example.com",
-  teamName: "Enigma",
+  teamName: "Aperturs",
   teamImage: `${baseUrl}/static/vercel-team.png`,
-  inviteId: "https://vercel.com/teams/invite/foo",
+  inviteId: "1234",
   inviteFromIp: "204.13.186.218",
   inviteFromLocation: "São Paulo, Brazil",
-} as VercelInviteUserEmailProps;
+} as InviteUserEmailProps;
 
 export default InviteUserEmail;
