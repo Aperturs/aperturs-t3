@@ -1,0 +1,25 @@
+
+
+> website@0.1.0 build /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web
+> next build
+
+  [1m[38;2;173;127;168m ▲ Next.js 14.1.0[39m[22m
+   - Environments: .env
+   - Experiments (use at your own risk):
+     · turbo
+
+ [37m[1m [22m[39m Creating an optimized production build ...
+Failed to compile.
+
+./src/components/ui/label.tsx
+Module not found: Can't resolve '@radix-ui/react-label'
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./src/components/ui/form.tsx
+./src/app/organisation/[orgid]/team/send-invite.tsx
+
+
+> Build failed because of webpack errors
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 1.[39m
