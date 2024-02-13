@@ -9,12 +9,15 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "husky": "^9.0.0",
     "prettier": "^3.1.1",
-    "turbo": "latest",
-    "husky": "^9.0.0"
+    "turbo": "latest"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
     "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv-cli": "^7.3.0"
   }
 }
