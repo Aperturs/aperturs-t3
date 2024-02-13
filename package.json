@@ -1,9 +1,20 @@
 {
-    "name": "aperturs",
-    "version": "0.1.0",
-    "private": true,
-    "packageManager": "pnpm@6.14.1",
-    "scripts": {
-      "dev": "turbo dev"
-    }
+  "name": "aperturs-app",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "prettier": "^3.1.1",
+    "turbo": "latest",
+    "husky": "^9.0.0"
+  },
+  "packageManager": "pnpm@8.9.0",
+  "engines": {
+    "node": ">=18"
   }
+}

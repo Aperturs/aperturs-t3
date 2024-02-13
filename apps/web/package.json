@@ -5,11 +5,9 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "format": "prettier . --write",
-    "prepare": "husky install"
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.5",
@@ -95,7 +93,6 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^8.36.0",
     "eslint-config-next": "^14.0.4",
-    "husky": "^8.0.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
     "prettier-plugin-tailwindcss": "^0.2.6",
