@@ -32,35 +32,6 @@ const SideBar = ({ params }: { params: { id: string } }) => {
             )}
           </div>
         )}
-        {/* <div className="grid grid-cols-3 place-items-start gap-3">
-          <ConnectedAccount
-            name={SocialType.Twitter}
-            type={SocialType.Twitter}
-            profilePic="/user.png"
-            id="1"
-          />
-
-          <ConnectedAccount
-            name={SocialType.Twitter}
-            type={SocialType.Twitter}
-            profilePic="/user.png"
-            id="2"
-          />
-
-          <ConnectedAccount
-            name={SocialType.Twitter}
-            type={SocialType.Twitter}
-            profilePic="/user.png"
-            id="3"
-          />
-
-          <ConnectedAccount
-            name={SocialType.Twitter}
-            type={SocialType.Twitter}
-            profilePic="/user.png"
-            id="4"
-          />
-        </div> */}
       </div>
     </div>
   );
