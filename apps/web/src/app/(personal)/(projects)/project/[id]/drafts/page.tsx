@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import DraftCard from "~/components/drafts/darfCard";
 import { api } from "~/trpc/server";
-import { type PostContentType } from "~/types/post-types";
 
 async function DraftPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -17,7 +15,7 @@ async function DraftPage({ params }: { params: { id: string } }) {
         xl:grid-cols-3
         "
       >
-        {data && data.length > 0 ? (
+        {/* {data && data.length > 0 ? (
           data.map((post) => (
             <DraftCard
               key={post.id}
@@ -31,7 +29,7 @@ async function DraftPage({ params }: { params: { id: string } }) {
           <div className="grid h-full w-full place-content-center">
             No Drafts
           </div>
-        )}
+        )} */}
         {/* <DraftCard id={1} />
         <DraftCard id={2} />
         <DraftCard id={3} /> */}
