@@ -33,7 +33,7 @@ import {
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
-import { BusinessCategory } from "../business-catagories";
+import { BusinessCategory } from "./business-catagories";
 import UploadImage from "./upload-image";
 
 export default function ProfileButton() {

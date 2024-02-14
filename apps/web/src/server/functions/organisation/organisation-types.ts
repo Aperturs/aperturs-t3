@@ -13,6 +13,8 @@ export const inviteUserToOrganisationSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   orgId: z.string(),
+  inviterId: z.string(),
+  inviterName: z.string(),
   role: z.enum(["ADMIN", "EDITOR", "MEMBER"]),
 });
 

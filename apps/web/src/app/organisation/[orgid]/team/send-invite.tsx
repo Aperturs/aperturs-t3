@@ -4,7 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import Loading from "~/app/loading";
+import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -144,7 +144,11 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
               )}
             />
             <Button disabled={form.formState.isSubmitting} type="submit">
-              {form.formState.isSubmitting ? <Loading /> : "Send Invitation"}
+              {form.formState.isSubmitting ? (
+                <SimpleLoader />
+              ) : (
+                "Send Invitation"
+              )}
             </Button>
           </form>
         </Form>

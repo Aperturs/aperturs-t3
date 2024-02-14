@@ -1,10 +1,14 @@
-import { auth } from "@clerk/nextjs";
+import { auth, clerkClient } from "@clerk/nextjs";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { inviteUserToOrganisationSchema } from "~/server/functions/organisation/organisation-types";
 import {
+  acceptInvite,
+  getInviteDetails,
   getOrgnanisationTeams,
   inviteUserToOrganisation,
+  rejectInvite,
   sendInvitationViaEmail,
 } from "~/server/functions/organisation/teams";
 import { type UserDetails } from "~/types/user-type";
@@ -54,7 +58,12 @@ export const OrganizationTeam = createTRPCRouter({
     }),
 
   inviteUserToOrganisation: protectedProcedure
-    .input(inviteUserToOrganisationSchema)
+    .input(
+      inviteUserToOrganisationSchema.omit({
+        inviterId: true,
+        inviterName: true,
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       const orgDetails = await ctx.prisma.organization.findUnique({
         where: {
@@ -66,7 +75,11 @@ export const OrganizationTeam = createTRPCRouter({
       const userImage = user?.imageUrl;
       const teamImage = orgDetails?.logo;
       const teamName = orgDetails?.name;
-      const res = await inviteUserToOrganisation(input);
+      const res = await inviteUserToOrganisation({
+        ...input,
+        inviterId: ctx.currentUser,
+        inviterName: userName,
+      });
       const inviteId = res.id;
       const sendEmail = await sendInvitationViaEmail({
         invitationId: inviteId,
@@ -81,5 +94,106 @@ export const OrganizationTeam = createTRPCRouter({
       });
       const final = Promise.all([res, sendEmail]);
       return final;
+    }),
+
+  getInviteDetails: protectedProcedure
+    .input(z.object({ inviteId: z.string() }))
+    .query(async ({ input }) => {
+      const res = getInviteDetails(input);
+      return res;
+    }),
+
+  acceptInvite: protectedProcedure
+    .input(
+      z.object({
+        inviteId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
+        where: {
+          id: input.inviteId,
+        },
+      });
+      if (
+        inviteDetails?.status === "ACCEPTED" ||
+        inviteDetails?.status === "REJECTED" ||
+        inviteDetails?.status === "CANCELLED"
+      ) {
+        throw new TRPCError({
+          code: "CLIENT_CLOSED_REQUEST",
+          message:
+            "This invitation has already been accepted or rejected or cancelled",
+        });
+      }
+      const user = await clerkClient.users.getUser(ctx.currentUser);
+      const primaryEmail = user.emailAddresses.find(
+        (email) => email.id === user.primaryEmailAddressId,
+      )?.emailAddress;
+      if (primaryEmail !== inviteDetails?.email) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "This invitation is not for you",
+        });
+      }
+      const final = await acceptInvite({
+        inviteId: input.inviteId,
+        userId: ctx.currentUser,
+      });
+      return final;
+    }),
+
+  rejectInvite: protectedProcedure
+    .input(z.object({ inviteId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
+        where: {
+          id: input.inviteId,
+        },
+      });
+      if (
+        inviteDetails?.status === "ACCEPTED" ||
+        inviteDetails?.status === "REJECTED" ||
+        inviteDetails?.status === "CANCELLED"
+      ) {
+        throw new TRPCError({
+          code: "CLIENT_CLOSED_REQUEST",
+          message:
+            "This invitation has already been accepted or rejected or cancelled",
+        });
+      }
+      const user = await clerkClient.users.getUser(ctx.currentUser);
+      const primaryEmail = user.emailAddresses.find(
+        (email) => email.id === user.primaryEmailAddressId,
+      )?.emailAddress;
+      if (primaryEmail !== inviteDetails?.email) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "This invitation is not for you",
+        });
+      }
+      const final = rejectInvite({ inviteId: input.inviteId });
+      return final;
+    }),
+
+  cancelInvite: protectedProcedure
+    .input(z.object({ inviteId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
+        where: {
+          id: input.inviteId,
+        },
+      });
+      if (
+        inviteDetails?.status === "ACCEPTED" ||
+        inviteDetails?.status === "REJECTED" ||
+        inviteDetails?.status === "CANCELLED"
+      ) {
+        throw new TRPCError({
+          code: "CLIENT_CLOSED_REQUEST",
+          message:
+            "This invitation has already been accepted or rejected or cancelled",
+        });
+      }
     }),
 });

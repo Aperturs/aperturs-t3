@@ -22,11 +22,17 @@ export async function inviteUserToOrganisation({
   orgId,
   email,
   role,
+  name,
+  inviterId,
+  inviterName,
 }: InviteUserToOrganisation) {
   const res = await prisma.organizationInvites.create({
     data: {
       email,
       role,
+      name,
+      inviterClerkId: inviterId,
+      inviterName: inviterName,
       organizationId: orgId,
       status: "PENDING",
     },
@@ -73,6 +79,9 @@ export async function getInviteDetails({ inviteId }: { inviteId: string }) {
       id: inviteId,
     },
   });
+  if (!res) {
+    return undefined;
+  }
   const orgDetails = await prisma.organization.findUnique({
     where: {
       id: res?.organizationId,
@@ -82,4 +91,46 @@ export async function getInviteDetails({ inviteId }: { inviteId: string }) {
     inviteDetails: res,
     orgDetails,
   };
+}
+
+export async function acceptInvite({
+  inviteId,
+  userId,
+}: {
+  inviteId: string;
+  userId: string;
+}) {
+  const res = await prisma.organizationInvites.update({
+    where: {
+      id: inviteId,
+    },
+    data: {
+      status: "ACCEPTED",
+    },
+  });
+  const orgId = res.organizationId;
+  const role = res.role;
+  const user = await prisma.organizationUser.create({
+    data: {
+      organizationId: orgId,
+      clerkUserId: userId,
+      role: role,
+    },
+  });
+  return {
+    res,
+    user,
+  };
+}
+
+export async function rejectInvite({ inviteId }: { inviteId: string }) {
+  const res = await prisma.organizationInvites.update({
+    where: {
+      id: inviteId,
+    },
+    data: {
+      status: "REJECTED",
+    },
+  });
+  return res;
 }
