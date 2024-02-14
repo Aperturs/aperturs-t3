@@ -17,8 +17,8 @@ async function DraftPage({ params }: { params: { id: string } }) {
         xl:grid-cols-3
         "
       >
-        {data.length > 0 ? (
-          data?.map((post) => (
+        {data && data.length > 0 ? (
+          data.map((post) => (
             <DraftCard
               key={post.id}
               id={post.id}

@@ -11,9 +11,10 @@
  [37m[1m [22m[39m Creating an optimized production build ...
  [32m[1m✓[22m[39m Compiled successfully
 [?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m [31m[1m⨯[22m[39m ESLint: Failed to load config "@aperturs/eslint-config/library.js" to extend from. Referenced from: /Users/kate/Developer/react/aperturs/aperturs-t3/.eslintrc.js
-[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
-[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
-[?25l [37m[1m [22m[39m Generating static pages (0/30)  [36m[    ][39mc [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
+[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/30)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/30)  [36m[=   ][39m  [37m[1m [22m[39m Generating static pages (16/30) 
+c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
     at c.from (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:1:2755)
     at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:2192 {
   meta: undefined,
@@ -22,9 +23,9 @@
   [cause]: o [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
       at d (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:4077)
       at c (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:1555)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/(projects)/project/page.js:21:9514
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/dashboard/page.js:1:13214
       at /Users/kate/Developer/react/aperturs/aperturs-t3/node_modules/.pnpm/next@14.1.0_react-dom@18.2.0_react@18.2.0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:182068
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/(projects)/project/page.js:21:9685
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/dashboard/page.js:1:13385
       at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
       at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:849)
       at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:977
@@ -43,53 +44,9 @@ c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically 
   [cause]: o [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
       at d (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:4077)
       at c (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:1555)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/(projects)/project/page.js:21:9514
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/dashboard/page.js:1:13214
       at /Users/kate/Developer/react/aperturs/aperturs-t3/node_modules/.pnpm/next@14.1.0_react-dom@18.2.0_react@18.2.0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:182068
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/(projects)/project/page.js:21:9685
-      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
-      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:849)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:977
-      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:1437 {
-    description: "Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
-    digest: 'DYNAMIC_SERVER_USAGE'
-  }
-}
-[2K[1G [37m[1m [22m[39m Generating static pages (0/30)  [36m[=   ][39m  [37m[1m [22m[39m Generating static pages (16/30) 
-[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/30)  [36m[==  ][39m  [37m[1m [22m[39m Generating static pages (18/30) 
-c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
-    at c.from (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:1:2755)
-    at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:2192 {
-  meta: undefined,
-  shape: undefined,
-  data: undefined,
-  [cause]: o [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
-      at d (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:4077)
-      at c (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:1555)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/drafts/page.js:6:4856
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/node_modules/.pnpm/next@14.1.0_react-dom@18.2.0_react@18.2.0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:182068
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/drafts/page.js:6:5027
-      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
-      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:849)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:977
-      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:1437 {
-    description: "Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
-    digest: 'DYNAMIC_SERVER_USAGE'
-  }
-}
-c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
-    at c.from (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:1:2755)
-    at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:2192 {
-  meta: undefined,
-  shape: undefined,
-  data: undefined,
-  [cause]: o [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
-      at d (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:4077)
-      at c (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:1555)
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/drafts/page.js:6:4856
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/node_modules/.pnpm/next@14.1.0_react-dom@18.2.0_react@18.2.0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:182068
-      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/drafts/page.js:6:5027
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/dashboard/page.js:1:13385
       at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
       at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:849)
       at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:977
@@ -141,6 +98,49 @@ c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically 
     digest: 'DYNAMIC_SERVER_USAGE'
   }
 }
+c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at c.from (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:1:2755)
+    at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:2192 {
+  meta: undefined,
+  shape: undefined,
+  data: undefined,
+  [cause]: o [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+      at d (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:4077)
+      at c (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:1555)
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/profile/page.js:1:18172
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/node_modules/.pnpm/next@14.1.0_react-dom@18.2.0_react@18.2.0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:182068
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/profile/page.js:1:18343
+      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
+      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:849)
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:977
+      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:1437 {
+    description: "Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+    digest: 'DYNAMIC_SERVER_USAGE'
+  }
+}
+c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+    at c.from (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:1:2755)
+    at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:2192 {
+  meta: undefined,
+  shape: undefined,
+  data: undefined,
+  [cause]: o [Error]: Dynamic server usage: Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error
+      at d (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:4077)
+      at c (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/4677.js:1:1555)
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/profile/page.js:1:18172
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/node_modules/.pnpm/next@14.1.0_react-dom@18.2.0_react@18.2.0/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:12:182068
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/app/(personal)/profile/page.js:1:18343
+      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
+      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:849)
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:977
+      at Object.subscribe (/Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:5299)
+      at /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web/.next/server/chunks/8038.js:5:1437 {
+    description: "Page couldn't be rendered statically because it used `cookies`. See more info here: https://nextjs.org/docs/messages/dynamic-server-error",
+    digest: 'DYNAMIC_SERVER_USAGE'
+  }
+}
+[2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/30)  [36m[==  ][39m  [37m[1m [22m[39m Generating static pages (28/30) 
 [2K[1G[1A[2K[1G [37m[1m [22m[39m Generating static pages (0/30)  [36m[=== ][39m  [37m[1m [22m[39m Generating static pages (28/30) 
 [2K[1G[1A[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (30/30) 
 [?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
@@ -157,7 +157,7 @@ c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically 
 ├ λ /drafts                                390 B           [37m[1m182 kB[22m[39m
 ├ λ /organisation/[orgid]/dashboard        164 B          [37m[1m84.6 kB[22m[39m
 ├ λ /organisation/[orgid]/drafts           164 B          [37m[1m84.6 kB[22m[39m
-├ λ /organisation/[orgid]/ideas            164 B          [37m[1m84.6 kB[22m[39m
+├ λ /organisation/[orgid]/ideas            165 B          [37m[1m84.6 kB[22m[39m
 ├ λ /organisation/[orgid]/post             554 B           [37m[1m299 kB[22m[39m
 ├ λ /organisation/[orgid]/post/[postid]    164 B          [37m[1m84.6 kB[22m[39m
 ├ λ /organisation/[orgid]/queue            164 B          [37m[1m84.6 kB[22m[39m
@@ -192,7 +192,7 @@ c [TRPCClientError]: Dynamic server usage: Page couldn't be rendered statically 
 ├ λ /api/post/schedule                     0 B             [37m[1m152 kB[22m[39m
 ├ λ /api/trigger                           0 B             [37m[1m152 kB[22m[39m
 ├ λ /api/webhooks/userx                    0 B             [37m[1m152 kB[22m[39m
-├ ○ /ideas ([32m306 ms[39m)                        382 B           [37m[1m311 kB[22m[39m
+├ ○ /ideas                                 382 B           [37m[1m311 kB[22m[39m
 ├ ○ /notifications                         377 B           [37m[1m311 kB[22m[39m
 ├ ○ /onboarding                            581 B           [37m[1m152 kB[22m[39m
 ├ ○ /onboarding/addSocial                  4 kB            [37m[1m179 kB[22m[39m
