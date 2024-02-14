@@ -61,6 +61,7 @@ model Organization {
 
 model OrganizationInvites {
   id             String       @id @default(nanoid(11))
+  name           String
   email          String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationId String

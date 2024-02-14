@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 import Loading from "~/app/loading";
 import { Button } from "~/components/ui/button";
@@ -28,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { api } from "~/trpc/react";
 
 interface SendInvitationProps {
   agencyId: string;
@@ -37,36 +39,37 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
   const userDataSchema = z.object({
     email: z.string().email(),
     role: z.enum(["ADMIN", "EDITOR", "MEMBER"]),
+    name: z.string(),
   });
-
   const form = useForm<z.infer<typeof userDataSchema>>({
     resolver: zodResolver(userDataSchema),
     mode: "onChange",
     defaultValues: {
       email: "",
       role: "MEMBER",
+      name: "",
     },
   });
+  const { mutateAsync: inviteUser } =
+    api.organisation.team.inviteUserToOrganisation.useMutation();
 
-  const onSubmit = (values: z.infer<typeof userDataSchema>) => {
+  const onSubmit = async (values: z.infer<typeof userDataSchema>) => {
     try {
-      //   const res = await sendInvitation(values.role, values.email, agencyId)
-      //   await saveActivityLogsNotification({
-      //     agencyId: agencyId,
-      //     description: `Invited ${res.email}`,
-      //     subaccountId: undefined,
-      //   })
-      //   toast({
-      //     title: 'Success',
-      //     description: 'Created and sent invitation',
-      //   })
+      const res = await inviteUser({
+        name: values.name,
+        email: values.email,
+        role: values.role,
+        orgId: agencyId,
+      });
+      // await saveActivityLogsNotification({
+      //   agencyId: agencyId,
+      //   description: `Invited ${res.email}`,
+      //   subaccountId: undefined,
+      // })
+      toast("Invitation sent", { icon: "🚀" });
     } catch (error) {
       console.log(error);
-      //   toast({
-      //     variant: 'destructive',
-      //     title: 'Oppse!',
-      //     description: 'Could not send invitation',
-      //   })
+      toast("Failed to send invitation", { icon: "🔥" });
     }
   };
 
@@ -95,6 +98,20 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="Email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              disabled={form.formState.isSubmitting}
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -1,6 +1,12 @@
+import { auth } from "@clerk/nextjs";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { getOrgnanisationTeams } from "~/server/functions/organisation/teams";
+import { inviteUserToOrganisationSchema } from "~/server/functions/organisation/organisation-types";
+import {
+  getOrgnanisationTeams,
+  inviteUserToOrganisation,
+  sendInvitationViaEmail,
+} from "~/server/functions/organisation/teams";
 import { type UserDetails } from "~/types/user-type";
 
 export const OrganizationTeam = createTRPCRouter({
@@ -45,5 +51,35 @@ export const OrganizationTeam = createTRPCRouter({
         },
       });
       return res;
+    }),
+
+  inviteUserToOrganisation: protectedProcedure
+    .input(inviteUserToOrganisationSchema)
+    .mutation(async ({ input, ctx }) => {
+      const orgDetails = await ctx.prisma.organization.findUnique({
+        where: {
+          id: input.orgId,
+        },
+      });
+      const { user } = auth();
+      const userName = user?.firstName + " " + user?.lastName;
+      const userImage = user?.imageUrl;
+      const teamImage = orgDetails?.logo;
+      const teamName = orgDetails?.name;
+      const res = await inviteUserToOrganisation(input);
+      const inviteId = res.id;
+      const sendEmail = await sendInvitationViaEmail({
+        invitationId: inviteId,
+        teamName: teamName || "team",
+        teamImage: teamImage || "/profile.jpeg",
+        userImage: userImage || "/user.png",
+        userName: input.name,
+        toEmail: input.email,
+        inviteFromIp: "",
+        inviteFromLocation: "São Paulo, Brazil",
+        invitedByName: userName,
+      });
+      const final = Promise.all([res, sendEmail]);
+      return final;
     }),
 });
