@@ -32,9 +32,12 @@ export async function createOrganisation({
 export async function getUserOrganisations(clerkID: string) {
   const res = await prisma.organization.findMany({
     where: {
-      clerkUserId: clerkID,
+      users: {
+        some: {
+          clerkUserId: clerkID,
+        },
+      },
     },
   });
-
   return res;
 }
