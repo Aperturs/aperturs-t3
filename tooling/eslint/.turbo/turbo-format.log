@@ -1,0 +1,7 @@
+
+
+> @aperturs/eslint-config@0.2.0 format /Users/kate/Developer/react/aperturs/aperturs-t3/tooling/eslint
+> prettier --check . --ignore-path ../../.gitignore "--cache" "--cache-location" "node_modules/.cache/.prettiercache"
+
+Checking formatting...
+.turbo/turbo-format.log[2K[1Gbase.js[2K[1Gnextjs.js[2K[1Gpackage.json[2K[1Greact.js[2K[1Gtsconfig.json[2K[1GAll matched files use Prettier code style!

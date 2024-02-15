@@ -1,0 +1,7 @@
+
+
+> @aperturs/prettier-config@0.1.0 format /Users/kate/Developer/react/aperturs/aperturs-t3/tooling/prettier
+> prettier --check . --ignore-path ../../.gitignore "--cache" "--cache-location" "node_modules/.cache/.prettiercache"
+
+Checking formatting...
+.turbo/turbo-format.log[2K[1Gindex.js[2K[1Gpackage.json[2K[1Gtsconfig.json[2K[1GAll matched files use Prettier code style!

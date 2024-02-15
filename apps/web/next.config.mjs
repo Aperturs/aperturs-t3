@@ -46,16 +46,15 @@ const config = {
         hostname: "img.clerk.com",
       },
       {
-        protocol:"https",
+        protocol: "https",
         hostname: "images.clerk.dev",
-      }
+      },
     ],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-  transpilePackages: ['@aperturs/ui'],
-
+  transpilePackages: ["@aperturs/ui"],
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
