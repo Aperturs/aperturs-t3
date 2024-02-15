@@ -1,0 +1,16 @@
+{
+  "extends": "@aperturs/typescript-config/react-library.json",
+  "include": [
+    "."
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "react-jsx",
+    "types": ["node"]
+  }
+}

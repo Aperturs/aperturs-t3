@@ -1,0 +1,23 @@
+{
+  "name": "@aperturs/email",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    ".react-email"
+  ],
+  "scripts": {
+    "dev": "email dev -p 3001",
+    "export": "email export"
+  },
+  "dependencies": {
+    "@aperturs/typescript-config": "workspace:*",
+    "@react-email/components": "0.0.14",
+    "@react-email/tailwind": "0.0.14",
+    "react": "^18.2.0",
+    "react-email": "2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@types/react": "18.2.38"
+  }
+}
