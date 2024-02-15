@@ -5,15 +5,15 @@ import { useCallback, useRef, useState } from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { Check } from "lucide-react";
 
-import { cn } from "@aperturs/ui/lib/utils";
+import { cn } from "@ui/lib/utils";
 
 import {
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-} from "~/components/ui/command";
-import { Skeleton } from "~/components/ui/skeleton";
+} from "./command";
+import { Skeleton } from "./skeleton";
 
 export type Option = Record<"value" | "label", string> & Record<string, string>;
 
@@ -35,6 +35,7 @@ export const AutoComplete = ({
   value,
   onValueChange,
   disabled,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   allowCustomInput,
   isLoading = false,
 }: AutoCompleteProps) => {

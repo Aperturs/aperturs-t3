@@ -7,6 +7,7 @@ const config = {
   ],
   rules: {
     "react/prop-types": "off",
+    "@typescript-eslint/no-empty-interface": "off",
   },
   globals: {
     React: "writable",

@@ -4,7 +4,8 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 
-import { cn } from "~/lib/utils";
+import { cn } from "@aperturs/ui/lib/utils";
+
 import { SocialType } from "~/types/post-enums";
 import { Button } from "../ui/button";
 

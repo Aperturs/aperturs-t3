@@ -1,6 +1,6 @@
 import React from "react";
 
-import { cn } from "@aperturs/ui/lib/utils";
+import { cn } from "@ui/lib/utils";
 
 interface ListItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -11,8 +11,8 @@ interface ListItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function ListItem({
   children,
-  prefixChildren,
-  suffixChildren,
+  // prefixChildren,
+  // suffixChildren,
   containerClassName,
   ...props
 }: ListItemProps) {

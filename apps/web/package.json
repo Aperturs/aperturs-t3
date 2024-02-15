@@ -88,6 +88,7 @@
     "@aperturs/eslint-config": "workspace:*",
     "@aperturs/prettier-config": "workspace:*",
     "@aperturs/tailwind-config": "workspace:*",
+    "@aperturs/tsconfig": "workspace:*",
     "eslint": "^8.56.0",
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/bcrypt": "^5.0.0",

@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
 
+import { cn } from "@aperturs/ui/lib/utils";
+
 import type { Option } from "~/components/ui/auto-complete";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -32,7 +34,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { cn } from "~/lib/utils";
 import { api } from "~/trpc/react";
 import { BusinessCategory } from "./business-catagories";
 import UploadImage from "./upload-image";
