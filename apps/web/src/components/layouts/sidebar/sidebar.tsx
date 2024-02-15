@@ -1,17 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   Bars2Icon,
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
+
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -179,7 +180,7 @@ export default function SideBar() {
         </AnimatePresence> */}
         <SheetContent
           className={clsx(
-            "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
+            "xs:w-[440px] fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl",
           )}
         >
           <div>

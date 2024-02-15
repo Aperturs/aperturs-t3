@@ -1,5 +1,6 @@
-import { type FC } from "react";
+import type { FC } from "react";
 import Calendar from "react-calendar";
+
 import "react-calendar/dist/Calendar.css";
 
 interface CalendarProps {

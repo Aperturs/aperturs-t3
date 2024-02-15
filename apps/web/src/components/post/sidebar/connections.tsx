@@ -1,12 +1,14 @@
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { shallow } from "zustand/shallow";
+
+import type { SocialType } from "~/types/post-enums";
 import { Avatar } from "~/components/ui/avatar";
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 
 interface IConnection {
   name: string;
-  type: string;
+  type: SocialType;
   profilePic?: string;
   id: string;
 }
@@ -33,7 +35,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           id,
           name,
           unique: false,
-          content: content[0]?.content || "",
+          content: content[0]?.content ?? "",
           files: [],
           uploadedFiles: [],
         },
@@ -42,6 +44,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
   };
 
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className={`${
         isSelected ? "opacity-100" : "opacity-25"

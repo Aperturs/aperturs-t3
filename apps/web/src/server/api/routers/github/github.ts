@@ -1,17 +1,19 @@
 import { z } from "zod";
+
 import { env } from "~/env.mjs";
+import { useGithub } from "~/hooks/useGithub";
+import { getGithubAccountDetails } from "../../helpers/github";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { githubPost } from "./post";
 import { githubProject } from "./project";
-import { getGithubAccountDetails } from "../../helpers/github";
-import { useGithub } from "~/hooks/useGithub";
 
 function getUsername(url: string): string | null {
+  // eslint-disable-next-line no-useless-escape
   const regex = /https:\/\/github\.com\/([^\/]+)\/[^\/]+/;
   const match = url.match(regex);
 
   if (match && match.length >= 2) {
-    return match[1] || null;
+    return match[1] ?? null;
   } else {
     return null;
   }

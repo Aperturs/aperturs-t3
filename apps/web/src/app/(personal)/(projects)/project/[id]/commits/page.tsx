@@ -30,7 +30,7 @@ export default async function CommitsPage({
   //   if (!owner || !repo) return;
   //   const res = await getCommits(owner, repo);
 
-  const data = project?.commits?.data || [];
+  const data = project?.commits?.data ?? [];
 
   const newTablesRows: TableRow[] = data.map((commit, index) => {
     return {

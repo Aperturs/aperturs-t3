@@ -1,15 +1,18 @@
-import { useClerk } from "@clerk/nextjs";
-import { PowerIcon } from "@heroicons/react/24/solid";
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
+import { PowerIcon } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
+
+import type { BottomMenuItem } from "./accordian-menu-type";
 import {
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-import { type BottomMenuItem } from "./accordian-menu-type";
 
 function BottomMenu({ bottomMenu }: { bottomMenu: BottomMenuItem[] }) {
   const { signOut } = useClerk();

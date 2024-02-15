@@ -1,4 +1,5 @@
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
+
 import Layout from "~/components/layouts/final-layouts/personal-layout";
 
 function Notifications() {

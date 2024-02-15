@@ -37,9 +37,9 @@ export default async function FetchInvite({
   return (
     <InviteCard
       name={invite.inviteDetails?.name || ""}
-      organisationName={invite.orgDetails?.name || ""}
-      organisationLogo={invite.orgDetails?.logo || "/profile.jpeg"}
-      orgId={invite.orgDetails?.id || ""}
+      organisationName={invite.orgDetails?.name ?? ""}
+      organisationLogo={invite.orgDetails?.logo ?? "/profile.jpeg"}
+      orgId={invite.orgDetails?.id ?? ""}
       inviteId={invite.inviteDetails?.id || ""}
       role={invite.inviteDetails?.role || ""}
       email={invite.inviteDetails?.email || ""}

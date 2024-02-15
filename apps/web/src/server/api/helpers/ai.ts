@@ -1,6 +1,8 @@
 import OpenAI from "openai";
+
+import type { IPrompt } from "./prompt";
 import { env } from "~/env.mjs";
-import { promptuser, type IPrompt } from "./prompt";
+import { promptuser } from "./prompt";
 
 function convertStringToArray(input: string): string[] {
   // Find the starting "[" and ending "]" positions
@@ -21,7 +23,7 @@ function convertStringToArray(input: string): string[] {
   // Remove the surrounding double quotes from each string
   const cleanedStrings = strings?.map((str) => str.slice(1, -1));
 
-  return cleanedStrings || [];
+  return cleanedStrings ?? [];
 }
 
 export async function AIGenerated({
@@ -60,8 +62,8 @@ export async function AIGenerated({
     // stream: true
   });
   console.log(response.usage, "total tokens");
-  const endResponse = response.choices[0]?.message.content;
+  const endResponse = response.choices[0]?.message?.content;
   console.log(endResponse);
 
-  return convertStringToArray(endResponse || "");
+  return convertStringToArray(endResponse ?? "");
 }

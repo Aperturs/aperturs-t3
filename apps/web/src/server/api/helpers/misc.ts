@@ -1,35 +1,31 @@
+import type { SavePostInput } from "../../../types/post-types";
 import { prisma } from "~/server/db";
-import { type SavePostInput } from "../../../types/post-types";
 
 export const ConnectSocial = async ({
   user,
 }: {
   user: string;
 }): Promise<boolean> => {
-  try {
-    const accounts = await prisma.user.findUnique({
-      where: {
-        clerkUserId: user,
-      },
-      select: {
-        twitterTokens: true,
-        linkedInTokens: true,
-      },
-    });
-    console.log(accounts, "accounts");
-    if (accounts) {
-      const number =
-        accounts.linkedInTokens.length + accounts.twitterTokens.length;
-      console.log(number, "number");
-      if (number < 2) {
-        return true;
-      }
-      return false;
+  const accounts = await prisma.user.findUnique({
+    where: {
+      clerkUserId: user,
+    },
+    select: {
+      twitterTokens: true,
+      linkedInTokens: true,
+    },
+  });
+  console.log(accounts, "accounts");
+  if (accounts) {
+    const number =
+      accounts.linkedInTokens.length + accounts.twitterTokens.length;
+    console.log(number, "number");
+    if (number < 2) {
+      return true;
     }
-    return true;
-  } catch (error) {
-    throw error; // or handle it in some other way
+    return false;
   }
+  return true;
 };
 
 export const saveDraft = async ({
@@ -39,17 +35,13 @@ export const saveDraft = async ({
   user: string;
   input: SavePostInput;
 }): Promise<string> => {
-  try {
-    const savedPost = await prisma.post.create({
-      data: {
-        clerkUserId: user,
-        status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-        scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
-        content: input.postContent,
-      },
-    });
-    return savedPost.id;
-  } catch (error) {
-    throw error; // or handle it in some other way
-  }
+  const savedPost = await prisma.post.create({
+    data: {
+      clerkUserId: user,
+      status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+      scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
+      content: input.postContent,
+    },
+  });
+  return savedPost.id;
 };

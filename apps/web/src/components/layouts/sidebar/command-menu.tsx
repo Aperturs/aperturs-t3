@@ -1,6 +1,7 @@
 import React from "react";
+
+import type { MenuItem } from "./accordian-menu-type";
 import { CommandDialog } from "~/components/ui/command";
-import { type MenuItem } from "./accordian-menu-type";
 import AccordanceMenu from "./command-group";
 
 export function CommandMenu({

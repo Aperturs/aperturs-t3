@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Buffer } from "buffer";
 import crypto from "crypto";
+import { Readable } from "stream";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import rawBody from "raw-body";
-import { Readable } from "stream";
+
 import { prisma } from "~/server/db";
 import ls from "~/utils/lemonSqueezy";
 
@@ -16,11 +15,11 @@ export async function POST(request: Request) {
   const headersList = headers();
   const payload = JSON.parse(body.toString());
   const sigString = headersList.get("x-signature");
-  const secret = process.env.LEMONS_SQUEEZY_SIGNATURE_SECRET as string;
+  const secret = process.env.LEMONS_SQUEEZY_SIGNATURE_SECRET!;
   const hmac = crypto.createHmac("sha256", secret);
   const digest = Buffer.from(hmac.update(body).digest("hex"), "utf8");
   const signature = Buffer.from(
-    Array.isArray(sigString) ? sigString.join("") : sigString || "",
+    Array.isArray(sigString) ? sigString.join("") : sigString ?? "",
     "utf8",
   );
 
@@ -37,8 +36,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Invalid signature" }, { status: 403 });
   }
 
-  const userId = payload.meta.custom_data["user_id"];
-  console.log(payload.meta.custom_data["user_id"]);
+  const userId = payload.meta.custom_data.user_id;
+  console.log(payload.meta.custom_data.user_id);
 
   // Check if custom defined data i.e. the `userId` is there or not
   if (!userId) {
@@ -60,7 +59,7 @@ export async function POST(request: Request) {
           lsCustomerId: `${payload.data.attributes.customer_id}`,
           lsVariantId: subscription.data.attributes.variant_id,
           lsCurrentPeriodEnd: new Date(
-            subscription.data.attributes.renews_at || "",
+            subscription.data.attributes.renews_at ?? "",
           ),
         },
       });
@@ -79,7 +78,7 @@ export async function POST(request: Request) {
         select: { lsSubscriptionId: true },
       });
 
-      if (!user || !user.lsSubscriptionId) return;
+      if (!user?.lsSubscriptionId) return;
 
       await prisma.user.update({
         where: { lsSubscriptionId: user.lsSubscriptionId },

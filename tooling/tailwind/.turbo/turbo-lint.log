@@ -1,0 +1,5 @@
+
+
+> @aperturs/tailwind-config@0.1.0 lint /Users/kate/Developer/react/aperturs/aperturs-t3/tooling/tailwind
+> eslint . "--cache" "--cache-location" "node_modules/.cache/.eslintcache"
+

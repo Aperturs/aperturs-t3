@@ -1,8 +1,9 @@
-import { ReloadIcon } from "@radix-ui/react-icons";
+import type { ButtonHTMLAttributes } from "react";
 import Image from "next/image";
-import { type ButtonHTMLAttributes } from "react";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
+
 import { cn } from "~/lib/utils";
 import { SocialType } from "~/types/post-enums";
 import { Button } from "../ui/button";
@@ -20,7 +21,7 @@ export const SimpleButton = ({
   return (
     <Button
       {...buttonProps}
-      disabled={isLoading || buttonProps.disabled}
+      disabled={isLoading ?? buttonProps.disabled}
       className="py-6 font-normal"
     >
       {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
@@ -30,7 +31,7 @@ export const SimpleButton = ({
 };
 
 interface SocialIconProps {
-  type: string;
+  type: SocialType;
   className?: string;
   size?: "xs" | "sm" | "md" | "lg" | "xl";
 }

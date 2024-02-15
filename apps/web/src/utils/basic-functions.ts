@@ -1,5 +1,5 @@
+import type { PostContentType } from "~/types/post-types";
 import { SocialType } from "~/types/post-enums";
-import { type PostContentType } from "~/types/post-types";
 
 export function defaultContent(content: string): PostContentType[] {
   return [

@@ -1,6 +1,7 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import { getAuth } from "@clerk/nextjs/server";
-import { type NextApiRequest, type NextApiResponse } from "next";
 import { Client } from "twitter-api-sdk";
+
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 

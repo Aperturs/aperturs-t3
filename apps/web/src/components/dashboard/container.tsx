@@ -1,6 +1,7 @@
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
 import { BsArrowUpRight } from "react-icons/bs";
+
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader } from "../ui/card";
 

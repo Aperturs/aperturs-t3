@@ -1,9 +1,10 @@
 import { z } from "zod";
+
 import ls from "~/utils/lemonSqueezy";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const subscriptionData = createTRPCRouter({
-  getProducts: protectedProcedure.query(async ({}) => {
+  getProducts: protectedProcedure.query(async () => {
     const products = await ls.getProducts();
     return products;
   }),

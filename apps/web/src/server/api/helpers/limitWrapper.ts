@@ -1,5 +1,6 @@
-import { type UserUsage } from "@prisma/client";
+import type { UserUsage } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+
 import { prisma } from "~/server/db";
 
 type LimitType = keyof Omit<

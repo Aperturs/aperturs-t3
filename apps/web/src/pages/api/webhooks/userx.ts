@@ -1,6 +1,7 @@
 import type { User } from "@clerk/nextjs/api";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Webhook } from "svix";
+
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -102,7 +103,7 @@ export default async function handler(
       return email.id === primary_email_address_id;
     });
     const userDetails = {
-      primaryEmail: emailObject?.email_address || "",
+      primaryEmail: emailObject?.email_address ?? "",
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
@@ -128,10 +129,10 @@ export default async function handler(
   return res.status(200).json({ message: "ok" });
 }
 
-type Event = {
+interface Event {
   data: UserInterface;
   object: "event";
   type: EventType;
-};
+}
 
 type EventType = "user.created" | "user.updated" | "user.deleted";

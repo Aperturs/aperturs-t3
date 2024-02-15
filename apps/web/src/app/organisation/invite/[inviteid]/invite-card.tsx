@@ -1,9 +1,11 @@
 "use client";
-import { useClerk, useUser } from "@clerk/nextjs";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useClerk, useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
+
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -36,13 +38,13 @@ export default function InviteCard({
   const { signOut } = useClerk();
   const { mutateAsync: acceptInvite, isLoading: accpeting } =
     api.organisation.team.acceptInvite.useMutation();
+  const router = useRouter();
 
   if (!isSignedIn || !isLoaded) {
     return null;
   }
   const userEmail = user.primaryEmailAddress?.emailAddress;
   const sameEmail = userEmail === email;
-  const router = useRouter();
 
   const handleAccept = async () => {
     await toast

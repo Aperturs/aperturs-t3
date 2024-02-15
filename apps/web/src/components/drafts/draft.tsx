@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
+
+import type { PostContentType } from "~/types/post-types";
 import { api } from "~/trpc/server";
-import { type PostContentType } from "~/types/post-types";
 import { Button } from "../ui/button";
 import ToolTipSimple from "../ui/tooltip-final";
 import PostCard from "./darfCard";
@@ -34,7 +36,7 @@ async function DraftPage() {
               key={item.id}
               id={item.id}
               content={
-                (item.content as any as PostContentType[])[0]?.content || ""
+                (item.content as any as PostContentType[])[0]?.content ?? ""
               }
             />
           ))

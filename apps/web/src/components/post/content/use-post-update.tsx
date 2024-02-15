@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
+
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 
@@ -16,9 +17,9 @@ function usePostUpdate(id: string) {
 
   const updateContent = useCallback(
     (newContent: string) => {
-      if (id === SocialType.Default) {
+      if ((id as SocialType) === SocialType.Default) {
         const updatedContent = content.map((item) =>
-          !item.unique || item.socialType === SocialType.Default
+          !item.unique || (item.socialType as SocialType) === SocialType.Default
             ? { ...item, content: newContent }
             : item,
         );
@@ -38,11 +39,11 @@ function usePostUpdate(id: string) {
   const updateFiles = useCallback(
     (newFiles: File[]) => {
       console.log(newFiles, "from updateFiles");
-      if (id === SocialType.Default) {
+      if ((id as SocialType) === SocialType.Default) {
         const updatedContent = content.map((item) =>
           !item.unique
             ? { ...item, files: newFiles }
-            : item.id === SocialType.Default
+            : (item.id as SocialType) === SocialType.Default
               ? { ...item, files: newFiles }
               : item,
         );
@@ -87,11 +88,11 @@ function usePostUpdate(id: string) {
   );
 
   const contentValue = useMemo(() => {
-    return content.find((item) => item.id === id)?.content || "";
+    return content.find((item) => item.id === id)?.content ?? "";
   }, [id, content]);
 
   const currentFiles = useMemo(() => {
-    return content.find((item) => item.id === id)?.uploadedFiles || [];
+    return content.find((item) => item.id === id)?.uploadedFiles ?? [];
   }, [id, content]);
 
   return {

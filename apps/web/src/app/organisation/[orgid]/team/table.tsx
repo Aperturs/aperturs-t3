@@ -1,5 +1,19 @@
 "use client";
+
+import type { ColumnDef } from "@tanstack/react-table";
 import React from "react";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Search } from "lucide-react";
+
+import CustomModal from "~/components/custom/modals/custom-modal";
+import { useModal } from "~/components/custom/modals/modal-provider";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import {
   Table,
   TableBody,
@@ -8,19 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
-  type ColumnDef,
-} from "@tanstack/react-table";
-import { Search } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import CustomModal from "~/components/custom/modals/custom-modal";
-import { useModal } from "~/components/custom/modals/modal-provider";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

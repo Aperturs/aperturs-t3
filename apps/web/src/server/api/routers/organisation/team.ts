@@ -1,6 +1,8 @@
 import { auth, clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
+import type { UserDetails } from "~/types/user-type";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { inviteUserToOrganisationSchema } from "~/server/functions/organisation/organisation-types";
 import {
@@ -11,7 +13,6 @@ import {
   rejectInvite,
   sendInvitationViaEmail,
 } from "~/server/functions/organisation/teams";
-import { type UserDetails } from "~/types/user-type";
 
 export const OrganizationTeam = createTRPCRouter({
   getOrganisationTeams: protectedProcedure
@@ -83,9 +84,9 @@ export const OrganizationTeam = createTRPCRouter({
       const inviteId = res.id;
       const sendEmail = await sendInvitationViaEmail({
         invitationId: inviteId,
-        teamName: teamName || "team",
-        teamImage: teamImage || "/profile.jpeg",
-        userImage: userImage || "/user.png",
+        teamName: teamName ?? "team",
+        teamImage: teamImage ?? "/profile.jpeg",
+        userImage: userImage ?? "/user.png",
         userName: input.name,
         toEmail: input.email,
         inviteFromIp: "",

@@ -1,3 +1,5 @@
+import { clerkClient } from "@clerk/nextjs";
+
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   createOrganisation,
@@ -5,7 +7,6 @@ import {
 } from "~/server/functions/organisation/main";
 import { createOrganisationSchema } from "~/server/functions/organisation/organisation-types";
 import { limitWrapper } from "../../helpers/limitWrapper";
-import { clerkClient } from "@clerk/nextjs";
 
 export const organisationBasic = createTRPCRouter({
   createOrganisation: protectedProcedure

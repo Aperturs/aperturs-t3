@@ -1,7 +1,9 @@
-import { type LinkedInToken } from "@prisma/client";
+import type { LinkedInToken } from "@prisma/client";
 import axios from "axios";
+
+import type { PostToLinkedInInput } from "../../../types/post-types";
 import { prisma } from "~/server/db";
-import { type PostToLinkedInInput } from "../../../types/post-types";
+
 interface LinkedInTokenDetails
   extends Pick<LinkedInToken, "access_token" | "refresh_token" | "profileId"> {
   full_name: string;
@@ -31,7 +33,7 @@ export const getLinkedinAccountDetails = async (
       refresh_token: linkedinToken.refresh_token,
       profileId: linkedinToken.profileId,
       full_name:
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands, @typescript-eslint/no-unsafe-member-access
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         userObject.localizedFirstName + " " + userObject.localizedLastName,
     });
   }

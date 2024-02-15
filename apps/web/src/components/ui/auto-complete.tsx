@@ -1,21 +1,22 @@
 "use client";
 
+import type { KeyboardEvent } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Command as CommandPrimitive } from "cmdk";
-import { useCallback, useRef, useState, type KeyboardEvent } from "react";
+import { Check } from "lucide-react";
+
 import {
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-
-import { Check } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
 
 export type Option = Record<"value" | "label", string> & Record<string, string>;
 
-type AutoCompleteProps = {
+interface AutoCompleteProps {
   options: Option[];
   emptyMessage: string;
   value?: Option;
@@ -24,7 +25,7 @@ type AutoCompleteProps = {
   disabled?: boolean;
   placeholder?: string;
   allowCustomInput?: boolean;
-};
+}
 
 export const AutoComplete = ({
   options,
@@ -39,8 +40,8 @@ export const AutoComplete = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isOpen, setOpen] = useState(false);
-  const [selected, setSelected] = useState<Option>(value as Option);
-  const [inputValue, setInputValue] = useState<string>(value?.label || "");
+  const [selected, setSelected] = useState<Option>(value!);
+  const [inputValue, setInputValue] = useState<string>(value?.label ?? "");
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {

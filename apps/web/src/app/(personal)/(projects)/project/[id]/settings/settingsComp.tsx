@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+
+import type { ProjectQnA } from "~/types/project";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -11,7 +13,6 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { type ProjectQnA } from "~/types/project";
 import { api } from "~/utils/api";
 
 const Settings = ({ params }: { params: { id: string } }) => {
@@ -34,7 +35,7 @@ const Settings = ({ params }: { params: { id: string } }) => {
         ? (data.questionsAnswersJsonString as unknown as ProjectQnA[]) // Parse JSON string to object
         : ([] as ProjectQnA[]);
 
-      setName(data.projectName || data.repoName);
+      setName(data.projectName ?? data.repoName);
       setTagline(data.repoDescription);
       if (questionAnswer[0]) {
         setDescription(questionAnswer[0].answer);
@@ -62,7 +63,7 @@ const Settings = ({ params }: { params: { id: string } }) => {
       {
         loading: "Saving Changes ...",
         success: "Saved Successfully",
-        error: `Something went wrong ${error?.message as string}`,
+        error: `Something went wrong ${error?.message}`,
       },
     );
   };

@@ -1,7 +1,7 @@
 "use client";
 
-import * as React from "react";
-import { AutoComplete, type Option } from "~/components/ui/auto-complete";
+import type { Option } from "~/components/ui/auto-complete";
+import { AutoComplete } from "~/components/ui/auto-complete";
 
 const categories = [
   {

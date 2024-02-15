@@ -1,6 +1,8 @@
 "use client";
-import { DialogTitle } from "@radix-ui/react-dialog";
+
 import React from "react";
+import { DialogTitle } from "@radix-ui/react-dialog";
+
 import {
   Dialog,
   DialogContent,
@@ -9,12 +11,12 @@ import {
 } from "~/components/ui/dialog";
 import { useModal } from "./modal-provider";
 
-type Props = {
+interface Props {
   title: string;
   subheading: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
-};
+}
 
 const CustomModal = ({ children, defaultOpen, subheading, title }: Props) => {
   const { isOpen, setClose } = useModal();

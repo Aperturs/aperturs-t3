@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
+import type { MenuItem } from "./accordian-menu-type";
 import {
   Command,
   CommandEmpty,
@@ -8,7 +10,6 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
-import { type MenuItem } from "./accordian-menu-type";
 
 export default function AccordanceMenu({
   accordanceMenuList,
@@ -17,7 +18,7 @@ export default function AccordanceMenu({
 }) {
   const pathName = usePathname();
   const currentPath = (url: string) => {
-    return url.includes(pathName || "");
+    return url.includes(pathName ?? "");
   };
 
   return (

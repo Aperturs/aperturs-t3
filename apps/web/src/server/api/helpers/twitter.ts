@@ -2,11 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { type TwitterToken } from "@prisma/client";
-import Client from "twitter-api-sdk";
-import { prisma } from "~/server/db";
-import { type PostTweetInput } from "../../../types/post-types";
+import type { TwitterToken } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import Client from "twitter-api-sdk";
+
+import type { PostTweetInput } from "../../../types/post-types";
+import { prisma } from "~/server/db";
 
 interface TwitterAccountDetails
   extends Pick<TwitterToken, "access_token" | "refresh_token" | "profileId"> {
@@ -40,7 +41,7 @@ export const getAccessToken = async (tokenId: string) => {
               }),
             },
           );
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           const data = await response.json();
           if (data) {
             await prisma.twitterToken.update({
@@ -83,7 +84,7 @@ export const getTwitterAccountDetails = async (
       const { data: userObject } = await client.users.findMyUser({
         "user.fields": ["username", "profile_image_url", "name"],
       });
-      if (userObject && userObject.username && userObject.profile_image_url) {
+      if (userObject?.username && userObject.profile_image_url) {
         twitterDetails.push({
           tokenId: twitterToken.id,
           profileId: twitterToken.profileId,

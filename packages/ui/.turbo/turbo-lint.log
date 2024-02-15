@@ -1,0 +1,5 @@
+
+
+> @aperturs/ui@0.1.1 lint /Users/kate/Developer/react/aperturs/aperturs-t3/packages/ui
+> eslint . "--cache" "--cache-location" "node_modules/.cache/.eslintcache"
+

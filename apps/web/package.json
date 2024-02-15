@@ -114,7 +114,8 @@
     "extends": [
       "@aperturs/eslint-config/base",
       "@aperturs/eslint-config/nextjs",
-      "@acapertursme/eslint-config/react"
+      "@aperturs/eslint-config/react"
     ]
-  }
+  },
+  "prettier": "@aperturs/prettier-config"
 }

@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 "use client";
-import {
-  type OrganizationInvites,
-  type OrganizationUser,
-  type User,
+
+import type {
+  OrganizationInvites,
+  OrganizationUser,
+  User,
 } from "@prisma/client";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -12,17 +15,18 @@ interface ModalProviderProps {
   children: React.ReactNode;
 }
 
-export type ModalData = {
+export interface ModalData {
   user?: User;
   organizationUser?: OrganizationUser;
   organizationInvites?: OrganizationInvites;
-};
-type ModalContextType = {
+}
+interface ModalContextType {
   data: ModalData;
   isOpen: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setOpen: (modal: React.ReactNode, fetchData?: () => Promise<any>) => void;
   setClose: () => void;
-};
+}
 
 export const ModalContext = createContext<ModalContextType>({
   data: {},
@@ -43,6 +47,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
 
   const setOpen = async (
     modal: React.ReactNode,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     fetchData?: () => Promise<any>,
   ) => {
     if (modal) {

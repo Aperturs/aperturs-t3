@@ -1,10 +1,10 @@
-type Question = {
+interface Question {
   index: number;
   question: string;
   description: string;
   answer: string;
   setAnswer: (index: number, answer: string) => void;
-};
+}
 
 export default function QuestionCard({
   index,
