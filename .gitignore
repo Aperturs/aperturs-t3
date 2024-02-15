@@ -50,3 +50,4 @@ package-lock.json
 /.turbo/*
 .turbo/*
 
+.turbo

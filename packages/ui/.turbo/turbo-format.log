@@ -1,7 +1,0 @@
-
-
-> @aperturs/ui@0.1.1 format /Users/kate/Developer/react/aperturs/aperturs-t3/packages/ui
-> prettier --check . --ignore-path ../../.gitignore "--write" "--cache" "--cache-location" "node_modules/.cache/.prettiercache"
-
-Checking formatting...
-.turbo/turbo-format.log[2K[1G.turbo/turbo-lint.log[2K[1Gcomponents.json[2K[1Gpackage.json[2K[1Gsrc/components/ui/button.tsx[2K[1Gsrc/globals.css[2K[1Gsrc/icons/bar_chart.tsx[2K[1Gsrc/icons/calendar.tsx[2K[1Gsrc/icons/check_circled.tsx[2K[1Gsrc/icons/chip.tsx[2K[1Gsrc/icons/clipboardIcon.tsx[2K[1Gsrc/icons/compass.tsx[2K[1Gsrc/icons/database.tsx[2K[1Gsrc/icons/flag.tsx[2K[1Gsrc/icons/funnel-page-placeholder.tsx[2K[1Gsrc/icons/headphone.tsx[2K[1Gsrc/icons/home.tsx[2K[1Gsrc/icons/info.tsx[2K[1Gsrc/icons/link.tsx[2K[1Gsrc/icons/lock.tsx[2K[1Gsrc/icons/mail.tsx[2K[1Gsrc/icons/messages.tsx[2K[1Gsrc/icons/notification.tsx[2K[1Gsrc/icons/payment.tsx[2K[1Gsrc/icons/person.tsx[2K[1Gsrc/icons/pipelines.tsx[2K[1Gsrc/icons/plura-category.tsx[2K[1Gsrc/icons/power.tsx[2K[1Gsrc/icons/receipt.tsx[2K[1Gsrc/icons/send.tsx[2K[1Gsrc/icons/settings.tsx[2K[1Gsrc/icons/shield.tsx[2K[1Gsrc/icons/star.tsx[2K[1Gsrc/icons/tune.tsx[2K[1Gsrc/icons/video_recorder.tsx[2K[1Gsrc/icons/wallet.tsx[2K[1Gsrc/icons/warning.tsx[2K[1Gsrc/lib/utils.ts[2K[1Gtailwind.config.ts[2K[1Gtsconfig.json[2K[1GAll matched files use Prettier code style!
