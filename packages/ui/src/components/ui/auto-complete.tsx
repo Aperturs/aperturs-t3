@@ -2,10 +2,9 @@
 
 import type { KeyboardEvent } from "react";
 import { useCallback, useRef, useState } from "react";
+import { cn } from "@ui/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
 import { Check } from "lucide-react";
-
-import { cn } from "@ui/lib/utils";
 
 import {
   CommandGroup,

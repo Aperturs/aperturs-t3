@@ -4,9 +4,8 @@ import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { cva } from "class-variance-authority";
-
 import { cn } from "@ui/lib/utils";
+import { cva } from "class-variance-authority";
 
 const Sheet = SheetPrimitive.Root;
 

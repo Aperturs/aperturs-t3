@@ -5,7 +5,7 @@
     "outDir": "dist",
     "paths": {
       "@ui/*": ["./src/*"]
-    },
+    }
   },
   "include": ["*.ts", "src"],
   "exclude": ["node_modules", "dist"]
