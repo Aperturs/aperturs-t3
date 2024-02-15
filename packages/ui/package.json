@@ -2,21 +2,27 @@
   "name": "@aperturs/ui",
   "version": "0.1.1",
   "private": true,
+  "type": "module",
+  "license": "MIT",
   "scripts": {
-    "ui:add": "pnpm dlx shadcn-ui@latest add",
-    "generate:component": "turbo gen react-component",
-    "lint": "eslint src"
+    "add": "pnpm dlx shadcn-ui add",
+    "clean": "rm -rf .turbo node_modules",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@aperturs/eslint-config": "workspace:*",
-    "@aperturs/typescript-config": "workspace:*",
+    "@aperturs/tsconfig": "workspace:*",
+    "@aperturs/tailwind-config": "workspace:*",
+    "@aperturs/prettier-config": "workspace:*",
     "@turbo/gen": "^1.11.3",
-    "@types/eslint": "^8.56.1",
+    "@types/eslint": "^8.56.2",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.17",
     "eslint": "^8.56.0",
-    "postcss": "^8.4.33",
+    "postcss": "^8.4.35",
     "react": "^18.2.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
@@ -31,10 +37,15 @@
   },
   "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.3.3",
-    "tailwindcss-animate": "^1.0.6"
+    "react-dom": "^18.2.0"
   },
+  "eslintConfig": {
+    "extends": [
+      "@aperturs/eslint-config/base",
+      "@aperturs/eslint-config/react"
+    ]
+  },
+  "prettier": "@aperturs/prettier-config",
   "exports": {
     "./globals.css": "./src/globals.css",
     "./postcss.config": "./postcss.config.js",
