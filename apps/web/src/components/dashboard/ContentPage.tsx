@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { CreateButton } from "~/components";
 import { currentUser } from "@clerk/nextjs";
+
+import type { PostContentType } from "~/types/post-types";
 import { api } from "~/trpc/server";
-import { type PostContentType } from "~/types/post-types";
 import InfoContainer from "./container";
 
 const WishingGoodDay = () => {
@@ -46,7 +48,7 @@ async function ContentPage() {
                 (draft.content as any as PostContentType[])[0]?.content?.slice(
                   0,
                   60,
-                ) || ""
+                ) ?? ""
               }...`,
               // title: 'test',
               link: `post/${draft.id}`,
@@ -62,7 +64,7 @@ async function ContentPage() {
           title="Your Recent Projects"
           infoBlocks={
             recentProjects?.map((project) => ({
-              title: project.projectName || project.repoName,
+              title: project.projectName ?? project.repoName,
               link: `/project/${project.id}/commits`,
             })) || []
           }

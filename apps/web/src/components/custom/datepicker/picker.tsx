@@ -1,7 +1,8 @@
+import { useCallback, useEffect, useState } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { format } from "date-fns";
-import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -117,7 +118,7 @@ export default function Picker() {
         <CalendarComponent handleDate={setDate} />
         <input
           type="time"
-          value={time || ""}
+          value={time ?? ""}
           onChange={onChange}
           className="time-input rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           required

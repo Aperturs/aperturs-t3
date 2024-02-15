@@ -1,6 +1,7 @@
-import { useS3Upload } from "next-s3-upload";
 import { useState } from "react";
+import { useS3Upload } from "next-s3-upload";
 import { shallow } from "zustand/shallow";
+
 import { useStore } from "~/store/post-store";
 
 export default function usePost() {
@@ -16,7 +17,7 @@ export default function usePost() {
   const [error, setError] = useState<Error | null>(null);
 
   const uploadFilesAndModifyContent = async () => {
-    const localUploadedFiles: { [key: string]: string } = {};
+    const localUploadedFiles: Record<string, string> = {};
     setLoading(true);
     console.log("uploading files");
 
@@ -41,11 +42,8 @@ export default function usePost() {
             console.log("localUploadedFiles", localUploadedFiles);
           } else {
             // File already uploaded, use the existing URL
-            console.log(
-              "pusing existing file",
-              localUploadedFiles[fileName] as string,
-            );
-            postUploadedFiles.push(localUploadedFiles[fileName] as string);
+            console.log("pusing existing file", localUploadedFiles[fileName]!);
+            postUploadedFiles.push(localUploadedFiles[fileName]!);
           }
         }
 

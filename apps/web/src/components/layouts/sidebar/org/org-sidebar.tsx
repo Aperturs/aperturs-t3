@@ -1,16 +1,17 @@
 "use client";
 
+import Image from "next/image";
+import { useParams } from "next/navigation";
 import {
   Bars2Icon,
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
-import Image from "next/image";
-import { useParams } from "next/navigation";
 import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
+
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -124,7 +125,7 @@ export default function OrgSidebar() {
                 <span className="text-xs">⌘</span>K
               </kbd>
             </p>
-            <CommandMenu accordanceMenuList={AccordanceMenuList(orgId || "")} />
+            <CommandMenu accordanceMenuList={AccordanceMenuList(orgId ?? "")} />
             <ModeToggle />
             <SheetTrigger asChild>
               <Button
@@ -140,10 +141,10 @@ export default function OrgSidebar() {
         <div className="hidden flex-1 flex-col justify-between lg:flex">
           <>
             <AccordanceMenu
-              accordanceMenuList={AccordanceMenuList(orgId || "")}
+              accordanceMenuList={AccordanceMenuList(orgId ?? "")}
             />
             <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu bottomMenu={bottomMenuList(orgId || "")} />
+            <BottomMenu bottomMenu={bottomMenuList(orgId ?? "")} />
           </>
           <div className="flex w-full justify-center">
             <ProfileButton />
@@ -168,7 +169,7 @@ export default function OrgSidebar() {
         </AnimatePresence> */}
         <SheetContent
           className={clsx(
-            "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
+            "xs:w-[440px] fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl",
           )}
         >
           <div>
@@ -176,10 +177,10 @@ export default function OrgSidebar() {
               <ProfileButton />
             </div>
             <AccordanceMenu
-              accordanceMenuList={AccordanceMenuList(orgId || "")}
+              accordanceMenuList={AccordanceMenuList(orgId ?? "")}
             />
             <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu bottomMenu={bottomMenuList(orgId || "")} />
+            <BottomMenu bottomMenu={bottomMenuList(orgId ?? "")} />
           </div>
         </SheetContent>
         {/* <UpgradeAlert /> */}

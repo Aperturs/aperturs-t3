@@ -1,4 +1,5 @@
 import { eventTrigger } from "@trigger.dev/sdk";
+
 import { client } from "~/trigger";
 
 // Your first job

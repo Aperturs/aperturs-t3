@@ -23,9 +23,9 @@ const SideBar = ({ params }: { params: { id: string } }) => {
               item.type === SocialType.Github ? null : (
                 <ConnectedAccount
                   key={item.data.tokenId}
-                  name={item.data.name || ""}
+                  name={item.data.name ?? ""}
                   type={item.type}
-                  profilePic={item.data.profile_image_url || "/user.png"}
+                  profilePic={item.data.profile_image_url ?? "/user.png"}
                   id={item.data.tokenId}
                 />
               ),

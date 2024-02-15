@@ -26,6 +26,7 @@ export const useAPICallWrapper = () => {
       throw error;
     } finally {
       setIsAPICallLoading(false);
+      // eslint-disable-next-line no-unsafe-finally
       return value;
     }
   };

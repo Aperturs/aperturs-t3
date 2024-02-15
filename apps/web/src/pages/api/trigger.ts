@@ -1,4 +1,5 @@
 import { createPagesRoute } from "@trigger.dev/nextjs";
+
 import { client } from "~/trigger";
 
 import "~/jobs";

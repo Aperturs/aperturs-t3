@@ -1,12 +1,13 @@
-import React, { useRef, type ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
+import React, { useRef } from "react";
 
-type SingleTweetProps = {
+interface SingleTweetProps {
   id: number;
   text: string;
   onChange: (id: number, text: string) => void;
   onRemove: (id: number) => void;
   onAdd: (id: number) => void;
-};
+}
 
 const SingleTweet: React.FC<SingleTweetProps> = ({
   id,

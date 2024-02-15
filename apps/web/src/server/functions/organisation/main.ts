@@ -1,5 +1,5 @@
+import type { CreateOrganisation } from "./organisation-types";
 import { prisma } from "~/server/db";
-import { type CreateOrganisation } from "./organisation-types";
 
 export async function createOrganisation({
   name,

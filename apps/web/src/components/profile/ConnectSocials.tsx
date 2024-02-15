@@ -1,13 +1,14 @@
 "use client";
 
-import { useAuth } from "@clerk/nextjs";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useAuth } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
+
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import SimpleLoader from "../custom/loading/simple-loading";
@@ -15,7 +16,7 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
-const SocialIcon = ({ type }: { type: string }) => {
+const SocialIcon = ({ type }: { type: SocialType }) => {
   if (type === SocialType.Twitter) {
     return <AiOutlineTwitter className="text-2xl" />;
   } else if (type === SocialType.Linkedin) {
@@ -42,14 +43,12 @@ const ConnectSocials = () => {
           {isLoading ? (
             <SimpleLoader />
           ) : (
-            data &&
-            data.map((item, key) => (
+            data?.map((item, key) => (
               <AfterConnect
                 key={key}
-                name={item.data.name || ""}
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                name={item.data.name ?? ""}
                 icon={<SocialIcon type={item.type} />}
-                profilePic={item.data.profile_image_url || "/user.png"}
+                profilePic={item.data.profile_image_url ?? "/user.png"}
               />
             ))
           )}

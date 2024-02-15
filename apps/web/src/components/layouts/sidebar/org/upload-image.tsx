@@ -2,6 +2,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { FiUpload } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
+
 import { Button } from "~/components/ui/button";
 
 interface UploadImageProps {

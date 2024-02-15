@@ -1,5 +1,5 @@
 {
-  "extends": "@aperturs/typescript-config/react-library.json",
+  "extends": "@aperturs/tsconfig/react-library.json",
   "include": [
     "."
   ],

@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
+
+import { postToLinkedInInputSchema } from "../../../../types/post-types";
 import { postToLinkedin } from "../../helpers/linkedln";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
-import { postToLinkedInInputSchema } from "../../../../types/post-types";
 
 export const linkedin = createTRPCRouter({
   postToLinkedin: protectedProcedure

@@ -1,8 +1,9 @@
 "use client";
 
+import React from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import NavList from "./navList";

@@ -4,10 +4,11 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
 import { Toaster } from "react-hot-toast";
+
+import ModalProvider from "~/components/custom/modals/modal-provider";
 import { TRPCReactProvider } from "~/trpc/react";
 import AuthProvider from "./_provider/auth-provider";
 import { ThemeProvider } from "./_provider/theme-provider";
-import ModalProvider from "~/components/custom/modals/modal-provider";
 
 const inter = Inter({
   subsets: ["latin"],

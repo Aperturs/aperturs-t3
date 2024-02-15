@@ -1,15 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 
-type Props = {
+interface Props {
   repoName: string;
   repoDescription: string;
   lastUpdated: string;
   repoImage?: string;
   projectId: string;
-};
+}
 
 export default function GithubCard({
   repoName,

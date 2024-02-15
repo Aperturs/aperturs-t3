@@ -1,12 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import {
-  savePostInputSchema,
-  updatePostInputSchema,
-  type PostContentType,
-} from "~/types/post-types";
+
+import type { PostContentType } from "~/types/post-types";
 import { limitDown, limitWrapper } from "~/server/api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { savePostInputSchema, updatePostInputSchema } from "~/types/post-types";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure

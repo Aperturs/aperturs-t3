@@ -1,8 +1,10 @@
-import { User } from "@clerk/nextjs/server";
-import { IncomingHttpHeaders } from "http";
+import type { User } from "@clerk/nextjs/server";
+import type { IncomingHttpHeaders } from "http";
+import type { WebhookRequiredHeaders } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { Webhook, WebhookRequiredHeaders } from "svix";
+import { Webhook } from "svix";
+
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -34,6 +36,7 @@ interface UserInterface extends Omit<User, UnwantedKeys> {
 }
 
 async function handler(request: Request) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await request.json();
   const headersList = headers();
   const heads = {
@@ -87,7 +90,7 @@ async function handler(request: Request) {
 
     await prisma.user.create({
       data: {
-        clerkUserId: id as string,
+        clerkUserId: id,
         userDetails: details,
       },
     });
@@ -98,7 +101,7 @@ async function handler(request: Request) {
       return email.id === primary_email_address_id;
     });
     const userDetails = {
-      primaryEmail: emailObject?.email_address || "",
+      primaryEmail: emailObject?.email_address ?? "",
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
@@ -128,11 +131,11 @@ async function handler(request: Request) {
 
 type EventType = "user.created" | "user.updated" | "user.deleted";
 
-type Event = {
+interface Event {
   data: UserInterface;
   object: "event";
   type: EventType;
-};
+}
 
 export const GET = handler;
 export const POST = handler;

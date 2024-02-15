@@ -1,6 +1,6 @@
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useUser } from "@clerk/nextjs";
 
 export default function Home() {
   const router = useRouter();

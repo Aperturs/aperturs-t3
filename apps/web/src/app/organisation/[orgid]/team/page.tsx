@@ -1,12 +1,13 @@
 import { Plus } from "lucide-react";
+
 import { api } from "~/trpc/server";
 import { columns } from "./columns";
-import DataTable from "./table";
 import SendInvitation from "./send-invite";
+import DataTable from "./table";
 
-type Props = {
+interface Props {
   params: { orgid: string };
-};
+}
 
 async function TeamPage({ params }: Props) {
   const orgId = params.orgid;

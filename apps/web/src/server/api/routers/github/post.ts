@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
 import { AIGenerated } from "../../helpers/ai";
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
 import { limitWrapper } from "../../helpers/limitWrapper";
+import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const githubPost = createTRPCRouter({
   generatePost: protectedProcedure

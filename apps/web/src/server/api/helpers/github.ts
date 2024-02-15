@@ -1,4 +1,4 @@
-import { type GithubToken } from "@prisma/client";
+import type { GithubToken } from "@prisma/client";
 
 interface GithubTokenDetails
   extends Pick<GithubToken, "access_token" | "refresh_token" | "profileId"> {

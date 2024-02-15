@@ -1,14 +1,15 @@
-import { useUser } from "@clerk/nextjs";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { useS3Upload } from "next-s3-upload";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { useS3Upload } from "next-s3-upload";
 import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
-import { type Option } from "~/components/ui/auto-complete";
+
+import type { Option } from "~/components/ui/auto-complete";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -54,15 +55,15 @@ export default function ProfileButton() {
         <PopoverTrigger className="w-full">
           {currentOrg ? (
             <CurrentOrganisation
-              avatar={currentOrg.logo || "/user.png"}
+              avatar={currentOrg.logo ?? "/user.png"}
               name={currentOrg.name}
               email={currentOrg.category}
             />
           ) : (
             <CurrentOrganisation
-              avatar={user?.imageUrl || "/user.png"}
-              name={`${user?.firstName || ""} ${user?.lastName || ""}`}
-              email={user?.primaryEmailAddress?.emailAddress || ""}
+              avatar={user?.imageUrl ?? "/user.png"}
+              name={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+              email={user?.primaryEmailAddress?.emailAddress ?? ""}
             />
           )}
         </PopoverTrigger>
@@ -72,8 +73,8 @@ export default function ProfileButton() {
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup heading="Personal">
                 <OrganisationItem
-                  name={`${user?.firstName || ""} ${user?.lastName || ""}`}
-                  logo={user?.imageUrl || "/user.png"}
+                  name={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+                  logo={user?.imageUrl ?? "/user.png"}
                   link="/dashboard"
                   current={!orgId}
                   subheading={"personal"}
@@ -85,7 +86,7 @@ export default function ProfileButton() {
                     <OrganisationItem
                       key={item.id}
                       name={item.name}
-                      logo={item.logo || undefined}
+                      logo={item.logo ?? undefined}
                       link={`/organisation/${item.id}/dashboard`}
                       current={item.id === orgId}
                       subheading={item.category}
@@ -243,7 +244,7 @@ function OrganisationItem({
       >
         <div className="flex items-center gap-2">
           <Image
-            src={logo || "/user.png"}
+            src={logo ?? "/user.png"}
             alt={name}
             width={30}
             height={30}

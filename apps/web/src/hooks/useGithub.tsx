@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Octokit } from "octokit";
+
 type VisibilityType = "all" | "public" | "private" | undefined;
 
 export const useGithub = (token: string) => {

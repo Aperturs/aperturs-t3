@@ -1,4 +1,4 @@
-import { type FC, type MouseEventHandler } from "react";
+import type { FC, MouseEventHandler } from "react";
 
 interface SideBarButtonProps {
   onClick: MouseEventHandler<HTMLButtonElement>;

@@ -1,7 +1,4 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
-import { appRouter } from "~/server/api/root";
-import cronJobServer from "~/server/cronjob";
-import { prisma } from "~/server/db";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const id = req.query.id as string;

@@ -1,12 +1,14 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
-import clsx from "clsx";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import clsx from "clsx";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import toast from "react-hot-toast";
+
+import type { OrganizationUser } from "~/types/user-type";
 import CustomModal from "~/components/custom/modals/custom-modal";
 import { useModal } from "~/components/custom/modals/modal-provider";
 import {
@@ -39,7 +41,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { api } from "~/trpc/react";
-import { type OrganizationUser } from "~/types/user-type";
 
 export const columns: ColumnDef<OrganizationUser>[] = [
   {

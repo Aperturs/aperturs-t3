@@ -6,9 +6,9 @@ import {
   DialogHeader,
 } from "~/components/ui/dialog";
 
-export type HandleOpenRef = {
+export interface HandleOpenRef {
   handleOpen: () => void;
-};
+}
 
 interface ConfirmationDialogProps {
   onConfirm: () => void;

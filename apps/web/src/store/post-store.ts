@@ -1,16 +1,17 @@
 import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
-import { SocialType } from "~/types/post-enums";
-import { type PostContentType } from "~/types/post-types";
 
-type StateValues = {
+import type { PostContentType } from "~/types/post-types";
+import { SocialType } from "~/types/post-enums";
+
+interface StateValues {
   // tweets: Tweet[];
   date: Date | null;
   time: string | null;
   content: PostContentType[];
-};
+}
 
-type StateSetters = {
+interface StateSetters {
   shouldReset: boolean;
   setShouldReset: (shouldReset: boolean) => void;
   // setTweets: (tweet: Tweet[]) => void;
@@ -18,7 +19,7 @@ type StateSetters = {
   setTime: (time: string | null) => void;
   reset: () => void;
   setContent: (content: PostContentType[]) => void;
-};
+}
 
 type State = StateValues & StateSetters;
 

@@ -1,16 +1,18 @@
+import type { ChangeEvent } from "react";
+import { useCallback, useState } from "react";
 import Image from "next/image";
-import { useCallback, useState, type ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import usePostUpdate from "./use-post-update";
 import ToolTipSimple from "~/components/ui/tooltip-final";
+import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
   const fileExtension = url.split(".");
@@ -95,6 +97,7 @@ export default function FileUpload({
               <video controls style={{ maxWidth: "100%", maxHeight: "100px" }}>
                 <source src={url} type="video/mp4" />
                 Your browser does not support the video tag.
+                <track kind="captions" />
               </video>
             )}
             <DeleteImage handleRemove={removeUpdatedFiles} index={index} />
@@ -119,6 +122,7 @@ export default function FileUpload({
                   src={url}
                   type={selectedFiles[index - uploadedFiles.length]?.type}
                 />
+                <track kind="captions" />
                 Your browser does not support the video tag.
               </video>
             )}
@@ -128,6 +132,8 @@ export default function FileUpload({
       </div>
       <ToolTipSimple content="Add Image/Video">
         <label htmlFor={inputId} className="my-2  block w-8 cursor-pointer">
+          {""}
+          <BsFillImageFill className="text-xl" />
           <input
             type="file"
             id={inputId}
@@ -135,7 +141,6 @@ export default function FileUpload({
             onChange={handleFileChange}
             accept="image/*,video/*"
           />
-          <BsFillImageFill className="text-xl" />
         </label>
       </ToolTipSimple>
     </div>

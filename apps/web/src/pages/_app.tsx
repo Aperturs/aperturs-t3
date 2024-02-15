@@ -1,14 +1,18 @@
+import type { Metadata, NextPage } from "next";
+import type { AppProps, AppType } from "next/app";
+import type { ReactElement, ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { Router } from "next/router";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
-import { type Metadata, type NextPage } from "next";
-import { type AppProps, type AppType } from "next/app";
-import { Router } from "next/router";
-import { useEffect, useState, type ReactElement, type ReactNode } from "react";
 import { Toaster } from "react-hot-toast";
-import LogoLoad from "~/components/custom/loading/logoLoad";
+
 import { ThemeProvider } from "~/app/_provider/theme-provider";
+import LogoLoad from "~/components/custom/loading/logoLoad";
+
 import "~/styles/calendar.css";
 import "~/styles/globals.css";
+
 import { api } from "~/utils/api";
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {

@@ -1,7 +1,10 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 "use client";
 
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
+
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -30,11 +33,12 @@ function SocialsMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {content.map((item) => {
-          if (item.socialType === SocialType.Default) return null;
+          if ((item.socialType as SocialType) === SocialType.Default)
+            return null;
           return (
             <DropdownMenuItem key={item.id}>
               <MenuItems
-                type={item.socialType}
+                type={item.socialType as SocialType}
                 name={item.name}
                 id={item.id}
                 unique={item.unique}
@@ -55,7 +59,7 @@ const MenuItems = ({
   id,
   unique,
 }: {
-  type: string;
+  type: SocialType;
   name: string;
   id: string;
   unique: boolean;
@@ -87,7 +91,7 @@ const MenuItems = ({
         if (item.id === id) {
           return {
             ...item,
-            content: content[0]?.content || "",
+            content: content[0]?.content ?? "",
             unique: true,
           };
         }

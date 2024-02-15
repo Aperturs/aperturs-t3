@@ -2,12 +2,12 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import Select from "react-select";
+
 import { useGithub } from "~/hooks/useGithub";
 import { api } from "~/utils/api";
 import LogoLoad from "../custom/loading/logoLoad";
@@ -18,10 +18,11 @@ import { Button } from "../ui/button";
 import { Dialog, DialogFooter, DialogHeader } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-type RepoOptionType = {
+
+interface RepoOptionType {
   value: Repo;
   label: string;
-};
+}
 const RepoOption = ({ label, value }: RepoOptionType) => {
   return (
     <div className="w-full">
@@ -55,7 +56,8 @@ const NewRepoFormModal = () => {
     api.user.getGithubAccounts.useQuery();
 
   const { getRepositories } = useGithub(
-    githubTokens?.at(0)?.access_token as string,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+    githubTokens?.at(0)?.access_token!,
   );
 
   // useEffect(() => {
@@ -152,6 +154,7 @@ const NewRepoFormModal = () => {
             value={option}
             options={options}
             placeholder="Search And Select your Repo"
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(value) => setOption(value as any)}
           />
           <div className="mt-5 flex flex-col gap-3">
