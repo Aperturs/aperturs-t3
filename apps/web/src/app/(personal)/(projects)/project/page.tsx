@@ -35,7 +35,7 @@ async function Projects() {
           repoDescription="test"
           lastUpdated="test"
         /> */}
-        {data ? (
+        {/* {data ? (
           data.map((item) => (
             <GithubCard
               key={item.id}
@@ -49,7 +49,7 @@ async function Projects() {
           <div className="grid h-full w-full place-content-center">
             No Projects Connected
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
