@@ -3,7 +3,7 @@
 
 import { motion } from "framer-motion";
 
-import { Card } from "~/components/ui/card";
+import { Card } from "@aperturs/ui/card";
 
 interface CommitCardProps {
   id: number;

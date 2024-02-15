@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import type { MenuItem } from "./accordian-menu-type";
 import {
   Command,
   CommandEmpty,
@@ -9,7 +8,9 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "~/components/ui/command";
+} from "@aperturs/ui/command";
+
+import type { MenuItem } from "./accordian-menu-type";
 
 export default function AccordanceMenu({
   accordanceMenuList,

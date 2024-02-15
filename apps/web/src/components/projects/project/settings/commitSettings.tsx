@@ -2,13 +2,8 @@
 
 import { useState } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
+import { Input } from "@aperturs/ui/input";
 
 export default function CommitSettings() {
   const [commits, setCommits] = useState(0);

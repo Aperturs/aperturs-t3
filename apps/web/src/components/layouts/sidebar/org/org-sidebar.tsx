@@ -12,10 +12,11 @@ import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
 
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
-import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { Badge } from "@aperturs/ui/badge";
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
+import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
+
 import { ModeToggle } from "../../theme-toggle";
 import BottomMenu from "../bottomMenu";
 import AccordanceMenu from "../command-group";

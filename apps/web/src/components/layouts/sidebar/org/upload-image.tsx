@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { FiUpload } from "react-icons/fi";
 import { MdDeleteOutline } from "react-icons/md";
 
-import { Button } from "~/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 
 interface UploadImageProps {
   image: File | undefined;

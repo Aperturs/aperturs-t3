@@ -1,7 +1,7 @@
 "use client";
 
-import type { Option } from "~/components/ui/auto-complete";
-import { AutoComplete } from "~/components/ui/auto-complete";
+import type { Option } from "@aperturs/ui/auto-complete";
+import { AutoComplete } from "@aperturs/ui/auto-complete";
 
 const categories = [
   {

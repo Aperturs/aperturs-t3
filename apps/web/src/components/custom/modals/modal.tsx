@@ -1,10 +1,10 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 import {
   DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
-} from "~/components/ui/dialog";
+} from "@aperturs/ui/dialog";
 
 export interface HandleOpenRef {
   handleOpen: () => void;

@@ -1,12 +1,8 @@
 "use client";
 
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "~/components/ui/card";
+import { Button } from "@aperturs/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
+
 import { api } from "~/trpc/react";
 
 interface iFeature {

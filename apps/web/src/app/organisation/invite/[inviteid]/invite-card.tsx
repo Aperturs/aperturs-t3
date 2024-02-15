@@ -6,13 +6,9 @@ import { useRouter } from "next/navigation";
 import { useClerk, useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "~/components/ui/card";
+import { Button } from "@aperturs/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
+
 import { api } from "~/trpc/react";
 
 interface InviteCardProps {

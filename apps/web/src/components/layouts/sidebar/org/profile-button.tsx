@@ -9,31 +9,27 @@ import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
 
-import { cn } from "@aperturs/ui/lib/utils";
-
-import type { Option } from "~/components/ui/auto-complete";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
+import type { Option } from "@aperturs/ui/auto-complete";
+import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "~/components/ui/command";
+} from "@aperturs/ui/command";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTrigger,
-} from "~/components/ui/dialog";
-import { Input } from "~/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
+} from "@aperturs/ui/dialog";
+import { Input } from "@aperturs/ui/input";
+import { cn } from "@aperturs/ui/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
+
 import { api } from "~/trpc/react";
 import { BusinessCategory } from "./business-catagories";
 import UploadImage from "./upload-image";

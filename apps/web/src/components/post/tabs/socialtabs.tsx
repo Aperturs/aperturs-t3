@@ -1,4 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
+
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";

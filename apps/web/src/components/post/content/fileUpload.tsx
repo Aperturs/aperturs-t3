@@ -6,12 +6,9 @@ import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover";
-import ToolTipSimple from "~/components/ui/tooltip-final";
+import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
+import ToolTipSimple from "@aperturs/ui/tooltip-final";
+
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {

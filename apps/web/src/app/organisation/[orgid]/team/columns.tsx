@@ -8,9 +8,6 @@ import clsx from "clsx";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
-import type { OrganizationUser } from "~/types/user-type";
-import CustomModal from "~/components/custom/modals/custom-modal";
-import { useModal } from "~/components/custom/modals/modal-provider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,9 +18,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+} from "@aperturs/ui/alert-dialog";
+import { Badge } from "@aperturs/ui/badge";
+import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,7 +28,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+} from "@aperturs/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -39,7 +36,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@aperturs/ui/select";
+
+import type { OrganizationUser } from "~/types/user-type";
+import CustomModal from "~/components/custom/modals/custom-modal";
+import { useModal } from "~/components/custom/modals/modal-provider";
 import { api } from "~/trpc/react";
 
 export const columns: ColumnDef<OrganizationUser>[] = [

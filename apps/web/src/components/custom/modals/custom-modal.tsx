@@ -8,7 +8,8 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-} from "~/components/ui/dialog";
+} from "@aperturs/ui/dialog";
+
 import { useModal } from "./modal-provider";
 
 interface Props {

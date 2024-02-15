@@ -6,13 +6,14 @@ import { useClerk } from "@clerk/nextjs";
 import { PowerIcon } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
 
-import type { BottomMenuItem } from "./accordian-menu-type";
 import {
   Command,
   CommandGroup,
   CommandItem,
   CommandList,
-} from "~/components/ui/command";
+} from "@aperturs/ui/command";
+
+import type { BottomMenuItem } from "./accordian-menu-type";
 
 function BottomMenu({ bottomMenu }: { bottomMenu: BottomMenuItem[] }) {
   const { signOut } = useClerk();

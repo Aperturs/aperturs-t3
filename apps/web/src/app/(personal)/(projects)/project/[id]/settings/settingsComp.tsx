@@ -3,16 +3,12 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+import { Button } from "@aperturs/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
+import { Input } from "@aperturs/ui/input";
+import { Textarea } from "@aperturs/ui/textarea";
+
 import type { ProjectQnA } from "~/types/project";
-import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "~/components/ui/card";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
 import { api } from "~/utils/api";
 
 const Settings = ({ params }: { params: { id: string } }) => {
