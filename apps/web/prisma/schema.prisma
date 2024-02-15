@@ -121,7 +121,7 @@ model TwitterToken {
   access_token   String?       @unique
   refresh_token  String?       @unique
   expires_in     DateTime?
-  profileId      String?       @unique
+  profileId      String?       
   username       String?
   fullname       String?
   profile_image  String?
@@ -204,8 +204,6 @@ model Post {
   updatedAt      DateTime      @updatedAt
   Organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  @@index([updatedAt])
-  @@index([status])
   @@index([clerkUserId])
   @@index([id])
   @@index([projectId])
