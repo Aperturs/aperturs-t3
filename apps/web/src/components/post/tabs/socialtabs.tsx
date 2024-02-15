@@ -20,7 +20,10 @@ export default function SocialTabs() {
                 item.unique && (
                   <TabsTrigger value={item.id} key={item.id}>
                     <div className="flex items-center gap-2 capitalize">
-                      <SocialIcon type={item.socialType} size="md" />
+                      <SocialIcon
+                        type={item.socialType as SocialType}
+                        size="md"
+                      />
                       {typeof item.socialType === "string"
                         ? item.socialType.toLowerCase()
                         : ""}

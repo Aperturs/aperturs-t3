@@ -47,4 +47,6 @@ yarn-error.log*
 *.tsbuildinfo
 package-lock.json
 
-/.turbo
+/.turbo/*
+.turbo/*
+
