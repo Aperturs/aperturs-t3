@@ -7,7 +7,6 @@ import {
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { clsx } from "clsx";
 import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -15,6 +14,7 @@ import { TbSocial } from "react-icons/tb";
 import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
+import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
 import { ModeToggle } from "../../theme-toggle";
@@ -169,8 +169,8 @@ export default function OrgSidebar() {
           )}
         </AnimatePresence> */}
         <SheetContent
-          className={clsx(
-            "xs:w-[440px] fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl",
+          className={cn(
+            "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
           )}
         >
           <div>

@@ -1,7 +1,6 @@
-import { AvatarImage } from "@radix-ui/react-avatar";
 import { shallow } from "zustand/shallow";
 
-import { Avatar } from "@aperturs/ui/avatar";
+import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
 
 import type { SocialType } from "~/types/post-enums";
 import { useStore } from "~/store/post-store";

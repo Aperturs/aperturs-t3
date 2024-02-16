@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { DialogTitle } from "@radix-ui/react-dialog";
 
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle,
 } from "@aperturs/ui/dialog";
 
 import { useModal } from "./modal-provider";

@@ -1,7 +1,7 @@
 import ContentPage from "~/components/dashboard/ContentPage";
 
-const Dashboard = () => {
+function Dashboard() {
   return <ContentPage />;
-};
+}
 
 export default Dashboard;

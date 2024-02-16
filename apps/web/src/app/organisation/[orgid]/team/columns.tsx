@@ -4,7 +4,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import clsx from "clsx";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -29,6 +28,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@aperturs/ui/dropdown-menu";
+import { cn } from "@aperturs/ui/lib/utils";
 import {
   Select,
   SelectContent,
@@ -87,11 +87,11 @@ export const columns: ColumnDef<OrganizationUser>[] = [
       const role: string = row.getValue("role");
       return (
         <Badge
-          className={clsx({
-            "bg-emerald-500": role === "AGENCY_OWNER",
-            "bg-orange-400": role === "AGENCY_ADMIN",
-            "bg-primary": role === "SUBACCOUNT_USER",
-            "bg-muted": role === "SUBACCOUNT_GUEST",
+          className={cn({
+            "bg-emerald-500": role === "OWNER",
+            "bg-orange-400": role === "ADMIN",
+            "bg-primary": role === "EDITOR",
+            "bg-muted": role === "MEMBER",
           })}
         >
           {role}
