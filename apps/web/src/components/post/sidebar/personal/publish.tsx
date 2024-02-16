@@ -8,8 +8,8 @@ import Picker from "~/components/custom/datepicker/picker";
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
-import { SimpleButton } from "../common";
-import usePost from "../content/use-post";
+import { SimpleButton } from "../../common";
+import usePost from "../../content/use-post";
 
 function Publish({ params }: { params: { id: string } }) {
   const { id } = params;

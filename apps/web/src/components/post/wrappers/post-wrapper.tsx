@@ -1,5 +1,5 @@
-import SideBar from "./sidebar/sidebar";
-import SocialTabs from "./tabs/socialtabs";
+import SideBar from "../sidebar/personal/sidebar";
+import SocialTabs from "../tabs/socialtabs";
 
 function PostView({ params }: { params: { id: string } }) {
   console.log("mounted PostView");

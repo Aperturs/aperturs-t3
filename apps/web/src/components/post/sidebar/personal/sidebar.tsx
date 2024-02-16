@@ -3,7 +3,7 @@
 import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
 import { SocialType } from "~/types/post-enums";
-import ConnectedAccount from "./connections";
+import ConnectedAccount from "../connections";
 import Publish from "./publish";
 
 const SideBar = ({ params }: { params: { id: string } }) => {
