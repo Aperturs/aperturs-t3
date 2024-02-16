@@ -2,10 +2,11 @@
 import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
 
+import { Button } from "@aperturs/ui/button";
+import ToolTipSimple from "@aperturs/ui/tooltip-final";
+
 import type { PostContentType } from "~/types/post-types";
 import { api } from "~/trpc/server";
-import { Button } from "../ui/button";
-import ToolTipSimple from "../ui/tooltip-final";
 import PostCard from "./darfCard";
 
 async function DraftPage() {

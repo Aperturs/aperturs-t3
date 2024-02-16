@@ -4,8 +4,9 @@ import React from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
+
 import NavList from "./navList";
 
 export default function ProjectNavBar({ params }: { params: { id: string } }) {

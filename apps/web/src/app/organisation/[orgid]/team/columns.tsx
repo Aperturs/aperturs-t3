@@ -4,13 +4,9 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import clsx from "clsx";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
-import type { OrganizationUser } from "~/types/user-type";
-import CustomModal from "~/components/custom/modals/custom-modal";
-import { useModal } from "~/components/custom/modals/modal-provider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,9 +17,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+} from "@aperturs/ui/alert-dialog";
+import { Badge } from "@aperturs/ui/badge";
+import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,7 +27,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+} from "@aperturs/ui/dropdown-menu";
+import { cn } from "@aperturs/ui/lib/utils";
 import {
   Select,
   SelectContent,
@@ -39,7 +36,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@aperturs/ui/select";
+
+import type { OrganizationUser } from "~/types/user-type";
+import CustomModal from "~/components/custom/modals/custom-modal";
+import { useModal } from "~/components/custom/modals/modal-provider";
 import { api } from "~/trpc/react";
 
 export const columns: ColumnDef<OrganizationUser>[] = [
@@ -86,11 +87,11 @@ export const columns: ColumnDef<OrganizationUser>[] = [
       const role: string = row.getValue("role");
       return (
         <Badge
-          className={clsx({
-            "bg-emerald-500": role === "AGENCY_OWNER",
-            "bg-orange-400": role === "AGENCY_ADMIN",
-            "bg-primary": role === "SUBACCOUNT_USER",
-            "bg-muted": role === "SUBACCOUNT_GUEST",
+          className={cn({
+            "bg-emerald-500": role === "OWNER",
+            "bg-orange-400": role === "ADMIN",
+            "bg-primary": role === "EDITOR",
+            "bg-muted": role === "MEMBER",
           })}
         >
           {role}

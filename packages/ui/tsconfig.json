@@ -1,11 +1,11 @@
 {
   "extends": "@aperturs/tsconfig/react-library.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "dist",
     "paths": {
-      "@ui/*": ["./src/*"]
-    },
-    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["*.ts", "src"],
   "exclude": ["node_modules", "dist"]

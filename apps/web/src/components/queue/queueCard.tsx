@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Card } from "../ui/card";
+import { Card } from "@aperturs/ui/card";
 
 interface CardProps {
   time: string;

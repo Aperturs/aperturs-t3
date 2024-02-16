@@ -4,9 +4,10 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 
-import { cn } from "~/lib/utils";
+import { Button } from "@aperturs/ui/button";
+import { cn } from "@aperturs/ui/lib/utils";
+
 import { SocialType } from "~/types/post-enums";
-import { Button } from "../ui/button";
 
 interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;

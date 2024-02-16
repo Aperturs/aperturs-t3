@@ -1,4 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
+
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
@@ -20,7 +21,10 @@ export default function SocialTabs() {
                 item.unique && (
                   <TabsTrigger value={item.id} key={item.id}>
                     <div className="flex items-center gap-2 capitalize">
-                      <SocialIcon type={item.socialType} size="md" />
+                      <SocialIcon
+                        type={item.socialType as SocialType}
+                        size="md"
+                      />
                       {typeof item.socialType === "string"
                         ? item.socialType.toLowerCase()
                         : ""}

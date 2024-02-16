@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import { Card } from "~/components/ui/card";
+import { Card } from "@aperturs/ui/card";
+
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";
 import ContentPostCreation from "./textarea";

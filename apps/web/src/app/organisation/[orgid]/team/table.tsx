@@ -10,10 +10,8 @@ import {
 } from "@tanstack/react-table";
 import { Search } from "lucide-react";
 
-import CustomModal from "~/components/custom/modals/custom-modal";
-import { useModal } from "~/components/custom/modals/modal-provider";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import { Button } from "@aperturs/ui/button";
+import { Input } from "@aperturs/ui/input";
 import {
   Table,
   TableBody,
@@ -21,7 +19,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table";
+} from "@aperturs/ui/table";
+
+import CustomModal from "~/components/custom/modals/custom-modal";
+import { useModal } from "~/components/custom/modals/modal-provider";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

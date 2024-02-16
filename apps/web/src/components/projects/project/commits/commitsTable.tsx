@@ -6,16 +6,17 @@ import { LineWobble } from "@uiball/loaders";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 
-import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
-import { Checkbox } from "~/components/ui/checkbox";
+import { Badge } from "@aperturs/ui/badge";
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
+import { Checkbox } from "@aperturs/ui/checkbox";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTrigger,
-} from "~/components/ui/dialog";
+} from "@aperturs/ui/dialog";
+
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/utils/api";
 import { defaultContent } from "~/utils/basic-functions";

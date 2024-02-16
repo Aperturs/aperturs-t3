@@ -5,7 +5,8 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
+
 import BillingTab from "./billingTab";
 import UserProfilePage from "./userprofile";
 

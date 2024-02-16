@@ -2,19 +2,14 @@
 
 import { useState } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "~/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@aperturs/ui/select";
 
 export default function CommitDescriptionSettingsCard() {
   const [commitDescription, setCommitDescription] = useState("simple");

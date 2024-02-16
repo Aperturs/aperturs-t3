@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
 
 export default function ManageSubscription({
   isCanceled,

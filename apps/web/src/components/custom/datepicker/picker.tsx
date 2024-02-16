@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
 
-import { Button } from "~/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTrigger,
-} from "~/components/ui/dialog";
+} from "@aperturs/ui/dialog";
+
 import { useStore } from "~/store/post-store";
 import CalendarComponent from "./calender";
 

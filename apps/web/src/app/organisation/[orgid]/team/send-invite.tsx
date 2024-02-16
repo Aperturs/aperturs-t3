@@ -6,15 +6,14 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 
-import SimpleLoader from "~/components/custom/loading/simple-loading";
-import { Button } from "~/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "~/components/ui/card";
+} from "@aperturs/ui/card";
 import {
   Form,
   FormControl,
@@ -22,15 +21,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+} from "@aperturs/ui/form";
+import { Input } from "@aperturs/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@aperturs/ui/select";
+
+import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
 
 interface SendInvitationProps {

@@ -6,7 +6,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@aperturs/ui/select";
 
 interface TimePickerProps {
   onHourChange: (time: number) => void;

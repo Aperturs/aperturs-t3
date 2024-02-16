@@ -1,6 +1,0 @@
-
-> website@0.1.0 format /Users/kate/Developer/react/aperturs/aperturs-t3/apps/web
-> prettier --check . --ignore-path ../../.gitignore "--cache" "--cache-location" "node_modules/.cache/.prettiercache"
-
-Checking formatting...
-All matched files use Prettier code style!

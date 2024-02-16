@@ -5,14 +5,15 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
-import { Button } from "~/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import { Switch } from "~/components/ui/switch";
+} from "@aperturs/ui/dropdown-menu";
+import { Switch } from "@aperturs/ui/switch";
+
 import { useStore } from "~/store/post-store";
 import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
