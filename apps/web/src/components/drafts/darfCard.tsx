@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 import { toast } from "react-hot-toast";
 import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
 
+import { Button } from "@aperturs/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
+import { Dialog, DialogTrigger } from "@aperturs/ui/dialog";
+import ToolTipSimple from "@aperturs/ui/tooltip-final";
+
 import ConfirmationModal from "~/components/custom/modals/modal";
 import { api } from "~/utils/api";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Dialog } from "../ui/dialog";
-import ToolTipSimple from "../ui/tooltip-final";
 
 interface IDarfCard {
   id: string;

@@ -9,12 +9,13 @@ import { AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
+import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
+
 import { SocialType } from "~/types/post-enums";
 import { api } from "~/utils/api";
 import SimpleLoader from "../custom/loading/simple-loading";
-import { Button } from "../ui/button";
-import { Card } from "../ui/card";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 
 const SocialIcon = ({ type }: { type: SocialType }) => {
   if (type === SocialType.Twitter) {

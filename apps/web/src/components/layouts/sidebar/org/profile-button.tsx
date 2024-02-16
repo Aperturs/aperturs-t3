@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { useS3Upload } from "next-s3-upload";
 import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
@@ -22,6 +21,7 @@ import {
 } from "@aperturs/ui/command";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTrigger,

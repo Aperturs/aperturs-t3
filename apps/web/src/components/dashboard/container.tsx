@@ -2,8 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { BsArrowUpRight } from "react-icons/bs";
 
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Button } from "@aperturs/ui/button";
+import { Card, CardContent, CardHeader } from "@aperturs/ui/card";
 
 interface SingleInfoProps {
   title: string;

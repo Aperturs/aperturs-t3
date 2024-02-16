@@ -1,5 +1,6 @@
 import React from "react";
-import { cn } from "@ui/lib/utils";
+
+import { cn } from "../../lib/utils";
 
 interface ListItemProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

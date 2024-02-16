@@ -8,16 +8,17 @@ import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import Select from "react-select";
 
+import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
+import { Badge } from "@aperturs/ui/badge";
+import { Button } from "@aperturs/ui/button";
+import { Dialog, DialogFooter, DialogHeader } from "@aperturs/ui/dialog";
+import { Input } from "@aperturs/ui/input";
+import { Textarea } from "@aperturs/ui/textarea";
+
 import { useGithub } from "~/hooks/useGithub";
 import { api } from "~/utils/api";
 import LogoLoad from "../custom/loading/logoLoad";
 import SimpleLoader from "../custom/loading/simple-loading";
-import { Avatar, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Dialog, DialogFooter, DialogHeader } from "../ui/dialog";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 
 interface RepoOptionType {
   value: Repo;

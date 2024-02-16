@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { Button } from "../ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import { Button } from "@aperturs/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
 
 interface Props {
   repoName: string;

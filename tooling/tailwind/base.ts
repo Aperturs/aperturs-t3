@@ -6,6 +6,15 @@ export default {
   theme: {
     extend: {
       colors: {
+        // primary: "#132da0",
+        // secondary: "#e3f2ff",
+        // accent: "#2d68ff",
+        // neutral: "#f7f7fc",
+        // "base-100": "#ffffff",
+        info: "#3ABFF8",
+        success: "#22c55e",
+        warning: "#ffa800",
+        error: "#dc2c2b",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -39,9 +48,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-      },
-      borderColor: {
-        DEFAULT: "hsl(var(--border))",
       },
     },
   },
