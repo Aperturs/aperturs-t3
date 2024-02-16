@@ -1,0 +1,1089 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "5",
+  "dialect": "mysql",
+  "tables": {
+    "GithubToken": {
+      "name": "GithubToken",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_token": {
+          "autoincrement": false,
+          "name": "access_token",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refresh_token": {
+          "autoincrement": false,
+          "name": "refresh_token",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profileId": {
+          "autoincrement": false,
+          "name": "profileId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_in": {
+          "autoincrement": false,
+          "name": "expires_in",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token_expires_in": {
+          "autoincrement": false,
+          "name": "refresh_token_expires_in",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationLsSubscriptionId": {
+          "autoincrement": false,
+          "name": "organizationLsSubscriptionId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "GithubToken_id": {
+          "name": "GithubToken_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "GithubToken_clerkUserId_idx": {
+          "name": "GithubToken_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "GithubToken_id_idx": {
+          "name": "GithubToken_id_idx",
+          "columns": ["id"],
+          "isUnique": false
+        },
+        "GithubToken_organizationId_idx": {
+          "name": "GithubToken_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {
+        "GithubToken_access_token_key": {
+          "name": "GithubToken_access_token_key",
+          "columns": ["access_token"]
+        },
+        "GithubToken_refresh_token_key": {
+          "name": "GithubToken_refresh_token_key",
+          "columns": ["refresh_token"]
+        }
+      }
+    },
+    "Idea": {
+      "name": "Idea",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "autoincrement": false,
+          "name": "content",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "Idea_id": {
+          "name": "Idea_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "Idea_clerkUserId_idx": {
+          "name": "Idea_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "Idea_organizationId_idx": {
+          "name": "Idea_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {
+        "Idea_clerkUserId_key": {
+          "name": "Idea_clerkUserId_key",
+          "columns": ["clerkUserId"]
+        }
+      }
+    },
+    "LinkedInToken": {
+      "name": "LinkedInToken",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "profileId": {
+          "autoincrement": false,
+          "name": "profileId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_token": {
+          "autoincrement": false,
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refresh_token": {
+          "autoincrement": false,
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_in": {
+          "autoincrement": false,
+          "name": "expires_in",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token_expires_in": {
+          "autoincrement": false,
+          "name": "refresh_token_expires_in",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "LinkedInToken_id": {
+          "name": "LinkedInToken_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "LinkedInToken_clerkUserId_idx": {
+          "name": "LinkedInToken_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "LinkedInToken_id_idx": {
+          "name": "LinkedInToken_id_idx",
+          "columns": ["id"],
+          "isUnique": false
+        },
+        "LinkedInToken_organizationId_idx": {
+          "name": "LinkedInToken_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        },
+        "LinkedInToken_profileId_idx": {
+          "name": "LinkedInToken_profileId_idx",
+          "columns": ["profileId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {}
+    },
+    "Organization": {
+      "name": "Organization",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "autoincrement": false,
+          "name": "name",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logo": {
+          "autoincrement": false,
+          "name": "logo",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "default": "'personal'",
+          "autoincrement": false,
+          "name": "category",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "Organization_id": {
+          "name": "Organization_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "Organization_clerkUserId_idx": {
+          "name": "Organization_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {}
+    },
+    "OrganizationInvites": {
+      "name": "OrganizationInvites",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "autoincrement": false,
+          "name": "name",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "autoincrement": false,
+          "name": "email",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "autoincrement": false,
+          "name": "role",
+          "type": "enum('OWNER','ADMIN','EDITOR','MEMBER')",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "autoincrement": false,
+          "name": "status",
+          "type": "enum('PENDING','ACCEPTED','REJECTED','CANCELLED')",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "inviterClerkId": {
+          "autoincrement": false,
+          "name": "inviterClerkId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "inviterName": {
+          "autoincrement": false,
+          "name": "inviterName",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "OrganizationInvites_id": {
+          "name": "OrganizationInvites_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "OrganizationInvites_organizationId_idx": {
+          "name": "OrganizationInvites_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {}
+    },
+    "OrganizationUser": {
+      "name": "OrganizationUser",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "autoincrement": false,
+          "name": "role",
+          "type": "enum('OWNER','ADMIN','EDITOR','MEMBER')",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "OrganizationUser_id": {
+          "name": "OrganizationUser_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "OrganizationUser_clerkUserId_idx": {
+          "name": "OrganizationUser_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "OrganizationUser_organizationId_idx": {
+          "name": "OrganizationUser_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {}
+    },
+    "Post": {
+      "name": "Post",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "autoincrement": false,
+          "name": "status",
+          "type": "enum('SAVED','PUBLISHED','SCHEDULED')",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduledAt": {
+          "autoincrement": false,
+          "name": "scheduledAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "autoincrement": false,
+          "name": "content",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projectId": {
+          "autoincrement": false,
+          "name": "projectId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "Post_id": {
+          "name": "Post_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "Post_clerkUserId_idx": {
+          "name": "Post_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "Post_id_idx": {
+          "name": "Post_id_idx",
+          "columns": ["id"],
+          "isUnique": false
+        },
+        "Post_organizationId_idx": {
+          "name": "Post_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        },
+        "Post_projectId_idx": {
+          "name": "Post_projectId_idx",
+          "columns": ["projectId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {}
+    },
+    "Project": {
+      "name": "Project",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organizationId": {
+          "default": "''",
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projectName": {
+          "autoincrement": false,
+          "name": "projectName",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "repoName": {
+          "autoincrement": false,
+          "name": "repoName",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "repoDescription": {
+          "default": "''",
+          "autoincrement": false,
+          "name": "repoDescription",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "repoUrl": {
+          "autoincrement": false,
+          "name": "repoUrl",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "repoId": {
+          "autoincrement": false,
+          "name": "repoId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "questionsAnswersJsonString": {
+          "autoincrement": false,
+          "name": "questionsAnswersJsonString",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "commitCount": {
+          "autoincrement": false,
+          "name": "commitCount",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "Project_id": {
+          "name": "Project_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "Project_clerkUserId_idx": {
+          "name": "Project_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "Project_id_idx": {
+          "name": "Project_id_idx",
+          "columns": ["id"],
+          "isUnique": false
+        },
+        "Project_organizationId_idx": {
+          "name": "Project_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {
+        "Project_repoUrl_key": {
+          "name": "Project_repoUrl_key",
+          "columns": ["repoUrl"]
+        }
+      }
+    },
+    "TwitterToken": {
+      "name": "TwitterToken",
+      "columns": {
+        "id": {
+          "autoincrement": false,
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationId": {
+          "autoincrement": false,
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "client_id": {
+          "autoincrement": false,
+          "name": "client_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_secret": {
+          "autoincrement": false,
+          "name": "client_secret",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_token": {
+          "autoincrement": false,
+          "name": "access_token",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token": {
+          "autoincrement": false,
+          "name": "refresh_token",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_in": {
+          "autoincrement": false,
+          "name": "expires_in",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profileId": {
+          "autoincrement": false,
+          "name": "profileId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "username": {
+          "autoincrement": false,
+          "name": "username",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fullname": {
+          "autoincrement": false,
+          "name": "fullname",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profile_image": {
+          "autoincrement": false,
+          "name": "profile_image",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "TwitterToken_id": {
+          "name": "TwitterToken_id",
+          "columns": ["id"]
+        }
+      },
+      "indexes": {
+        "TwitterToken_clerkUserId_idx": {
+          "name": "TwitterToken_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "TwitterToken_id_idx": {
+          "name": "TwitterToken_id_idx",
+          "columns": ["id"],
+          "isUnique": false
+        },
+        "TwitterToken_organizationId_idx": {
+          "name": "TwitterToken_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        },
+        "TwitterToken_profileId_idx": {
+          "name": "TwitterToken_profileId_idx",
+          "columns": ["profileId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {
+        "TwitterToken_access_token_key": {
+          "name": "TwitterToken_access_token_key",
+          "columns": ["access_token"]
+        },
+        "TwitterToken_refresh_token_key": {
+          "name": "TwitterToken_refresh_token_key",
+          "columns": ["refresh_token"]
+        }
+      }
+    },
+    "User": {
+      "name": "User",
+      "columns": {
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userDetails": {
+          "autoincrement": false,
+          "name": "userDetails",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "currentPlan": {
+          "default": "'FREE'",
+          "autoincrement": false,
+          "name": "currentPlan",
+          "type": "enum('FREE','PRO','PRO2','PRO3')",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ls_subscription_id": {
+          "autoincrement": false,
+          "name": "ls_subscription_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ls_customer_id": {
+          "autoincrement": false,
+          "name": "ls_customer_id",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lsVariantId": {
+          "autoincrement": false,
+          "name": "lsVariantId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ls_current_period_end": {
+          "autoincrement": false,
+          "name": "ls_current_period_end",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {
+        "User_clerkUserId_idx": {
+          "name": "User_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {
+        "User_clerkUserId_key": {
+          "name": "User_clerkUserId_key",
+          "columns": ["clerkUserId"]
+        },
+        "User_ls_customer_id_key": {
+          "name": "User_ls_customer_id_key",
+          "columns": ["ls_customer_id"]
+        },
+        "User_ls_subscription_id_key": {
+          "name": "User_ls_subscription_id_key",
+          "columns": ["ls_subscription_id"]
+        }
+      }
+    },
+    "UserUsage": {
+      "name": "UserUsage",
+      "columns": {
+        "clerkUserId": {
+          "autoincrement": false,
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduledposts": {
+          "default": 15,
+          "autoincrement": false,
+          "name": "scheduledposts",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduledtime": {
+          "default": 10,
+          "autoincrement": false,
+          "name": "scheduledtime",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "projects": {
+          "default": 3,
+          "autoincrement": false,
+          "name": "projects",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "socialaccounts": {
+          "default": 4,
+          "autoincrement": false,
+          "name": "socialaccounts",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generatedposts": {
+          "default": 50,
+          "autoincrement": false,
+          "name": "generatedposts",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "drafts": {
+          "default": 15,
+          "autoincrement": false,
+          "name": "drafts",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ideas": {
+          "default": 15,
+          "autoincrement": false,
+          "name": "ideas",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organisation": {
+          "default": 0,
+          "autoincrement": false,
+          "name": "organisation",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "default": "CURRENT_TIMESTAMP(3)",
+          "autoincrement": false,
+          "name": "createdAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updatedAt": {
+          "autoincrement": false,
+          "name": "updatedAt",
+          "type": "datetime(3)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {},
+      "indexes": {
+        "UserUsage_clerkUserId_idx": {
+          "name": "UserUsage_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "uniqueConstraints": {
+        "UserUsage_clerkUserId_key": {
+          "name": "UserUsage_clerkUserId_key",
+          "columns": ["clerkUserId"]
+        }
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
