@@ -1,4 +1,5 @@
 import SideBar from "../sidebar/personal/sidebar";
+import SidebarWrapper from "../sidebar/sidebar-wrapper";
 import SocialTabs from "../tabs/socialtabs";
 
 function PostView({ params }: { params: { id: string } }) {
@@ -7,7 +8,9 @@ function PostView({ params }: { params: { id: string } }) {
     <div className="flex  justify-center gap-5">
       <SocialTabs />
       <div className="mt-[-6rem] w-full lg:max-w-[18rem]">
-        <SideBar params={params} />
+        <SidebarWrapper>
+          <SideBar params={params} />
+        </SidebarWrapper>
       </div>
     </div>
   );

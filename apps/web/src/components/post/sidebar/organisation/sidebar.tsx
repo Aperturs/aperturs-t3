@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 
 import { api } from "~/trpc/react";
 
-const SideBar = () => {
+export default function OrgSideBar() {
   const params = useParams<{ orgid: string }>();
   const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
 
@@ -34,6 +34,4 @@ const SideBar = () => {
       </div>
     </div>
   );
-};
-
-export default SideBar;
+}
