@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
@@ -6,11 +5,9 @@ import { shallow } from "zustand/shallow";
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
 import { SocialType } from "~/types/post-enums";
-import usePost from "../content/use-post";
+import usePost from "../../content/use-post";
 
 export default function usePublishing({ id }: { id: string }) {
-  const [isDisabled, setIsDisabled] = useState(false);
-
   const {
     content,
     date,
@@ -60,7 +57,6 @@ export default function usePublishing({ id }: { id: string }) {
   const router = useRouter();
 
   const handlePublish = async () => {
-    setIsDisabled(true);
     content.forEach(async (item) => {
       switch (item.socialType) {
         case `${SocialType.Twitter}`:
@@ -101,14 +97,11 @@ export default function usePublishing({ id }: { id: string }) {
     if (!twitterError || !linkedinError) {
       reset();
     }
-    setIsDisabled(false);
   };
 
   const handleSave = async ({ isScheduling }: { isScheduling: boolean }) => {
-    setIsDisabled(true);
     let postId = "";
     if (!time) {
-      setIsDisabled(false);
       return toast.error("Please select a time");
     }
     const [hours, minutes] = time.split(":");
@@ -117,11 +110,9 @@ export default function usePublishing({ id }: { id: string }) {
         ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
         : undefined;
     if (isScheduling && !scheduledTime) {
-      setIsDisabled(false);
       return toast.error("Please select a date and time");
     }
     if (!content) {
-      setIsDisabled(false);
       return toast.error("Please add a post content");
     }
 
@@ -151,14 +142,12 @@ export default function usePublishing({ id }: { id: string }) {
         error: "Failed to save to drafts",
       },
     );
-    setIsDisabled(false);
+
     return postId;
   };
 
   const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
-    setIsDisabled(true);
     if (!time) {
-      setIsDisabled(false);
       return toast.error("Please select a time");
     }
     const [hours, minutes] = time.split(":");
@@ -206,13 +195,10 @@ export default function usePublishing({ id }: { id: string }) {
     } catch (err) {
       toast.error(`Failed to update post ${err as string}`);
     }
-    setIsDisabled(false);
   };
 
   const handleSchedule = async () => {
-    setIsDisabled(true);
     if (!time) {
-      setIsDisabled(false);
       return toast.error("Please select a time");
     }
     const [hours, minutes] = time.split(":");
@@ -222,7 +208,6 @@ export default function usePublishing({ id }: { id: string }) {
         : undefined;
 
     if (!scheduledTime) {
-      setIsDisabled(false);
       return toast.error("Please select a date and time");
     }
     try {
@@ -256,7 +241,6 @@ export default function usePublishing({ id }: { id: string }) {
     } catch (err) {
       toast.error(`Failed to schedule post`);
     }
-    setIsDisabled(false);
   };
 
   return {
@@ -264,6 +248,14 @@ export default function usePublishing({ id }: { id: string }) {
     handleSave,
     handleUpdate,
     handleSchedule,
-    isDisabled,
+    isDisabled:
+      !content || uploadingFiles || saving || linkedinPosting || tweeting,
+    isUploaded,
+    scheduling,
+    linkedinPosting,
+    tweeting,
+    uploadingFiles,
+    saving,
+    updating,
   };
 }

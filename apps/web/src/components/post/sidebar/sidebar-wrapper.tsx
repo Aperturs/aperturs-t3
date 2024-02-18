@@ -1,23 +1,22 @@
 "use client";
 
+import { Button } from "@aperturs/ui/components/ui/button";
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@aperturs/ui/drawer";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@aperturs/ui/sheet";
 
 import useIsMobile from "~/hooks/useIsMobile";
 
 export default function SidebarWrapper({
   children,
-  mobileChildren,
 }: {
   children: React.ReactNode;
-  mobileChildren?: React.ReactNode;
 }) {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(1024);
 
   return (
     <>
@@ -26,16 +25,17 @@ export default function SidebarWrapper({
           {children}
         </div>
       ) : (
-        <Drawer>
-          <DrawerTrigger>Open</DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>Advanced Settings</DrawerTitle>
-              {/* <DrawerDescription>This action cannot be undone.</DrawerDescription> */}
-            </DrawerHeader>
-            {mobileChildren}
-          </DrawerContent>
-        </Drawer>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button className="mt-[100px]">Advanced Settings</Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Advanced Settings</SheetTitle>
+            </SheetHeader>
+            {children}
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );

@@ -10,7 +10,7 @@ const SideBar = ({ params }: { params: { id: string } }) => {
   const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
 
   return (
-    <div className="shadow-blue-gray-900/5 z-20 w-full rounded-lg bg-card  p-4 px-8 shadow-xl  dark:border lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
+    <div>
       <div className="my-4 flex flex-grow flex-col justify-end gap-1">
         <h2 className="text-xl">Schedule Post</h2>
         <Publish params={params} />
