@@ -1,18 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
-import Picker from "~/components/custom/datepicker/picker";
 import { useStore } from "~/store/post-store";
+import { api } from "~/trpc/react";
 import { SocialType } from "~/types/post-enums";
-import { api } from "~/utils/api";
-import { SimpleButton } from "../../common";
-import usePost from "../../content/use-post";
+import usePost from "../content/use-post";
 
-function Publish({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function usePublishing({ id }: { id: string }) {
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const {
     content,
     date,
@@ -29,6 +27,11 @@ function Publish({ params }: { params: { id: string } }) {
     }),
     shallow,
   );
+  const {
+    uploadFilesAndModifyContent,
+    error: uploadingFilesError,
+    loading: uploadingFiles,
+  } = usePost();
 
   const {
     mutateAsync: createTweet,
@@ -56,13 +59,8 @@ function Publish({ params }: { params: { id: string } }) {
 
   const router = useRouter();
 
-  const {
-    uploadFilesAndModifyContent,
-    error: uploadingFilesError,
-    loading: uploadingFiles,
-  } = usePost();
-
-  const handlePublish = () => {
+  const handlePublish = async () => {
+    setIsDisabled(true);
     content.forEach(async (item) => {
       switch (item.socialType) {
         case `${SocialType.Twitter}`:
@@ -103,11 +101,14 @@ function Publish({ params }: { params: { id: string } }) {
     if (!twitterError || !linkedinError) {
       reset();
     }
+    setIsDisabled(false);
   };
 
   const handleSave = async ({ isScheduling }: { isScheduling: boolean }) => {
+    setIsDisabled(true);
     let postId = "";
     if (!time) {
+      setIsDisabled(false);
       return toast.error("Please select a time");
     }
     const [hours, minutes] = time.split(":");
@@ -116,9 +117,13 @@ function Publish({ params }: { params: { id: string } }) {
         ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
         : undefined;
     if (isScheduling && !scheduledTime) {
+      setIsDisabled(false);
       return toast.error("Please select a date and time");
     }
-    if (!content) return toast.error("Please add a post content");
+    if (!content) {
+      setIsDisabled(false);
+      return toast.error("Please add a post content");
+    }
 
     await toast.promise(
       (async () => {
@@ -146,11 +151,14 @@ function Publish({ params }: { params: { id: string } }) {
         error: "Failed to save to drafts",
       },
     );
+    setIsDisabled(false);
     return postId;
   };
 
   const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
+    setIsDisabled(true);
     if (!time) {
+      setIsDisabled(false);
       return toast.error("Please select a time");
     }
     const [hours, minutes] = time.split(":");
@@ -198,10 +206,13 @@ function Publish({ params }: { params: { id: string } }) {
     } catch (err) {
       toast.error(`Failed to update post ${err as string}`);
     }
+    setIsDisabled(false);
   };
 
   const handleSchedule = async () => {
+    setIsDisabled(true);
     if (!time) {
+      setIsDisabled(false);
       return toast.error("Please select a time");
     }
     const [hours, minutes] = time.split(":");
@@ -211,6 +222,7 @@ function Publish({ params }: { params: { id: string } }) {
         : undefined;
 
     if (!scheduledTime) {
+      setIsDisabled(false);
       return toast.error("Please select a date and time");
     }
     try {
@@ -244,73 +256,14 @@ function Publish({ params }: { params: { id: string } }) {
     } catch (err) {
       toast.error(`Failed to schedule post`);
     }
+    setIsDisabled(false);
   };
 
-  return (
-    <div className="my-4 flex w-full flex-col justify-end gap-1">
-      <div className="grid grid-cols-2 gap-1">
-        <Picker />
-        <SimpleButton
-          text="Schedule"
-          isLoading={scheduling}
-          disabled={
-            content.length === 0 || saving || updating || uploadingFiles
-          }
-          onClick={async () => {
-            await handleSchedule();
-          }}
-        />
-      </div>
-      <SimpleButton
-        isLoading={tweeting || linkedinPosting}
-        text="Publish Now"
-        disabled={content.length === 0 || saving || updating || scheduling}
-        onClick={() => {
-          handlePublish();
-        }}
-      />
-      {/* <PostWeb content={defaultContent} /> */}
-      {isUploaded ? (
-        <SimpleButton
-          text="Update Post"
-          isLoading={updating || uploadingFiles}
-          disabled={
-            content.length === 0 ||
-            saving ||
-            scheduling ||
-            tweeting ||
-            linkedinPosting
-          }
-          onClick={async () => {
-            await handleUpdate({ isScheduling: false });
-          }}
-        />
-      ) : (
-        <SimpleButton
-          isLoading={saving || uploadingFiles}
-          text="Save to drafts"
-          disabled={
-            content.length === 0 ||
-            scheduling ||
-            tweeting ||
-            linkedinPosting ||
-            uploadingFiles
-          }
-          onClick={async () => {
-            await handleSave({ isScheduling: false });
-          }}
-        />
-      )}
-      {/* <SimpleButton
-        text="Add to Queue"
-        
-        onClick={() => {
-          // console.log("onClick event is triggered");
-        }}
-        disabled={content.length === 0}
-      /> */}
-    </div>
-  );
+  return {
+    handlePublish,
+    handleSave,
+    handleUpdate,
+    handleSchedule,
+    isDisabled,
+  };
 }
-
-export default Publish;

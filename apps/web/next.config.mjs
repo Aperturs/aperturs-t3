@@ -1,3 +1,9 @@
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
@@ -17,6 +23,9 @@ const config = {
         },
       },
     },
+    ...(process.env.NODE_ENV === "development"
+      ? { outputFileTracingRoot: path.join(__dirname, "../../") }
+      : null),
   },
 
   images: {
@@ -51,9 +60,7 @@ const config = {
       },
     ],
   },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
-  },
+
   transpilePackages: ["@aperturs/ui"],
 
   /**
