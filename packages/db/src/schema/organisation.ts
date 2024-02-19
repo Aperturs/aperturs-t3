@@ -1,86 +1,85 @@
 import { sql } from "drizzle-orm";
 import {
-  datetime,
+  date,
   index,
-  mysqlEnum,
-  mysqlTable,
-  primaryKey,
+  integer,
+  json,
+  pgEnum,
+  pgTable,
+  unique,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
-export const organization = mysqlTable(
+export const organization = pgTable(
   "Organization",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    clerkUserId: varchar("clerkUserId", { length: 191 }).notNull(),
-    name: varchar("name", { length: 191 }).notNull(),
-    logo: varchar("logo", { length: 191 }),
-    category: varchar("category", { length: 191 })
+    id: varchar("id", { length: 256 }).notNull().primaryKey(),
+    clerkUserId: varchar("clerkUserId", { length: 256 }).notNull(),
+    name: varchar("name", { length: 256 }).notNull(),
+    logo: varchar("logo", { length: 256 }),
+    category: varchar("category", { length: 256 })
       .default("personal")
       .notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    createdAt: date("createdAt", { mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
   },
   (table) => {
     return {
       clerkUserIdIdx: index("Organization_clerkUserId_idx").on(
         table.clerkUserId,
       ),
-      organizationId: primaryKey({
-        columns: [table.id],
-        name: "Organization_id",
-      }),
     };
   },
 );
 
-export const organizationInvites = mysqlTable(
+const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
+const statusEnum = pgEnum("status", [
+  "PENDING",
+  "ACCEPTED",
+  "REJECTED",
+  "CANCELLED",
+]);
+
+export const organizationInvites = pgTable(
   "OrganizationInvites",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    name: varchar("name", { length: 191 }).notNull(),
-    email: varchar("email", { length: 191 }).notNull(),
-    organizationId: varchar("organizationId", { length: 191 }).notNull(),
-    role: mysqlEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]).notNull(),
-    status: mysqlEnum("status", [
-      "PENDING",
-      "ACCEPTED",
-      "REJECTED",
-      "CANCELLED",
-    ]).notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    id: varchar("id", { length: 256 }).notNull().primaryKey(),
+    name: varchar("name", { length: 256 }).notNull(),
+    email: varchar("email", { length: 256 }).notNull(),
+    organizationId: varchar("organizationId", { length: 256 }).notNull(),
+    role: roleEnum("role").notNull(),
+    status: statusEnum("status").notNull(),
+    createdAt: date("createdAt", { mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
-    inviterClerkId: varchar("inviterClerkId", { length: 191 }).notNull(),
-    inviterName: varchar("inviterName", { length: 191 }).notNull(),
+    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    inviterClerkId: varchar("inviterClerkId", { length: 256 }).notNull(),
+    inviterName: varchar("inviterName", { length: 256 }).notNull(),
   },
   (table) => {
     return {
       organizationIdIdx: index("OrganizationInvites_organizationId_idx").on(
         table.organizationId,
       ),
-      organizationInvitesId: primaryKey({
-        columns: [table.id],
-        name: "OrganizationInvites_id",
-      }),
     };
   },
 );
 
-export const organizationUser = mysqlTable(
+export const organizationUser = pgTable(
   "OrganizationUser",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    organizationId: varchar("organizationId", { length: 191 }).notNull(),
-    clerkUserId: varchar("clerkUserId", { length: 191 }).notNull(),
-    role: mysqlEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]).notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    id: varchar("id", { length: 256 }).primaryKey(),
+    organizationId: varchar("organizationId", { length: 256 }).notNull(),
+    clerkUserId: varchar("clerkUserId", { length: 256 }).notNull(),
+    role: pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"])(
+      "role",
+    ).notNull(),
+    createdAt: date("createdAt", { mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
   },
   (table) => {
     return {
@@ -90,10 +89,6 @@ export const organizationUser = mysqlTable(
       organizationIdIdx: index("OrganizationUser_organizationId_idx").on(
         table.organizationId,
       ),
-      organizationUserId: primaryKey({
-        columns: [table.id],
-        name: "OrganizationUser_id",
-      }),
     };
   },
 );

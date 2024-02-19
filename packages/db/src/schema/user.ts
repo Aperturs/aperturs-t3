@@ -1,72 +1,63 @@
 import { sql } from "drizzle-orm";
 import {
-  datetime,
+  date,
   index,
-  int,
+  integer,
   json,
-  mysqlEnum,
-  mysqlTable,
+  pgEnum,
+  pgTable,
   unique,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
-export const user = mysqlTable(
+const currentPlanEnum = pgEnum("currentPlan", ["FREE", "PRO", "PRO2", "PRO3"]);
+
+export const user = pgTable(
   "User",
   {
-    clerkUserId: varchar("clerkUserId", { length: 191 }).notNull(),
+    clerkUserId: varchar("clerkUserId", { length: 256 }).notNull(),
     userDetails: json("userDetails"),
-    currentPlan: mysqlEnum("currentPlan", ["FREE", "PRO", "PRO2", "PRO3"])
-      .default("FREE")
+    currentPlan: currentPlanEnum("currentPlan").default("FREE").notNull(),
+    createdAt: date("createdAt", { mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
-      .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
-    lsSubscriptionId: varchar("ls_subscription_id", { length: 191 }),
-    lsCustomerId: varchar("ls_customer_id", { length: 191 }),
-    lsVariantId: int("lsVariantId"),
-    lsCurrentPeriodEnd: datetime("ls_current_period_end", {
-      mode: "string",
-      fsp: 3,
-    }),
+    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    lsSubscriptionId: varchar("ls_subscription_id", { length: 256 }),
+    lsCustomerId: varchar("ls_customer_id", { length: 256 }),
+    lsVariantId: integer("lsVariantId"),
+    lsCurrentPeriodEnd: date("ls_current_period_end", { mode: "string" }),
   },
   (table) => {
     return {
       clerkUserIdIdx: index("User_clerkUserId_idx").on(table.clerkUserId),
-      userClerkUserIdKey: unique("User_clerkUserId_key").on(table.clerkUserId),
-      userLsCustomerIdKey: unique("User_ls_customer_id_key").on(
-        table.lsCustomerId,
-      ),
-      userLsSubscriptionIdKey: unique("User_ls_subscription_id_key").on(
-        table.lsSubscriptionId,
-      ),
+      userClerkUserIdKey: unique().on(table.clerkUserId),
+      userLsCustomerIdKey: unique().on(table.lsCustomerId),
+      userLsSubscriptionIdKey: unique().on(table.lsSubscriptionId),
     };
   },
 );
 
-export const userUsage = mysqlTable(
+export const userUsage = pgTable(
   "UserUsage",
   {
-    clerkUserId: varchar("clerkUserId", { length: 191 }).notNull(),
-    scheduledposts: int("scheduledposts").default(15).notNull(),
-    scheduledtime: int("scheduledtime").default(10).notNull(),
-    projects: int("projects").default(3).notNull(),
-    socialaccounts: int("socialaccounts").default(4).notNull(),
-    generatedposts: int("generatedposts").default(50).notNull(),
-    drafts: int("drafts").default(15).notNull(),
-    ideas: int("ideas").default(15).notNull(),
-    organisation: int("organisation").default(0).notNull(),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    clerkUserId: varchar("clerkUserId", { length: 256 }).notNull(),
+    scheduledposts: integer("scheduledposts").default(15).notNull(),
+    scheduledtime: integer("scheduledtime").default(10).notNull(),
+    projects: integer("projects").default(3).notNull(),
+    socialaccounts: integer("socialaccounts").default(4).notNull(),
+    generatedposts: integer("generatedposts").default(50).notNull(),
+    drafts: integer("drafts").default(15).notNull(),
+    ideas: integer("ideas").default(15).notNull(),
+    organisation: integer("organisation").default(0).notNull(),
+    createdAt: date("createdAt", { mode: "string" })
+      .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
   },
   (table) => {
     return {
       clerkUserIdIdx: index("UserUsage_clerkUserId_idx").on(table.clerkUserId),
-      userUsageClerkUserIdKey: unique("UserUsage_clerkUserId_key").on(
-        table.clerkUserId,
-      ),
+      userUsageClerkUserIdKey: unique().on(table.clerkUserId),
     };
   },
 );
