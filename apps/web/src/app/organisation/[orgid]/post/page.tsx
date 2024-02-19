@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 
 import LogoLoad from "~/components/custom/loading/logoLoad";
-import PostView from "~/components/post/postWrapper";
+import OrgPostWrapper from "~/components/post/wrappers/org-post-wrapper";
+import PostView from "~/components/post/wrappers/post-wrapper";
 import { useStore } from "~/store/post-store";
 
 export default function PostContent({
@@ -43,7 +44,7 @@ export default function PostContent({
 
   return (
     <div className="container mx-auto p-4">
-      <PostView params={params} />{" "}
+      <OrgPostWrapper />
     </div>
   );
 }

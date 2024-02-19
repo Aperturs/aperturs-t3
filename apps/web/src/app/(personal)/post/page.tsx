@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import LogoLoad from "~/components/custom/loading/logoLoad";
-import PostView from "~/components/post/postWrapper";
+import PostView from "~/components/post/wrappers/post-wrapper";
 import { useStore } from "~/store/post-store";
 
 export default function PostContent({ params }: { params: { id: string } }) {

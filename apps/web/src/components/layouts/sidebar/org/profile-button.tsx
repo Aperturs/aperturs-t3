@@ -134,7 +134,9 @@ function CurrentOrganisation({
         </Avatar>
         <div>
           <h3 className="capitalize">{name}</h3>
-          <p className="text-xs text-muted-foreground">{email}</p>
+          <p className="break-links max-w-36 break-words text-xs text-muted-foreground">
+            {email}
+          </p>
         </div>
       </div>
       <LuChevronsUpDown className="text-base text-muted-foreground" />

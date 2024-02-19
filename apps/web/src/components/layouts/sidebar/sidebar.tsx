@@ -105,7 +105,7 @@ export default function SideBar() {
   useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setIsNavOpen(false),
+      () => window.innerWidth >= 768 && setIsNavOpen(false),
     );
   }, []);
 

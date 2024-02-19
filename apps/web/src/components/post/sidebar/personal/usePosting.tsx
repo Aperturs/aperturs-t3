@@ -1,18 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
-import Picker from "~/components/custom/datepicker/picker";
 import { useStore } from "~/store/post-store";
+import { api } from "~/trpc/react";
 import { SocialType } from "~/types/post-enums";
-import { api } from "~/utils/api";
-import { SimpleButton } from "../common";
-import usePost from "../content/use-post";
+import usePost from "../../content/use-post";
 
-function Publish({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function usePublishing({ id }: { id: string }) {
   const {
     content,
     date,
@@ -29,6 +24,12 @@ function Publish({ params }: { params: { id: string } }) {
     }),
     shallow,
   );
+  const {
+    uploadFilesAndModifyContent,
+    error: uploadingFilesError,
+    loading: uploadingFiles,
+  } = usePost();
+
   const {
     mutateAsync: createTweet,
     error: twitterError,
@@ -55,13 +56,7 @@ function Publish({ params }: { params: { id: string } }) {
 
   const router = useRouter();
 
-  const {
-    uploadFilesAndModifyContent,
-    error: uploadingFilesError,
-    loading: uploadingFiles,
-  } = usePost();
-
-  const handlePublish = () => {
+  const handlePublish = async () => {
     content.forEach(async (item) => {
       switch (item.socialType) {
         case `${SocialType.Twitter}`:
@@ -117,7 +112,9 @@ function Publish({ params }: { params: { id: string } }) {
     if (isScheduling && !scheduledTime) {
       return toast.error("Please select a date and time");
     }
-    if (!content) return toast.error("Please add a post content");
+    if (!content) {
+      return toast.error("Please add a post content");
+    }
 
     await toast.promise(
       (async () => {
@@ -145,6 +142,7 @@ function Publish({ params }: { params: { id: string } }) {
         error: "Failed to save to drafts",
       },
     );
+
     return postId;
   };
 
@@ -245,71 +243,19 @@ function Publish({ params }: { params: { id: string } }) {
     }
   };
 
-  return (
-    <div className="my-4 flex w-full flex-col justify-end gap-1">
-      <div className="grid grid-cols-2 gap-1">
-        <Picker />
-        <SimpleButton
-          text="Schedule"
-          isLoading={scheduling}
-          disabled={
-            content.length === 0 || saving || updating || uploadingFiles
-          }
-          onClick={async () => {
-            await handleSchedule();
-          }}
-        />
-      </div>
-      <SimpleButton
-        isLoading={tweeting || linkedinPosting}
-        text="Publish Now"
-        disabled={content.length === 0 || saving || updating || scheduling}
-        onClick={() => {
-          handlePublish();
-        }}
-      />
-      {/* <PostWeb content={defaultContent} /> */}
-      {isUploaded ? (
-        <SimpleButton
-          text="Update Post"
-          isLoading={updating || uploadingFiles}
-          disabled={
-            content.length === 0 ||
-            saving ||
-            scheduling ||
-            tweeting ||
-            linkedinPosting
-          }
-          onClick={async () => {
-            await handleUpdate({ isScheduling: false });
-          }}
-        />
-      ) : (
-        <SimpleButton
-          isLoading={saving || uploadingFiles}
-          text="Save to drafts"
-          disabled={
-            content.length === 0 ||
-            scheduling ||
-            tweeting ||
-            linkedinPosting ||
-            uploadingFiles
-          }
-          onClick={async () => {
-            await handleSave({ isScheduling: false });
-          }}
-        />
-      )}
-      {/* <SimpleButton
-        text="Add to Queue"
-        
-        onClick={() => {
-          // console.log("onClick event is triggered");
-        }}
-        disabled={content.length === 0}
-      /> */}
-    </div>
-  );
+  return {
+    handlePublish,
+    handleSave,
+    handleUpdate,
+    handleSchedule,
+    isDisabled:
+      !content || uploadingFiles || saving || linkedinPosting || tweeting,
+    isUploaded,
+    scheduling,
+    linkedinPosting,
+    tweeting,
+    uploadingFiles,
+    saving,
+    updating,
+  };
 }
-
-export default Publish;
