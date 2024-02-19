@@ -2,11 +2,8 @@ import { sql } from "drizzle-orm";
 import {
   date,
   index,
-  integer,
-  json,
   pgEnum,
   pgTable,
-  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 
