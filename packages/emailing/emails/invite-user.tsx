@@ -54,7 +54,7 @@ export const InviteUserEmail = ({
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Section className="mt-[32px]">
               <Img
-                src={`${baseUrl}/static/vercel-logo.png`}
+                src={`https://app.aperturs.com/logo.svg`}
                 width="40"
                 height="37"
                 alt="Vercel"

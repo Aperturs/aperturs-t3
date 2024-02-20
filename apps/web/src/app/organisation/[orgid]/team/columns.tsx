@@ -117,6 +117,8 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { setOpen } = useModal();
+  const { mutateAsync: removeUser } =
+    api.organisation.team.removeUserFromOrganisation.useMutation();
   if (!rowData) return;
   return (
     <AlertDialog>
@@ -138,33 +140,27 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
           >
             <Copy size={15} /> Copy Email
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          {/* <DialogTrigger asChild> */}
-          <DropdownMenuItem
-            className="flex gap-2"
-            onClick={() => {
-              setOpen(
-                <CustomModal
-                  subheading="You can change user roles"
-                  title="Edit User Details"
-                >
-                  {/* <UserDetails
-                        type="agency"
-                        id={rowData?.Agency?.id || null}
-                        subAccounts={rowData?.Agency?.SubAccount}
-                      /> */}
-                  <EditDetails {...rowData} />
-                </CustomModal>,
-                // async () => {
-                //   return { user: await getUser(rowData?.id) };
-                // }
-              );
-            }}
-          >
-            <Edit size={15} />
-            Edit Details
-          </DropdownMenuItem>
-          {/* </DialogTrigger> */}
+          {rowData.role !== "OWNER" && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="flex gap-2"
+                onClick={() => {
+                  setOpen(
+                    <CustomModal
+                      subheading="You can change user roles"
+                      title="Edit User Details"
+                    >
+                      <EditDetails {...rowData} />
+                    </CustomModal>,
+                  );
+                }}
+              >
+                <Edit size={15} />
+                Edit Details
+              </DropdownMenuItem>
+            </>
+          )}
           {rowData.role !== "OWNER" && (
             <AlertDialogTrigger asChild>
               <DropdownMenuItem className="flex gap-2">
@@ -189,16 +185,17 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
           <AlertDialogAction
             disabled={loading}
             className="bg-destructive hover:bg-destructive"
-            onClick={() => {
+            onClick={async () => {
               setLoading(true);
-              // await deleteUser(rowData.id);
-              // toast({
-              //   title: "Deleted User",
-              //   description:
-              //     "The user has been deleted from this agency they no longer have access to the agency",
-              // });
+              await toast.promise(removeUser({ orgUserId: rowData.id }), {
+                loading: "Removing User...",
+                success: "User Removed",
+                error: "Failed to remove user",
+              });
               setLoading(false);
-              router.refresh();
+              setTimeout(() => {
+                router.refresh();
+              }, 2000);
             }}
           >
             Delete

@@ -6,6 +6,7 @@ import {
   getUserOrganisations,
 } from "~/server/functions/organisation/main";
 import { createOrganisationSchema } from "~/server/functions/organisation/organisation-types";
+import { addUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { limitWrapper } from "../../helpers/limitWrapper";
 
 export const organisationBasic = createTRPCRouter({
@@ -29,6 +30,14 @@ export const organisationBasic = createTRPCRouter({
             role: "OWNER",
           },
         },
+      });
+      await addUserPrivateMetadata({
+        organisations: [
+          {
+            orgId: orgId,
+            role: "OWNER",
+          },
+        ],
       });
       return res;
     }),
