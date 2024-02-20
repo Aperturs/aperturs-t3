@@ -1,5 +1,6 @@
 import type { CreateOrganisation } from "./organisation-types";
 import { prisma } from "~/server/db";
+import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 
 export async function createOrganisation({
   name,
@@ -26,6 +27,16 @@ export async function createOrganisation({
       throw e;
     });
 
+  if (res) {
+    await updateUserPrivateMetadata({
+      organisations: [
+        {
+          orgId: res.id,
+          role: "OWNER",
+        },
+      ],
+    });
+  }
   return res;
 }
 

@@ -5,7 +5,9 @@ import { auth, clerkClient } from "@clerk/nextjs";
 import type { PrivateMetaData } from "./user-private-metadata";
 import type { ChangeUserRoleWithOrgIdType } from "~/server/functions/organisation/organisation-types";
 
-export async function addUserPrivateMetadata(data: Partial<PrivateMetaData>) {
+export async function updateUserPrivateMetadata(
+  data: Partial<PrivateMetaData>,
+) {
   const { userId, user } = auth();
   if (!userId) {
     throw new Error("No user ID found");

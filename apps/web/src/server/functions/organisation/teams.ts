@@ -7,8 +7,8 @@ import type {
 import { prisma } from "~/server/db";
 import { resend } from "~/server/emails/resend";
 import {
-  addUserPrivateMetadata,
   removeUserPrivateMetadata,
+  updateUserPrivateMetadata,
 } from "~/utils/actions/user-private-meta";
 
 export async function getOrgnanisationTeams(orgId: string) {
@@ -28,6 +28,10 @@ export async function removeUserFromOrganisation(orgUserId: string) {
     where: {
       id: orgUserId,
     },
+  });
+  await removeUserPrivateMetadata({
+    orgId: res.organizationId,
+    role: res.role,
   });
   return res;
 }
@@ -131,7 +135,7 @@ export async function acceptInvite({
       role: role,
     },
   });
-  await addUserPrivateMetadata({
+  await updateUserPrivateMetadata({
     organisations: [
       {
         orgId: orgId,
