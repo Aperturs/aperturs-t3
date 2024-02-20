@@ -77,7 +77,7 @@ export async function sendInvitationViaEmail({
   const email = await resend.emails
     .send({
       to: toEmail,
-      from: "Swaraj <rajswaraj.r@gmail.com>",
+      from: "Aperturs <noreply@aperturs.com>",
       react: reactSendEmail,
       subject: `You have been invited to join ${teamName} on Aperturs`,
     })

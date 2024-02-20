@@ -102,8 +102,8 @@ export const OrganizationTeam = createTRPCRouter({
       const sendEmail = await sendInvitationViaEmail({
         invitationId: inviteId,
         teamName: teamName ?? "team",
-        teamImage: teamImage ?? "/profile.jpeg",
-        userImage: userImage ?? "/user.png",
+        teamImage: teamImage ?? "https://app.aperturs.com/profile.jpeg",
+        userImage: userImage ?? "https://app.aperturs.com/user.png",
         userName: input.name,
         toEmail: input.email,
         inviteFromIp: "",

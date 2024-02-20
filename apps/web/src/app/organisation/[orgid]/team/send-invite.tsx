@@ -59,12 +59,21 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
 
   const onSubmit = async (values: z.infer<typeof userDataSchema>) => {
     try {
-      const res = await inviteUser({
-        name: values.name,
-        email: values.email,
-        role: values.role,
-        orgId: agencyId,
-      });
+      await toast.promise(
+        inviteUser({
+          name: values.name,
+          email: values.email,
+          role: values.role,
+          orgId: agencyId,
+        }),
+        {
+          loading: "Sending invitation",
+          success: (res) => {
+            return `Invitation sent to ${res[0].email}`;
+          },
+          error: "Failed to send invitation",
+        },
+      );
       // await saveActivityLogsNotification({
       //   agencyId: agencyId,
       //   description: `Invited ${res.email}`,
