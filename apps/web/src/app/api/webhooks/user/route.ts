@@ -7,7 +7,7 @@ import { Webhook } from "svix";
 
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
-import { addUserPrivateMetadata } from "~/utils/actions/user-private-meta";
+import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 
 const webhookSecret = env.WEBHOOK_SECRET || "";
 
@@ -80,7 +80,7 @@ async function handler(request: Request) {
         { status: 400 },
       );
     }
-    await addUserPrivateMetadata({
+    await updateUserPrivateMetadata({
       organisations: [],
     });
     const details = {
