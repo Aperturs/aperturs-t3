@@ -6,7 +6,10 @@ import type {
 } from "./organisation-types";
 import { prisma } from "~/server/db";
 import { resend } from "~/server/emails/resend";
-import { addUserPrivateMetadata, removeUserPrivateMetadata } from "~/utils/actions/user-private-meta";
+import {
+  addUserPrivateMetadata,
+  removeUserPrivateMetadata,
+} from "~/utils/actions/user-private-meta";
 
 export async function getOrgnanisationTeams(orgId: string) {
   const res = await prisma.organizationUser.findMany({

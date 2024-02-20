@@ -15,5 +15,4 @@ export const privateMetaDataSchema = z.object({
   lsCurrentPeriodEnd: z.string().optional(),
 });
 
-
 export type PrivateMetaData = z.infer<typeof privateMetaDataSchema>;

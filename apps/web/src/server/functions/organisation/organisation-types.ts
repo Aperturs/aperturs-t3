@@ -40,16 +40,18 @@ export type sendInvitationViaEmailType = z.infer<
   typeof sendInvitationViaEmailSchema
 >;
 
-
 export const changeUserRoleSchema = z.object({
   orgUserId: z.string(),
   newRole: z.enum(["ADMIN", "MEMBER", "EDITOR"]),
 });
 
-export const changeUserRoleWithOrgIdSchema = changeUserRoleSchema.extend({
-  orgId: z.string(),
-}).omit({ orgUserId: true });
+export const changeUserRoleWithOrgIdSchema = changeUserRoleSchema
+  .extend({
+    orgId: z.string(),
+  })
+  .omit({ orgUserId: true });
 
 export type ChangeUserRoleType = z.infer<typeof changeUserRoleSchema>;
 export type ChangeUserRoleWithOrgIdType = z.infer<
-  typeof changeUserRoleWithOrgIdSchema>
+  typeof changeUserRoleWithOrgIdSchema
+>;
