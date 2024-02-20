@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -31,6 +31,7 @@ import {
   SelectValue,
 } from "@aperturs/ui/select";
 
+import { DialogClose } from "@aperturs/ui/components/ui/dialog";
 import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
 
@@ -146,6 +147,7 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
                 </FormItem>
               )}
             />
+            <DialogClose asChild>
             <Button disabled={form.formState.isSubmitting} type="submit">
               {form.formState.isSubmitting ? (
                 <SimpleLoader />
@@ -153,6 +155,7 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
                 "Send Invitation"
               )}
             </Button>
+            </DialogClose>
           </form>
         </Form>
       </CardContent>

@@ -64,7 +64,7 @@ export async function GET(req: NextRequest) {
       // });
     }
     const url = req.nextUrl.clone();
-    url.pathname = "/settings";
+    url.pathname = "/socials";
     return NextResponse.redirect(url);
   } catch (e) {
     console.log(e, "error");
@@ -75,6 +75,6 @@ export async function GET(req: NextRequest) {
 export function POST(req: NextRequest) {
   console.log("working this is get");
   const url = req.nextUrl.clone();
-  url.pathname = "/settings";
+  url.pathname = "/socials";
   return NextResponse.redirect(url);
 }

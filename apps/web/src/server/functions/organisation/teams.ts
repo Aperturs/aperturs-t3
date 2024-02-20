@@ -1,11 +1,12 @@
 import { InviteUserEmail } from "@aperturs/email/emails/invite-user";
 
-import { prisma } from "~/server/db";
-import { resend } from "~/server/emails/resend";
-import {
+import type {
   InviteUserToOrganisation,
   sendInvitationViaEmailType,
 } from "./organisation-types";
+import { prisma } from "~/server/db";
+import { resend } from "~/server/emails/resend";
+import { addUserPrivateMetadata, removeUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 
 export async function getOrgnanisationTeams(orgId: string) {
   const res = await prisma.organizationUser.findMany({
@@ -14,6 +15,15 @@ export async function getOrgnanisationTeams(orgId: string) {
     },
     include: {
       user: true,
+    },
+  });
+  return res;
+}
+
+export async function removeUserFromOrganisation(orgUserId: string) {
+  const res = await prisma.organizationUser.delete({
+    where: {
+      id: orgUserId,
     },
   });
   return res;
@@ -117,6 +127,14 @@ export async function acceptInvite({
       clerkUserId: userId,
       role: role,
     },
+  });
+  await addUserPrivateMetadata({
+    organisations: [
+      {
+        orgId: orgId,
+        role: role,
+      },
+    ],
   });
   return {
     res,

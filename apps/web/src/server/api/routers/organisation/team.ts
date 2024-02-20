@@ -4,15 +4,23 @@ import { z } from "zod";
 
 import type { UserDetails } from "~/types/user-type";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { inviteUserToOrganisationSchema } from "~/server/functions/organisation/organisation-types";
+import {
+  changeUserRoleSchema,
+  inviteUserToOrganisationSchema,
+} from "~/server/functions/organisation/organisation-types";
 import {
   acceptInvite,
   getInviteDetails,
   getOrgnanisationTeams,
   inviteUserToOrganisation,
   rejectInvite,
+  removeUserFromOrganisation,
   sendInvitationViaEmail,
 } from "~/server/functions/organisation/teams";
+import {
+  changeUserRoleMetaData,
+  removeUserPrivateMetadata,
+} from "~/utils/actions/user-private-meta";
 
 export const OrganizationTeam = createTRPCRouter({
   getOrganisationTeams: protectedProcedure
@@ -40,12 +48,7 @@ export const OrganizationTeam = createTRPCRouter({
     }),
 
   changeUserRole: protectedProcedure
-    .input(
-      z.object({
-        orgUserId: z.string(),
-        newRole: z.enum(["ADMIN", "MEMBER", "EDITOR"]),
-      }),
-    )
+    .input(changeUserRoleSchema)
     .mutation(async ({ input, ctx }) => {
       const res = await ctx.prisma.organizationUser.update({
         where: {
@@ -55,7 +58,21 @@ export const OrganizationTeam = createTRPCRouter({
           role: input.newRole,
         },
       });
+      await changeUserRoleMetaData({
+        orgId: res.organizationId,
+        newRole: input.newRole,
+      });
       return res;
+    }),
+
+  removeUserFromOrganisation: protectedProcedure
+    .input(z.object({ orgUserId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const res = await removeUserFromOrganisation(input.orgUserId);
+      await removeUserPrivateMetadata({
+        orgId: res.organizationId,
+        role: res.role,
+      });
     }),
 
   inviteUserToOrganisation: protectedProcedure

@@ -55,5 +55,5 @@ export default async function handler(
   } else {
     console.log("no user object");
   }
-  return res.redirect("/settings");
+  return res.redirect("/socials");
 }

@@ -9,13 +9,15 @@ export const createOrganisationSchema = z.object({
 
 export type CreateOrganisation = z.infer<typeof createOrganisationSchema>;
 
+export const organisationRole = z.enum(["ADMIN", "EDITOR", "MEMBER", "OWNER"]);
+
 export const inviteUserToOrganisationSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   orgId: z.string(),
   inviterId: z.string(),
   inviterName: z.string(),
-  role: z.enum(["ADMIN", "EDITOR", "MEMBER"]),
+  role: organisationRole,
 });
 
 export type InviteUserToOrganisation = z.infer<
@@ -37,3 +39,17 @@ export const sendInvitationViaEmailSchema = z.object({
 export type sendInvitationViaEmailType = z.infer<
   typeof sendInvitationViaEmailSchema
 >;
+
+
+export const changeUserRoleSchema = z.object({
+  orgUserId: z.string(),
+  newRole: z.enum(["ADMIN", "MEMBER", "EDITOR"]),
+});
+
+export const changeUserRoleWithOrgIdSchema = changeUserRoleSchema.extend({
+  orgId: z.string(),
+}).omit({ orgUserId: true });
+
+export type ChangeUserRoleType = z.infer<typeof changeUserRoleSchema>;
+export type ChangeUserRoleWithOrgIdType = z.infer<
+  typeof changeUserRoleWithOrgIdSchema>
