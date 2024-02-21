@@ -9,6 +9,7 @@ export const privateMetaDataSchema = z.object({
       role: organisationRole,
     }),
   ),
+  currentPlan: z.enum(["FREE", "PRO", "PRO2", "PRO3"]),
   lsSubscriptionId: z.string().optional(),
   lsCustomerId: z.string().optional(),
   lsVariantId: z.number().optional(),
@@ -16,3 +17,9 @@ export const privateMetaDataSchema = z.object({
 });
 
 export type PrivateMetaData = z.infer<typeof privateMetaDataSchema>;
+
+export const publicMetaDataSchema = z.object({
+  currentPlan: z.enum(["FREE", "PRO", "PRO2", "PRO3"]),
+});
+
+export type PublicMetaData = z.infer<typeof publicMetaDataSchema>;

@@ -7,8 +7,8 @@ import type {
 import { prisma } from "~/server/db";
 import { resend } from "~/server/emails/resend";
 import {
-  addUserPrivateMetadata,
   removeUserPrivateMetadata,
+  updateUserPrivateMetadata,
 } from "~/utils/actions/user-private-meta";
 
 export async function getOrgnanisationTeams(orgId: string) {
@@ -28,6 +28,10 @@ export async function removeUserFromOrganisation(orgUserId: string) {
     where: {
       id: orgUserId,
     },
+  });
+  await removeUserPrivateMetadata({
+    orgId: res.organizationId,
+    role: res.role,
   });
   return res;
 }
@@ -70,9 +74,6 @@ export async function sendInvitationViaEmail({
     teamName: teamName,
     teamImage: teamImage,
     inviteUrl: `http://localhost:3000/invite/${invitationId}`,
-    inviteFromIp: "204.13.186.218",
-    inviteFromLocation: "São Paulo, Brazil",
-    appLogo: "/logo.svg",
   });
   const email = await resend.emails
     .send({
@@ -131,7 +132,7 @@ export async function acceptInvite({
       role: role,
     },
   });
-  await addUserPrivateMetadata({
+  await updateUserPrivateMetadata({
     organisations: [
       {
         orgId: orgId,

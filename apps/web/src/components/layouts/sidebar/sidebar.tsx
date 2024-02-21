@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -18,6 +19,7 @@ import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
+import { getUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
 import AccordianMenu from "./command-group";
@@ -118,6 +120,10 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
+  const { data: metadata } = useQuery(["getUserPrivateMetadata"], () =>
+    getUserPrivateMetadata(),
+  );
+
   return (
     <Sheet>
       <Card className="mt-2 flex w-full flex-col overflow-scroll p-4 shadow-md lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
@@ -158,36 +164,23 @@ export default function SideBar() {
             <hr className="border-blue-gray-50 my-2" />
             <BottomMenu bottomMenu={bottomMenu} />
           </>
-          <div className="flex w-full justify-center">
-            <ProfileButton />
-          </div>
-        </div>
-        {/* <AnimatePresence>
-          {isNavOpen && (
-            <motion.div
-              initial={{ height: 0 }}
-              animate={{ height: "auto" }}
-              exit={{ height: 0 }}
-              transition={{ duration: 0.5 }}
-              className="overflow-scroll"
-            >
-              <div>
-                <AccordianMenu accordanceMenuList={AccordanceMenuList} />
-                <hr className="border-blue-gray-50 my-2" />
-                <BottomMenu />
-              </div>
-            </motion.div>
+          {metadata && metadata.currentPlan !== "FREE" && (
+            <div className="flex w-full justify-center">
+              <ProfileButton />
+            </div>
           )}
-        </AnimatePresence> */}
+        </div>
         <SheetContent
           className={cn(
             "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
           )}
         >
           <div>
-            <div className="flex w-full justify-center">
-              <ProfileButton />
-            </div>
+            {metadata?.currentPlan !== "FREE" && (
+              <div className="flex w-full justify-center">
+                <ProfileButton />
+              </div>
+            )}
             <AccordianMenu accordanceMenuList={AccordanceMenuList} />
             <hr className="border-blue-gray-50 my-2" />
             <BottomMenu bottomMenu={bottomMenu} />
