@@ -72,8 +72,8 @@ model OrganizationInvites {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
-  @@unique([email, organizationId])
   @@index([organizationId])
+  @@index([email])
 }
 
 model OrganizationUser {
