@@ -23,9 +23,6 @@ interface InviteUserEmailProps {
   teamName: string;
   teamImage?: string;
   inviteUrl: string;
-  inviteFromIp?: string;
-  inviteFromLocation?: string;
-  appLogo: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -39,9 +36,6 @@ export const InviteUserEmail = ({
   teamName,
   teamImage,
   inviteUrl,
-  inviteFromIp,
-  inviteFromLocation,
-  appLogo,
 }: InviteUserEmailProps) => {
   const previewText = `Join ${invitedByName} on Aperturs `;
 
@@ -54,7 +48,7 @@ export const InviteUserEmail = ({
           <Container className="mx-auto my-[40px] max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
             <Section className="mt-[32px]">
               <Img
-                src={`${baseUrl}/static/vercel-logo.png`}
+                src={`https://app.aperturs.com/logo.svg`}
                 width="40"
                 height="37"
                 alt="Vercel"
@@ -115,14 +109,14 @@ export const InviteUserEmail = ({
               </Link>
             </Text>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
-            <Text className="text-[12px] leading-[24px] text-[#666666]">
+            {/* <Text className="text-[12px] leading-[24px] text-[#666666]">
               This invite was sent from{" "}
               <span className="text-black">{inviteFromIp}</span> located in{" "}
               <span className="text-black">{inviteFromLocation}</span>. If you
               were not expecting this invitation, you can ignore this email. If
               you are concerned about your account&apos;s safety, please reply
               to this email to get in touch with us.
-            </Text>
+            </Text> */}
           </Container>
         </Body>
       </Tailwind>
@@ -132,15 +126,12 @@ export const InviteUserEmail = ({
 
 InviteUserEmail.PreviewProps = {
   userName: "Alan Turing",
-  appLogo: `${baseUrl}/static/vercel-logo.png`,
-  userImage: `${baseUrl}/static/vercel-user.png`,
+  userImage: `https://app.aperturs.com/user.png`,
   invitedByName: "Alan",
   invitedByEmail: "alan.turing@example.com",
-  teamName: "Aperturs",
-  teamImage: `${baseUrl}/static/vercel-team.png`,
+  teamName: "viaprize",
+  teamImage: `https://app.aperturs.com/profile.jpeg`,
   inviteUrl: "http://localhost:3000/invite/1234",
-  inviteFromIp: "204.13.186.218",
-  inviteFromLocation: "São Paulo, Brazil",
 } as InviteUserEmailProps;
 
 export default InviteUserEmail;

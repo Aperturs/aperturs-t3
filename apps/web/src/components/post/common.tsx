@@ -12,19 +12,17 @@ import { SocialType } from "~/types/post-enums";
 interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 export const SimpleButton = ({
   text,
   isLoading,
+  disabled,
   ...buttonProps
 }: SimpleButtonProps) => {
   return (
-    <Button
-      {...buttonProps}
-      disabled={isLoading ?? buttonProps.disabled}
-      className="py-6 font-normal"
-    >
+    <Button {...buttonProps} disabled={disabled} className="py-6 font-normal">
       {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
       {text}
     </Button>

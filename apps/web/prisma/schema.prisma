@@ -73,6 +73,7 @@ model OrganizationInvites {
   updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
+  @@index([email])
 }
 
 model OrganizationUser {
@@ -85,6 +86,7 @@ model OrganizationUser {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 
+  @@unique([organizationId, clerkUserId])
   @@index([clerkUserId])
   @@index([organizationId])
 }
@@ -148,6 +150,7 @@ model GithubToken {
   Organization                 Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   organizationLsSubscriptionId String?
 
+  @@unique([clerkUserId, organizationId, profileId])
   @@index([clerkUserId])
   @@index([id])
   @@index([organizationId])

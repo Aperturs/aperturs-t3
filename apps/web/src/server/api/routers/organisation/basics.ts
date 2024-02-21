@@ -6,6 +6,7 @@ import {
   getUserOrganisations,
 } from "~/server/functions/organisation/main";
 import { createOrganisationSchema } from "~/server/functions/organisation/organisation-types";
+import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { limitWrapper } from "../../helpers/limitWrapper";
 
 export const organisationBasic = createTRPCRouter({
@@ -22,13 +23,13 @@ export const organisationBasic = createTRPCRouter({
         "organisation",
       );
       const orgId = res.id;
-      await clerkClient.users.updateUserMetadata(ctx.currentUser, {
-        privateMetadata: {
-          organisation: {
-            id: orgId,
+      await updateUserPrivateMetadata({
+        organisations: [
+          {
+            orgId: orgId,
             role: "OWNER",
           },
-        },
+        ],
       });
       return res;
     }),

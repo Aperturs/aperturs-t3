@@ -1,11 +1,15 @@
 import { InviteUserEmail } from "@aperturs/email/emails/invite-user";
 
-import { prisma } from "~/server/db";
-import { resend } from "~/server/emails/resend";
-import {
+import type {
   InviteUserToOrganisation,
   sendInvitationViaEmailType,
 } from "./organisation-types";
+import { prisma } from "~/server/db";
+import { resend } from "~/server/emails/resend";
+import {
+  removeUserPrivateMetadata,
+  updateUserPrivateMetadata,
+} from "~/utils/actions/user-private-meta";
 
 export async function getOrgnanisationTeams(orgId: string) {
   const res = await prisma.organizationUser.findMany({
@@ -15,6 +19,19 @@ export async function getOrgnanisationTeams(orgId: string) {
     include: {
       user: true,
     },
+  });
+  return res;
+}
+
+export async function removeUserFromOrganisation(orgUserId: string) {
+  const res = await prisma.organizationUser.delete({
+    where: {
+      id: orgUserId,
+    },
+  });
+  await removeUserPrivateMetadata({
+    orgId: res.organizationId,
+    role: res.role,
   });
   return res;
 }
@@ -57,14 +74,11 @@ export async function sendInvitationViaEmail({
     teamName: teamName,
     teamImage: teamImage,
     inviteUrl: `http://localhost:3000/invite/${invitationId}`,
-    inviteFromIp: "204.13.186.218",
-    inviteFromLocation: "São Paulo, Brazil",
-    appLogo: "/logo.svg",
   });
   const email = await resend.emails
     .send({
       to: toEmail,
-      from: "Swaraj <rajswaraj.r@gmail.com>",
+      from: "Aperturs <noreply@aperturs.com>",
       react: reactSendEmail,
       subject: `You have been invited to join ${teamName} on Aperturs`,
     })
@@ -117,6 +131,14 @@ export async function acceptInvite({
       clerkUserId: userId,
       role: role,
     },
+  });
+  await updateUserPrivateMetadata({
+    organisations: [
+      {
+        orgId: orgId,
+        role: role,
+      },
+    ],
   });
   return {
     res,
