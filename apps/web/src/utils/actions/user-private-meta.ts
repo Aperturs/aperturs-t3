@@ -32,6 +32,10 @@ export async function updateUserPrivateMetadata(
       lsCustomerId: data.lsCustomerId,
       lsVariantId: data.lsVariantId,
       lsCurrentPeriodEnd: data.lsCurrentPeriodEnd,
+      currentPlan: data.currentPlan,
+    },
+    publicMetadata: {
+      currentPlan: data.currentPlan,
     },
   });
 }

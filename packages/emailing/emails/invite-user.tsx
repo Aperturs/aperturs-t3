@@ -23,9 +23,6 @@ interface InviteUserEmailProps {
   teamName: string;
   teamImage?: string;
   inviteUrl: string;
-  inviteFromIp?: string;
-  inviteFromLocation?: string;
-  appLogo: string;
 }
 
 const baseUrl = process.env.VERCEL_URL
@@ -39,8 +36,6 @@ export const InviteUserEmail = ({
   teamName,
   teamImage,
   inviteUrl,
-  inviteFromIp,
-  inviteFromLocation,
 }: InviteUserEmailProps) => {
   const previewText = `Join ${invitedByName} on Aperturs `;
 
@@ -131,15 +126,12 @@ export const InviteUserEmail = ({
 
 InviteUserEmail.PreviewProps = {
   userName: "Alan Turing",
-  appLogo: `${baseUrl}/static/vercel-logo.png`,
-  userImage: `${baseUrl}/static/vercel-user.png`,
+  userImage: `https://app.aperturs.com/user.png`,
   invitedByName: "Alan",
   invitedByEmail: "alan.turing@example.com",
-  teamName: "Aperturs",
-  teamImage: `${baseUrl}/static/vercel-team.png`,
+  teamName: "viaprize",
+  teamImage: `https://app.aperturs.com/profile.jpeg`,
   inviteUrl: "http://localhost:3000/invite/1234",
-  inviteFromIp: "204.13.186.218",
-  inviteFromLocation: "São Paulo, Brazil",
 } as InviteUserEmailProps;
 
 export default InviteUserEmail;

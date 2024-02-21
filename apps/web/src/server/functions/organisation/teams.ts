@@ -74,9 +74,6 @@ export async function sendInvitationViaEmail({
     teamName: teamName,
     teamImage: teamImage,
     inviteUrl: `http://localhost:3000/invite/${invitationId}`,
-    inviteFromIp: "204.13.186.218",
-    inviteFromLocation: "São Paulo, Brazil",
-    appLogo: "/logo.svg",
   });
   const email = await resend.emails
     .send({

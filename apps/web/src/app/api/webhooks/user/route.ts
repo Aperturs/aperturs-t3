@@ -82,6 +82,7 @@ async function handler(request: Request) {
     }
     await updateUserPrivateMetadata({
       organisations: [],
+      currentPlan: "FREE",
     });
     const details = {
       primaryEmail: emailObject.email_address,
