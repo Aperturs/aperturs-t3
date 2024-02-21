@@ -1,10 +1,7 @@
-import type { ReactElement } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
-import Layout from "~/components/layouts/final-layouts/personal-layout";
-import ProjectLayout from "~/components/layouts/projectnavbar/projectLayout";
 import QuestionCard from "~/components/projects/project/context/questionCard";
 import { api } from "~/utils/api";
 
@@ -161,18 +158,18 @@ const ProjectContext = () => {
   );
 };
 
-ProjectContext.getLayout = function getLayout(page: ReactElement) {
-  return (
-    <Layout>
-      <ProjectLayout
-        params={{
-          id: "",
-        }}
-      >
-        {page}
-      </ProjectLayout>
-    </Layout>
-  );
-};
+// ProjectContext.getLayout = function getLayout(page: ReactElement) {
+//   return (
+//     <Layout>
+//       <ProjectLayout
+//         params={{
+//           id: "",
+//         }}
+//       >
+//         {page}
+//       </ProjectLayout>
+//     </Layout>
+//   );
+// };
 
 export default ProjectContext;

@@ -23,14 +23,6 @@ export const organisationBasic = createTRPCRouter({
         "organisation",
       );
       const orgId = res.id;
-      await clerkClient.users.updateUserMetadata(ctx.currentUser, {
-        privateMetadata: {
-          organisation: {
-            id: orgId,
-            role: "OWNER",
-          },
-        },
-      });
       await updateUserPrivateMetadata({
         organisations: [
           {

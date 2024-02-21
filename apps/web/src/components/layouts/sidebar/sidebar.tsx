@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import {
   Bars2Icon,
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -19,7 +19,7 @@ import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
-import type { PublicMetaData } from "~/utils/actions/user-private-metadata";
+import { getUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
 import AccordianMenu from "./command-group";
@@ -120,9 +120,9 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
-  const { user } = useUser();
-
-  const metadata = user?.publicMetadata as PublicMetaData;
+  const { data: metadata } = useQuery(["getUserPrivateMetadata"], () =>
+    getUserPrivateMetadata(),
+  );
 
   return (
     <Sheet>
@@ -164,7 +164,7 @@ export default function SideBar() {
             <hr className="border-blue-gray-50 my-2" />
             <BottomMenu bottomMenu={bottomMenu} />
           </>
-          {metadata.currentPlan !== "FREE" && (
+          {metadata && metadata.currentPlan !== "FREE" && (
             <div className="flex w-full justify-center">
               <ProfileButton />
             </div>
@@ -176,7 +176,7 @@ export default function SideBar() {
           )}
         >
           <div>
-            {metadata.currentPlan !== "FREE" && (
+            {metadata?.currentPlan !== "FREE" && (
               <div className="flex w-full justify-center">
                 <ProfileButton />
               </div>
