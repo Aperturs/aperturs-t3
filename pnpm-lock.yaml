@@ -243,6 +243,9 @@ importers:
       drizzle-orm:
         specifier: ^0.29.3
         version: 0.29.3(pg@8.11.3)(postgres@3.4.3)
+      nanoid:
+        specifier: ^5.0.4
+        version: 5.0.5
       pg:
         specifier: ^8.11.3
         version: 8.11.3
@@ -257,7 +260,7 @@ importers:
         specifier: workspace:^0.1.0
         version: link:../../tooling/prettier
       '@aperturs/tsconfig':
-        specifier: workspace:^0.1.0
+        specifier: workspace:*
         version: link:../../tooling/typescript
       dotenv-cli:
         specifier: ^7.3.0

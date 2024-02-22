@@ -1,28 +1,57 @@
 import { sql } from "drizzle-orm";
 import {
-  datetime,
+  date,
   index,
   json,
-  mysqlEnum,
-  mysqlTable,
+  pgEnum,
+  pgTable,
   primaryKey,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
+import { nanoid } from "nanoid";
 
-export const post = mysqlTable(
+import { organization } from "./organisation";
+import { project } from "./project";
+import { user } from "./user";
+
+const postStatusEnum = pgEnum("postStatus", [
+  "PENDING",
+  "ACCEPTED",
+  "REJECTED",
+  "CANCELLED",
+]);
+
+export const post = pgTable(
   "Post",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    clerkUserId: varchar("clerkUserId", { length: 191 }),
-    status: mysqlEnum("status", ["SAVED", "PUBLISHED", "SCHEDULED"]).notNull(),
-    scheduledAt: datetime("scheduledAt", { mode: "string", fsp: 3 }),
-    organizationId: varchar("organizationId", { length: 191 }),
+    id: varchar("id", { length: 191 })
+      .primaryKey()
+      .$defaultFn(() => nanoid(12)),
+    clerkUserId: varchar("clerkUserId", { length: 256 }).references(
+      () => user.clerkUserId,
+      {
+        onDelete: "cascade",
+      },
+    ),
+    status: postStatusEnum("postStatus").notNull(),
+    scheduledAt: date("scheduledAt", { mode: "string" }),
+    organizationId: varchar("organizationId", { length: 191 }).references(
+      () => organization.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
     content: json("content").notNull(),
-    projectId: varchar("projectId", { length: 191 }),
-    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+    projectId: varchar("projectId", { length: 191 }).references(
+      () => project.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
+    createdAt: date("createdAt", { mode: "string" })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
   },
   (table) => {
     return {

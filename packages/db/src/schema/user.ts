@@ -15,7 +15,7 @@ const currentPlanEnum = pgEnum("currentPlan", ["FREE", "PRO", "PRO2", "PRO3"]);
 export const user = pgTable(
   "User",
   {
-    clerkUserId: varchar("clerkUserId", { length: 256 }).notNull(),
+    clerkUserId: varchar("clerkUserId", { length: 256 }).primaryKey(),
     userDetails: json("userDetails"),
     currentPlan: currentPlanEnum("currentPlan").default("FREE").notNull(),
     createdAt: date("createdAt", { mode: "string" })
@@ -30,7 +30,6 @@ export const user = pgTable(
   (table) => {
     return {
       clerkUserIdIdx: index("User_clerkUserId_idx").on(table.clerkUserId),
-      userClerkUserIdKey: unique().on(table.clerkUserId),
       userLsCustomerIdKey: unique().on(table.lsCustomerId),
       userLsSubscriptionIdKey: unique().on(table.lsSubscriptionId),
     };
@@ -40,7 +39,9 @@ export const user = pgTable(
 export const userUsage = pgTable(
   "UserUsage",
   {
-    clerkUserId: varchar("clerkUserId", { length: 256 }).notNull(),
+    clerkUserId: varchar("clerkUserId", { length: 256 })
+      .primaryKey()
+      .references(() => user.clerkUserId, { onDelete: "cascade" }),
     scheduledposts: integer("scheduledposts").default(15).notNull(),
     scheduledtime: integer("scheduledtime").default(10).notNull(),
     projects: integer("projects").default(3).notNull(),
@@ -57,7 +58,6 @@ export const userUsage = pgTable(
   (table) => {
     return {
       clerkUserIdIdx: index("UserUsage_clerkUserId_idx").on(table.clerkUserId),
-      userUsageClerkUserIdKey: unique().on(table.clerkUserId),
     };
   },
 );
