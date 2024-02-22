@@ -1,7 +1,11 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { date, index, pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
+import { idea } from "./idea";
+import { post } from "./post";
+import { project } from "./project";
+import { githubToken, linkedInToken, twitterToken } from "./tokens";
 import { user } from "./user";
 
 export const organization = pgTable(
@@ -35,6 +39,24 @@ export const organization = pgTable(
   },
 );
 
+export const organisationRelations = relations(
+  organization,
+  ({ many, one }) => ({
+    owner: one(user, {
+      fields: [organization.clerkUserId],
+      references: [user.clerkUserId],
+    }),
+    invites: many(organizationInvites),
+    members: many(organizationUser),
+    orgCreatedProjects: many(project),
+    orgCreatedIdeas: many(idea),
+    orgCreatedPosts: many(post),
+    orgTwitterAccounts: many(twitterToken),
+    orgLinkedinAccounts: many(linkedInToken),
+    orgGithubAccounts: many(githubToken),
+  }),
+);
+
 const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
 const statusEnum = pgEnum("status", [
   "PENDING",
@@ -58,7 +80,9 @@ export const organizationInvites = pgTable(
       }),
     role: roleEnum("role").notNull(),
     status: statusEnum("status").notNull(),
-    inviterClerkId: varchar("inviterClerkId", { length: 256 }).notNull(),
+    inviterClerkId: varchar("inviterClerkId", { length: 256 })
+      .notNull()
+      .references(() => user.clerkUserId),
     inviterName: varchar("inviterName", { length: 256 }).notNull(),
     createdAt: date("createdAt", { mode: "string" })
       .default(sql`CURRENT_TIMESTAMP`)
@@ -72,6 +96,20 @@ export const organizationInvites = pgTable(
       ),
     };
   },
+);
+
+export const organizationInvitesRelations = relations(
+  organizationInvites,
+  ({ one }) => ({
+    organization: one(organization, {
+      fields: [organizationInvites.organizationId],
+      references: [organization.id],
+    }),
+    invitedBy: one(user, {
+      fields: [organizationInvites.inviterClerkId],
+      references: [user.clerkUserId],
+    }),
+  }),
 );
 
 export const organizationUser = pgTable(
@@ -104,4 +142,18 @@ export const organizationUser = pgTable(
       ),
     };
   },
+);
+
+export const organizationUserRelations = relations(
+  organizationUser,
+  ({ one }) => ({
+    organization: one(organization, {
+      fields: [organizationUser.organizationId],
+      references: [organization.id],
+    }),
+    user: one(user, {
+      fields: [organizationUser.clerkUserId],
+      references: [user.clerkUserId],
+    }),
+  }),
 );

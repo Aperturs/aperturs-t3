@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   date,
   index,
@@ -65,3 +65,18 @@ export const post = pgTable(
     };
   },
 );
+
+export const postRelations = relations(post, ({ one }) => ({
+  organization: one(organization, {
+    fields: [post.organizationId],
+    references: [organization.id],
+  }),
+  project: one(project, {
+    fields: [post.projectId],
+    references: [project.id],
+  }),
+  user: one(user, {
+    fields: [post.clerkUserId],
+    references: [user.clerkUserId],
+  }),
+}));
