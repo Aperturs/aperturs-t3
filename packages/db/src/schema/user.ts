@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   date,
   index,
@@ -9,6 +9,12 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
+
+import { idea } from "./idea";
+import { organization, organizationUser } from "./organisation";
+import { post } from "./post";
+import { project } from "./project";
+import { githubToken, linkedInToken, twitterToken } from "./tokens";
 
 const currentPlanEnum = pgEnum("currentPlan", ["FREE", "PRO", "PRO2", "PRO3"]);
 
@@ -35,6 +41,21 @@ export const user = pgTable(
     };
   },
 );
+
+export const userRalations = relations(user, ({ one, many }) => ({
+  userUsage: one(userUsage, {
+    fields: [user.clerkUserId],
+    references: [userUsage.clerkUserId],
+  }),
+  userOwnedOrganisation: many(organization),
+  userJoinedOrganisation: many(organizationUser),
+  userCreatedProjects: many(project),
+  userCreatedIdeas: many(idea),
+  userCreatedPosts: many(post),
+  userTwitterAccounts: many(twitterToken),
+  userLinkedinAccounts: many(linkedInToken),
+  userGithubAccounts: many(githubToken),
+}));
 
 export const userUsage = pgTable(
   "UserUsage",

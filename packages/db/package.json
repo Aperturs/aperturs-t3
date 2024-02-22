@@ -12,6 +12,7 @@
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
     "push": "pnpm with-env drizzle-kit push:mysql",
+    "migration:generate": "drizzle-kit generate:pg --schema=./src/index.ts",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
