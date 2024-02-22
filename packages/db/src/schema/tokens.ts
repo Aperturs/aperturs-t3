@@ -3,7 +3,6 @@ import {
   date,
   index,
   pgTable,
-  primaryKey,
   text,
   unique,
   varchar,
@@ -51,10 +50,6 @@ export const githubToken = pgTable(
       organizationIdIdx: index("GithubToken_organizationId_idx").on(
         table.organizationId,
       ),
-      githubTokenId: primaryKey({
-        columns: [table.id],
-        name: "GithubToken_id",
-      }),
       githubTokenAccessTokenKey: unique("GithubToken_access_token_key").on(
         table.accessToken,
       ),
@@ -101,10 +96,6 @@ export const linkedInToken = pgTable(
         table.organizationId,
       ),
       profileIdIdx: index("LinkedInToken_profileId_idx").on(table.profileId),
-      linkedInTokenId: primaryKey({
-        columns: [table.id],
-        name: "LinkedInToken_id",
-      }),
     };
   },
 );
@@ -138,15 +129,10 @@ export const twitterToken = pgTable(
       clerkUserIdIdx: index("TwitterToken_clerkUserId_idx").on(
         table.clerkUserId,
       ),
-      idIdx: index("TwitterToken_id_idx").on(table.id),
       organizationIdIdx: index("TwitterToken_organizationId_idx").on(
         table.organizationId,
       ),
       profileIdIdx: index("TwitterToken_profileId_idx").on(table.profileId),
-      twitterTokenId: primaryKey({
-        columns: [table.id],
-        name: "TwitterToken_id",
-      }),
       twitterTokenAccessTokenKey: unique("TwitterToken_access_token_key").on(
         table.accessToken,
       ),

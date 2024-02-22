@@ -1,12 +1,40 @@
 {
   "version": "5",
-  "dialect": "mysql",
+  "dialect": "pg",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1708094544292,
-      "tag": "0000_empty_shadowcat",
+      "when": 1708615679951,
+      "tag": "0000_complex_menace",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1708615834303,
+      "tag": "0001_broad_doctor_doom",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1708615912790,
+      "tag": "0002_tan_blackheart",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1708616129501,
+      "tag": "0003_faulty_lord_hawal",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1708616185971,
+      "tag": "0004_supreme_thor",
       "breakpoints": true
     }
   ]

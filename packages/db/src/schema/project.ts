@@ -1,12 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import {
-  date,
-  index,
-  pgTable,
-  primaryKey,
-  unique,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { date, index, pgTable, varchar } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 import { organization } from "./organisation";
@@ -43,12 +36,9 @@ export const project = pgTable(
   (table) => {
     return {
       clerkUserIdIdx: index("Project_clerkUserId_idx").on(table.clerkUserId),
-      idIdx: index("Project_id_idx").on(table.id),
       organizationIdIdx: index("Project_organizationId_idx").on(
         table.organizationId,
       ),
-      projectId: primaryKey({ columns: [table.id], name: "Project_id" }),
-      projectRepoUrlKey: unique("Project_repoUrl_key").on(table.repoUrl),
     };
   },
 );

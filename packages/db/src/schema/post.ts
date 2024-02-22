@@ -5,7 +5,6 @@ import {
   json,
   pgEnum,
   pgTable,
-  primaryKey,
   varchar,
 } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
@@ -14,7 +13,7 @@ import { organization } from "./organisation";
 import { project } from "./project";
 import { user } from "./user";
 
-const postStatusEnum = pgEnum("postStatus", [
+export const postStatusEnum = pgEnum("postStatus", [
   "PENDING",
   "ACCEPTED",
   "REJECTED",
@@ -55,13 +54,7 @@ export const post = pgTable(
   },
   (table) => {
     return {
-      clerkUserIdIdx: index("Post_clerkUserId_idx").on(table.clerkUserId),
       idIdx: index("Post_id_idx").on(table.id),
-      organizationIdIdx: index("Post_organizationId_idx").on(
-        table.organizationId,
-      ),
-      projectIdIdx: index("Post_projectId_idx").on(table.projectId),
-      postId: primaryKey({ columns: [table.id], name: "Post_id" }),
     };
   },
 );

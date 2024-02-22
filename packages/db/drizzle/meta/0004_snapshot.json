@@ -1,6 +1,6 @@
 {
-  "id": "9e28c37d-6e7d-4c51-a907-7ea7de88ea40",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "09e80be6-e5ae-4365-bdd7-421b35e4b4a4",
+  "prevId": "fa4308b3-8c3d-47a3-bf0a-3b4c771c777d",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -78,19 +78,8 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Idea_id": {
-          "name": "Idea_id",
-          "columns": ["id"]
-        }
-      },
-      "uniqueConstraints": {
-        "Idea_clerkUserId_key": {
-          "name": "Idea_clerkUserId_key",
-          "nullsNotDistinct": false,
-          "columns": ["clerkUserId"]
-        }
-      }
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "Organization": {
       "name": "Organization",
@@ -387,24 +376,9 @@
         }
       },
       "indexes": {
-        "Post_clerkUserId_idx": {
-          "name": "Post_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
-        },
         "Post_id_idx": {
           "name": "Post_id_idx",
           "columns": ["id"],
-          "isUnique": false
-        },
-        "Post_organizationId_idx": {
-          "name": "Post_organizationId_idx",
-          "columns": ["organizationId"],
-          "isUnique": false
-        },
-        "Post_projectId_idx": {
-          "name": "Post_projectId_idx",
-          "columns": ["projectId"],
           "isUnique": false
         }
       },
@@ -437,12 +411,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Post_id": {
-          "name": "Post_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "Project": {
@@ -519,11 +488,6 @@
           "columns": ["clerkUserId"],
           "isUnique": false
         },
-        "Project_id_idx": {
-          "name": "Project_id_idx",
-          "columns": ["id"],
-          "isUnique": false
-        },
         "Project_organizationId_idx": {
           "name": "Project_organizationId_idx",
           "columns": ["organizationId"],
@@ -550,19 +514,8 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Project_id": {
-          "name": "Project_id",
-          "columns": ["id"]
-        }
-      },
-      "uniqueConstraints": {
-        "Project_repoUrl_key": {
-          "name": "Project_repoUrl_key",
-          "nullsNotDistinct": false,
-          "columns": ["repoUrl"]
-        }
-      }
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "GithubToken": {
       "name": "GithubToken",
@@ -673,12 +626,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "GithubToken_id": {
-          "name": "GithubToken_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "GithubToken_access_token_key": {
           "name": "GithubToken_access_token_key",
@@ -800,12 +748,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "LinkedInToken_id": {
-          "name": "LinkedInToken_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "TwitterToken": {
@@ -891,11 +834,6 @@
           "columns": ["clerkUserId"],
           "isUnique": false
         },
-        "TwitterToken_id_idx": {
-          "name": "TwitterToken_id_idx",
-          "columns": ["id"],
-          "isUnique": false
-        },
         "TwitterToken_organizationId_idx": {
           "name": "TwitterToken_organizationId_idx",
           "columns": ["organizationId"],
@@ -927,12 +865,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "TwitterToken_id": {
-          "name": "TwitterToken_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "TwitterToken_access_token_key": {
           "name": "TwitterToken_access_token_key",
@@ -1007,13 +940,7 @@
           "notNull": false
         }
       },
-      "indexes": {
-        "User_clerkUserId_idx": {
-          "name": "User_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -1109,13 +1036,7 @@
           "notNull": true
         }
       },
-      "indexes": {
-        "UserUsage_clerkUserId_idx": {
-          "name": "UserUsage_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "UserUsage_clerkUserId_User_clerkUserId_fk": {
           "name": "UserUsage_clerkUserId_User_clerkUserId_fk",
@@ -1131,7 +1052,44 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
+  "enums": {
+    "role": {
+      "name": "role",
+      "values": {
+        "OWNER": "OWNER",
+        "ADMIN": "ADMIN",
+        "EDITOR": "EDITOR",
+        "MEMBER": "MEMBER"
+      }
+    },
+    "status": {
+      "name": "status",
+      "values": {
+        "PENDING": "PENDING",
+        "ACCEPTED": "ACCEPTED",
+        "REJECTED": "REJECTED",
+        "CANCELLED": "CANCELLED"
+      }
+    },
+    "postStatus": {
+      "name": "postStatus",
+      "values": {
+        "PENDING": "PENDING",
+        "ACCEPTED": "ACCEPTED",
+        "REJECTED": "REJECTED",
+        "CANCELLED": "CANCELLED"
+      }
+    },
+    "currentPlan": {
+      "name": "currentPlan",
+      "values": {
+        "FREE": "FREE",
+        "PRO": "PRO",
+        "PRO2": "PRO2",
+        "PRO3": "PRO3"
+      }
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},

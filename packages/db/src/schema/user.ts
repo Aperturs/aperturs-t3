@@ -1,7 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
   date,
-  index,
   integer,
   json,
   pgEnum,
@@ -16,7 +15,12 @@ import { post } from "./post";
 import { project } from "./project";
 import { githubToken, linkedInToken, twitterToken } from "./tokens";
 
-const currentPlanEnum = pgEnum("currentPlan", ["FREE", "PRO", "PRO2", "PRO3"]);
+export const currentPlanEnum = pgEnum("currentPlan", [
+  "FREE",
+  "PRO",
+  "PRO2",
+  "PRO3",
+]);
 
 export const user = pgTable(
   "User",
@@ -35,7 +39,6 @@ export const user = pgTable(
   },
   (table) => {
     return {
-      clerkUserIdIdx: index("User_clerkUserId_idx").on(table.clerkUserId),
       userLsCustomerIdKey: unique().on(table.lsCustomerId),
       userLsSubscriptionIdKey: unique().on(table.lsSubscriptionId),
     };
@@ -57,28 +60,20 @@ export const userRalations = relations(user, ({ one, many }) => ({
   userGithubAccounts: many(githubToken),
 }));
 
-export const userUsage = pgTable(
-  "UserUsage",
-  {
-    clerkUserId: varchar("clerkUserId", { length: 256 })
-      .primaryKey()
-      .references(() => user.clerkUserId, { onDelete: "cascade" }),
-    scheduledposts: integer("scheduledposts").default(15).notNull(),
-    scheduledtime: integer("scheduledtime").default(10).notNull(),
-    projects: integer("projects").default(3).notNull(),
-    socialaccounts: integer("socialaccounts").default(4).notNull(),
-    generatedposts: integer("generatedposts").default(50).notNull(),
-    drafts: integer("drafts").default(15).notNull(),
-    ideas: integer("ideas").default(15).notNull(),
-    organisation: integer("organisation").default(0).notNull(),
-    createdAt: date("createdAt", { mode: "string" })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
-  },
-  (table) => {
-    return {
-      clerkUserIdIdx: index("UserUsage_clerkUserId_idx").on(table.clerkUserId),
-    };
-  },
-);
+export const userUsage = pgTable("UserUsage", {
+  clerkUserId: varchar("clerkUserId", { length: 256 })
+    .primaryKey()
+    .references(() => user.clerkUserId, { onDelete: "cascade" }),
+  scheduledposts: integer("scheduledposts").default(15).notNull(),
+  scheduledtime: integer("scheduledtime").default(10).notNull(),
+  projects: integer("projects").default(3).notNull(),
+  socialaccounts: integer("socialaccounts").default(4).notNull(),
+  generatedposts: integer("generatedposts").default(50).notNull(),
+  drafts: integer("drafts").default(15).notNull(),
+  ideas: integer("ideas").default(15).notNull(),
+  organisation: integer("organisation").default(0).notNull(),
+  createdAt: date("createdAt", { mode: "string" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+});

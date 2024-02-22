@@ -11,13 +11,14 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
-    "push": "pnpm with-env drizzle-kit push:mysql",
-    "migration:generate": "drizzle-kit generate:pg --schema=./src/index.ts",
+    "push": "pnpm with-env drizzle-kit push:pg",
+    "migration:generate": "drizzle-kit generate:pg",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "dotenv": "^16.4.5",
     "drizzle-orm": "^0.29.3",
     "nanoid": "^5.0.4",
     "pg": "^8.11.3",

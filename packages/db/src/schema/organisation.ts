@@ -8,6 +8,14 @@ import { project } from "./project";
 import { githubToken, linkedInToken, twitterToken } from "./tokens";
 import { user } from "./user";
 
+export const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
+export const statusEnum = pgEnum("status", [
+  "PENDING",
+  "ACCEPTED",
+  "REJECTED",
+  "CANCELLED",
+]);
+
 export const organization = pgTable(
   "Organization",
   {
@@ -56,14 +64,6 @@ export const organisationRelations = relations(
     orgGithubAccounts: many(githubToken),
   }),
 );
-
-const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
-const statusEnum = pgEnum("status", [
-  "PENDING",
-  "ACCEPTED",
-  "REJECTED",
-  "CANCELLED",
-]);
 
 export const organizationInvites = pgTable(
   "OrganizationInvites",

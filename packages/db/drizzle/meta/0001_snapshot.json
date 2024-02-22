@@ -1,6 +1,6 @@
 {
-  "id": "9e28c37d-6e7d-4c51-a907-7ea7de88ea40",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f1632027-a337-43ee-80e5-aeed1b35ee3b",
+  "prevId": "9e28c37d-6e7d-4c51-a907-7ea7de88ea40",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -1131,7 +1131,44 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
+  "enums": {
+    "role": {
+      "name": "role",
+      "values": {
+        "OWNER": "OWNER",
+        "ADMIN": "ADMIN",
+        "EDITOR": "EDITOR",
+        "MEMBER": "MEMBER"
+      }
+    },
+    "status": {
+      "name": "status",
+      "values": {
+        "PENDING": "PENDING",
+        "ACCEPTED": "ACCEPTED",
+        "REJECTED": "REJECTED",
+        "CANCELLED": "CANCELLED"
+      }
+    },
+    "postStatus": {
+      "name": "postStatus",
+      "values": {
+        "PENDING": "PENDING",
+        "ACCEPTED": "ACCEPTED",
+        "REJECTED": "REJECTED",
+        "CANCELLED": "CANCELLED"
+      }
+    },
+    "currentPlan": {
+      "name": "currentPlan",
+      "values": {
+        "FREE": "FREE",
+        "PRO": "PRO",
+        "PRO2": "PRO2",
+        "PRO3": "PRO3"
+      }
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},
