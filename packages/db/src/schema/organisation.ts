@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { date, index, pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
+import { timestamp, index, pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 import { idea } from "./idea";
@@ -15,6 +15,7 @@ export const statusEnum = pgEnum("status", [
   "REJECTED",
   "CANCELLED",
 ]);
+
 
 export const organization = pgTable(
   "Organization",
@@ -33,10 +34,10 @@ export const organization = pgTable(
     category: varchar("category", { length: 256 })
       .default("personal")
       .notNull(),
-    createdAt: date("createdAt", { mode: "string" })
-      .default(sql`CURRENT_TIMESTAMP`)
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+      .defaultNow()
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", {precision: 6, withTimezone: true }).notNull(),
   },
   (table) => {
     return {
@@ -46,6 +47,10 @@ export const organization = pgTable(
     };
   },
 );
+
+export type organisationInsert = typeof organization.$inferInsert;
+export type organisationSelect = typeof organization.$inferSelect;
+
 
 export const organisationRelations = relations(
   organization,
@@ -84,10 +89,10 @@ export const organizationInvites = pgTable(
       .notNull()
       .references(() => user.clerkUserId),
     inviterName: varchar("inviterName", { length: 256 }).notNull(),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
   },
   (table) => {
     return {
@@ -97,6 +102,9 @@ export const organizationInvites = pgTable(
     };
   },
 );
+
+export type organizationInvitesInsert = typeof organizationInvites.$inferInsert;
+export type organizationInvitesSelect = typeof organizationInvites.$inferSelect;
 
 export const organizationInvitesRelations = relations(
   organizationInvites,
@@ -111,6 +119,7 @@ export const organizationInvitesRelations = relations(
     }),
   }),
 );
+
 
 export const organizationUser = pgTable(
   "OrganizationUser",
@@ -127,10 +136,10 @@ export const organizationUser = pgTable(
     role: pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"])(
       "role",
     ).notNull(),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
   },
   (table) => {
     return {
@@ -143,6 +152,9 @@ export const organizationUser = pgTable(
     };
   },
 );
+
+export type organizationUserInsert = typeof organizationUser.$inferInsert;
+export type organizationUserSelect = typeof organizationUser.$inferSelect;
 
 export const organizationUserRelations = relations(
   organizationUser,

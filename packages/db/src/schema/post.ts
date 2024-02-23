@@ -1,10 +1,10 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  date,
   index,
   json,
   pgEnum,
   pgTable,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
@@ -33,7 +33,7 @@ export const post = pgTable(
       },
     ),
     status: postStatusEnum("postStatus").notNull(),
-    scheduledAt: date("scheduledAt", { mode: "string" }),
+    scheduledAt: timestamp("scheduledAt", { precision: 6, withTimezone: true }),
     organizationId: varchar("organizationId", { length: 191 }).references(
       () => organization.id,
       {
@@ -47,10 +47,13 @@ export const post = pgTable(
         onDelete: "cascade",
       },
     ),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {
@@ -58,6 +61,8 @@ export const post = pgTable(
     };
   },
 );
+
+export type PostInsert = typeof post.$inferInsert;
 
 export const postRelations = relations(post, ({ one }) => ({
   organization: one(organization, {

@@ -2,8 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 
-import { env } from "~/env.mjs";
+import { eq, schema } from "@aperturs/db";
 import { SocialType } from "@aperturs/validators/post";
+
+import { env } from "~/env.mjs";
 import { getGithubAccountDetails } from "../helpers/github";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
 import { ConnectSocial } from "../helpers/misc";
@@ -102,23 +104,22 @@ export const userRouter = createTRPCRouter({
     }),
 
   getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
-    const github = await ctx.prisma.githubToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
+    const github = await ctx.db.query.githubToken.findMany({
+      where: eq(schema.githubToken.clerkUserId, ctx.currentUser),
     });
     const githubDetails = await getGithubAccountDetails(github);
     return githubDetails;
   }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
-    const twitter = await ctx.prisma.twitterToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
+    const twitter = await ctx.db.query.twitterToken.findMany({
+      where: eq(schema.twitterToken.clerkUserId, ctx.currentUser),
     });
-    const linkedin = await ctx.prisma.linkedInToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
+    const linkedin = await ctx.db.query.linkedInToken.findMany({
+      where: eq(schema.linkedInToken.clerkUserId, ctx.currentUser),
     });
-
-    const github = await ctx.prisma.githubToken.findMany({
-      where: { clerkUserId: ctx.currentUser },
+    const github = await ctx.db.query.githubToken.findMany({
+      where: eq(schema.githubToken.clerkUserId, ctx.currentUser),
     });
 
     // TODO: define proper output types, instead of directly using Prisma types

@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { date, index, pgTable, varchar } from "drizzle-orm/pg-core";
+import { index, pgTable, varchar,timestamp } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 import { organization } from "./organisation";
@@ -26,10 +26,10 @@ export const project = pgTable(
       .notNull(),
     repoUrl: varchar("repoUrl", { length: 191 }).notNull(),
     repoId: varchar("repoId", { length: 191 }).notNull(),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" })
+    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
   },
@@ -42,6 +42,9 @@ export const project = pgTable(
     };
   },
 );
+
+export type ProjectInsert = typeof project.$inferInsert;
+export type ProjectSelect = typeof project.$inferSelect;
 
 export const projectRelations = relations(project, ({ one }) => ({
   organization: one(organization, {

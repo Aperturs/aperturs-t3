@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 import Client from "twitter-api-sdk";
 
 import type { PostTweetInput } from "../../../types/post-types";
-import { prisma } from "~/server/db";
+import { db, eq, schema } from "@aperturs/db";
 
 interface TwitterAccountDetails
   extends Pick<TwitterToken, "access_token" | "refresh_token" | "profileId"> {
@@ -18,14 +18,14 @@ interface TwitterAccountDetails
 }
 
 export const getAccessToken = async (tokenId: string) => {
-  const token = await prisma.twitterToken.findUnique({
-    where: { id: tokenId },
+  const token = await db.query.twitterToken.findFirst({
+    where: eq(schema.twitterToken.id, tokenId),
   });
   if (token) {
-    if (token.expires_in && token.refresh_token && token.access_token) {
-      if (token.expires_in < new Date()) {
+    if (token.expiresIn && token.refreshToken && token.accessToken) {
+      if (token.expiresIn  < new Date()) {
         const bearerToken = Buffer.from(
-          `${token.client_id}:${token.client_secret}`,
+          `${token.clientId}:${token.clientSecret}`,
         ).toString("base64");
         try {
           const response = await fetch(
