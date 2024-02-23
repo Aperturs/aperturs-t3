@@ -1,22 +1,29 @@
-import { InviteUserEmail } from "@aperturs/email/emails/invite-user";
+import { resend } from "@api/emails";
+import {
+  removeUserPrivateMetadata,
+  updateUserPrivateMetadata,
+} from "@api/handlers/metadata/user-private-meta";
 
 import type {
   InviteUserToOrganisation,
   sendInvitationViaEmailType,
-} from "./organisation-types";
-import { prisma } from "~/server/db";
-import { resend } from "~/server/emails/resend";
-import {
-  removeUserPrivateMetadata,
-  updateUserPrivateMetadata,
-} from "~/utils/actions/user-private-meta";
+} from "@aperturs/validators/organisation";
+// import { prisma } from "~/server/db";
+import { db, eq, schema } from "@aperturs/db";
+import { InviteUserEmail } from "@aperturs/email/invite-user";
 
 export async function getOrgnanisationTeams(orgId: string) {
-  const res = await prisma.organizationUser.findMany({
-    where: {
-      organizationId: orgId,
-    },
-    include: {
+  // const res = await prisma.organizationUser.findMany({
+  //   where: {
+  //     organizationId: orgId,
+  //   },
+  //   include: {
+  //     user: true,
+  //   },
+  // });
+  const res = await db.query.organizationUser.findMany({
+    where: eq(schema.organizationUser.organizationId, orgId),
+    with: {
       user: true,
     },
   });
@@ -24,11 +31,18 @@ export async function getOrgnanisationTeams(orgId: string) {
 }
 
 export async function removeUserFromOrganisation(orgUserId: string) {
-  const res = await prisma.organizationUser.delete({
-    where: {
-      id: orgUserId,
-    },
-  });
+  // const res = await prisma.organizationUser.delete({
+  //   where: {
+  //     id: orgUserId,
+  //   },
+  // });
+  const [res] = await db
+    .delete(schema.organizationUser)
+    .where(eq(schema.organizationUser.id, orgUserId))
+    .returning();
+  if (!res) {
+    throw new Error("Error deleting user from organisation");
+  }
   await removeUserPrivateMetadata({
     orgId: res.organizationId,
     role: res.role,
@@ -44,8 +58,20 @@ export async function inviteUserToOrganisation({
   inviterId,
   inviterName,
 }: InviteUserToOrganisation) {
-  const res = await prisma.organizationInvites.create({
-    data: {
+  // const res = await prisma.organizationInvites.create({
+  //   data: {
+  //     email,
+  //     role,
+  //     name,
+  //     inviterClerkId: inviterId,
+  //     inviterName: inviterName,
+  //     organizationId: orgId,
+  //     status: "PENDING",
+  //   },
+  // });
+  const [res] = await db
+    .insert(schema.organizationInvites)
+    .values({
       email,
       role,
       name,
@@ -53,8 +79,12 @@ export async function inviteUserToOrganisation({
       inviterName: inviterName,
       organizationId: orgId,
       status: "PENDING",
-    },
-  });
+      updatedAt: new Date(),
+    })
+    .returning();
+  if (!res) {
+    throw new Error("Error inviting user to organisation");
+  }
   return res;
 }
 
@@ -89,18 +119,24 @@ export async function sendInvitationViaEmail({
 }
 
 export async function getInviteDetails({ inviteId }: { inviteId: string }) {
-  const res = await prisma.organizationInvites.findUnique({
-    where: {
-      id: inviteId,
-    },
+  // const res = await prisma.organizationInvites.findUnique({
+  //   where: {
+  //     id: inviteId,
+  //   },
+  // });
+  const res = await db.query.organizationInvites.findFirst({
+    where: eq(schema.organizationInvites.id, inviteId),
   });
   if (!res) {
     return undefined;
   }
-  const orgDetails = await prisma.organization.findUnique({
-    where: {
-      id: res?.organizationId,
-    },
+  // const orgDetails = await prisma.organization.findUnique({
+  //   where: {
+  //     id: res?.organizationId,
+  //   },
+  // });
+  const orgDetails = await db.query.organization.findFirst({
+    where: eq(schema.organization.id, res?.organizationId),
   });
   return {
     inviteDetails: res,
@@ -115,23 +151,42 @@ export async function acceptInvite({
   inviteId: string;
   userId: string;
 }) {
-  const res = await prisma.organizationInvites.update({
-    where: {
-      id: inviteId,
-    },
-    data: {
+  // const res = await prisma.organizationInvites.update({
+  //   where: {
+  //     id: inviteId,
+  //   },
+  //   data: {
+  //     status: "ACCEPTED",
+  //   },
+  // });
+  const [res] = await db
+    .update(schema.organizationInvites)
+    .set({
       status: "ACCEPTED",
-    },
-  });
+    })
+    .where(eq(schema.organizationInvites.id, inviteId))
+    .returning();
+  if (!res) {
+    throw new Error("Error accepting invite");
+  }
   const orgId = res.organizationId;
   const role = res.role;
-  const user = await prisma.organizationUser.create({
-    data: {
+  // const user = await prisma.organizationUser.create({
+  //   data: {
+  //     organizationId: orgId,
+  //     clerkUserId: userId,
+  //     role: role,
+  //   },
+  // });
+  const [user] = await db
+    .insert(schema.organizationUser)
+    .values({
       organizationId: orgId,
       clerkUserId: userId,
       role: role,
-    },
-  });
+      updatedAt: new Date(),
+    })
+    .returning();
   await updateUserPrivateMetadata({
     organisations: [
       {
@@ -147,13 +202,20 @@ export async function acceptInvite({
 }
 
 export async function rejectInvite({ inviteId }: { inviteId: string }) {
-  const res = await prisma.organizationInvites.update({
-    where: {
-      id: inviteId,
-    },
-    data: {
+  // const res = await prisma.organizationInvites.update({
+  //   where: {
+  //     id: inviteId,
+  //   },
+  //   data: {
+  //     status: "REJECTED",
+  //   },
+  // });
+  const [res] = await db
+    .update(schema.organizationInvites)
+    .set({
       status: "REJECTED",
-    },
-  });
+    })
+    .where(eq(schema.organizationInvites.id, inviteId))
+    .returning();
   return res;
 }

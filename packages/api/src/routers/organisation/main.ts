@@ -1,4 +1,5 @@
-import { createTRPCRouter } from "~/server/api/trpc";
+import { createTRPCRouter } from "@api/trpc";
+
 import { organisationBasic } from "./basics";
 import { OrganizationTeam } from "./team";
 

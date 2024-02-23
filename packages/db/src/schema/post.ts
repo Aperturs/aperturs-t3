@@ -14,10 +14,9 @@ import { project } from "./project";
 import { user } from "./user";
 
 export const postStatusEnum = pgEnum("postStatus", [
-  "PENDING",
-  "ACCEPTED",
-  "REJECTED",
-  "CANCELLED",
+  "SAVED",
+  "PUBLISHED",
+  "SCHEDULED",
 ]);
 
 export const post = pgTable(

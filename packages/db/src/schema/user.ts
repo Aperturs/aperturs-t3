@@ -1,10 +1,10 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  timestamp,
   integer,
   json,
   pgEnum,
   pgTable,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -31,11 +31,17 @@ export const user = pgTable(
     createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
     lsSubscriptionId: varchar("ls_subscription_id", { length: 256 }),
     lsCustomerId: varchar("ls_customer_id", { length: 256 }),
     lsVariantId: integer("lsVariantId"),
-    lsCurrentPeriodEnd: timestamp("ls_current_period_end", { precision: 6, withTimezone: true }),
+    lsCurrentPeriodEnd: timestamp("ls_current_period_end", {
+      precision: 6,
+      withTimezone: true,
+    }),
   },
   (table) => {
     return {
@@ -78,7 +84,10 @@ export const userUsage = pgTable("UserUsage", {
   createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
+  updatedAt: timestamp("updatedAt", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
 });
 
 export type UserUsageInsert = typeof userUsage.$inferInsert;

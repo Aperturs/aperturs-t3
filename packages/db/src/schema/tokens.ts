@@ -1,9 +1,9 @@
 import { sql } from "drizzle-orm";
 import {
-  timestamp,
   index,
   pgTable,
   text,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -31,12 +31,16 @@ export const githubToken = pgTable(
     profileId: varchar("profileId", { length: 191 }),
     expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
-      precision: 6, withTimezone: true,
+      precision: 6,
+      withTimezone: true,
     }),
     createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
     organizationLsSubscriptionId: varchar("organizationLsSubscriptionId", {
       length: 191,
     }),
@@ -82,12 +86,16 @@ export const linkedInToken = pgTable(
     ),
     expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
-      precision: 6, withTimezone: true,
+      precision: 6,
+      withTimezone: true,
     }),
     createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {
@@ -148,7 +156,6 @@ export const twitterToken = pgTable(
     };
   },
 );
-
 
 export type twitterTokenInsert = typeof twitterToken.$inferInsert;
 export type twitterTokenSelect = typeof twitterToken.$inferSelect;

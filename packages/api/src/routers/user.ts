@@ -1,14 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 
 import { eq, schema } from "@aperturs/db";
 import { SocialType } from "@aperturs/validators/post";
 
-import { env } from "~/env.mjs";
 import { getGithubAccountDetails } from "../helpers/github";
 import { getLinkedinAccountDetails } from "../helpers/linkedln";
-import { ConnectSocial } from "../helpers/misc";
 import { getTwitterAccountDetails } from "../helpers/twitter";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
@@ -21,86 +18,21 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.create({
-        data: {
+      // const user = await ctx.prisma.user.create({
+      //   data: {
+      //     clerkUserId: input.clerkId,
+      //     userDetails: input.details,
+      //   },
+      // });
+      const [user] = await ctx.db
+        .insert(schema.user)
+        .values({
           clerkUserId: input.clerkId,
           userDetails: input.details,
-        },
-      });
+          updatedAt: new Date(),
+        })
+        .returning();
       return user;
-    }),
-
-  addLinkedln: protectedProcedure.mutation(async ({ ctx }) => {
-    const canConnect = await ConnectSocial({ user: ctx.currentUser });
-    console.log(canConnect, "canConnect");
-    if (canConnect) {
-      const url = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID}&redirect_uri=${env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
-      return { url };
-    }
-    throw new TRPCError({
-      message: "Upgrade to higher plan to connect more Socials",
-      code: "FORBIDDEN",
-    });
-  }),
-
-  addGithub: protectedProcedure.mutation(() => {
-    // const canConnect = await ConnectSocial({ user: ctx.currentUser });
-
-    // if (canConnect) {
-    try {
-      const url = `https://github.com/login/oauth/authorize?client_id=${
-        env.NEXT_PUBLIC_GITHUB_CLIENT_ID
-      }&redirect_uri=${encodeURIComponent(
-        env.NEXT_PUBLIC_GITHUB_CALLBACK_URL,
-      )}&scope=${encodeURIComponent("user repo")}`;
-      return { url };
-    } catch (error) {
-      console.log(error);
-    }
-  }),
-
-  addTwitter: protectedProcedure
-    .input(
-      z.object({
-        clientId: z.string(),
-        clientSecret: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const canConnect = await ConnectSocial({ user: ctx.currentUser });
-      if (canConnect) {
-        const authClient = new auth.OAuth2User({
-          client_id: input.clientId,
-          client_secret: input.clientSecret,
-          callback: env.TWITTER_CALLBACK_URL,
-          scopes: [
-            "users.read",
-            "tweet.read",
-            "offline.access",
-            "tweet.write",
-            "follows.read",
-            "follows.write",
-            "like.write",
-            "list.read",
-            "list.write",
-            "bookmark.read",
-            "bookmark.write",
-          ],
-        });
-        const url = authClient.generateAuthURL({
-          state: `${input.clientId}-${input.clientSecret}`,
-          // state: org.id.toString(),
-          code_challenge_method: "plain",
-          code_challenge: "challenge",
-        });
-
-        return url;
-      } else {
-        throw new TRPCError({
-          message: "Upgrade to higher plan to connect more Socials",
-          code: "FORBIDDEN",
-        });
-      }
     }),
 
   getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {

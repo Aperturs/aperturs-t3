@@ -2,8 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 
-import { env } from "~/env.mjs";
-import { postTweetInputSchema } from "../../../../types/post-types";
+import { eq, schema } from "@aperturs/db";
+import { postTweetInputSchema } from "@aperturs/validators/post";
+
+import { env } from "../../../env";
 import { ConnectSocial } from "../../helpers/misc";
 import { postToTwitter } from "../../helpers/twitter";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
@@ -75,11 +77,14 @@ export const twitterData = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await ctx.prisma.twitterToken.delete({
-          where: {
-            id: input.tokenId,
-          },
-        });
+        // await ctx.prisma.twitterToken.delete({
+        //   where: {
+        //     id: input.tokenId,
+        //   },
+        // });
+        await ctx.db
+          .delete(schema.twitterToken)
+          .where(eq(schema.twitterToken.id, input.tokenId));
         return { success: true, message: "Twitter removed successfully" };
       } catch (error) {
         return { success: false, message: "Error removing Twitter" };

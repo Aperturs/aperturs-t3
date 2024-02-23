@@ -1,13 +1,12 @@
-import { clerkClient } from "@clerk/nextjs";
-
-import { createTRPCRouter, protectedProcedure } from "@api/trpc";
+import { updateUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
 import {
   createOrganisation,
   getUserOrganisations,
 } from "@api/handlers/organisation/main";
-import { createOrganisationSchema } from "@api/handlers/organisation/organisation-types";
-import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
-import { limitWrapper } from "../../helpers/limitWrapper";
+import { limitWrapper } from "@api/helpers/limitWrapper";
+import { createTRPCRouter, protectedProcedure } from "@api/trpc";
+
+import { createOrganisationSchema } from "@aperturs/validators/organisation";
 
 export const organisationBasic = createTRPCRouter({
   createOrganisation: protectedProcedure
@@ -22,7 +21,7 @@ export const organisationBasic = createTRPCRouter({
         ctx.currentUser,
         "organisation",
       );
-      const orgId = res.id;
+      const orgId = res?.id ?? "";
       await updateUserPrivateMetadata({
         organisations: [
           {

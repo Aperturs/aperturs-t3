@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
-import { postToLinkedInInputSchema } from "../../../../types/post-types";
+import { postToLinkedInInputSchema } from "@aperturs/validators/post";
+
 import { postToLinkedin } from "../../helpers/linkedln";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 

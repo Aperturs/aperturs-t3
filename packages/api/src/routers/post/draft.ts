@@ -1,10 +1,14 @@
+import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
+import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { PostContentType } from "~/types/post-types";
-import { limitDown, limitWrapper } from "~/server/api/helpers/limitWrapper";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { savePostInputSchema, updatePostInputSchema } from "~/types/post-types";
+import type { PostContentType } from "@aperturs/validators/post";
+import { desc, eq, schema } from "@aperturs/db";
+import {
+  savePostInputSchema,
+  updatePostInputSchema,
+} from "@aperturs/validators/post";
 
 export const posting = createTRPCRouter({
   savePost: protectedProcedure
@@ -13,8 +17,9 @@ export const posting = createTRPCRouter({
       try {
         const savedPost = await limitWrapper(
           () =>
-            ctx.prisma.post.create({
-              data: {
+            ctx.db
+              .insert(schema.post)
+              .values({
                 clerkUserId: ctx.currentUser,
                 status: input.scheduledTime ? "SCHEDULED" : "SAVED",
                 scheduledAt: input.scheduledTime
@@ -22,13 +27,14 @@ export const posting = createTRPCRouter({
                   : null,
                 content: input.postContent,
                 projectId: input.projectId,
-              },
-            }),
+                updatedAt: new Date(),
+              })
+              .returning(),
           ctx.currentUser,
           "drafts",
         );
         return {
-          data: savedPost.id,
+          data: savedPost[0]?.id,
           success: true,
           message: "Saved to draft successfully",
           state: 200,
@@ -42,10 +48,15 @@ export const posting = createTRPCRouter({
     }),
 
   getRecentDrafts: protectedProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany({
-      where: { clerkUserId: ctx.currentUser, status: "SAVED" },
-      orderBy: [{ updatedAt: "desc" }],
-      take: 5,
+    // const posts = await ctx.prisma.post.findMany({
+    //   where: { clerkUserId: ctx.currentUser, status: "SAVED" },
+    //   orderBy: [{ updatedAt: "desc" }],
+    //   take: 5,
+    // });
+    const posts = await ctx.db.query.post.findMany({
+      where: eq(schema.post.clerkUserId, ctx.currentUser),
+      orderBy: desc(schema.post.updatedAt),
+      limit: 5,
     });
     return posts;
   }),
@@ -55,17 +66,28 @@ export const posting = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log(input.postContent);
       try {
-        await ctx.prisma.post.update({
-          where: { id: input.postId },
-          data: {
+        // await ctx.prisma.post.update({
+        //   where: { id: input.postId },
+        //   data: {
+        //     status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+        //     scheduledAt: input.scheduledTime
+        //       ? new Date(input.scheduledTime)
+        //       : null,
+        //     content: input.postContent,
+        //   },
+        // });
+
+        await ctx.db
+          .update(schema.post)
+          .set({
             status: input.scheduledTime ? "SCHEDULED" : "SAVED",
             scheduledAt: input.scheduledTime
               ? new Date(input.scheduledTime)
               : null,
             content: input.postContent,
-          },
-        });
-
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.post.id, input.postId));
         return {
           success: true,
           message: "Saved to draft successfully",
@@ -80,9 +102,13 @@ export const posting = createTRPCRouter({
     }),
 
   getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany({
-      where: { clerkUserId: ctx.currentUser, status: "SAVED" },
-      orderBy: [{ updatedAt: "desc" }],
+    // const posts = await ctx.prisma.post.findMany({
+    //   where: { clerkUserId: ctx.currentUser, status: "SAVED" },
+    //   orderBy: [{ updatedAt: "desc" }],
+    // });
+    const posts = await ctx.db.query.post.findMany({
+      where: eq(schema.post.clerkUserId, ctx.currentUser),
+      orderBy: desc(schema.post.updatedAt),
     });
     return posts;
   }),
@@ -90,11 +116,15 @@ export const posting = createTRPCRouter({
   getSavedPostById: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const post = await ctx.prisma.post.findUnique({
-        where: { id: input },
+      // const post = await ctx.prisma.post.findUnique({
+      //   where: { id: input },
+      // });
+
+      const post = await ctx.db.query.post.findFirst({
+        where: eq(schema.post.id, input),
       });
 
-      const localPost = post?.content as unknown as PostContentType[];
+      const localPost = post?.content as PostContentType[];
       const contentWithEmptyFiles = localPost.map((post) => ({
         ...post,
         files: post.files ?? [],
@@ -111,9 +141,13 @@ export const posting = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }) => {
       try {
-        const posts = await ctx.prisma.post.findMany({
-          where: { projectId: input, status: "SAVED" },
-          orderBy: [{ updatedAt: "desc" }],
+        // const posts = await ctx.prisma.post.findMany({
+        //   where: { projectId: input, status: "SAVED" },
+        //   orderBy: [{ updatedAt: "desc" }],
+        // });
+        const posts = await ctx.db.query.post.findMany({
+          where: eq(schema.post.projectId, input),
+          orderBy: desc(schema.post.updatedAt),
         });
         return posts;
       } catch (error) {
@@ -133,9 +167,10 @@ export const posting = createTRPCRouter({
       try {
         await limitDown(
           () =>
-            ctx.prisma.post.delete({
-              where: { id: input.id },
-            }),
+            // ctx.prisma.post.delete({
+            //   where: { id: input.id },
+            // }),
+            ctx.db.delete(schema.post).where(eq(schema.post.id, input.id)),
           ctx.currentUser,
           "drafts",
         );

@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 import type { IPrompt } from "./prompt";
-import { env } from "~/env.mjs";
+import { env } from "../../env";
 import { promptuser } from "./prompt";
 
 function convertStringToArray(input: string): string[] {

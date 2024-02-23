@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { organisationRole } from "@aperturs/validators/organisation";
+import { organisationRole } from "./organisation";
 
 export const privateMetaDataSchema = z.object({
   organisations: z.array(

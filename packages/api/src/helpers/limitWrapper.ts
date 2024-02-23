@@ -1,10 +1,10 @@
-import type { UserUsage } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
-import { prisma } from "~/server/db";
+import type { user } from "@aperturs/db";
+import { db, eq, schema } from "@aperturs/db";
 
 type LimitType = keyof Omit<
-  UserUsage,
+  user.UserUsageSelect,
   "clerkUserId" | "createdAt" | "updatedAt"
 >;
 
@@ -16,15 +16,17 @@ export async function limitWrapper<T>(
   limitType: LimitType,
 ): Promise<T> {
   // Fetch the user's usage data
-  const userUsage = await prisma.userUsage.findUnique({
-    where: { clerkUserId },
+
+  const userUsage = await db.query.userUsage.findFirst({
+    where: eq(schema.userUsage.clerkUserId, clerkUserId),
   });
 
   if (!userUsage) {
-    // If the user doesn't have any usage data, create it
-    await prisma.userUsage.create({
-      data: { clerkUserId },
+    await db.insert(schema.userUsage).values({
+      clerkUserId: clerkUserId,
+      updatedAt: new Date(),
     });
+
     return limitWrapper(func, clerkUserId, limitType);
   }
 
@@ -40,10 +42,12 @@ export async function limitWrapper<T>(
   const result = await func();
 
   // If the function was successful, decrement the current usage count
-  await prisma.userUsage.update({
-    where: { clerkUserId },
-    data: { [limitType]: { decrement: 1 } },
-  });
+  await db
+    .update(schema.userUsage)
+    .set({
+      [limitType]: userUsage[limitType] - 1,
+    })
+    .where(eq(schema.userUsage.clerkUserId, clerkUserId));
 
   return result;
 }
@@ -53,19 +57,27 @@ export async function limitDown<T>(
   clerkUserId: string,
   limitType: LimitType,
 ): Promise<T> {
-  const userUsage = await prisma.userUsage.findUnique({
-    where: { clerkUserId },
+  const userUsage = await db.query.userUsage.findFirst({
+    where: eq(schema.userUsage.clerkUserId, clerkUserId),
   });
+
   if (!userUsage) {
-    throw new TRPCError({ code: "NOT_FOUND" });
+    await db.insert(schema.userUsage).values({
+      clerkUserId: clerkUserId,
+      updatedAt: new Date(),
+    });
+
+    return limitWrapper(func, clerkUserId, limitType);
   }
 
   const result = func();
 
-  await prisma.userUsage.update({
-    where: { clerkUserId },
-    data: { [limitType]: { increment: 1 } },
-  });
+  await db
+    .update(schema.userUsage)
+    .set({
+      [limitType]: userUsage[limitType] + 1,
+    })
+    .where(eq(schema.userUsage.clerkUserId, clerkUserId));
 
   return result;
 }

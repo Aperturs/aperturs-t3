@@ -1,13 +1,7 @@
-import { auth, clerkClient } from "@clerk/nextjs";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-
-import type { UserDetails } from "@aperturs/validators/user"
-import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import {
-  changeUserRoleSchema,
-  inviteUserToOrganisationSchema,
-} from "@aperturs/validators/organisation";
+  changeUserRoleMetaData,
+  removeUserPrivateMetadata,
+} from "@api/handlers/metadata/user-private-meta";
 import {
   acceptInvite,
   getInviteDetails,
@@ -17,10 +11,17 @@ import {
   removeUserFromOrganisation,
   sendInvitationViaEmail,
 } from "@api/handlers/organisation/teams";
+import { createTRPCRouter, protectedProcedure } from "@api/trpc";
+import { auth, clerkClient } from "@clerk/nextjs";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import type { UserDetails } from "@aperturs/validators/user";
+import { eq, schema } from "@aperturs/db";
 import {
-  changeUserRoleMetaData,
-  removeUserPrivateMetadata,
-} from "@api/handlers/metadata/user-private-meta";
+  changeUserRoleSchema,
+  inviteUserToOrganisationSchema,
+} from "@aperturs/validators/organisation";
 
 export const OrganizationTeam = createTRPCRouter({
   getOrganisationTeams: protectedProcedure
@@ -50,14 +51,28 @@ export const OrganizationTeam = createTRPCRouter({
   changeUserRole: protectedProcedure
     .input(changeUserRoleSchema)
     .mutation(async ({ input, ctx }) => {
-      const res = await ctx.prisma.organizationUser.update({
-        where: {
-          id: input.orgUserId,
-        },
-        data: {
+      // const res = await ctx.prisma.organizationUser.update({
+      //   where: {
+      //     id: input.orgUserId,
+      //   },
+      //   data: {
+      //     role: input.newRole,
+      //   },
+      // });
+      const [res] = await ctx.db
+        .update(schema.organizationUser)
+        .set({
           role: input.newRole,
-        },
-      });
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.organizationUser.id, input.orgUserId))
+        .returning();
+      if (!res) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error changing role",
+        });
+      }
       await changeUserRoleMetaData({
         orgId: res.organizationId,
         newRole: input.newRole,
@@ -67,7 +82,7 @@ export const OrganizationTeam = createTRPCRouter({
 
   removeUserFromOrganisation: protectedProcedure
     .input(z.object({ orgUserId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const res = await removeUserFromOrganisation(input.orgUserId);
       await removeUserPrivateMetadata({
         orgId: res.organizationId,
@@ -83,10 +98,13 @@ export const OrganizationTeam = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const orgDetails = await ctx.prisma.organization.findUnique({
-        where: {
-          id: input.orgId,
-        },
+      // const orgDetails = await ctx.prisma.organization.findUnique({
+      //   where: {
+      //     id: input.orgId,
+      //   },
+      // });
+      const orgDetails = await ctx.db.query.organization.findFirst({
+        where: eq(schema.organization.id, input.orgId),
       });
       const { user } = auth();
       const userName = user?.firstName + " " + user?.lastName;
@@ -128,10 +146,13 @@ export const OrganizationTeam = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
-        where: {
-          id: input.inviteId,
-        },
+      // const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
+      //   where: {
+      //     id: input.inviteId,
+      //   },
+      // });
+      const inviteDetails = await ctx.db.query.organizationInvites.findFirst({
+        where: eq(schema.organizationInvites.id, input.inviteId),
       });
       if (
         inviteDetails?.status === "ACCEPTED" ||
@@ -164,10 +185,13 @@ export const OrganizationTeam = createTRPCRouter({
   rejectInvite: protectedProcedure
     .input(z.object({ inviteId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
-        where: {
-          id: input.inviteId,
-        },
+      // const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
+      //   where: {
+      //     id: input.inviteId,
+      //   },
+      // });
+      const inviteDetails = await ctx.db.query.organizationInvites.findFirst({
+        where: eq(schema.organizationInvites.id, input.inviteId),
       });
       if (
         inviteDetails?.status === "ACCEPTED" ||
@@ -197,10 +221,13 @@ export const OrganizationTeam = createTRPCRouter({
   cancelInvite: protectedProcedure
     .input(z.object({ inviteId: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
-        where: {
-          id: input.inviteId,
-        },
+      // const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
+      //   where: {
+      //     id: input.inviteId,
+      //   },
+      // });
+      const inviteDetails = await ctx.db.query.organizationInvites.findFirst({
+        where: eq(schema.organizationInvites.id, input.inviteId),
       });
       if (
         inviteDetails?.status === "ACCEPTED" ||

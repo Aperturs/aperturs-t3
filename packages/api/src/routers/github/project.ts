@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-import { ProjectQnASchema } from "~/types/project";
+import { desc, eq, schema } from "@aperturs/db";
+import { ProjectQnASchema } from "@aperturs/validators/project";
+
 import { limitWrapper } from "../../helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
@@ -19,16 +21,13 @@ export const githubProject = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const project = await limitWrapper(
         () =>
-          ctx.prisma.project.create({
-            data: {
-              repoName: input.repoName,
-              repoDescription: input.repoDescription,
-              repoUrl: input.repoUrl,
-              repoId: input.repoId,
-              questionsAnswersJsonString: input.questionsAnswersJsonString,
-              commitCount: input.commitCount,
-              user: { connect: { clerkUserId: ctx.currentUser } },
-            },
+          ctx.db.insert(schema.project).values({
+            repoName: input.repoName,
+            repoDescription: input.repoDescription,
+            repoUrl: input.repoUrl,
+            repoId: input.repoId,
+            updatedAt: new Date(),
+            clerkUserId: ctx.currentUser,
           }),
         ctx.currentUser,
         "projects",
@@ -53,36 +52,54 @@ export const githubProject = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, data } = input;
 
-      const project = await ctx.prisma.project.update({
-        where: { id },
-        data,
-      });
+      // const project = await ctx.prisma.project.update({
+      //   where: { id },
+      //   data,
+      // });
+
+      const [project] = await ctx.db
+        .update(schema.project)
+        .set(data)
+        .where(eq(schema.project.id, id))
+        .returning();
 
       return project;
     }),
 
   getAllProjects: protectedProcedure.query(async ({ ctx }) => {
-    const projects = await ctx.prisma.project.findMany({
-      where: { clerkUserId: ctx.currentUser },
+    // const projects = await ctx.prisma.project.findMany({
+    //   where: { clerkUserId: ctx.currentUser },
+    // });
+    const projects = await ctx.db.query.project.findMany({
+      where: eq(schema.project.clerkUserId, ctx.currentUser),
     });
+
     return projects;
   }),
 
   getRecentProjects: protectedProcedure.query(async ({ ctx }) => {
-    const projects = await ctx.prisma.project.findMany({
-      where: { clerkUserId: ctx.currentUser },
-      orderBy: { createdAt: "desc" },
-      take: 5,
+    // const projects = await ctx.prisma.project.findMany({
+    //   where: { clerkUserId: ctx.currentUser },
+    //   orderBy: { createdAt: "desc" },
+    //   take: 5,
+    // });
+    const recentProjects = await ctx.db.query.project.findMany({
+      where: eq(schema.project.clerkUserId, ctx.currentUser),
+      orderBy: desc(schema.project.createdAt),
+      limit: 5,
     });
-    return projects;
+    return recentProjects;
   }),
 
   getProject: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const project = await ctx.prisma.project.findUnique({
-        where: { id: input },
+      // const project = await ctx.prisma.project.findUnique({
+      //   where: { id: input },
+      // });
+      const projectData = await ctx.db.query.project.findFirst({
+        where: eq(schema.project.id, input),
       });
-      return project;
+      return projectData;
     }),
 });

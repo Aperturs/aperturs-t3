@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, pgTable, varchar,timestamp } from "drizzle-orm/pg-core";
+import { index, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 import { organization } from "./organisation";

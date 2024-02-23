@@ -1,6 +1,7 @@
-import type { CreateOrganisation } from "./organisation-types";
-import { prisma } from "~/server/db";
-import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
+import { updateUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
+
+import type { CreateOrganisation } from "@aperturs/validators/organisation";
+import { db, eq, schema } from "@aperturs/db";
 
 export async function createOrganisation({
   name,
@@ -8,47 +9,41 @@ export async function createOrganisation({
   clerkID,
   category,
 }: CreateOrganisation) {
-  const res = await prisma.organization
-    .create({
-      data: {
+  const resp = await db.transaction(async (tx) => {
+    const [res] = await tx
+      .insert(schema.organization)
+      .values({
         name,
         logo,
         category,
         clerkUserId: clerkID,
-        users: {
-          create: {
-            clerkUserId: clerkID,
-            role: "OWNER",
-          },
-        },
-      },
-    })
-    .catch((e) => {
-      throw e;
+        updatedAt: new Date(),
+      })
+      .returning();
+    await tx.insert(schema.organizationUser).values({
+      clerkUserId: clerkID,
+      organizationId: res?.id ?? "",
+      role: "OWNER",
+      updatedAt: new Date(),
     });
-
-  if (res) {
+    return res;
+  });
+  if (resp) {
     await updateUserPrivateMetadata({
       organisations: [
         {
-          orgId: res.id,
+          orgId: resp.id,
           role: "OWNER",
         },
       ],
     });
   }
-  return res;
+  return resp;
 }
 
 export async function getUserOrganisations(clerkID: string) {
-  const res = await prisma.organization.findMany({
-    where: {
-      users: {
-        some: {
-          clerkUserId: clerkID,
-        },
-      },
-    },
+  const res = await db.query.organization.findMany({
+    where: eq(schema.organization.clerkUserId, clerkID),
   });
   return res;
 }

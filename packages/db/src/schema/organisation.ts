@@ -1,5 +1,11 @@
 import { relations, sql } from "drizzle-orm";
-import { timestamp, index, pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgEnum,
+  pgTable,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 import { idea } from "./idea";
@@ -9,13 +15,12 @@ import { githubToken, linkedInToken, twitterToken } from "./tokens";
 import { user } from "./user";
 
 export const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
-export const statusEnum = pgEnum("status", [
+export const inviteStatusEnum = pgEnum("status", [
   "PENDING",
   "ACCEPTED",
   "REJECTED",
   "CANCELLED",
 ]);
-
 
 export const organization = pgTable(
   "Organization",
@@ -37,7 +42,10 @@ export const organization = pgTable(
     createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updatedAt", {precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {
@@ -50,7 +58,6 @@ export const organization = pgTable(
 
 export type organisationInsert = typeof organization.$inferInsert;
 export type organisationSelect = typeof organization.$inferSelect;
-
 
 export const organisationRelations = relations(
   organization,
@@ -84,7 +91,7 @@ export const organizationInvites = pgTable(
         onDelete: "cascade",
       }),
     role: roleEnum("role").notNull(),
-    status: statusEnum("status").notNull(),
+    status: inviteStatusEnum("status").notNull(),
     inviterClerkId: varchar("inviterClerkId", { length: 256 })
       .notNull()
       .references(() => user.clerkUserId),
@@ -92,7 +99,10 @@ export const organizationInvites = pgTable(
     createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {
@@ -120,7 +130,6 @@ export const organizationInvitesRelations = relations(
   }),
 );
 
-
 export const organizationUser = pgTable(
   "OrganizationUser",
   {
@@ -139,7 +148,10 @@ export const organizationUser = pgTable(
     createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {

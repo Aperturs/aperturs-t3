@@ -53,7 +53,6 @@ export enum SocialType {
   Github = "Github",
 }
 
-
 // might use these types later
 
 // interface Tweet {

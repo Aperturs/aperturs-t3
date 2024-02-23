@@ -14,7 +14,6 @@ export * from "drizzle-orm";
 
 export { idea, organisation, post, project, tokens, user };
 
-
 export const schema = {
   ...idea,
   ...user,

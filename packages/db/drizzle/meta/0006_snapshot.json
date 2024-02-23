@@ -1,6 +1,6 @@
 {
-  "id": "88b7b6b2-d7d6-4389-a4b0-d3090a1abfae",
-  "prevId": "09e80be6-e5ae-4365-bdd7-421b35e4b4a4",
+  "id": "a19d6c5b-a4cd-4a32-baab-94a97815eb7d",
+  "prevId": "88b7b6b2-d7d6-4389-a4b0-d3090a1abfae",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -37,7 +37,7 @@
           "type": "timestamp (6) with time zone",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
@@ -1053,15 +1053,6 @@
     }
   },
   "enums": {
-    "role": {
-      "name": "role",
-      "values": {
-        "OWNER": "OWNER",
-        "ADMIN": "ADMIN",
-        "EDITOR": "EDITOR",
-        "MEMBER": "MEMBER"
-      }
-    },
     "status": {
       "name": "status",
       "values": {
@@ -1071,13 +1062,21 @@
         "CANCELLED": "CANCELLED"
       }
     },
+    "role": {
+      "name": "role",
+      "values": {
+        "OWNER": "OWNER",
+        "ADMIN": "ADMIN",
+        "EDITOR": "EDITOR",
+        "MEMBER": "MEMBER"
+      }
+    },
     "postStatus": {
       "name": "postStatus",
       "values": {
-        "PENDING": "PENDING",
-        "ACCEPTED": "ACCEPTED",
-        "REJECTED": "REJECTED",
-        "CANCELLED": "CANCELLED"
+        "SAVED": "SAVED",
+        "PUBLISHED": "PUBLISHED",
+        "SCHEDULED": "SCHEDULED"
       }
     },
     "currentPlan": {

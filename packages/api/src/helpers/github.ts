@@ -1,26 +1,32 @@
-import type { GithubToken } from "@prisma/client";
+import type { tokens } from "@aperturs/db";
+import type { GithubUser } from "@aperturs/validators/github";
 
 interface GithubTokenDetails
-  extends Pick<GithubToken, "access_token" | "refresh_token" | "profileId"> {
+  extends Pick<
+    tokens.githubTokenSelect,
+    "accessToken" | "refreshToken" | "profileId"
+  > {
   full_name: string;
   username?: string;
   profile_image_url?: string;
   tokenId: string;
 }
 
-export const getGithubAccountDetails = async (githubTokens: GithubToken[]) => {
+export const getGithubAccountDetails = async (
+  githubTokens: tokens.githubTokenSelect[],
+) => {
   const githubTokenDetails: GithubTokenDetails[] = [];
   for (const githubToken of githubTokens) {
     const userObject: GithubUser = (await (
       await fetch("https://api.github.com/user", {
         headers: {
-          Authorization: `token ${githubToken.access_token}`,
+          Authorization: `token ${githubToken.accessToken}`,
         },
       })
     ).json()) as GithubUser;
     githubTokenDetails.push({
-      access_token: githubToken.access_token,
-      refresh_token: githubToken.refresh_token,
+      accessToken: githubToken.accessToken,
+      refreshToken: githubToken.refreshToken,
       full_name: userObject.name,
       profileId: githubToken.profileId,
       tokenId: githubToken.id,

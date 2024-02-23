@@ -1,7 +1,7 @@
 import { auth, clerkClient } from "@clerk/nextjs";
 
-import type { PrivateMetaData } from "./user-private-metadata";
 import type { ChangeUserRoleWithOrgIdType } from "@aperturs/validators/organisation";
+import type { PrivateMetaData } from "@aperturs/validators/private_metadata";
 
 export async function updateUserPrivateMetadata(
   data: Partial<PrivateMetaData>,
