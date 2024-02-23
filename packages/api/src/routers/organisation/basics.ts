@@ -21,7 +21,10 @@ export const organisationBasic = createTRPCRouter({
         ctx.currentUser,
         "organisation",
       );
-      const orgId = res?.id ?? "";
+      if(!res) {
+        throw new Error("Failed to create organisation");
+      }
+      const orgId = res.id;
       await updateUserPrivateMetadata({
         organisations: [
           {
@@ -30,6 +33,7 @@ export const organisationBasic = createTRPCRouter({
           },
         ],
       });
+
       return res;
     }),
 
