@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 import ConnectSocials from "~/components/profile/ConnectSocials";
 
@@ -11,16 +13,16 @@ function AddSocial() {
         <div className="flex justify-between">
           <button
             className="btn btn-primary btn-wide my-3 text-white"
-            onClick={async () => {
-              await router.push("/onboarding");
+            onClick={() => {
+              router.push("/onboarding");
             }}
           >
             Back
           </button>
           <button
             className="btn btn-primary btn-wide my-3 text-white"
-            onClick={async () => {
-              await router.push("/dashboard");
+            onClick={() => {
+              router.push("/dashboard");
             }}
           >
             Next

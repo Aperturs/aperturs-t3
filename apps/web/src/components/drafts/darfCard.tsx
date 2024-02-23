@@ -13,7 +13,7 @@ import { Dialog, DialogTrigger } from "@aperturs/ui/dialog";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
 import ConfirmationModal from "~/components/custom/modals/modal";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 interface IDarfCard {
   id: string;

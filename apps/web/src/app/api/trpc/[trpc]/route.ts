@@ -1,9 +1,12 @@
 import type { NextRequest } from "next/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
+import { appRouter, createTRPCContext } from "@aperturs/api";
+
 import { env } from "~/env.mjs";
-import { appRouter } from "~/server/api/root";
-import { createTRPCContext } from "~/server/api/trpc";
+
+
+export const runtime = "edge";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when

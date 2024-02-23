@@ -18,7 +18,7 @@ export default async function CommitsPage({
   const project = await api.github.getCommits.query({
     projectId: params.id,
   });
-  //   const githubTokens = await api.user.getGithubAccounts.query();
+  //   const githubTokens = await api.user.getGithubAccounts();
   //   const { getCommits } = useGithub(
   //     githubTokens?.at(0)?.access_token ?? ""
   //   );

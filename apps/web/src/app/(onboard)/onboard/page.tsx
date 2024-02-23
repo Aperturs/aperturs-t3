@@ -1,5 +1,7 @@
+'use client';
+
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Example() {
   const router = useRouter();
@@ -22,8 +24,8 @@ export default function Example() {
         </h2>
         <button
           className="btn btn-primary btn-wide my-3 text-white"
-          onClick={async () => {
-            await router.push("/onboarding/addSocial");
+          onClick={ () => {
+             router.push("/onboarding/addSocial");
           }}
         >
           Get Started

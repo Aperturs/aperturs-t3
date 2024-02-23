@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,9 +41,8 @@ export default function ProfileButton() {
   console.log(user?.imageUrl, "user");
   const { data, isLoading } =
     api.organisation.basics.getAllUserOrganisations.useQuery();
-  const router = useRouter();
   const params = useParams<{ orgid: string }>();
-  const orgId = params?.orgid;
+  const orgId = params?.orgid ;
   const currentOrg = data?.find((org) => org.id === orgId);
 
   return (
@@ -146,7 +147,7 @@ function CurrentOrganisation({
 function CreateOrganisationDialog() {
   const {
     mutateAsync: createOrganisation,
-    isLoading: creatingOrganisation,
+    isPending: creatingOrganisation,
     error,
   } = api.organisation.basics.createOrganisation.useMutation();
   const [name, setName] = useState("");

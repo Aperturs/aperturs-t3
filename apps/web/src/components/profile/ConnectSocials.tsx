@@ -13,8 +13,8 @@ import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
 
+import { api } from "~/trpc/react";
 import { SocialType } from "~/types/post-enums";
-import { api } from "~/utils/api";
 import SimpleLoader from "../custom/loading/simple-loading";
 
 const SocialIcon = ({ type }: { type: SocialType }) => {

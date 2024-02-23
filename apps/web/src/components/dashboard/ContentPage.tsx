@@ -24,9 +24,8 @@ const WishingGoodDay = () => {
 
 async function ContentPage() {
   const user = await currentUser();
-  const recentDrafts = await api.savepost.getRecentDrafts.query();
-  const recentProjects = await api.github.project.getRecentProjects.query();
-
+  const recentDrafts = await api.savepost.getRecentDrafts();
+  const recentProjects = await api.github.project.getRecentProjects();
   return (
     <div className="flex w-full flex-col justify-start gap-7">
       <div className="flex flex-col justify-items-start gap-1 px-5">

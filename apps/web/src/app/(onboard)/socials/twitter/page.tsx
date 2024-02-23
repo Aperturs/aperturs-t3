@@ -1,9 +1,11 @@
+'use client';
+
 import React from "react";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { IoIosArrowBack } from "react-icons/io";
 
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 const AddTwitter = () => {
   return (
@@ -29,7 +31,8 @@ const AddTwitter = () => {
 };
 
 function ApiBox() {
-  const { mutateAsync, error, isLoading } = api.user.addTwitter.useMutation();
+  const { mutateAsync, error, isPending } =
+    api.twitter.addTwitter.useMutation();
 
   const [clientID, setClientID] = React.useState("");
   const [clientSecret, setClientSecret] = React.useState("");
@@ -101,7 +104,7 @@ function ApiBox() {
         <button
           className="btn btn-primary mt-4 w-24  rounded-xl px-4 py-2 text-white sm:w-56"
           onClick={connectHandler}
-          disabled={isLoading}
+          disabled={isPending}
         >
           Connect
         </button>

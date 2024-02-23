@@ -16,7 +16,7 @@ import { Input } from "@aperturs/ui/input";
 import { Textarea } from "@aperturs/ui/textarea";
 
 import { useGithub } from "~/hooks/useGithub";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 import LogoLoad from "../custom/loading/logoLoad";
 import SimpleLoader from "../custom/loading/simple-loading";
 

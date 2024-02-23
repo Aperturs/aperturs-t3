@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
 import {
   Bars2Icon,
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -120,9 +120,10 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
-  const { data: metadata } = useQuery(["getUserPrivateMetadata"], () =>
-    getUserPrivateMetadata(),
-  );
+  const { data: metadata } = useQuery({
+    queryKey: ["userPrivateMetadata"],
+    queryFn: () => getUserPrivateMetadata(),
+  });
 
   return (
     <Sheet>

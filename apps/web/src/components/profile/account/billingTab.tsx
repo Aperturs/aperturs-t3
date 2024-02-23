@@ -46,8 +46,8 @@ function extractPrice(priceRange: string, position: 1 | 2): number | null {
 }
 
 export default async function BillingTab() {
-  const billingPlans = await api.subscriptions.getProducts.query();
-  const getSubscription = await api.subscriptions.getSubscriptions.query();
+  const billingPlans = await api.subscriptions.getProducts();
+  const getSubscription = await api.subscriptions.getSubscriptions();
 
   return (
     <div className="w-full flex-1">

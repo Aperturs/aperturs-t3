@@ -1,4 +1,4 @@
-import { InviteUserEmail } from "@aperturs/email/emails/invite-user";
+import { InviteUserEmail } from "@aperturs/email/invite-user";
 
 import type {
   InviteUserToOrganisation,

@@ -2,7 +2,6 @@ import "~/styles/calendar.css";
 import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
-import { cookies } from "next/headers";
 import { Toaster } from "react-hot-toast";
 
 import ModalProvider from "~/components/custom/modals/modal-provider";
@@ -37,7 +36,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <Toaster position="top-left" reverseOrder={false} />
-            <TRPCReactProvider cookies={cookies().toString()}>
+            <TRPCReactProvider>
               <ModalProvider>{children}</ModalProvider>
             </TRPCReactProvider>
           </AuthProvider>

@@ -10,7 +10,7 @@ import { api } from "~/trpc/server";
 import PostCard from "./darfCard";
 
 async function DraftPage() {
-  const getSavedPosts = await api.savepost.getSavedPosts.query();
+  const getSavedPosts = await api.savepost.getSavedPosts();
 
   return (
     <div className=" relative flex w-full flex-col">
