@@ -8,6 +8,8 @@ export const env = createEnv({
     GITHUB_CALLBACK_URL: z.string().min(1),
     RESEND_EMAIL_API: z.string().min(1),
     TWITTER_CALLBACK_URL: z.string().min(1),
+    LINKEDIN_CLIENT_ID: z.string().min(1),
+    LINKEDIN_CALLBACK_URL: z.string().min(1),
   },
   client: {},
   experimental__runtimeEnv: {},

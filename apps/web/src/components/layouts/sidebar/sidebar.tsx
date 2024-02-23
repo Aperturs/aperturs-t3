@@ -1,14 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   Bars2Icon,
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -19,13 +19,13 @@ import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
+import { api } from "~/trpc/react";
 import { getUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
 import AccordianMenu from "./command-group";
 import { CommandMenu } from "./command-menu";
 import ProfileButton from "./org/profile-button";
-import { api } from "~/trpc/react";
 
 const AccordanceMenuList = [
   {
@@ -127,7 +127,7 @@ export default function SideBar() {
   //   // refetchInterval:1000,
   // });
 
-  const {data: metadata} = api.metadata.getUserPrivateMetaData.useQuery();
+  const { data: metadata } = api.metadata.getUserPrivateMetaData.useQuery();
 
   // console.log(metadata,error,'meta');
 

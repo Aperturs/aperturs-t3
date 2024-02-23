@@ -20,7 +20,7 @@ const SideBar = ({ params }: { params: { id: string } }) => {
         ) : (
           <div className="grid grid-cols-3 place-items-start gap-3">
             {data?.map((item) =>
-              item.type as SocialType === SocialType.Github ? null : (
+              (item.type as SocialType) === SocialType.Github ? null : (
                 <ConnectedAccount
                   key={item.data.tokenId}
                   name={item.data.name ?? ""}

@@ -46,18 +46,18 @@ function extractPrice(priceRange: string, position: 1 | 2): number | null {
 }
 
 export default async function BillingTab() {
-  const billingPlans = await api.subscriptions.getProducts();
-  const getSubscription = await api.subscriptions.getSubscriptions();
+  // const billingPlans = await api.subscriptions.getProducts();
+  // const getSubscription = await api.subscriptions.getSubscriptions();
 
   return (
     <div className="w-full flex-1">
-      <ManageSubscription
+      {/* <ManageSubscription
         isCanceled={getSubscription?.isCanceled ?? false}
         lsCurrentPeriodEnd={getSubscription?.lsCurrentPeriodEnd ?? 0}
         updatePaymentMethodURL={getSubscription?.updatePaymentMethodURL ?? ""}
-      />
+      /> */}
       <div className="gird-cols-1 grid w-full gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {billingPlans?.data
+        {/* {billingPlans?.data
           ?.slice()
           .reverse()
           .map((plan) => (
@@ -72,7 +72,7 @@ export default async function BillingTab() {
                 getSubscription?.subscription?.data?.attributes?.product_name
               }
             />
-          ))}
+          ))} */}
       </div>
     </div>
   );

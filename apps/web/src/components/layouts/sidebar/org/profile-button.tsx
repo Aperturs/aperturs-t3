@@ -42,7 +42,7 @@ export default function ProfileButton() {
   const { data, isLoading } =
     api.organisation.basics.getAllUserOrganisations.useQuery();
   const params = useParams<{ orgid: string }>();
-  const orgId = params?.orgid ;
+  const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
 
   return (

@@ -2,8 +2,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getAuth } from "@clerk/nextjs/server";
 import { Client } from "twitter-api-sdk";
 
+import { db, schema } from "@aperturs/db";
+
 import { env } from "~/env.mjs";
-import { prisma } from "~/server/db";
 
 interface Response {
   access_token: string;
@@ -63,19 +64,32 @@ export default async function handler(
           if (userId) {
             if (userObject) {
               //console.log(response.expires_in, "response.expires_in");
-              await prisma.twitterToken
-                .create({
-                  data: {
-                    access_token: response.access_token,
-                    refresh_token: response.refresh_token,
-                    expires_in: new Date(
-                      new Date().getTime() + response.expires_in * 1000,
-                    ),
-                    profileId: userObject.id,
-                    client_id: formattedClientId,
-                    client_secret: formattedClientSecret,
-                    clerkUserId: userId,
-                  },
+              // await prisma.twitterToken
+              //   .create({
+              //     data: {
+              //       access_token: response.access_token,
+              //       refresh_token: response.refresh_token,
+              //       expires_in: new Date(
+              //         new Date().getTime() + response.expires_in * 1000,
+              //       ),
+              //       profileId: userObject.id,
+              //       client_id: formattedClientId,
+              //       client_secret: formattedClientSecret,
+              //       clerkUserId: userId,
+              //     },
+              //   })
+              await db
+                .insert(schema.twitterToken)
+                .values({
+                  accessToken: response.access_token,
+                  refreshToken: response.refresh_token,
+                  expiresIn: new Date(
+                    new Date().getTime() + response.expires_in * 1000,
+                  ),
+                  profileId: userObject.id,
+                  clientId: formattedClientId,
+                  clientSecret: formattedClientSecret,
+                  clerkUserId: userId,
                 })
                 .finally(() => {
                   console.log("working");

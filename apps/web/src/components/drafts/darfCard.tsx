@@ -23,7 +23,7 @@ interface IDarfCard {
 
 export default function DraftCard({ id, content, refetch }: IDarfCard) {
   const router = useRouter();
-  const { mutateAsync: DeleteDraft, isLoading: deleting } =
+  const { mutateAsync: DeleteDraft, isPending: deleting } =
     api.savepost.deleteSavedPostById.useMutation();
 
   const [open, setOpen] = useState(false);

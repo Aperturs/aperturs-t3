@@ -21,18 +21,27 @@ export const githubProject = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const project = await limitWrapper(
         () =>
-          ctx.db.insert(schema.project).values({
-            repoName: input.repoName,
-            repoDescription: input.repoDescription,
-            repoUrl: input.repoUrl,
-            repoId: input.repoId,
-            updatedAt: new Date(),
-            clerkUserId: ctx.currentUser,
-          }),
+          ctx.db
+            .insert(schema.project)
+            .values({
+              repoName: input.repoName,
+              repoDescription: input.repoDescription,
+              repoUrl: input.repoUrl,
+              repoId: input.repoId,
+              updatedAt: new Date(),
+              clerkUserId: ctx.currentUser,
+            })
+            .returning(),
         ctx.currentUser,
         "projects",
       );
-      return project;
+
+      const [newProject] = project;
+
+      if (!newProject) {
+        throw new Error("Failed to create project");
+      }
+      return newProject;
     }),
 
   updateProject: protectedProcedure

@@ -15,7 +15,7 @@ export default async function CommitsPage({
 }) {
   // const router = useRouter();
   // const id = router.query.id as string;
-  const project = await api.github.getCommits.query({
+  const project = await api.github.getCommits({
     projectId: params.id,
   });
   //   const githubTokens = await api.user.getGithubAccounts();
@@ -49,7 +49,8 @@ export default async function CommitsPage({
       projectName={project?.project?.repoName ?? ""}
       ProjectTagline={project?.project?.repoDescription ?? ""}
       projectDescription={
-        project?.project?.questionsAnswersJsonString?.toString() ?? ""
+        // project?.project?.questionsAnswersJsonString?.toString() ?? ""
+        ""
       }
       params={params}
     />

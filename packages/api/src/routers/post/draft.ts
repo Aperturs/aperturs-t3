@@ -33,8 +33,15 @@ export const posting = createTRPCRouter({
           ctx.currentUser,
           "drafts",
         );
+
+        const [post] = savedPost;
+
+        if (!post) {
+          throw new Error("Failed to save post");
+        }
+
         return {
-          data: savedPost[0]?.id,
+          data: post.id,
           success: true,
           message: "Saved to draft successfully",
           state: 200,

@@ -21,7 +21,7 @@ export const organisationBasic = createTRPCRouter({
         ctx.currentUser,
         "organisation",
       );
-      if(!res) {
+      if (!res) {
         throw new Error("Failed to create organisation");
       }
       const orgId = res.id;

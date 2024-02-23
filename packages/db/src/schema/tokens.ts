@@ -137,6 +137,9 @@ export const twitterToken = pgTable(
     username: varchar("username", { length: 191 }),
     fullname: varchar("fullname", { length: 191 }),
     profileImage: varchar("profile_image", { length: 191 }),
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => {
     return {

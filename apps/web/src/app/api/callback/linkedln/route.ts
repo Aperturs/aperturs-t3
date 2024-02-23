@@ -4,8 +4,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 
+import { db, schema } from "@aperturs/db";
+
 import { env } from "~/env.mjs";
-import { prisma } from "~/server/db";
 
 export async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
@@ -45,23 +46,35 @@ export async function GET(req: NextRequest) {
     console.log(data, "data");
     // console.log({ user });
     if (user && userId) {
-      await prisma.linkedInToken.create({
-        data: {
-          profileId: user.id,
-          access_token: data.access_token,
-          refresh_token: data.refresh_token ?? undefined,
-          expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
-          refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
-          clerkUserId: userId,
-        },
-      });
-      // await caller.user.addLinkedln({
-      //   access_token: data.access_token,
-      //   expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
-      //   profileId: user["id"],
-      //   refresh_token: data.refresh_token ?? undefined,
-      //   refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
+      // await prisma.linkedInToken.create({
+      //   data: {
+      //     profileId: user.id,
+      //     access_token: data.access_token,
+      //     refresh_token: data.refresh_token ?? undefined,
+      //     expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
+      //     refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
+      //     clerkUserId: userId,
+      //   },
       // });
+      if (
+        !user.id ||
+        !data.access_token ||
+        !data.refresh_token ||
+        !data.expires_in ||
+        !data.refresh_token_expires_in ||
+        !userId
+      ) {
+        throw new Error("Invalid data");
+      }
+      await db.insert(schema.linkedInToken).values({
+        profileId: user.id,
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token,
+        expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
+        refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
+        clerkUserId: userId,
+        updatedAt: new Date(),
+      });
     }
     const url = req.nextUrl.clone();
     url.pathname = "/socials";

@@ -85,12 +85,12 @@ const Socials = () => {
     mutateAsync: addLinkedln,
     data: linkedlnData,
     error,
-  } = api.user.addLinkedln.useMutation();
+  } = api.linkedin.addLinkedln.useMutation();
   const {
     mutateAsync: addGithub,
     data: githubData,
-    isLoading: githubLoading,
-  } = api.user.addGithub.useMutation();
+    isPending: githubLoading,
+  } = api.github.addGithub.useMutation();
 
   const handleLinkedln = async () => {
     setLocalLoading(true);

@@ -56,10 +56,7 @@ const NewRepoFormModal = () => {
   const { data: githubTokens, isLoading } =
     api.user.getGithubAccounts.useQuery();
 
-  const { getRepositories } = useGithub(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    githubTokens?.at(0)?.access_token!,
-  );
+  const { getRepositories } = useGithub(githubTokens?.at(0)?.accessToken ?? "");
 
   // useEffect(() => {
   //   if (!githubTokens || githubTokens.length <= 0) {
@@ -93,7 +90,7 @@ const NewRepoFormModal = () => {
       });
   }, []);
 
-  const { mutateAsync: addProject, isLoading: projectLoading } =
+  const { mutateAsync: addProject, isPending: projectLoading } =
     api.github.project.addProject.useMutation({
       onSuccess: (data) => {
         router.push(`/project/${data.id}/commits`);

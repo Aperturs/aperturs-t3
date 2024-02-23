@@ -2,8 +2,9 @@
 
 import { auth, clerkClient } from "@clerk/nextjs";
 
+import type { ChangeUserRoleWithOrgIdType } from "@aperturs/validators/organisation";
+
 import type { PrivateMetaData } from "./user-private-metadata";
-import type { ChangeUserRoleWithOrgIdType } from "~/server/functions/organisation/organisation-types";
 
 export async function updateUserPrivateMetadata(
   data: Partial<PrivateMetaData>,
@@ -41,13 +42,13 @@ export async function updateUserPrivateMetadata(
 }
 
 export async function getUserPrivateMetadata() {
-  console.log('here');
+  console.log("here");
   const { userId, user } = auth();
   if (!userId) {
     throw new Error("No user ID found");
   }
   const metadata = user?.privateMetadata as PrivateMetaData;
-  console.log(user?.privateMetadata,'private');
+  console.log(user?.privateMetadata, "private");
   return metadata;
 }
 

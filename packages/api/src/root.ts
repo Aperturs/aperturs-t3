@@ -22,7 +22,7 @@ export const appRouter = createTRPCRouter({
   post: post,
   // subscriptions: subscriptionData,
   organisation: organisationRouter,
-  metadata: metaDataRouter
+  metadata: metaDataRouter,
 });
 
 // export type definition of API
