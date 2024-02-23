@@ -1,15 +1,14 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import _jiti from "jiti";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import _jiti from "jiti";
-
 const jiti = _jiti(__filename);
 
-jiti("./src/env");
-jiti("@acme/auth/env");
+// jiti("./env");
+jiti("@aperturs/api/env");
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
