@@ -25,6 +25,7 @@ import BottomMenu from "./bottomMenu";
 import AccordianMenu from "./command-group";
 import { CommandMenu } from "./command-menu";
 import ProfileButton from "./org/profile-button";
+import { api } from "~/trpc/react";
 
 const AccordanceMenuList = [
   {
@@ -120,10 +121,15 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
-  const { data: metadata } = useQuery({
-    queryKey: ["userPrivateMetadata"],
-    queryFn: () => getUserPrivateMetadata(),
-  });
+  // const { data: metadata,error } = useQuery({
+  //   queryKey: ["userPrivateMetadata"],
+  //   queryFn: () => getUserPrivateMetadata(),
+  //   // refetchInterval:1000,
+  // });
+
+  const {data: metadata} = api.metadata.getUserPrivateMetaData.useQuery();
+
+  // console.log(metadata,error,'meta');
 
   return (
     <Sheet>

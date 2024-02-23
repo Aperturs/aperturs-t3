@@ -1,5 +1,6 @@
 import { github } from "./routers/github/github";
 import { linkedin } from "./routers/linkedin/linkedin";
+import { metaDataRouter } from "./routers/metadata/main";
 import { organisationRouter } from "./routers/organisation/main";
 import { posting } from "./routers/post/draft";
 import { post } from "./routers/post/post";
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   post: post,
   // subscriptions: subscriptionData,
   organisation: organisationRouter,
+  metadata: metaDataRouter
 });
 
 // export type definition of API

@@ -41,11 +41,13 @@ export async function updateUserPrivateMetadata(
 }
 
 export async function getUserPrivateMetadata() {
+  console.log('here');
   const { userId, user } = auth();
   if (!userId) {
     throw new Error("No user ID found");
   }
   const metadata = user?.privateMetadata as PrivateMetaData;
+  console.log(user?.privateMetadata,'private');
   return metadata;
 }
 

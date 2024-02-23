@@ -8,7 +8,7 @@ export default async function FetchInvite({
 }) {
   const inviteId = params.inviteid;
 
-  const invite = await api.organisation.team.getInviteDetails.query({
+  const invite = await api.organisation.team.getInviteDetails({
     inviteId,
   });
   console.log(invite, "invite");
