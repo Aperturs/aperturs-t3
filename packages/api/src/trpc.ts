@@ -46,6 +46,7 @@ const createInnerTRPCContext = (opts: { headers: Headers }) => {
     ...opts,
     db,
     currentUser: clerkId,
+    user: user,
   };
 };
 

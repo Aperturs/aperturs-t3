@@ -39,6 +39,12 @@ export const organisationBasic = createTRPCRouter({
 
   getAllUserOrganisations: protectedProcedure.query(async ({ ctx }) => {
     const res = await getUserOrganisations(ctx.currentUser);
-    return res;
+    const orgs = res.map((user) => {
+      return {
+        ...user.organization,
+        role: user.role,
+      };
+    });
+    return orgs;
   }),
 });

@@ -90,7 +90,7 @@ export async function sendInvitationViaEmail({
     invitedByName: invitedByName,
     teamName: teamName,
     teamImage: teamImage,
-    inviteUrl: `http://localhost:3000/invite/${invitationId}`,
+    inviteUrl: `http://localhost:3000/organisation/invite/${invitationId}`,
   });
   const email = await resend.emails
     .send({

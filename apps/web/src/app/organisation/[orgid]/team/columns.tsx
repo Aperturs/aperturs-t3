@@ -91,7 +91,7 @@ export const columns: ColumnDef<OrganizationUser>[] = [
             "bg-emerald-500": role === "OWNER",
             "bg-orange-400": role === "ADMIN",
             "bg-primary": role === "EDITOR",
-            "bg-muted": role === "MEMBER",
+            "bg-indigo-400": role === "MEMBER",
           })}
         >
           {role}

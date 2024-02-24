@@ -42,8 +42,11 @@ export async function createOrganisation({
 }
 
 export async function getUserOrganisations(clerkID: string) {
-  const res = await db.query.organization.findMany({
-    where: eq(schema.organization.clerkUserId, clerkID),
+  const res = await db.query.organizationUser.findMany({
+    where: eq(schema.organizationUser.clerkUserId, clerkID),
+    with: {
+      organization: true,
+    },
   });
   return res;
 }

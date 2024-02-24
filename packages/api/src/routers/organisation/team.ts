@@ -12,7 +12,7 @@ import {
   sendInvitationViaEmail,
 } from "@api/handlers/organisation/teams";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -98,19 +98,20 @@ export const OrganizationTeam = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      // const orgDetails = await ctx.prisma.organization.findUnique({
-      //   where: {
-      //     id: input.orgId,
-      //   },
-      // });
-      const orgDetails = await ctx.db.query.organization.findFirst({
+      const details = await ctx.db.query.organization.findFirst({
         where: eq(schema.organization.id, input.orgId),
+        with: {
+          owner: true,
+        },
       });
-      const { user } = auth();
-      const userName = user?.firstName + " " + user?.lastName;
-      const userImage = user?.imageUrl;
-      const teamImage = orgDetails?.logo;
-      const teamName = orgDetails?.name;
+
+      const userDetails = details?.owner?.userDetails as UserDetails;
+      const userName = userDetails.firstName + " " + userDetails.lastName;
+      const userImage = userDetails.profileImageUrl;
+      const teamImage = details?.logo;
+      const teamName = details?.name;
+      // console.log(user,'user')
+      console.log(userName, userImage, teamImage, teamName);
       const res = await inviteUserToOrganisation({
         ...input,
         inviterId: ctx.currentUser,
