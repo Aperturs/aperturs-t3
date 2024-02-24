@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
   pgTable,
@@ -114,6 +114,17 @@ export const linkedInToken = pgTable(
 export type linkedInTokenInsert = typeof linkedInToken.$inferInsert;
 export type linkedInTokenSelect = typeof linkedInToken.$inferSelect;
 
+export const linkedinTokenRelations = relations(linkedInToken, ({ one }) => ({
+  organization: one(organization, {
+    references: [organization.id],
+    fields: [linkedInToken.organizationId],
+  }),
+  clerkUser: one(user, {
+    references: [user.clerkUserId],
+    fields: [linkedInToken.clerkUserId],
+  }),
+}));
+
 export const twitterToken = pgTable(
   "TwitterToken",
   {
@@ -162,3 +173,14 @@ export const twitterToken = pgTable(
 
 export type twitterTokenInsert = typeof twitterToken.$inferInsert;
 export type twitterTokenSelect = typeof twitterToken.$inferSelect;
+
+export const twitterTokenRelations = relations(twitterToken, ({ one }) => ({
+  organization: one(organization, {
+    references: [organization.id],
+    fields: [twitterToken.organizationId],
+  }),
+  clerkUser: one(user, {
+    references: [user.clerkUserId],
+    fields: [twitterToken.clerkUserId],
+  }),
+}));
