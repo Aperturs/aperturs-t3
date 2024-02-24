@@ -5,8 +5,9 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
+import { db, eq, schema } from "@aperturs/db";
+
 import { env } from "~/env.mjs";
-import { prisma } from "~/server/db";
 import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 
 const webhookSecret = env.WEBHOOK_SECRET || "";
@@ -93,11 +94,16 @@ async function handler(request: Request) {
       profileImageUrl: evt.data.profile_image_url,
     };
 
-    await prisma.user.create({
-      data: {
-        clerkUserId: id,
-        userDetails: details,
-      },
+    // await prisma.user.create({
+    //   data: {
+    //     clerkUserId: id,
+    //     userDetails: details,
+    //   },
+    // });
+    await db.insert(schema.user).values({
+      clerkUserId: id,
+      userDetails: details,
+      updatedAt: new Date(),
     });
   }
   if (eventType === "user.updated") {
@@ -113,21 +119,29 @@ async function handler(request: Request) {
       birthday: evt.data.birthday,
       profileImageUrl: evt.data.profile_image_url,
     };
-    await prisma.user.update({
-      where: {
-        clerkUserId: id,
-      },
-      data: {
-        userDetails: userDetails,
-      },
-    });
+    // await prisma.user.update({
+    //   where: {
+    //     clerkUserId: id,
+    //   },
+    //   data: {
+    //     userDetails: userDetails,
+    //   },
+    // });
+    await db
+      .update(schema.user)
+      .set({
+        userDetails,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.user.clerkUserId, id));
   }
   if (eventType === "user.deleted") {
-    await prisma.user.delete({
-      where: {
-        clerkUserId: id,
-      },
-    });
+    // await prisma.user.delete({
+    //   where: {
+    //     clerkUserId: id,
+    //   },
+    // });
+    await db.delete(schema.user).where(eq(schema.user.clerkUserId, id));
   }
   return NextResponse.json({
     message: "ok",

@@ -19,6 +19,7 @@ import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
+import { api } from "~/trpc/react";
 import { getUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
@@ -120,9 +121,15 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
-  const { data: metadata } = useQuery(["getUserPrivateMetadata"], () =>
-    getUserPrivateMetadata(),
-  );
+  // const { data: metadata,error } = useQuery({
+  //   queryKey: ["userPrivateMetadata"],
+  //   queryFn: () => getUserPrivateMetadata(),
+  //   // refetchInterval:1000,
+  // });
+
+  const { data: metadata } = api.metadata.getUserPrivateMetaData.useQuery();
+
+  // console.log(metadata,error,'meta');
 
   return (
     <Sheet>

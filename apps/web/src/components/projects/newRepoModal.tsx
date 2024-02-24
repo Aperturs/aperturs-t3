@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import Select from "react-select";
 
+import type { Repo } from "@aperturs/validators/github";
 import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
 import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";
@@ -16,7 +17,7 @@ import { Input } from "@aperturs/ui/input";
 import { Textarea } from "@aperturs/ui/textarea";
 
 import { useGithub } from "~/hooks/useGithub";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 import LogoLoad from "../custom/loading/logoLoad";
 import SimpleLoader from "../custom/loading/simple-loading";
 
@@ -56,10 +57,7 @@ const NewRepoFormModal = () => {
   const { data: githubTokens, isLoading } =
     api.user.getGithubAccounts.useQuery();
 
-  const { getRepositories } = useGithub(
-    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
-    githubTokens?.at(0)?.access_token!,
-  );
+  const { getRepositories } = useGithub(githubTokens?.at(0)?.accessToken ?? "");
 
   // useEffect(() => {
   //   if (!githubTokens || githubTokens.length <= 0) {
@@ -93,7 +91,7 @@ const NewRepoFormModal = () => {
       });
   }, []);
 
-  const { mutateAsync: addProject, isLoading: projectLoading } =
+  const { mutateAsync: addProject, isPending: projectLoading } =
     api.github.project.addProject.useMutation({
       onSuccess: (data) => {
         router.push(`/project/${data.id}/commits`);

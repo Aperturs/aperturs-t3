@@ -7,7 +7,9 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import rawBody from "raw-body";
 
-import { prisma } from "~/server/db";
+// import { prisma } from "~/server/db";
+import { db, eq, schema } from "@aperturs/db";
+
 import ls from "~/utils/lemonSqueezy";
 
 export async function POST(request: Request) {
@@ -36,7 +38,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Invalid signature" }, { status: 403 });
   }
 
-  const userId = payload.meta.custom_data.user_id;
+  const userId = payload.meta.custom_data.user_id as string;
   console.log(payload.meta.custom_data.user_id);
 
   // Check if custom defined data i.e. the `userId` is there or not
@@ -51,9 +53,21 @@ export async function POST(request: Request) {
     case "subscription_created": {
       const subscription = await ls.getSubscription({ id: payload.data.id });
 
-      await prisma.user.update({
-        where: { clerkUserId: userId },
-        data: {
+      // await prisma.user.update({
+      //   where: { clerkUserId: userId },
+      //   data: {
+      //     currentPlan: "PRO",
+      //     lsSubscriptionId: `${subscription.data.id}`,
+      //     lsCustomerId: `${payload.data.attributes.customer_id}`,
+      //     lsVariantId: subscription.data.attributes.variant_id,
+      //     lsCurrentPeriodEnd: new Date(
+      //       subscription.data.attributes.renews_at ?? "",
+      //     ),
+      //   },
+      // });
+      await db
+        .update(schema.user)
+        .set({
           currentPlan: "PRO",
           lsSubscriptionId: `${subscription.data.id}`,
           lsCustomerId: `${payload.data.attributes.customer_id}`,
@@ -61,8 +75,9 @@ export async function POST(request: Request) {
           lsCurrentPeriodEnd: new Date(
             subscription.data.attributes.renews_at ?? "",
           ),
-        },
-      });
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.user.clerkUserId, userId));
 
       return NextResponse.json(
         { message: "Success Subscription Created" },
@@ -73,20 +88,39 @@ export async function POST(request: Request) {
     case "subscription_updated": {
       const subscription = await ls.getSubscription({ id: payload.data.id });
 
-      const user = await prisma.user.findUnique({
-        where: { lsSubscriptionId: `${subscription.data.id}` },
-        select: { lsSubscriptionId: true },
+      if (!subscription.data.attributes.renews_at)
+        return NextResponse.json(
+          { message: "No renews_at date" },
+          { status: 501 },
+        );
+
+      // const user = await prisma.user.findUnique({
+      //   where: { lsSubscriptionId: `${subscription.data.id}` },
+      //   select: { lsSubscriptionId: true },
+      // });
+
+      const user = await db.query.user.findFirst({
+        where: eq(schema.user.lsSubscriptionId, `${subscription.data.id}`),
       });
 
       if (!user?.lsSubscriptionId) return;
 
-      await prisma.user.update({
-        where: { lsSubscriptionId: user.lsSubscriptionId },
-        data: {
+      // await prisma.user.update({
+      //   where: { lsSubscriptionId: user.lsSubscriptionId },
+      //   data: {
+      //     lsVariantId: subscription.data.attributes.variant_id,
+      //     lsCurrentPeriodEnd: subscription.data.attributes.renews_at,
+      //   },
+      // });
+
+      await db
+        .update(schema.user)
+        .set({
           lsVariantId: subscription.data.attributes.variant_id,
-          lsCurrentPeriodEnd: subscription.data.attributes.renews_at,
-        },
-      });
+          lsCurrentPeriodEnd: new Date(subscription.data.attributes.renews_at),
+          updatedAt: new Date(),
+        })
+        .where(eq(schema.user.lsSubscriptionId, user.lsSubscriptionId));
 
       return NextResponse.json(
         { message: "Success Subscription Updated" },

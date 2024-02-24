@@ -5,6 +5,9 @@
   "workspaces": [
     ".react-email"
   ],
+  "exports": {
+    "./*": "./emails/*.tsx"
+  },
   "scripts": {
     "dev": "email dev -p 3001",
     "export": "email export"

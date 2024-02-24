@@ -32,7 +32,7 @@ export default function InviteCard({
 }: InviteCardProps) {
   const { isSignedIn, user, isLoaded } = useUser();
   const { signOut } = useClerk();
-  const { mutateAsync: acceptInvite, isLoading: accpeting } =
+  const { mutateAsync: acceptInvite, isPending: accpeting } =
     api.organisation.team.acceptInvite.useMutation();
   const router = useRouter();
 

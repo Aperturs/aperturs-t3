@@ -3,8 +3,10 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { getAuth } from "@clerk/nextjs/server";
 
+import { db, schema } from "@aperturs/db";
+import { GithubUser } from "@aperturs/validators/github";
+
 import { env } from "~/env.mjs";
-import { prisma } from "~/server/db";
 
 // interface TokenData {
 //   access_token: string;
@@ -44,13 +46,20 @@ export default async function handler(
   const { userId } = getAuth(req);
 
   if (userObject && userId) {
-    await prisma.githubToken.create({
-      data: {
-        clerkUserId: userId,
-        access_token: tokenData.access_token,
-        expires_in: null,
-        profileId: userObject.login,
-      },
+    // await prisma.githubToken.create({
+    //   data: {
+    //     clerkUserId: userId,
+    //     access_token: tokenData.access_token,
+    //     expires_in: null,
+    //     profileId: userObject.login,
+    //   },
+    // });
+    await db.insert(schema.githubToken).values({
+      clerkUserId: userId,
+      accessToken: tokenData.access_token,
+      expiresIn: null,
+      profileId: userObject.login,
+      updatedAt: new Date(),
     });
   } else {
     console.log("no user object");

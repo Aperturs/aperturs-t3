@@ -6,8 +6,8 @@ import { api } from "~/trpc/server";
 
 async function Projects() {
   //TODO: moving them into separate components and add suspense and skeleton loading
-  const data = await api.github.project.getAllProjects.query();
-  const githubTokens = await api.user.getGithubAccounts.query();
+  const data = await api.github.project.getAllProjects();
+  const githubTokens = await api.user.getGithubAccounts();
 
   //   if (isLoading || tokensLoading) return <LogoLoad size="24" />;
   if (!githubTokens || githubTokens.length <= 0)
@@ -30,13 +30,13 @@ async function Projects() {
       <div
         className={`grid-col-1 grid w-full gap-6  md:grid-cols-2 2xl:grid-cols-3`}
       >
-        {/* <GithubCard
+        <GithubCard
           projectId="test"
           repoName="test"
           repoDescription="test"
           lastUpdated="test"
-        /> */}
-        {/* {data ? (
+        />
+        {data ? (
           data.map((item) => (
             <GithubCard
               key={item.id}
@@ -50,7 +50,7 @@ async function Projects() {
           <div className="grid h-full w-full place-content-center">
             No Projects Connected
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );

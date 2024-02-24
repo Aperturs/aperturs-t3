@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
+import { SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import SocialsMenu from "./menu";

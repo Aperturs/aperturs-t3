@@ -12,9 +12,9 @@ import { IoIosAddCircle } from "react-icons/io";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
+import { SocialType } from "@aperturs/validators/post";
 
-import { SocialType } from "~/types/post-enums";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 import SimpleLoader from "../custom/loading/simple-loading";
 
 const SocialIcon = ({ type }: { type: SocialType }) => {
@@ -85,12 +85,12 @@ const Socials = () => {
     mutateAsync: addLinkedln,
     data: linkedlnData,
     error,
-  } = api.user.addLinkedln.useMutation();
+  } = api.linkedin.addLinkedln.useMutation();
   const {
     mutateAsync: addGithub,
     data: githubData,
-    isLoading: githubLoading,
-  } = api.user.addGithub.useMutation();
+    isPending: githubLoading,
+  } = api.github.addGithub.useMutation();
 
   const handleLinkedln = async () => {
     setLocalLoading(true);

@@ -1,8 +1,9 @@
 "use client";
 
+import { SocialType } from "@aperturs/validators/post";
+
 import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
-import { SocialType } from "~/types/post-enums";
 import ConnectedAccount from "../connections";
 import Publish from "./publish";
 
@@ -20,7 +21,7 @@ const SideBar = ({ params }: { params: { id: string } }) => {
         ) : (
           <div className="grid grid-cols-3 place-items-start gap-3">
             {data?.map((item) =>
-              item.type === SocialType.Github ? null : (
+              (item.type as SocialType) === SocialType.Github ? null : (
                 <ConnectedAccount
                   key={item.data.tokenId}
                   name={item.data.name ?? ""}

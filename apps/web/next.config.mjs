@@ -1,8 +1,14 @@
-import path, { dirname } from "path";
+import { dirname } from "path";
 import { fileURLToPath } from "url";
+import _jiti from "jiti";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const jiti = _jiti(__filename);
+
+// jiti("./env");
+jiti("@aperturs/api/env");
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
@@ -14,19 +20,19 @@ const __dirname = dirname(__filename);
 const config = {
   reactStrictMode: true,
 
-  experimental: {
-    turbo: {
-      rules: {
-        "*.svg": {
-          loaders: ["@svgr/webpack"],
-          as: "*.js",
-        },
-      },
-    },
-    ...(process.env.NODE_ENV === "development"
-      ? { outputFileTracingRoot: path.join(__dirname, "../../") }
-      : null),
-  },
+  // experimental: {
+  //   turbo: {
+  //     rules: {
+  //       "*.svg": {
+  //         loaders: ["@svgr/webpack"],
+  //         as: "*.js",
+  //       },
+  //     },
+  //   },
+  //   ...(process.env.NODE_ENV === "development"
+  //     ? { outputFileTracingRoot: path.join(__dirname, "../../") }
+  //     : null),
+  // },
 
   images: {
     remotePatterns: [
@@ -61,7 +67,12 @@ const config = {
     ],
   },
 
-  transpilePackages: ["@aperturs/ui"],
+  transpilePackages: [
+    "@aperturs/api",
+    "@aperturs/db",
+    "@aperturs/ui",
+    "@aperturs/validators",
+  ],
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
