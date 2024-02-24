@@ -3,6 +3,10 @@
   "compilerOptions": {
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json"
   },
-  "include": ["src", "drizzle.config.ts"],
+  "include": [
+    "src",
+    "drizzle.config.ts",
+    "../validators/src/private_metadata.ts"
+  ],
   "exclude": ["node_modules"]
 }

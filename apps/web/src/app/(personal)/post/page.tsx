@@ -28,7 +28,7 @@ export default function PostContent({ params }: { params: { id: string } }) {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 200); // 2-second delay
+    }, 2000); // 2-second delay
 
     return () => {
       clearTimeout(timeout);

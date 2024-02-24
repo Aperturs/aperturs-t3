@@ -27,7 +27,7 @@ export default function BillingCard({
   id,
   currentPlan,
 }: iFeatureList) {
-  const subscribe = api.subscriptions.createCheckout.useMutation();
+  // const subscribe = api.subscriptions.createCheckout.useMutation();
 
   // const handleSubscribe = async (productId: string) => {
   //   await subscribe({ productId: parseInt(productId) }).then((res) => {
@@ -103,9 +103,9 @@ export default function BillingCard({
       <CardFooter>
         <Button
           className="w-full"
-          onClick={async () => {
-            await subscribe.mutateAsync({ productId: parseInt(id) });
-          }}
+          // onClick={async () => {
+          //   await subscribe.mutateAsync({ productId: parseInt(id) });
+          // }}
         >
           Choose plan
         </Button>

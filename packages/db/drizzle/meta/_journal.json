@@ -36,6 +36,20 @@
       "when": 1708616185971,
       "tag": "0004_supreme_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1708669270064,
+      "tag": "0005_boring_queen_noir",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1708674195425,
+      "tag": "0006_fantastic_wild_child",
+      "breakpoints": true
     }
   ]
 }

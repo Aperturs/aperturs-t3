@@ -2,9 +2,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
+import { SocialType } from "@aperturs/validators/post";
+
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
-import { SocialType } from "~/types/post-enums";
 import usePost from "../../content/use-post";
 
 export default function usePublishing({ id }: { id: string }) {
@@ -33,26 +34,26 @@ export default function usePublishing({ id }: { id: string }) {
   const {
     mutateAsync: createTweet,
     error: twitterError,
-    isLoading: tweeting,
+    isPending: tweeting,
   } = api.twitter.postTweet.useMutation();
   const {
     mutateAsync: createLinkedinPost,
-    isLoading: linkedinPosting,
+    isPending: linkedinPosting,
     error: linkedinError,
   } = api.linkedin.postToLinkedin.useMutation();
 
   const {
     mutateAsync: saveToDrafts,
-    isLoading: saving,
+    isPending: saving,
     data: saveData,
     // status: saveStatus,
     // error: saveError,
   } = api.savepost.savePost.useMutation();
-  const { mutateAsync: updatePost, isLoading: updating } =
+  const { mutateAsync: updatePost, isPending: updating } =
     api.savepost.updatePost.useMutation();
 
-  const { mutateAsync: Schedule, isLoading: scheduling } =
-    api.post.schedule.useMutation();
+  // const { mutateAsync: Schedule, isPending: scheduling } =
+  //   api.post.schedule.useMutation();
 
   const router = useRouter();
 
@@ -220,24 +221,24 @@ export default function usePublishing({ id }: { id: string }) {
       }
       console.log(id, "id");
       console.log(saveData, "savedData");
-      await toast
-        .promise(
-          Schedule({
-            id: id,
-            date: new Date(scheduledTime),
-          }),
-          {
-            loading: "Scheduling post...",
-            success: "Scheduled post",
-            error: "Failed to schedule post",
-          },
-        )
-        .then((response) => {
-          if (response) {
-            reset();
-            router.push("/post");
-          }
-        });
+      // await toast
+      //   .promise(
+      //     Schedule({
+      //       id: id,
+      //       date: new Date(scheduledTime),
+      //     }),
+      //     {
+      //       loading: "Scheduling post...",
+      //       success: "Scheduled post",
+      //       error: "Failed to schedule post",
+      //     },
+      //   )
+      //   .then((response) => {
+      //     if (response) {
+      //       reset();
+      //       router.push("/post");
+      //     }
+      //   });
     } catch (err) {
       toast.error(`Failed to schedule post`);
     }
@@ -251,7 +252,7 @@ export default function usePublishing({ id }: { id: string }) {
     isDisabled:
       !content || uploadingFiles || saving || linkedinPosting || tweeting,
     isUploaded,
-    scheduling,
+    // scheduling,
     linkedinPosting,
     tweeting,
     uploadingFiles,

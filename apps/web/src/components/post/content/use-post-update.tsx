@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
+import { SocialType } from "@aperturs/validators/post";
+
 import { useStore } from "~/store/post-store";
-import { SocialType } from "~/types/post-enums";
 
 function usePostUpdate(id: string) {
   const { setContent, content } = useStore(

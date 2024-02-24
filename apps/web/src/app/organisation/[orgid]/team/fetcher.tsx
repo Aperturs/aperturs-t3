@@ -12,7 +12,7 @@ interface Props {
 async function MebersTable({ params }: Props) {
   const orgId = params.orgid;
 
-  const team = await api.organisation.team.getOrganisationTeams.query({
+  const team = await api.organisation.team.getOrganisationTeams({
     orgId,
   });
 

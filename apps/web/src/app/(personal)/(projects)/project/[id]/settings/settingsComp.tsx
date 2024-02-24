@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from "react";
 
 import { Button } from "@aperturs/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
 import { Input } from "@aperturs/ui/input";
 import { Textarea } from "@aperturs/ui/textarea";
 
-import type { ProjectQnA } from "~/types/project";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 const Settings = ({ params }: { params: { id: string } }) => {
   const { data } = api.github.project.getProject.useQuery(params.id);
@@ -21,48 +19,48 @@ const Settings = ({ params }: { params: { id: string } }) => {
   const [tagline, setTagline] = useState("");
   const {
     mutateAsync: updateContext,
-    isLoading,
+    isPending,
     error,
   } = api.github.project.updateProject.useMutation();
 
-  useEffect(() => {
-    if (data) {
-      const questionAnswer = data?.questionsAnswersJsonString
-        ? (data.questionsAnswersJsonString as unknown as ProjectQnA[]) // Parse JSON string to object
-        : ([] as ProjectQnA[]);
+  // useEffect(() => {
+  //   if (data) {
+  //     const questionAnswer = data?.questionsAnswersJsonString
+  //       ? (data.questionsAnswersJsonString as unknown as ProjectQnA[]) // Parse JSON string to object
+  //       : ([] as ProjectQnA[]);
 
-      setName(data.projectName ?? data.repoName);
-      setTagline(data.repoDescription);
-      if (questionAnswer[0]) {
-        setDescription(questionAnswer[0].answer);
-      }
-    }
-  }, [data]);
+  //     setName(data.projectName ?? data.repoName);
+  //     setTagline(data.repoDescription);
+  //     if (questionAnswer[0]) {
+  //       setDescription(questionAnswer[0].answer);
+  //     }
+  //   }
+  // }, [data]);
 
-  const submit = async () => {
-    const id = params.id;
-    if (!id) {
-      toast.error("Something went wrong");
-      return;
-    }
-    await toast.promise(
-      updateContext({
-        data: {
-          projectName: name,
-          questionsAnswersJsonString: [
-            { question: "Description", answer: description },
-          ],
-          repoDescription: tagline,
-        },
-        id: id.toString(),
-      }),
-      {
-        loading: "Saving Changes ...",
-        success: "Saved Successfully",
-        error: `Something went wrong ${error?.message}`,
-      },
-    );
-  };
+  // const submit = async () => {
+  //   const id = params.id;
+  //   if (!id) {
+  //     toast.error("Something went wrong");
+  //     return;
+  //   }
+  //   await toast.promise(
+  //     updateContext({
+  //       data: {
+  //         projectName: name,
+  //         questionsAnswersJsonString: [
+  //           { question: "Description", answer: description },
+  //         ],
+  //         repoDescription: tagline,
+  //       },
+  //       id: id.toString(),
+  //     }),
+  //     {
+  //       loading: "Saving Changes ...",
+  //       success: "Saved Successfully",
+  //       error: `Something went wrong ${error?.message}`,
+  //     },
+  //   );
+  // };
   return (
     <div className="mt-4 grid grid-cols-1 gap-11 sm:grid-cols-1">
       {/* <CommitSettings />
@@ -97,9 +95,9 @@ const Settings = ({ params }: { params: { id: string } }) => {
         </CardContent>
         <CardFooter>
           <Button
-            disabled={isLoading}
+            disabled={isPending}
             className="w-full"
-            onClick={async () => await submit()}
+            // onClick={async () => await submit()}
           >
             Save Changes
           </Button>

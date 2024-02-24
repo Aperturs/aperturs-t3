@@ -16,9 +16,10 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@aperturs/ui/dialog";
+import { CommitType } from "@aperturs/validators/github-store";
 
 import { useGithubStore } from "~/store/github-store";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 import { defaultContent } from "~/utils/basic-functions";
 
 const staggerVariants = {
@@ -50,7 +51,7 @@ function formatedSavePost(text: string) {
 // }
 
 interface CommitTableProps {
-  rows: ICommit[];
+  rows: CommitType[];
   projectName: string;
   ProjectTagline: string;
   projectDescription: string;
@@ -76,7 +77,7 @@ export default function CommitsTable({
     data: generatedPosts,
     mutateAsync: generatePosts,
     error: generationError,
-    isLoading,
+    isPending,
   } = api.github.post.generatePost.useMutation();
 
   const toggleSelectAll = () => {
@@ -139,7 +140,7 @@ export default function CommitsTable({
         <div className="flex items-center justify-between">
           <h5>Commits</h5>
           <DialogTrigger asChild>
-            <Button disabled={isLoading} onClick={generatePost}>
+            <Button disabled={isPending} onClick={generatePost}>
               Generate Post
             </Button>
           </DialogTrigger>
@@ -194,7 +195,7 @@ export default function CommitsTable({
         </div>
         <DialogContent className="max-h-[40rem] overflow-scroll">
           <DialogHeader>Generated Posts</DialogHeader>
-          {isLoading ? (
+          {isPending ? (
             <div className="grid h-24 w-full place-items-center">
               <LineWobble size={80} lineWeight={5} speed={1.75} />
             </div>
@@ -222,7 +223,7 @@ function GeneratedPostsCard({
   const [selectedPost, setSelectedPost] = useState(posts[0]);
   const {
     mutateAsync: savePost,
-    isLoading,
+    isPending,
     error,
   } = api.savepost.savePost.useMutation();
 
@@ -274,7 +275,7 @@ function GeneratedPostsCard({
           <p className="whitespace-pre-line">{formatedSavePost(post)}</p>
         </Card>
       ))}
-      <Button onClick={handleSavePost} disabled={isLoading}>
+      <Button onClick={handleSavePost} disabled={isPending}>
         Save Post
       </Button>
     </div>

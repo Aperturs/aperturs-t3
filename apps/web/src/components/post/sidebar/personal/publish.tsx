@@ -15,7 +15,7 @@ function Publish({ params }: { params: { id: string } }) {
     linkedinPosting,
     saving,
     tweeting,
-    scheduling,
+    // scheduling,
     updating,
     uploadingFiles,
   } = usePublishing({ id });
@@ -26,7 +26,7 @@ function Publish({ params }: { params: { id: string } }) {
         <Picker />
         <SimpleButton
           text="Schedule"
-          isLoading={scheduling}
+          // isLoading={scheduling}
           disabled={isDisabled}
           onClick={async () => {
             await handleSchedule();

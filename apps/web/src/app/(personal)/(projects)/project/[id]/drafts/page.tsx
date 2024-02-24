@@ -3,7 +3,7 @@ import { api } from "~/trpc/server";
 
 async function DraftPage({ params }: { params: { id: string } }) {
   const { id } = params;
-  const data = await api.savepost.getSavedPostsByProjectId.query(id);
+  const data = await api.savepost.getSavedPostsByProjectId(id);
 
   return (
     <div className="flex w-full flex-col">

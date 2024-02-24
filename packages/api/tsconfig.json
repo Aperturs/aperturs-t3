@@ -1,0 +1,11 @@
+{
+  "extends": "@aperturs/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "paths": {
+      "@api/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "env.ts", "../validators/src/private_metadata.ts"],
+  "exclude": ["node_modules"]
+}

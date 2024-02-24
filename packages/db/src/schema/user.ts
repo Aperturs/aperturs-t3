@@ -1,10 +1,10 @@
 import { relations, sql } from "drizzle-orm";
 import {
-  date,
   integer,
   json,
   pgEnum,
   pgTable,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -28,14 +28,20 @@ export const user = pgTable(
     clerkUserId: varchar("clerkUserId", { length: 256 }).primaryKey(),
     userDetails: json("userDetails"),
     currentPlan: currentPlanEnum("currentPlan").default("FREE").notNull(),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
     lsSubscriptionId: varchar("ls_subscription_id", { length: 256 }),
     lsCustomerId: varchar("ls_customer_id", { length: 256 }),
     lsVariantId: integer("lsVariantId"),
-    lsCurrentPeriodEnd: date("ls_current_period_end", { mode: "string" }),
+    lsCurrentPeriodEnd: timestamp("ls_current_period_end", {
+      precision: 6,
+      withTimezone: true,
+    }),
   },
   (table) => {
     return {
@@ -44,6 +50,9 @@ export const user = pgTable(
     };
   },
 );
+
+export type UserInsert = typeof user.$inferInsert;
+export type UserSelect = typeof user.$inferSelect;
 
 export const userRalations = relations(user, ({ one, many }) => ({
   userUsage: one(userUsage, {
@@ -72,8 +81,14 @@ export const userUsage = pgTable("UserUsage", {
   drafts: integer("drafts").default(15).notNull(),
   ideas: integer("ideas").default(15).notNull(),
   organisation: integer("organisation").default(0).notNull(),
-  createdAt: date("createdAt", { mode: "string" })
+  createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
-  updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+  updatedAt: timestamp("updatedAt", {
+    precision: 6,
+    withTimezone: true,
+  }).notNull(),
 });
+
+export type UserUsageInsert = typeof userUsage.$inferInsert;
+export type UserUsageSelect = typeof userUsage.$inferSelect;

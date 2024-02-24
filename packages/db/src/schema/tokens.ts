@@ -1,9 +1,9 @@
 import { sql } from "drizzle-orm";
 import {
-  date,
   index,
   pgTable,
   text,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -29,14 +29,18 @@ export const githubToken = pgTable(
       { onDelete: "cascade" },
     ),
     profileId: varchar("profileId", { length: 191 }),
-    expiresIn: date("expires_in", { mode: "string" }),
-    refreshTokenExpiresIn: date("refresh_token_expires_in", {
-      mode: "string",
+    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
+      precision: 6,
+      withTimezone: true,
     }),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
     organizationLsSubscriptionId: varchar("organizationLsSubscriptionId", {
       length: 191,
     }),
@@ -60,6 +64,9 @@ export const githubToken = pgTable(
   },
 );
 
+export type githubTokenInsert = typeof githubToken.$inferInsert;
+export type githubTokenSelect = typeof githubToken.$inferSelect;
+
 export const linkedInToken = pgTable(
   "LinkedInToken",
   {
@@ -77,14 +84,18 @@ export const linkedInToken = pgTable(
       () => user.clerkUserId,
       { onDelete: "cascade" },
     ),
-    expiresIn: date("expires_in", { mode: "string" }),
-    refreshTokenExpiresIn: date("refresh_token_expires_in", {
-      mode: "string",
+    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
+      precision: 6,
+      withTimezone: true,
     }),
-    createdAt: date("createdAt", { mode: "string" })
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {
@@ -99,6 +110,9 @@ export const linkedInToken = pgTable(
     };
   },
 );
+
+export type linkedInTokenInsert = typeof linkedInToken.$inferInsert;
+export type linkedInTokenSelect = typeof linkedInToken.$inferSelect;
 
 export const twitterToken = pgTable(
   "TwitterToken",
@@ -118,11 +132,14 @@ export const twitterToken = pgTable(
     clientSecret: varchar("client_secret", { length: 191 }).notNull(),
     accessToken: varchar("access_token", { length: 191 }),
     refreshToken: varchar("refresh_token", { length: 191 }),
-    expiresIn: date("expires_in", { mode: "string" }),
+    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
     profileId: varchar("profileId", { length: 191 }),
     username: varchar("username", { length: 191 }),
     fullname: varchar("fullname", { length: 191 }),
     profileImage: varchar("profile_image", { length: 191 }),
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => {
     return {
@@ -142,3 +159,6 @@ export const twitterToken = pgTable(
     };
   },
 );
+
+export type twitterTokenInsert = typeof twitterToken.$inferInsert;
+export type twitterTokenSelect = typeof twitterToken.$inferSelect;

@@ -13,7 +13,7 @@ import { Dialog, DialogTrigger } from "@aperturs/ui/dialog";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
 import ConfirmationModal from "~/components/custom/modals/modal";
-import { api } from "~/utils/api";
+import { api } from "~/trpc/react";
 
 interface IDarfCard {
   id: string;
@@ -23,7 +23,7 @@ interface IDarfCard {
 
 export default function DraftCard({ id, content, refetch }: IDarfCard) {
   const router = useRouter();
-  const { mutateAsync: DeleteDraft, isLoading: deleting } =
+  const { mutateAsync: DeleteDraft, isPending: deleting } =
     api.savepost.deleteSavedPostById.useMutation();
 
   const [open, setOpen] = useState(false);

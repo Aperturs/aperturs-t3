@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const id = req.query.id as string;
-  const userId = req.query.userId as string;
+  // const userId = req.query.userId as string;
 
   console.log(id);
   // const caller = appRouter.createCaller({

@@ -1,5 +1,4 @@
-import { sql } from "drizzle-orm";
-import { date, index, pgTable, varchar } from "drizzle-orm/pg-core";
+import { index, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
 import { nanoid } from "nanoid";
 
 import { organization } from "./organisation";
@@ -20,10 +19,13 @@ export const idea = pgTable(
       () => organization.id,
       { onDelete: "cascade" },
     ),
-    createdAt: date("createdAt", { mode: "string" })
-      .default(sql`CURRENT_TIMESTAMP(3)`)
+    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+      .defaultNow()
       .notNull(),
-    updatedAt: date("updatedAt", { mode: "string" }).notNull(),
+    updatedAt: timestamp("updatedAt", {
+      precision: 6,
+      withTimezone: true,
+    }).notNull(),
   },
   (table) => {
     return {
@@ -34,3 +36,6 @@ export const idea = pgTable(
     };
   },
 );
+
+export type IdeaSelect = typeof idea.$inferSelect;
+export type IdeaInsert = typeof idea.$inferInsert;
