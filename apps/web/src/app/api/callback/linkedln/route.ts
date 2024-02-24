@@ -59,12 +59,12 @@ export async function GET(req: NextRequest) {
       if (
         !user.id ||
         !data.access_token ||
-        !data.refresh_token ||
+        // !data.refresh_token ||
         !data.expires_in ||
-        !data.refresh_token_expires_in ||
+        // !data.refresh_token_expires_in ||
         !userId
       ) {
-        throw new Error("Invalid data");
+        return NextResponse.json({ error: "Invalid data" }, { status: 400 });
       }
       await db.insert(schema.linkedInToken).values({
         profileId: user.id,
@@ -75,6 +75,10 @@ export async function GET(req: NextRequest) {
         clerkUserId: userId,
         updatedAt: new Date(),
       });
+      const url = req.nextUrl.clone();
+      const final = url.basePath + "/socials";
+      // url.pathname = "/socials";
+      return NextResponse.redirect(final);
     }
     const url = req.nextUrl.clone();
     url.pathname = "/socials";

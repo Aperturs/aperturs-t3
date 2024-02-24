@@ -92,12 +92,13 @@ export default function usePublishing({ id }: { id: string }) {
           );
           break;
         default:
-          toast.error("Please select a social media platform");
+          console.log("hey brooo");
       }
     });
     if (!twitterError || !linkedinError) {
       reset();
     }
+    router.push("/post");
   };
 
   const handleSave = async ({ isScheduling }: { isScheduling: boolean }) => {
