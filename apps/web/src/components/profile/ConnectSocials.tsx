@@ -12,9 +12,9 @@ import { IoIosAddCircle } from "react-icons/io";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
+import { SocialType } from "@aperturs/validators/post";
 
 import { api } from "~/trpc/react";
-import { SocialType } from "~/types/post-enums";
 import SimpleLoader from "../custom/loading/simple-loading";
 
 const SocialIcon = ({ type }: { type: SocialType }) => {

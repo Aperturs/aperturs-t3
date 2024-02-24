@@ -4,6 +4,7 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 import { getAuth } from "@clerk/nextjs/server";
 
 import { db, schema } from "@aperturs/db";
+import { GithubUser } from "@aperturs/validators/github";
 
 import { env } from "~/env.mjs";
 

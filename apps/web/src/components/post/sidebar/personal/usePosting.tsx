@@ -2,9 +2,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
+import { SocialType } from "@aperturs/validators/post";
+
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
-import { SocialType } from "~/types/post-enums";
 import usePost from "../../content/use-post";
 
 export default function usePublishing({ id }: { id: string }) {

@@ -2,7 +2,8 @@
 // import { CreateButton } from "~/components";
 import { currentUser } from "@clerk/nextjs";
 
-import type { PostContentType } from "~/types/post-types";
+import type { PostContentType } from "@aperturs/validators/post";
+
 import { api } from "~/trpc/server";
 import InfoContainer from "./container";
 

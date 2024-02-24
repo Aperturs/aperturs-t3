@@ -6,8 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa";
 
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
-
-import { SocialType } from "~/types/post-enums";
+import { SocialType } from "@aperturs/validators/post";
 
 interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;

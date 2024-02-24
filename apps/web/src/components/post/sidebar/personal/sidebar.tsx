@@ -1,8 +1,9 @@
 "use client";
 
+import { SocialType } from "@aperturs/validators/post";
+
 import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
-import { SocialType } from "~/types/post-enums";
 import ConnectedAccount from "../connections";
 import Publish from "./publish";
 

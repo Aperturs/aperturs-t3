@@ -1,8 +1,8 @@
 import { shallow } from "zustand/shallow";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
 
-import type { SocialType } from "~/types/post-enums";
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 

@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
+import type { CommitType } from "@aperturs/validators/github-store";
+
 interface IGithubStore {
-  commits: ICommit[];
-  setCommits: (commits: ICommit[]) => void;
+  commits: CommitType[];
+  setCommits: (commits: CommitType[]) => void;
 }
 
 export const useGithubStore = create<IGithubStore>((set) => ({

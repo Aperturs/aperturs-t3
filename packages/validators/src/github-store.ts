@@ -7,4 +7,4 @@ export const commitSchema = z.object({
   date: z.string(),
 });
 
-export type Commit = z.infer<typeof commitSchema>;
+export type CommitType = z.infer<typeof commitSchema>;

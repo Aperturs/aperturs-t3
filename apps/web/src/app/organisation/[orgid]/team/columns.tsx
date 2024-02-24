@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
+import type { OrganizationUser } from "@aperturs/validators/user";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +39,6 @@ import {
   SelectValue,
 } from "@aperturs/ui/select";
 
-import type { OrganizationUser } from "~/types/user-type";
 import CustomModal from "~/components/custom/modals/custom-modal";
 import { useModal } from "~/components/custom/modals/modal-provider";
 import { api } from "~/trpc/react";

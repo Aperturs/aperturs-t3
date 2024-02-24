@@ -13,9 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@aperturs/ui/dropdown-menu";
 import { Switch } from "@aperturs/ui/switch";
+import { SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { SocialType } from "~/types/post-enums";
 import { SocialIcon } from "../common";
 
 function SocialsMenu() {

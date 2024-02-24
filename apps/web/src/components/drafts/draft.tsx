@@ -2,10 +2,10 @@
 import Link from "next/link";
 import { BsFillCalendarFill } from "react-icons/bs";
 
+import type { PostContentType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
-import type { PostContentType } from "~/types/post-types";
 import { api } from "~/trpc/server";
 import PostCard from "./darfCard";
 

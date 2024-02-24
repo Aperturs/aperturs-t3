@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { BsInfoCircle } from "react-icons/bs";
 import Select from "react-select";
 
+import type { Repo } from "@aperturs/validators/github";
 import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
 import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";

@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@aperturs/ui/dialog";
+import { CommitType } from "@aperturs/validators/github-store";
 
 import { useGithubStore } from "~/store/github-store";
 import { api } from "~/trpc/react";
@@ -50,7 +51,7 @@ function formatedSavePost(text: string) {
 // }
 
 interface CommitTableProps {
-  rows: ICommit[];
+  rows: CommitType[];
   projectName: string;
   ProjectTagline: string;
   projectDescription: string;
