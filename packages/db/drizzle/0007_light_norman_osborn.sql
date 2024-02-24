@@ -1,0 +1,1 @@
+ALTER TABLE "TwitterToken" ADD COLUMN "createdAt" timestamp (6) with time zone DEFAULT now() NOT NULL;

@@ -7,7 +7,7 @@
     "prepare": "husky install",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
-    "dev": "dotenv turbo dev --parallel",
+    "dev": "turbo dev --parallel",
     "start-website": "cd apps/web && pnpm run dev",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
