@@ -13,14 +13,6 @@ import { db, eq, schema } from "@aperturs/db";
 import { InviteUserEmail } from "@aperturs/email/invite-user";
 
 export async function getOrgnanisationTeams(orgId: string) {
-  // const res = await prisma.organizationUser.findMany({
-  //   where: {
-  //     organizationId: orgId,
-  //   },
-  //   include: {
-  //     user: true,
-  //   },
-  // });
   const res = await db.query.organizationUser.findMany({
     where: eq(schema.organizationUser.organizationId, orgId),
     with: {
@@ -31,11 +23,6 @@ export async function getOrgnanisationTeams(orgId: string) {
 }
 
 export async function removeUserFromOrganisation(orgUserId: string) {
-  // const res = await prisma.organizationUser.delete({
-  //   where: {
-  //     id: orgUserId,
-  //   },
-  // });
   const [res] = await db
     .delete(schema.organizationUser)
     .where(eq(schema.organizationUser.id, orgUserId))
@@ -151,14 +138,7 @@ export async function acceptInvite({
   inviteId: string;
   userId: string;
 }) {
-  // const res = await prisma.organizationInvites.update({
-  //   where: {
-  //     id: inviteId,
-  //   },
-  //   data: {
-  //     status: "ACCEPTED",
-  //   },
-  // });
+  //TODO: add transactions rollback
   const [res] = await db
     .update(schema.organizationInvites)
     .set({
@@ -171,13 +151,6 @@ export async function acceptInvite({
   }
   const orgId = res.organizationId;
   const role = res.role;
-  // const user = await prisma.organizationUser.create({
-  //   data: {
-  //     organizationId: orgId,
-  //     clerkUserId: userId,
-  //     role: role,
-  //   },
-  // });
   const [user] = await db
     .insert(schema.organizationUser)
     .values({

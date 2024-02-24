@@ -20,19 +20,19 @@ jiti("@aperturs/api/env");
 const config = {
   reactStrictMode: true,
 
-  // experimental: {
-  //   turbo: {
-  //     rules: {
-  //       "*.svg": {
-  //         loaders: ["@svgr/webpack"],
-  //         as: "*.js",
-  //       },
-  //     },
-  //   },
-  //   ...(process.env.NODE_ENV === "development"
-  //     ? { outputFileTracingRoot: path.join(__dirname, "../../") }
-  //     : null),
-  // },
+  experimental: {
+    turbo: {
+      rules: {
+        "*.svg": {
+          loaders: ["@svgr/webpack"],
+          as: "*.js",
+        },
+      },
+    },
+    // ...(process.env.NODE_ENV === "development"
+    //   ? { outputFileTracingRoot: path.join(__dirname, "../../") }
+    //   : null),
+  },
 
   images: {
     remotePatterns: [
