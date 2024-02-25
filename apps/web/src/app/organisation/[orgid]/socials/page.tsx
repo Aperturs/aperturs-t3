@@ -1,5 +1,14 @@
-import React from "react";
+import { AddSocialPersonal } from "~/components/profile/connect-socials/personal/personal-social-connect";
+import ConnectSocials from "~/components/profile/connect-socials/socials";
 
-export default function Socials() {
-  return <div></div>;
-}
+const SocialsPage = () => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <ConnectSocials>
+        <AddSocialPersonal />
+      </ConnectSocials>
+    </div>
+  );
+};
+
+export default SocialsPage;

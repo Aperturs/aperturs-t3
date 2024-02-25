@@ -26,11 +26,11 @@ export const SocialIcon = ({ type }: { type: SocialType }) => {
   }
 };
 
-export const AddSocial = () => {
+export const AddSocialPersonal = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
-        <Button className="h-full w-full  whitespace-nowrap">
+        <Button className="h-20 w-full  whitespace-nowrap">
           <IoIosAddCircle className="text-2xl" />
           Add Socials
         </Button>

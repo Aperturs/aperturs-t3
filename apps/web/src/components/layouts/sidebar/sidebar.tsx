@@ -8,7 +8,6 @@ import {
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { useQuery } from "@tanstack/react-query";
 import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
@@ -19,8 +18,6 @@ import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
-import { api } from "~/trpc/react";
-import { getUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
 import AccordianMenu from "./command-group";
@@ -127,7 +124,7 @@ export default function SideBar() {
   //   // refetchInterval:1000,
   // });
 
-  const { data: metadata } = api.metadata.getUserPrivateMetaData.useQuery();
+  // const { data: metadata } = api.metadata.getUserPrivateMetaData.useQuery();
 
   // console.log(metadata,error,'meta');
 
@@ -171,11 +168,10 @@ export default function SideBar() {
             <hr className="border-blue-gray-50 my-2" />
             <BottomMenu bottomMenu={bottomMenu} />
           </>
-          {metadata && metadata.currentPlan !== "FREE" && (
-            <div className="flex w-full justify-center">
-              <ProfileButton />
-            </div>
-          )}
+
+          <div className="flex w-full justify-center">
+            <ProfileButton />
+          </div>
         </div>
         <SheetContent
           className={cn(
@@ -183,11 +179,11 @@ export default function SideBar() {
           )}
         >
           <div>
-            {metadata?.currentPlan !== "FREE" && (
-              <div className="flex w-full justify-center">
-                <ProfileButton />
-              </div>
-            )}
+            {/* {metadata?.currentPlan !== "FREE" && ( */}
+            <div className="flex w-full justify-center">
+              <ProfileButton />
+            </div>
+            {/* )} */}
             <AccordianMenu accordanceMenuList={AccordanceMenuList} />
             <hr className="border-blue-gray-50 my-2" />
             <BottomMenu bottomMenu={bottomMenu} />

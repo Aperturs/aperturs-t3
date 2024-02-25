@@ -2,7 +2,6 @@ import { Suspense } from "react";
 
 import { Card } from "@aperturs/ui/components/ui/card";
 
-import { AddSocial } from "./personal/personal-social-connect";
 import SocialsSkeleton from "./socials-skeleton";
 
 export default function ConnectSocials({
@@ -19,7 +18,6 @@ export default function ConnectSocials({
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
           <Suspense fallback={<SocialsSkeleton />}>{children}</Suspense>
-          <AddSocial />
         </div>
       </div>
     </Card>

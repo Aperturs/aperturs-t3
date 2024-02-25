@@ -2,14 +2,21 @@
 
 import { useRouter } from "next/navigation";
 
-import ConnectSocials from "~/components/profile/connect-socials/personal/personal-social-connect";
+import FetchPersonalSocials from "~/components/profile/connect-socials/personal/fetch-socials";
+import { AddSocialPersonal } from "~/components/profile/connect-socials/personal/personal-social-connect";
+import ConnectSocials from "~/components/profile/connect-socials/socials";
 
 function AddSocial() {
   const router = useRouter();
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center">
       <div className="w-[75%]">
-        <ConnectSocials />
+        <div className="flex flex-col items-center justify-center">
+          <ConnectSocials>
+            <FetchPersonalSocials />
+            <AddSocialPersonal />
+          </ConnectSocials>
+        </div>{" "}
         <div className="flex justify-between">
           <button
             className="btn btn-primary btn-wide my-3 text-white"
