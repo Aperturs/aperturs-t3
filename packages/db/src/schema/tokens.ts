@@ -86,6 +86,7 @@ export const linkedInToken = pgTable(
       withTimezone: true,
     }),
     fullName: varchar("fullName", { length: 191 }),
+    profilePicture: varchar("profilePicture", { length: 191 }),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),

@@ -1,9 +1,14 @@
-import ConnectSocials from "~/components/profile/connect-socials/socials";
+import type { OrgIdParams } from "@aperturs/validators/organisation";
 
-const SocialsPage = () => {
+import ConnectSocials from "~/components/profile/connect-socials/socials";
+import FetchOrgSocials from "./fetch-socials";
+
+const SocialsPage = ({ params }: { params: OrgIdParams }) => {
   return (
     <div className="flex flex-col items-center justify-center">
-      <ConnectSocials>fasf</ConnectSocials>
+      <ConnectSocials>
+        <FetchOrgSocials params={params} />
+      </ConnectSocials>
     </div>
   );
 };

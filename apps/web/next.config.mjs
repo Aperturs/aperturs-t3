@@ -1,9 +1,8 @@
-import { dirname } from "path";
 import { fileURLToPath } from "url";
 import _jiti from "jiti";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __dirname = dirname(__filename);
 
 const jiti = _jiti(__filename);
 
@@ -63,6 +62,10 @@ const config = {
       {
         protocol: "https",
         hostname: "images.clerk.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "media.licdn.com",
       },
     ],
   },

@@ -35,29 +35,32 @@ export async function GET(req: NextRequest) {
     console.log(response, "response");
     const data = await response.json();
     console.log(data, "data");
-    const userResponse = await fetch("https://api.linkedin.com/v2/me", {
-      headers: {
-        Authorization: `Bearer ${data.access_token}`,
-        "cache-control": "no-cache",
-        "X-Restli-Protocol-Version": "2.0.0",
+    const userResponse = await fetch(
+      "https://api.linkedin.com/v2/me?projection=(id,firstName,lastName,profilePicture(displayImage~:playableStreams))",
+      {
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+          "cache-control": "no-cache",
+          "X-Restli-Protocol-Version": "2.0.0",
+        },
       },
-    }).catch();
-    // console.log({ userResponse });
+    ).catch();
     const user = await userResponse?.json();
     console.log(data, "data");
     console.log(user, "user");
-    // console.log({ user });
+    console.log(
+      user.profilePicture.displayImage,
+      "user.profilePicture.displayImage",
+    );
+    const profile_picture_url =
+      user.profilePicture["displayImage~"].elements[0].identifiers[0]
+        .identifier;
+    console.log(profile_picture_url, "profile_picture_url");
+    const firstName = user.firstName.localized.en_US;
+    const lastName = user.lastName.localized.en_US;
+    const fullName = `${firstName} ${lastName}`;
+
     if (user && userId) {
-      // await prisma.linkedInToken.create({
-      //   data: {
-      //     profileId: user.id,
-      //     access_token: data.access_token,
-      //     refresh_token: data.refresh_token ?? undefined,
-      //     expires_in: new Date(new Date().getTime() + data.expires_in * 1000),
-      //     refresh_token_expires_in: data.refresh_token_expires_in ?? undefined,
-      //     clerkUserId: userId,
-      //   },
-      // });
       if (
         !user.id ||
         !data.access_token ||
@@ -68,7 +71,6 @@ export async function GET(req: NextRequest) {
       ) {
         return NextResponse.json({ error: "Invalid data" }, { status: 400 });
       }
-
       const domain = env.DOMAIN;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const id = (await redis.get(userId))! as string;
@@ -81,7 +83,8 @@ export async function GET(req: NextRequest) {
           expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
           clerkUserId: userId,
-          fullName: user.localizedFirstName + " " + user.localizedLastName,
+          profilePicture: profile_picture_url,
+          fullName: fullName,
           updatedAt: new Date(),
         });
         const url = `${domain}/socials`;
@@ -93,7 +96,8 @@ export async function GET(req: NextRequest) {
           refreshToken: data.refresh_token,
           expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
-          fullName: user.localizedFirstName + " " + user.localizedLastName,
+          fullName: fullName,
+          profilePicture: profile_picture_url,
           organizationId: id,
           updatedAt: new Date(),
         });
@@ -106,7 +110,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(url);
   } catch (e) {
     console.log(e, "error");
-    return;
+    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
   }
 }
 

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { SocialType } from "./post";
+
 export const OrganizationUserSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -20,3 +22,17 @@ export const UserDetailsSchema = z.object({
 });
 
 export type UserDetails = z.infer<typeof UserDetailsSchema>;
+
+export const SocialAccounts = z.array(
+  z.object({
+    type: z.nativeEnum(SocialType),
+    data: z.object({
+      tokenId: z.string(),
+      name: z.string(),
+      profile_image_url: z.string(),
+      profileId: z.string(),
+    }),
+  }),
+);
+
+export type SocialAccountsBackend = z.infer<typeof SocialAccounts>;

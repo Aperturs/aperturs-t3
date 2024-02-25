@@ -15,11 +15,11 @@ import { handleGithubRedirect, handleLinkedinRedirect } from "./handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
   if (type === SocialType.Twitter) {
-    return <AiOutlineTwitter className="text-2xl" />;
+    return <AiOutlineTwitter className="text-2xl dark:text-white" />;
   } else if (type === SocialType.Linkedin) {
-    return <FaLinkedinIn className="text-2xl" />;
+    return <FaLinkedinIn className="text-2xl dark:text-white" />;
   } else if (type === SocialType.Github) {
-    return <FaGithub className="text-2xl" />;
+    return <FaGithub className="text-2xl dark:text-white" />;
   } else {
     return null; // Return null or a default icon for other types
   }

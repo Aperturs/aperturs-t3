@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { z } from "zod";
 
 export const createOrganisationSchema = z.object({
@@ -55,3 +56,7 @@ export type ChangeUserRoleType = z.infer<typeof changeUserRoleSchema>;
 export type ChangeUserRoleWithOrgIdType = z.infer<
   typeof changeUserRoleWithOrgIdSchema
 >;
+
+export type OrgIdParams = { orgid: string };
+export type InviteIdParams = { inviteid: string };
+export type OrgPostIdParams = { orgid: string; postid: string };
