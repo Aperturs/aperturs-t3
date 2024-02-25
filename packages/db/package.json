@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "push": "pnpm with-env drizzle-kit push:pg",
     "migration:generate": "drizzle-kit generate:pg",
+    "migrate": "pnpm migration:generate && pnpm push",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit",
     "with-env": "dotenv -e ../../.env --"

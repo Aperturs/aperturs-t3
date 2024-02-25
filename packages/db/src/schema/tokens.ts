@@ -29,16 +29,14 @@ export const githubToken = pgTable(
       { onDelete: "cascade" },
     ),
     profileId: varchar("profileId", { length: 191 }),
-    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    expiresIn: timestamp("expires_in", { withTimezone: true }),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
-      precision: 6,
       withTimezone: true,
     }),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
     organizationLsSubscriptionId: varchar("organizationLsSubscriptionId", {
@@ -50,7 +48,6 @@ export const githubToken = pgTable(
       clerkUserIdIdx: index("GithubToken_clerkUserId_idx").on(
         table.clerkUserId,
       ),
-      idIdx: index("GithubToken_id_idx").on(table.id),
       organizationIdIdx: index("GithubToken_organizationId_idx").on(
         table.organizationId,
       ),
@@ -84,16 +81,15 @@ export const linkedInToken = pgTable(
       () => user.clerkUserId,
       { onDelete: "cascade" },
     ),
-    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    expiresIn: timestamp("expires_in", { withTimezone: true }),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
-      precision: 6,
       withTimezone: true,
     }),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    fullName: varchar("fullName", { length: 191 }),
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
   },
@@ -102,7 +98,6 @@ export const linkedInToken = pgTable(
       clerkUserIdIdx: index("LinkedInToken_clerkUserId_idx").on(
         table.clerkUserId,
       ),
-      idIdx: index("LinkedInToken_id_idx").on(table.id),
       organizationIdIdx: index("LinkedInToken_organizationId_idx").on(
         table.organizationId,
       ),
@@ -143,12 +138,12 @@ export const twitterToken = pgTable(
     clientSecret: varchar("client_secret", { length: 191 }).notNull(),
     accessToken: varchar("access_token", { length: 191 }),
     refreshToken: varchar("refresh_token", { length: 191 }),
-    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    expiresIn: timestamp("expires_in", { withTimezone: true }),
     profileId: varchar("profileId", { length: 191 }),
     username: varchar("username", { length: 191 }),
     fullname: varchar("fullname", { length: 191 }),
     profileImage: varchar("profile_image", { length: 191 }),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .defaultNow()
       .notNull(),
   },

@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
@@ -12,8 +11,7 @@ import { Button } from "@aperturs/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
 import { SocialType } from "@aperturs/validators/post";
 
-import { api } from "~/trpc/react";
-import { handleLinkedinRedirect } from "../handle-socials";
+import { handleGithubRedirect, handleLinkedinRedirect } from "./handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
   if (type === SocialType.Twitter) {
@@ -27,7 +25,7 @@ export const SocialIcon = ({ type }: { type: SocialType }) => {
   }
 };
 
-export const AddSocialPersonal = () => {
+export const AddSocial = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
@@ -48,39 +46,34 @@ const Socials = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
   const { userId } = useAuth();
-  const {
-    mutateAsync: addLinkedln,
-    data: linkedlnData,
-    error,
-  } = api.linkedin.addLinkedln.useMutation();
-  const {
-    mutateAsync: addGithub,
-    data: githubData,
-    isPending: githubLoading,
-  } = api.github.addGithub.useMutation();
+
+  const params = useParams<{ orgid: string }>();
+
+  const handleGithub = async () => {
+    setLocalLoading(true);
+    if (!params?.orgid) {
+      await handleGithubRedirect({
+        orgId: "personal",
+      });
+      return;
+    }
+    await handleGithubRedirect({
+      orgId: params?.orgid,
+    });
+    setLocalLoading(false);
+  };
 
   const handleLinkedln = async () => {
     setLocalLoading(true);
+    if (!params?.orgid) {
+      await handleLinkedinRedirect({
+        orgId: "personal",
+      });
+      return;
+    }
     await handleLinkedinRedirect({
-      orgId: "personal",
+      orgId: params?.orgid,
     });
-    // if (linkedlnData) {
-    //   window.location.href = linkedlnData.url;
-    // }
-    // if (error) {
-    //   toast.error(error.message);
-    // }
-    setLocalLoading(false);
-  };
-  const handleGithub = async () => {
-    setLocalLoading(true);
-    await addGithub();
-    if (githubData) {
-      window.location.href = githubData.url;
-    }
-    if (error) {
-      toast.error(error.message);
-    }
     setLocalLoading(false);
   };
 
@@ -94,6 +87,7 @@ const Socials = () => {
         variant="secondary"
         className="h-12"
         onClick={() => router.push("/socials/twitter")}
+        disabled={localLoading}
       >
         <AiOutlineTwitter className="mr-2 text-2xl " />
         <p>Twitter</p>
@@ -105,9 +99,7 @@ const Socials = () => {
       <Button
         variant="secondary"
         className="h-12"
-        onClick={async () => {
-          if (userId) await handleLinkedln();
-        }}
+        onClick={handleLinkedln}
         disabled={localLoading}
       >
         <FaLinkedinIn className="mr-2 text-2xl" />
@@ -126,7 +118,7 @@ const Socials = () => {
         onClick={async () => {
           if (userId) await handleGithub();
         }}
-        disabled={githubLoading || localLoading}
+        disabled={localLoading}
       >
         <FaGithub className="mr-2 text-2xl" />
         <p>Github </p>

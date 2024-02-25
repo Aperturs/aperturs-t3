@@ -57,6 +57,41 @@
       "when": 1708756472784,
       "tag": "0007_light_norman_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1708845975091,
+      "tag": "0008_redundant_grim_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1708848759849,
+      "tag": "0009_late_liz_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1708862351621,
+      "tag": "0010_many_cargill",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1708862520667,
+      "tag": "0011_strange_nehzno",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1708862565258,
+      "tag": "0012_omniscient_vivisector",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "TwitterToken" ADD COLUMN "fullname" varchar(191);

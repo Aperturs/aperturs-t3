@@ -19,11 +19,10 @@ export const idea = pgTable(
       () => organization.id,
       { onDelete: "cascade" },
     ),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .defaultNow()
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
   },

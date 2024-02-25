@@ -81,6 +81,7 @@ export async function GET(req: NextRequest) {
           expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
           clerkUserId: userId,
+          fullName: user.localizedFirstName + " " + user.localizedLastName,
           updatedAt: new Date(),
         });
         const url = `${domain}/socials`;
@@ -92,6 +93,7 @@ export async function GET(req: NextRequest) {
           refreshToken: data.refresh_token,
           expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
+          fullName: user.localizedFirstName + " " + user.localizedLastName,
           organizationId: id,
           updatedAt: new Date(),
         });

@@ -39,11 +39,10 @@ export const organization = pgTable(
     category: varchar("category", { length: 256 })
       .default("personal")
       .notNull(),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .defaultNow()
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
   },
@@ -96,11 +95,10 @@ export const organizationInvites = pgTable(
       .notNull()
       .references(() => user.clerkUserId),
     inviterName: varchar("inviterName", { length: 256 }).notNull(),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
   },
@@ -145,11 +143,10 @@ export const organizationUser = pgTable(
     role: pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"])(
       "role",
     ).notNull(),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
   },

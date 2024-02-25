@@ -1,0 +1,1 @@
+ALTER TABLE "TwitterToken" DROP COLUMN IF EXISTS "fullname";

@@ -26,10 +26,10 @@ export const project = pgTable(
       .notNull(),
     repoUrl: varchar("repoUrl", { length: 191 }).notNull(),
     repoId: varchar("repoId", { length: 191 }).notNull(),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
-    updatedAt: timestamp("updatedAt", { precision: 6, withTimezone: true })
+    updatedAt: timestamp("updatedAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
   },
