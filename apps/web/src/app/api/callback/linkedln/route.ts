@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 
+import { redis } from "@aperturs/api";
 import { db, schema } from "@aperturs/db";
 
 import { env } from "~/env.mjs";
@@ -66,6 +67,8 @@ export async function GET(req: NextRequest) {
       ) {
         return NextResponse.json({ error: "Invalid data" }, { status: 400 });
       }
+
+      const id = (await redis.get(userId))!;
       await db.insert(schema.linkedInToken).values({
         profileId: user.id,
         accessToken: data.access_token,

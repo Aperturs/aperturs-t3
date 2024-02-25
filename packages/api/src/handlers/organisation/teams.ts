@@ -1,8 +1,8 @@
-import { resend } from "@api/emails";
 import {
   removeUserPrivateMetadata,
   updateUserPrivateMetadata,
 } from "@api/handlers/metadata/user-private-meta";
+import { resend } from "@api/utils/emails";
 
 import type {
   InviteUserToOrganisation,

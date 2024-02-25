@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import ConnectSocials from "~/components/profile/ConnectSocials";
+import ConnectSocials from "~/components/profile/connect-socials/personal/personal-social-connect";
 
 function AddSocial() {
   const router = useRouter();

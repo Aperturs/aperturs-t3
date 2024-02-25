@@ -10,6 +10,8 @@ export const env = createEnv({
     TWITTER_CALLBACK_URL: z.string().min(1),
     LINKEDIN_CLIENT_ID: z.string().min(1),
     LINKEDIN_CALLBACK_URL: z.string().min(1),
+    REDISURL: z.string().min(1),
+    REDISTOKEN: z.string().min(1),
   },
   client: {},
   experimental__runtimeEnv: {},

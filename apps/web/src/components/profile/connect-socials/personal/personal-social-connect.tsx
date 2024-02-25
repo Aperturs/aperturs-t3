@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
@@ -10,14 +9,12 @@ import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 
 import { Button } from "@aperturs/ui/button";
-import { Card } from "@aperturs/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
 import { SocialType } from "@aperturs/validators/post";
 
 import { api } from "~/trpc/react";
-import SimpleLoader from "../custom/loading/simple-loading";
 
-const SocialIcon = ({ type }: { type: SocialType }) => {
+export const SocialIcon = ({ type }: { type: SocialType }) => {
   if (type === SocialType.Twitter) {
     return <AiOutlineTwitter className="text-2xl" />;
   } else if (type === SocialType.Linkedin) {
@@ -29,38 +26,7 @@ const SocialIcon = ({ type }: { type: SocialType }) => {
   }
 };
 
-const ConnectSocials = () => {
-  const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
-
-  return (
-    <Card className="min-h-[50vh] w-full rounded-xl p-6">
-      {/* <h1 className='text-5xl font-medium text-gray-600'>Connect Socials</h1> */}
-      <div className="mt-4 flex flex-col">
-        <h2 className="mb-6 text-xl font-bold md:text-3xl">
-          Connect your socials
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
-          {/* <Suspense fallback={<div>Loading...</div>}> */}
-          {isLoading ? (
-            <SimpleLoader />
-          ) : (
-            data?.map((item, key) => (
-              <AfterConnect
-                key={key}
-                name={item.data.name ?? ""}
-                icon={<SocialIcon type={item.type} />}
-                profilePic={item.data.profile_image_url ?? "/user.png"}
-              />
-            ))
-          )}
-          <AddSocial />
-        </div>
-      </div>
-    </Card>
-  );
-};
-
-const AddSocial = () => {
+export const AddSocial = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
@@ -165,31 +131,3 @@ const Socials = () => {
     </div>
   );
 };
-
-interface IConnection {
-  name: string;
-  icon: React.ReactNode;
-  profilePic: string;
-}
-
-const AfterConnect = ({ name, icon, profilePic }: IConnection) => {
-  return (
-    <Card className="flex w-full items-center justify-center  px-10 py-6 ">
-      <Image
-        className="mx-2 h-10 w-10 rounded-full object-cover"
-        src={profilePic}
-        alt="profile"
-        width={40}
-        height={40}
-      />
-      <div className="mx-2 my-2 flex w-full flex-col items-center">
-        <h2 className="whitespace-nowrap text-sm leading-3 ">{name}</h2>
-      </div>
-      <div className="flex w-full justify-center text-3xl text-black">
-        {icon}
-      </div>
-    </Card>
-  );
-};
-
-export default ConnectSocials;
