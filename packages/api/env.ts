@@ -12,6 +12,7 @@ export const env = createEnv({
     LINKEDIN_CALLBACK_URL: z.string().min(1),
     REDISURL: z.string().min(1),
     REDISTOKEN: z.string().min(1),
+    REDISDATABASE: z.string().min(1),
   },
   client: {},
   experimental__runtimeEnv: {},

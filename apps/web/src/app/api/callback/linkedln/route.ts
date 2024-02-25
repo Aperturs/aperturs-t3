@@ -19,9 +19,9 @@ export async function GET(req: NextRequest) {
       "https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code=" +
         code +
         "&redirect_uri=" +
-        encodeURIComponent(env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL) +
+        encodeURIComponent(env.LINKEDIN_CALLBACK_URL) +
         "&client_id=" +
-        env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID +
+        env.LINKEDIN_CLIENT_ID +
         "&client_secret=" +
         env.LINKEDIN_CLIENT_SECRET,
       {
@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
     // console.log({ userResponse });
     const user = await userResponse?.json();
     console.log(data, "data");
+    console.log(user, "user");
     // console.log({ user });
     if (user && userId) {
       // await prisma.linkedInToken.create({
@@ -68,20 +69,35 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Invalid data" }, { status: 400 });
       }
 
-      const id = (await redis.get(userId))!;
-      await db.insert(schema.linkedInToken).values({
-        profileId: user.id,
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
-        expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
-        refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
-        clerkUserId: userId,
-        updatedAt: new Date(),
-      });
-      const url = req.nextUrl.clone();
-      const final = url.basePath + "/socials";
-      // url.pathname = "/socials";
-      return NextResponse.redirect(final);
+      const domain = env.DOMAIN;
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      const id = (await redis.get(userId))! as string;
+      const isPersonal = id === "personal";
+      if (isPersonal) {
+        await db.insert(schema.linkedInToken).values({
+          profileId: user.id,
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token,
+          expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
+          refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
+          clerkUserId: userId,
+          updatedAt: new Date(),
+        });
+        const url = `${domain}/socials`;
+        return NextResponse.redirect(url);
+      } else {
+        await db.insert(schema.linkedInToken).values({
+          profileId: user.id,
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token,
+          expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
+          refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
+          organizationId: id,
+          updatedAt: new Date(),
+        });
+        const url = `${domain}/organisation/${id}/socials`;
+        return NextResponse.redirect(url);
+      }
     }
     const url = req.nextUrl.clone();
     url.pathname = "/socials";

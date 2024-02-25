@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "react-hot-toast";
 import { AiOutlineTwitter } from "react-icons/ai";
@@ -27,7 +27,7 @@ export const SocialIcon = ({ type }: { type: SocialType }) => {
   }
 };
 
-export const AddSocialPersonal = () => {
+export const AddSocialOrg = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
@@ -59,19 +59,8 @@ const Socials = () => {
     isPending: githubLoading,
   } = api.github.addGithub.useMutation();
 
-  const handleLinkedln = async () => {
-    setLocalLoading(true);
-    await handleLinkedinRedirect({
-      orgId: "personal",
-    });
-    // if (linkedlnData) {
-    //   window.location.href = linkedlnData.url;
-    // }
-    // if (error) {
-    //   toast.error(error.message);
-    // }
-    setLocalLoading(false);
-  };
+  const params = useParams<{ orgid: string }>();
+
   const handleGithub = async () => {
     setLocalLoading(true);
     await addGithub();
@@ -106,7 +95,13 @@ const Socials = () => {
         variant="secondary"
         className="h-12"
         onClick={async () => {
-          if (userId) await handleLinkedln();
+          if (params?.orgid) {
+            await handleLinkedinRedirect({
+              orgId: params.orgid,
+            });
+          } else {
+            toast.error("Org id not found");
+          }
         }}
         disabled={localLoading}
       >

@@ -13,8 +13,8 @@ const server = z.object({
   GITHUB_CLIENT_SECRET: z.string().min(1),
   NEXT_PUBLIC_GITHUB_CLIENT_ID: z.string().min(1),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-  NEXT_PUBLIC_LINKEDIN_CLIENT_ID: z.string().min(1),
-  NEXT_PUBLIC_LINKEDIN_CALLBACK_URL: z.string().url(),
+  LINKEDIN_CLIENT_ID: z.string().min(1),
+  LINKEDIN_CALLBACK_URL: z.string().url(),
   LINKEDIN_CLIENT_SECRET: z.string().min(1),
   CLERK_SECRET_KEY: z.string().min(1),
   CRONJOB_AUTH: z.string(),
@@ -22,6 +22,7 @@ const server = z.object({
   OPENAI_API_KEY: z.string(),
   NEXT_PRIVATE_LEMONSQUEEZY_KEY: z.string(),
   RESEND_EMAIL_API: z.string(),
+  DOMAIN: z.string(),
 });
 
 /**
@@ -31,9 +32,9 @@ const server = z.object({
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
   NEXT_PUBLIC_GITHUB_CLIENT_ID: z.string().min(1),
-  NEXT_PUBLIC_LINKEDIN_CLIENT_ID: z.string().min(1),
+  // NEXT_PUBLIC_LINKEDIN_CLIENT_ID: z.string().min(1),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-  NEXT_PUBLIC_LINKEDIN_CALLBACK_URL: z.string().url(),
+  // NEXT_PUBLIC_LINKEDIN_CALLBACK_URL: z.string().url(),
   NEXT_PUBLIC_GITHUB_CALLBACK_URL: z.string().url(),
   NEXT_PRIVATE_LEMONSQUEEZY_KEY: z.string(),
 });
@@ -54,16 +55,16 @@ const processEnv = {
   NEXT_PUBLIC_GITHUB_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-  NEXT_PUBLIC_LINKEDIN_CLIENT_ID: process.env.NEXT_PUBLIC_LINKEDIN_CLIENT_ID,
+  LINKEDIN_CLIENT_ID: process.env.LINKEDIN_CLIENT_ID,
   LINKEDIN_CLIENT_SECRET: process.env.LINKEDIN_CLIENT_SECRET,
   CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
-  NEXT_PUBLIC_LINKEDIN_CALLBACK_URL:
-    process.env.NEXT_PUBLIC_LINKEDIN_CALLBACK_URL,
+  LINKEDIN_CALLBACK_URL: process.env.LINKEDIN_CALLBACK_URL,
   CRONJOB_AUTH: process.env.CRONJOB_AUTH,
   CRONJOB_SCHEDULE_URL: process.env.CRONJOB_SCHEDULE_URL,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
   NEXT_PRIVATE_LEMONSQUEEZY_KEY: process.env.NEXT_PRIVATE_LEMONSQUEEZY_KEY,
   RESEND_EMAIL_API: process.env.RESEND_EMAIL_API,
+  DOMAIN: process.env.DOMAIN,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
