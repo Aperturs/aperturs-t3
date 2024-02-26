@@ -41,12 +41,8 @@ function ApiBox() {
 
   const orgId = searchParams?.get("orgid");
 
-  const [clientID, setClientID] = React.useState(
-    "U1FRem1XMzF0a2N6Mm94MURQRnk6MTpjaQ",
-  );
-  const [clientSecret, setClientSecret] = React.useState(
-    "jVsKjIVRYCQ_lcmXdiJBIIZRRERgElzT13nYNxMUT73TavhoPD",
-  );
+  const [clientID, setClientID] = React.useState("");
+  const [clientSecret, setClientSecret] = React.useState("");
   const [localLoading, setLocalLoading] = React.useState(false);
 
   const connectHandler = async () => {
