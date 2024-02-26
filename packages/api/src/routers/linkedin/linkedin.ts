@@ -1,3 +1,4 @@
+import { refreshLinkedinDataInDatabase } from "@api/handlers/linkedin/main";
 import { limitWrapper, verifyLimitAndRun } from "@api/helpers/limitWrapper";
 import { redis } from "@api/index";
 import { TRPCError } from "@trpc/server";
@@ -5,6 +6,7 @@ import { z } from "zod";
 
 import { db, schema, tokens } from "@aperturs/db";
 import { postToLinkedInInputSchema } from "@aperturs/validators/post";
+import { SocialRedisKeySchema } from "@aperturs/validators/socials";
 
 import { env } from "../../../env";
 import { postToLinkedin } from "../../helpers/linkedln";
@@ -34,11 +36,11 @@ export const linkedin = createTRPCRouter({
     }),
 
   getLinkedinAuthUrl: protectedProcedure
-    .input(z.object({ orgId: z.string() }))
+    .input(SocialRedisKeySchema)
     .query(({ input, ctx }) => {
       const res = verifyLimitAndRun({
         func: async () => {
-          await redis.set(ctx.currentUser, input.orgId, {
+          await redis.set(ctx.currentUser, input, {
             ex: 120,
           });
           return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${env.LINKEDIN_CLIENT_ID}&redirect_uri=${env.LINKEDIN_CALLBACK_URL}&scope=r_liteprofile%20r_emailaddress%20w_member_social`;
@@ -47,5 +49,27 @@ export const linkedin = createTRPCRouter({
         limitType: "socialaccounts",
       });
       return res;
+    }),
+  refreshLinkedinToken: protectedProcedure
+    .input(
+      z.object({
+        tokenId: z.string(),
+        linkedinData: tokens.linkedInTokenInsertSchema,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await refreshLinkedinDataInDatabase({
+          linkedinData: input.linkedinData,
+          userId: ctx.currentUser,
+          tokenId: input.tokenId,
+        });
+        return {
+          success: true,
+          message: "Linkedin Token refreshed successfully",
+        };
+      } catch (error) {
+        return { success: false, message: "Error refreshing Twitter" };
+      }
     }),
 });

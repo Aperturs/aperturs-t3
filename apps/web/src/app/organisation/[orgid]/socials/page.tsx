@@ -1,6 +1,6 @@
 import type { OrgIdParams } from "@aperturs/validators/organisation";
 
-import ConnectSocials from "~/components/profile/connect-socials/socials";
+import ConnectSocials from "~/components/profile/socials/socials";
 import FetchOrgSocials from "./fetch-socials";
 
 const SocialsPage = ({ params }: { params: OrgIdParams }) => {

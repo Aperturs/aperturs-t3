@@ -11,7 +11,7 @@ import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { Input } from "@aperturs/ui/input";
 
-import { handleTwitterRedirect } from "~/components/profile/connect-socials/handle-socials";
+import { handleTwitterRedirect } from "~/components/profile/socials/handle-socials";
 
 const AddTwitter = () => {
   return (
@@ -40,6 +40,7 @@ function ApiBox() {
   const searchParams = useSearchParams();
 
   const orgId = searchParams?.get("orgid");
+  const tokenId = searchParams?.get("tokenid");
 
   const [clientID, setClientID] = React.useState("");
   const [clientSecret, setClientSecret] = React.useState("");
@@ -55,7 +56,10 @@ function ApiBox() {
     await handleTwitterRedirect({
       clientId: clientID,
       clientSecret,
-      orgId: orgId,
+      redis: {
+        orgId,
+        tokenId: tokenId ? tokenId : "new",
+      },
     });
     setLocalLoading(false);
   };

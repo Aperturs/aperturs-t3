@@ -53,6 +53,8 @@ export enum SocialType {
   Github = "Github",
 }
 
+export const SocialTypeSchema = z.nativeEnum(SocialType);
+
 // might use these types later
 
 // interface Tweet {

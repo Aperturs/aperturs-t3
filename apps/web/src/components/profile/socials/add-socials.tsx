@@ -1,12 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
@@ -51,19 +46,8 @@ const Socials = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
   const { userId } = useAuth();
-  const searchParams = useSearchParams();
 
   const params = useParams<{ orgid: string }>();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams?.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   const handleGithub = async () => {
     setLocalLoading(true);
@@ -104,8 +88,7 @@ const Socials = () => {
         className="h-12"
         onClick={() =>
           router.push(
-            "/socials/twitter?" +
-              createQueryString("orgid", params?.orgid ?? "personal"),
+            `/socials/twitter?orgid=${params?.orgid ?? "personal&tokenid=new"}`,
           )
         }
         disabled={localLoading}

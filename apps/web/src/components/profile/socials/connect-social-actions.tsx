@@ -1,5 +1,9 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { MoreVertical, RefreshCcw, Trash } from "lucide-react";
+import toast from "react-hot-toast";
 
 import type { SocialType } from "@aperturs/validators/post";
 import {
@@ -14,7 +18,6 @@ import {
   AlertDialogTrigger,
 } from "@aperturs/ui/components/ui/alert-dialog";
 import { Button } from "@aperturs/ui/components/ui/button";
-import { Card } from "@aperturs/ui/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,38 +26,36 @@ import {
   DropdownMenuTrigger,
 } from "@aperturs/ui/components/ui/dropdown-menu";
 
-export interface IConnection {
-  name: string;
-  icon: React.ReactNode;
-  profilePic: string;
-  id: string;
-  type: SocialType;
-}
+import { api } from "~/trpc/react";
+import { handleLinkedinRedirect } from "./handle-socials";
 
-export const ConnectedSocial = ({
-  name,
-  icon,
-  profilePic,
+export default function ConnectSocialsAction({
   id,
   type,
-}: IConnection) => {
-  return (
-    <Card className="flex w-full items-center justify-between gap-3  px-10 py-6 ">
-      <Image
-        className="mx-2 h-10 w-10 rounded-full object-cover"
-        src={profilePic}
-        alt="profile"
-        width={40}
-        height={40}
-      />
-      <h2 className="whitespace-nowrap text-sm leading-3 ">{name}</h2>
-      {icon}
-      <ConnectSocialsAction id={id} type={type} />
-    </Card>
-  );
-};
+}: {
+  id: string;
+  type: SocialType;
+}) {
+  const { mutateAsync: removeAccount } =
+    api.user.removeSocialAccount.useMutation();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-function ConnectSocialsAction({ id, type }: { id: string; type: SocialType }) {
+  const params = useParams<{ orgid: string }>();
+
+  const handleRefreshAccount = async () => {
+    if (type === ("TWITTER" as SocialType)) {
+      router.push(
+        `/socials/twitter?orgid=${params?.orgid ?? "personal"}&tokenid=${id}`,
+      );
+    }
+    if (type === ("LINKEDIN" as SocialType)) {
+      await handleLinkedinRedirect({
+        orgId: params?.orgid ?? "personal",
+        tokenId: id,
+      });
+    }
+  };
   return (
     <AlertDialog>
       <DropdownMenu>
@@ -66,7 +67,10 @@ function ConnectSocialsAction({ id, type }: { id: string; type: SocialType }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem className="flex gap-2">
+          <DropdownMenuItem
+            className="flex gap-2"
+            onClick={handleRefreshAccount}
+          >
             <RefreshCcw size={15} />
             Refresh Details
           </DropdownMenuItem>
@@ -90,20 +94,23 @@ function ConnectSocialsAction({ id, type }: { id: string; type: SocialType }) {
         <AlertDialogFooter className="flex items-center">
           <AlertDialogCancel className="mb-2">Cancel</AlertDialogCancel>
           <AlertDialogAction
-            // disabled={loading}
+            disabled={loading}
             className="bg-destructive hover:bg-destructive"
-            // onClick={async () => {
-            //   setLoading(true);
-            //   await toast.promise(removeUser({ orgUserId: rowData.id }), {
-            //     loading: "Removing User...",
-            //     success: "User Removed",
-            //     error: "Failed to remove user",
-            //   });
-            //   setLoading(false);
-            //   setTimeout(() => {
-            //     router.refresh();
-            //   }, 2000);
-            // }}
+            onClick={async () => {
+              setLoading(true);
+              await toast.promise(
+                removeAccount({ socialType: type, tokenId: id }),
+                {
+                  loading: "Removing User...",
+                  success: "User Removed",
+                  error: "Failed to remove user",
+                },
+              );
+              setLoading(false);
+              setTimeout(() => {
+                router.refresh();
+              }, 2000);
+            }}
           >
             Delete
           </AlertDialogAction>

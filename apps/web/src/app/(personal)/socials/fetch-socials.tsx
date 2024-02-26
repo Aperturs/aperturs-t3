@@ -1,5 +1,5 @@
-import { SocialIcon } from "~/components/profile/connect-socials/add-socials";
-import { ConnectedSocial } from "~/components/profile/connect-socials/connected-social";
+import { SocialIcon } from "~/components/profile/socials/add-socials";
+import { ConnectedSocial } from "~/components/profile/socials/connected-social";
 import { api } from "~/trpc/server";
 
 export default async function FetchPersonalSocials() {

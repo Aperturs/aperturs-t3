@@ -1,5 +1,6 @@
 import {
   GetTwitterConnectUrl,
+  refreshTwitterDataInDatabase,
   saveTwitterDataToDatabase,
 } from "@api/handlers/twitter/main";
 import { verifyLimitAndRun } from "@api/helpers/limitWrapper";
@@ -34,7 +35,7 @@ export const twitterData = createTRPCRouter({
     .query(({ input, ctx }) => {
       const res = verifyLimitAndRun({
         func: async () => {
-          await redis.set(ctx.currentUser, input.orgId, {
+          await redis.set(ctx.currentUser, input.redis, {
             ex: 120,
           });
           return GetTwitterConnectUrl(input);
@@ -53,6 +54,26 @@ export const twitterData = createTRPCRouter({
         twitterData: input,
         userId: ctx.currentUser,
       });
+    }),
+
+  refreshTwitterToken: protectedProcedure
+    .input(
+      z.object({
+        tokenId: z.string(),
+        tokenData: tokens.twitterTokenInsertSchema,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await refreshTwitterDataInDatabase({
+          twitterData: input.tokenData,
+          userId: ctx.currentUser,
+          tokenId: input.tokenId,
+        });
+        return { success: true, message: "Twitter refreshed successfully" };
+      } catch (error) {
+        return { success: false, message: "Error refreshing Twitter" };
+      }
     }),
 
   removeTwitter: protectedProcedure

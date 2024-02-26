@@ -1,4 +1,4 @@
-import ConnectSocials from "~/components/profile/connect-socials/socials";
+import ConnectSocials from "~/components/profile/socials/socials";
 import FetchPersonalSocials from "./fetch-socials";
 
 const SocialsPage = () => {

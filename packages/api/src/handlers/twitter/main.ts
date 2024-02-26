@@ -61,3 +61,23 @@ export async function removeTwitterDataFromDatabase({
     limitType: "socialaccounts",
   });
 }
+
+export async function refreshTwitterDataInDatabase({
+  tokenId,
+  twitterData,
+  userId,
+}: {
+  tokenId: string;
+  twitterData: tokens.twitterTokenInsert;
+  userId: string;
+}) {
+  await limitDown({
+    func: async () =>
+      await db
+        .update(schema.twitterToken)
+        .set(twitterData)
+        .where(eq(schema.twitterToken.id, tokenId)),
+    clerkUserId: userId,
+    limitType: "socialaccounts",
+  });
+}

@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 
+import type { SocialRedisKeyType } from "@aperturs/validators/socials";
 import { redis } from "@aperturs/api";
 
 import { env } from "~/env.mjs";
@@ -73,38 +74,42 @@ export async function GET(req: NextRequest) {
       }
       const domain = env.DOMAIN;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      const id = (await redis.get(userId))! as string;
-      const isPersonal = id === "personal";
-
-      if (isPersonal) {
+      const redisData = (await redis.get(userId))! as SocialRedisKeyType;
+      const isPersonal = redisData.orgId === "personal";
+      const isNew = redisData.tokenId === "new";
+      if (isNew) {
         await api.linkedin.addLinkedlnToDatabase({
           profileId: user.id,
           accessToken: data.access_token,
           refreshToken: data.refresh_token,
           expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
-          clerkUserId: userId,
+          clerkUserId: isPersonal ? userId : undefined,
+          organizationId: isPersonal ? undefined : redisData.orgId,
           profilePicture: profile_picture_url,
           fullName: fullName,
           updatedAt: new Date(),
         });
+      } else {
+        await api.linkedin.refreshLinkedinToken({
+          linkedinData: {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
+            refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
+            profilePicture: profile_picture_url,
+            fullName: fullName,
+            updatedAt: new Date(),
+          },
+          tokenId: redisData.tokenId,
+        });
+      }
+      if (isPersonal) {
         const url = `${domain}/socials`;
         return NextResponse.redirect(url);
-      } else {
-        await api.linkedin.addLinkedlnToDatabase({
-          profileId: user.id,
-          accessToken: data.access_token,
-          refreshToken: data.refresh_token,
-          expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
-          refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
-          fullName: fullName,
-          profilePicture: profile_picture_url,
-          organizationId: id,
-          updatedAt: new Date(),
-        });
-        const url = `${domain}/organisation/${id}/socials`;
-        return NextResponse.redirect(url);
       }
+      const url = `${domain}/organisation/${redisData.orgId}/socials`;
+      return NextResponse.redirect(url);
     }
     const url = `${env.DOMAIN}/socials`;
     return NextResponse.redirect(url);
