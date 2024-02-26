@@ -46,6 +46,7 @@ export const getAccessToken = async (tokenId: string) => {
           );
 
           const data = await response.json();
+          console.log("new Token", data);
           if (data) {
             await db
               .update(schema.twitterToken)

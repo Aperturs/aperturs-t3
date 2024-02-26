@@ -33,8 +33,8 @@ export default function Post({ params }: { params: { id: string } }) {
         const data = getData.data;
         if (!data) return;
         const localContent = data.content;
-
         setContent(localContent);
+        console.log("localContent", localContent);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -45,6 +45,7 @@ export default function Post({ params }: { params: { id: string } }) {
   useEffect(() => {
     setShouldReset(true);
     fetchData();
+    console.log("fetchData done");
     const timeout = setTimeout(() => {
       setLoading(false);
     }, 2000); // 2-second delay

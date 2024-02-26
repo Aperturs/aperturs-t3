@@ -6,6 +6,7 @@ import { Client } from "twitter-api-sdk";
 import { redis } from "@aperturs/api";
 
 import { env } from "~/env.mjs";
+import { api } from "~/trpc/server";
 
 interface Response {
   access_token: string;
@@ -83,55 +84,22 @@ export async function handler(req: NextRequest) {
           });
           if (userId) {
             if (userObject) {
-              //console.log(response.expires_in, "response.expires_in");
-              // await prisma.twitterToken
-              //   .create({
-              //     data: {
-              //       access_token: response.access_token,
-              //       refresh_token: response.refresh_token,
-              //       expires_in: new Date(
-              //         new Date().getTime() + response.expires_in * 1000,
-              //       ),
-              //       profileId: userObject.id,
-              //       client_id: formattedClientId,
-              //       client_secret: formattedClientSecret,
-              //       clerkUserId: userId,
-              //     },
-              //   })
               console.log("I have user", userObject);
-              //   const res = await api.twitter.saveDataToDataBase({
-              //     accessToken: response.access_token,
-              //     refreshToken: response.refresh_token,
-              //     expiresIn: new Date(
-              //       new Date().getTime() + response.expires_in * 1000,
-              //     ),
-              //     fullname: userObject.name,
-              //     username: userObject.username,
-              //     profileImage: userObject.profile_image_url,
-              //     profileId: userObject.id,
-              //     clientId: formattedClientId,
-              //     clientSecret: formattedClientSecret,
-              //     clerkUserId: isPersonal ? userId : undefined,
-              //     organizationId: isPersonal ? undefined : id,
-              //   });
-
-              // await db
-              //   .insert(schema.twitterToken)
-              //   .values({
-              //     accessToken: response.access_token,
-              //     refreshToken: response.refresh_token,
-              //     expiresIn: new Date(
-              //       new Date().getTime() + response.expires_in * 1000,
-              //     ),
-              //     profileId: userObject.id,
-              //     clientId: formattedClientId,
-              //     clientSecret: formattedClientSecret,
-              //     clerkUserId: isPersonal ? userId : undefined,
-              //     organizationId: isPersonal ? undefined : id,
-              //   })
-              //   .finally(() => {
-              //     console.log("working");
-              //   });
+              await api.twitter.saveDataToDataBase({
+                accessToken: response.access_token,
+                refreshToken: response.refresh_token,
+                expiresIn: new Date(
+                  new Date().getTime() + response.expires_in * 1000,
+                ),
+                fullname: userObject.name,
+                username: userObject.username,
+                profileImage: userObject.profile_image_url,
+                profileId: userObject.id,
+                clientId: formattedClientId,
+                clientSecret: formattedClientSecret,
+                clerkUserId: isPersonal ? userId : undefined,
+                organizationId: isPersonal ? undefined : id,
+              });
             }
           } else {
             console.log("I dont have user");

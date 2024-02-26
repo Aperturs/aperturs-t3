@@ -18,7 +18,7 @@ const AddTwitter = () => {
     <div className="w-screen px-10 py-28 md:px-24 lg:px-56">
       <Link
         href={"/socials"}
-        className="my-2 flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-900"
+        className="my-2 flex items-center space-x-2 text-sm"
       >
         <IoIosArrowBack size={20} />
         <span>Back</span>

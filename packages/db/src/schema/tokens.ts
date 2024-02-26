@@ -74,6 +74,17 @@ export const githubTokenSelectSchema = createSelectSchema(githubToken);
 export type githubTokenInsert = z.infer<typeof githubTokenInsertSchema>;
 export type githubTokenSelect = z.infer<typeof githubTokenSelectSchema>;
 
+export const githubTokenRelation = relations(githubToken, ({ one }) => ({
+  organization: one(organization, {
+    references: [organization.id],
+    fields: [githubToken.organizationId],
+  }),
+  clerkUser: one(user, {
+    references: [user.clerkUserId],
+    fields: [githubToken.clerkUserId],
+  }),
+}));
+
 export const linkedInToken = pgTable(
   "LinkedInToken",
   {
@@ -180,15 +191,8 @@ export const twitterToken = pgTable(
         table.organizationId,
       ),
       profileIdIdx: index("TwitterToken_profileId_idx").on(table.profileId),
-      twitterTokenAccessTokenKey: unique("TwitterToken_access_token_key").on(
-        table.accessToken,
-      ),
-      twitterTokenRefreshTokenKey: unique("TwitterToken_refresh_token_key").on(
-        table.refreshToken,
-      ),
-      twitterAccountPerOrg: unique("TwitterToken_organizationId_clerkID").on(
-        table.organizationId,
-        table.clerkUserId,
+      twitterAccountPerOrg: unique("TwitterToken_Unique_ProfilePerApp").on(
+        table.clientId,
         table.profileId,
       ),
     };

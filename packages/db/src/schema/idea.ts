@@ -1,4 +1,7 @@
+import type { z } from "zod";
+import { relations } from "drizzle-orm";
 import { index, pgTable, timestamp, varchar } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 import { nanoid } from "nanoid";
 
 import { organization } from "./organisation";
@@ -36,5 +39,19 @@ export const idea = pgTable(
   },
 );
 
-export type IdeaSelect = typeof idea.$inferSelect;
-export type IdeaInsert = typeof idea.$inferInsert;
+export const ideaRelations = relations(idea, ({ one }) => ({
+  createdBy: one(user, {
+    fields: [idea.clerkUserId],
+    references: [user.clerkUserId],
+  }),
+  organization: one(organization, {
+    fields: [idea.organizationId],
+    references: [organization.id],
+  }),
+}));
+
+export const ideaInsertSchema = createInsertSchema(idea);
+export type IdeaInsert = z.infer<typeof ideaInsertSchema>;
+
+export const ideaSelectSchema = createInsertSchema(idea);
+export type IdeaSelect = z.infer<typeof ideaSelectSchema>;

@@ -20,6 +20,8 @@ export default async function FetchOrgSocials({
           name={item.data.name ?? ""}
           icon={<SocialIcon type={item.type} />}
           profilePic={item.data.profile_image_url ?? "/user.png"}
+          id={item.data.tokenId}
+          type={item.type}
         />
       ))}
     </>
