@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 
 import FetchPersonalSocials from "~/app/(personal)/socials/fetch-socials";
-import { AddSocialPersonal } from "~/components/profile/connect-socials/personal/personal-social-connect";
 import ConnectSocials from "~/components/profile/connect-socials/socials";
 
 function AddSocial() {
@@ -14,7 +13,6 @@ function AddSocial() {
         <div className="flex flex-col items-center justify-center">
           <ConnectSocials>
             <FetchPersonalSocials />
-            <AddSocialPersonal />
           </ConnectSocials>
         </div>{" "}
         <div className="flex justify-between">

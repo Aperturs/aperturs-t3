@@ -1,8 +1,9 @@
-import { limitWrapper } from "@api/helpers/limitWrapper";
+import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { auth } from "twitter-api-sdk";
 
+import type { tokens } from "@aperturs/db";
 import type { addTwitterType } from "@aperturs/validators/socials";
-import { db, tokens } from "@aperturs/db";
+import { db, eq, schema } from "@aperturs/db";
 
 import { env } from "../../../env";
 
@@ -38,8 +39,25 @@ export async function saveTwitterDataToDatabase({
   userId: string;
 }) {
   await limitWrapper(
-    () => db.insert(tokens.twitterToken).values(twitterData),
+    () => db.insert(schema.twitterToken).values(twitterData),
     userId,
     "socialaccounts",
   );
+}
+
+export async function removeTwitterDataFromDatabase({
+  tokenId,
+  userId,
+}: {
+  tokenId: string;
+  userId: string;
+}) {
+  await limitDown({
+    func: async () =>
+      await db
+        .delete(schema.twitterToken)
+        .where(eq(schema.twitterToken.id, tokenId)),
+    clerkUserId: userId,
+    limitType: "socialaccounts",
+  });
 }

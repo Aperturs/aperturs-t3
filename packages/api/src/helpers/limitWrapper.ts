@@ -55,11 +55,15 @@ export async function limitWrapper<T>(
   return result;
 }
 
-export async function limitDown<T>(
-  func: () => Promise<T>,
-  clerkUserId: string,
-  limitType: LimitType,
-): Promise<T> {
+export async function limitDown<T>({
+  func,
+  clerkUserId,
+  limitType,
+}: {
+  func: () => Promise<T> | T;
+  clerkUserId: string;
+  limitType: LimitType;
+}): Promise<T> {
   const userUsage = await db.query.userUsage.findFirst({
     where: eq(schema.userUsage.clerkUserId, clerkUserId),
   });
@@ -70,7 +74,7 @@ export async function limitDown<T>(
       updatedAt: new Date(),
     });
 
-    return limitWrapper(func, clerkUserId, limitType);
+    return limitDown({ func, clerkUserId, limitType });
   }
 
   const result = func();
@@ -79,6 +83,7 @@ export async function limitDown<T>(
     .update(schema.userUsage)
     .set({
       [limitType]: userUsage[limitType] + 1,
+      updatedAt: new Date(),
     })
     .where(eq(schema.userUsage.clerkUserId, clerkUserId));
 
