@@ -1,7 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
@@ -46,8 +51,19 @@ const Socials = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
   const { userId } = useAuth();
+  const searchParams = useSearchParams();
 
   const params = useParams<{ orgid: string }>();
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams?.toString());
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams],
+  );
 
   const handleGithub = async () => {
     setLocalLoading(true);
@@ -86,7 +102,12 @@ const Socials = () => {
       <Button
         variant="secondary"
         className="h-12"
-        onClick={() => router.push("/socials/twitter")}
+        onClick={() =>
+          router.push(
+            "/socials/twitter?" +
+              createQueryString("orgid", params?.orgid ?? "personal"),
+          )
+        }
         disabled={localLoading}
       >
         <AiOutlineTwitter className="mr-2 text-2xl " />

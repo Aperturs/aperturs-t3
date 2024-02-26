@@ -2,9 +2,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getAuth } from "@clerk/nextjs/server";
 import { Client } from "twitter-api-sdk";
 
-import { db, schema } from "@aperturs/db";
+import { redis } from "@aperturs/api";
 
 import { env } from "~/env.mjs";
+import { api } from "~/trpc/server";
 
 interface Response {
   access_token: string;
@@ -16,7 +17,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { userId } = getAuth(req);
+  const { userId, user } = getAuth(req);
   const { state, code } = req.query;
   console.log("working twitter");
   console.log(userId, "userId");
@@ -37,6 +38,12 @@ export default async function handler(
   const bearerToken = Buffer.from(
     `${formattedClientId}:${formattedClientSecret}`,
   ).toString("base64");
+  // const heads = new Headers(headers);
+  // const caller = createCaller({
+  //   db: db,
+  //   currentUser: userId,
+  //   headers: req.headers,
+  // });
 
   await fetch("https://api.twitter.com/2/oauth2/token", {
     method: "POST",
@@ -58,9 +65,13 @@ export default async function handler(
           response.expires_in
         ) {
           const client = new Client(response.access_token);
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+          const id = (await redis.get(userId))! as string;
+          const isPersonal = id === "personal";
           const { data: userObject } = await client.users.findMyUser({
             "user.fields": ["id"],
           });
+          console.log(userObject, "userObject");
           if (userId) {
             if (userObject) {
               //console.log(response.expires_in, "response.expires_in");
@@ -78,26 +89,47 @@ export default async function handler(
               //       clerkUserId: userId,
               //     },
               //   })
-              await db
-                .insert(schema.twitterToken)
-                .values({
-                  accessToken: response.access_token,
-                  refreshToken: response.refresh_token,
-                  expiresIn: new Date(
-                    new Date().getTime() + response.expires_in * 1000,
-                  ),
-                  profileId: userObject.id,
-                  clientId: formattedClientId,
-                  clientSecret: formattedClientSecret,
-                  clerkUserId: userId,
-                })
-                .finally(() => {
-                  console.log("working");
-                });
+              await api.twitter.saveDataToDataBase({
+                accessToken: response.access_token,
+                refreshToken: response.refresh_token,
+                expiresIn: new Date(
+                  new Date().getTime() + response.expires_in * 1000,
+                ),
+                profileId: userObject.id,
+                clientId: formattedClientId,
+                clientSecret: formattedClientSecret,
+                clerkUserId: isPersonal ? userId : undefined,
+                organizationId: isPersonal ? undefined : id,
+              });
+              console.log("saving to database");
+
+              // await db
+              //   .insert(schema.twitterToken)
+              //   .values({
+              //     accessToken: response.access_token,
+              //     refreshToken: response.refresh_token,
+              //     expiresIn: new Date(
+              //       new Date().getTime() + response.expires_in * 1000,
+              //     ),
+              //     profileId: userObject.id,
+              //     clientId: formattedClientId,
+              //     clientSecret: formattedClientSecret,
+              //     clerkUserId: isPersonal ? userId : undefined,
+              //     organizationId: isPersonal ? undefined : id,
+              //   })
+              //   .finally(() => {
+              //     console.log("working");
+              //   });
             }
           } else {
             console.log("I dont have user");
           }
+          if (isPersonal) {
+            res.redirect("/socials");
+          }
+          res.redirect(`/organisation/${id}/socials`);
+        } else {
+          res.status(400).send("You denied the app or your session expired!");
         }
       });
     })
@@ -106,5 +138,5 @@ export default async function handler(
       console.log(err, "err");
     });
 
-  res.redirect("/settings");
+  res.redirect("/socials");
 }

@@ -2,25 +2,29 @@ import type { tokens } from "@aperturs/db";
 import type { SocialAccountsBackend } from "@aperturs/validators/user";
 import { SocialType } from "@aperturs/validators/post";
 
-export function getAccounts(
+import { getTwitterAccountDetails } from "./twitter";
+
+export async function getAccounts(
   linkedin: tokens.linkedInTokenSelect[],
   twitter: tokens.twitterTokenSelect[],
-): SocialAccountsBackend {
+): Promise<SocialAccountsBackend> {
   const accounts: SocialAccountsBackend = [];
 
   // Process Twitter data
-  for (const twitterDetail of twitter) {
+  const twitterDetails = await getTwitterAccountDetails(twitter);
+  console.log(twitterDetails, "twitterDetails");
+  for (const twitterDetail of twitterDetails) {
     if (
-      twitterDetail.id &&
-      twitterDetail.fullname &&
-      twitterDetail.profileImage &&
+      twitterDetail.tokenId &&
+      twitterDetail.full_name &&
+      twitterDetail.profile_image_url &&
       twitterDetail.profileId
     ) {
       accounts.push({
         data: {
-          tokenId: twitterDetail.id,
-          name: twitterDetail.fullname,
-          profile_image_url: twitterDetail.profileImage,
+          tokenId: twitterDetail.tokenId,
+          name: twitterDetail.full_name,
+          profile_image_url: twitterDetail.profile_image_url,
           profileId: twitterDetail.profileId,
         },
         type: SocialType.Twitter,

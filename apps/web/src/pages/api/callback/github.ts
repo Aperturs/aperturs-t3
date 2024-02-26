@@ -25,7 +25,7 @@ export default async function handler(
   const { code } = req.query;
   const tokenData = await (
     await fetch(
-      `https://github.com/login/oauth/access_token?client_id=${env.NEXT_PUBLIC_GITHUB_CLIENT_ID}&client_secret=${env.GITHUB_CLIENT_SECRET}&code=${code}`,
+      `https://github.com/login/oauth/access_token?client_id=${env.GITHUB_CLIENT_ID}&client_secret=${env.GITHUB_CLIENT_SECRET}&code=${code}`,
       {
         headers: {
           Accept: "application/json",

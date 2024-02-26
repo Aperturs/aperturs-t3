@@ -2,10 +2,16 @@
 
 import React from "react";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
+import { useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 import { IoIosArrowBack } from "react-icons/io";
 
-import { api } from "~/trpc/react";
+import { Alert, AlertDescription, AlertTitle } from "@aperturs/ui/alert";
+import { Button } from "@aperturs/ui/button";
+import { Card } from "@aperturs/ui/card";
+import { Input } from "@aperturs/ui/input";
+
+import { handleTwitterRedirect } from "~/components/profile/connect-socials/handle-socials";
 
 const AddTwitter = () => {
   return (
@@ -31,51 +37,53 @@ const AddTwitter = () => {
 };
 
 function ApiBox() {
-  const { mutateAsync, error, isPending } =
-    api.twitter.addTwitter.useMutation();
+  const searchParams = useSearchParams();
 
-  const [clientID, setClientID] = React.useState("");
-  const [clientSecret, setClientSecret] = React.useState("");
+  const orgId = searchParams?.get("orgid");
+
+  const [clientID, setClientID] = React.useState(
+    "U1FRem1XMzF0a2N6Mm94MURQRnk6MTpjaQ",
+  );
+  const [clientSecret, setClientSecret] = React.useState(
+    "jVsKjIVRYCQ_lcmXdiJBIIZRRERgElzT13nYNxMUT73TavhoPD",
+  );
+  const [localLoading, setLocalLoading] = React.useState(false);
 
   const connectHandler = async () => {
-    try {
-      await mutateAsync({
-        clientId: clientID,
-        clientSecret: clientSecret,
-      }).then((data) => {
-        window.location.href = data;
-      });
-    } catch (err) {
-      if (error) {
-        // handle the TRPCError
-        toast.error(error.message);
-      } else {
-        // handle other types of errors
-        console.error(err);
-      }
+    setLocalLoading(true);
+    if (!orgId) {
+      toast.error("Something went wrong, please try again");
+      setLocalLoading(false);
+      return;
     }
+    await handleTwitterRedirect({
+      clientId: clientID,
+      clientSecret,
+      orgId: orgId,
+    });
+    setLocalLoading(false);
   };
 
   return (
-    <div className="postShadow mt-8 flex  w-full flex-col rounded-xl p-6">
+    <Card className="my-8  flex w-full flex-col rounded-xl p-6">
       <h1 className="text-2xl font-medium text-primary">API Keys</h1>
       <p className="mt-2 text-gray-500">Client ID</p>
-      <input
-        className="my-2 h-auto w-full resize-none rounded-xl border border-primary p-3"
+      <Input
+        // className="my-2 h-auto w-full resize-none rounded-xl border border-primary p-3"
         placeholder="UE05dTJ45jhjTvdEUYQ5aTBIcFo6MTpjaQ"
         value={clientID}
         onChange={(e) => setClientID(e.target.value)}
-      ></input>
+      ></Input>
       <p className="mt-2 text-gray-500">Client Secret</p>
-      <input
-        className="h-auto w-full resize-none rounded-xl  
-      border border-primary p-3 "
+      <Input
+        //   className="h-auto w-full resize-none rounded-xl
+        // border border-primary p-3 "
         placeholder="NzEjJmLCdQud4JuKSw2QaLjFv4zSTQWtg31hRwrsdSfw3ayqfq"
         value={clientSecret}
         onChange={(e) => setClientSecret(e.target.value)}
-      ></input>
+      />
 
-      <div className="alert alert-warning my-3 bg-orange-200 ">
+      <Alert className="my-3 bg-orange-200 dark:bg-orange-700">
         <div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -91,25 +99,25 @@ function ApiBox() {
             />
           </svg>
           <div>
-            <span className="font-bold">Bring your Own APIs</span>
-            <span className="m-1">
+            <AlertTitle className="font-bold">Bring your Own APIs</AlertTitle>
+            <AlertDescription>
               Due to Twitter new APIs rules, we are only allowing user who bring
               their own Api Keys
-            </span>
+            </AlertDescription>
           </div>
         </div>
-      </div>
+      </Alert>
 
       <div className="flex w-full justify-end">
-        <button
+        <Button
           className="btn btn-primary mt-4 w-24  rounded-xl px-4 py-2 text-white sm:w-56"
           onClick={connectHandler}
-          disabled={isPending}
+          disabled={localLoading}
         >
           Connect
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }
 

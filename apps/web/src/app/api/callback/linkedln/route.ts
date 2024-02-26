@@ -5,9 +5,9 @@ import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 
 import { redis } from "@aperturs/api";
-import { db, schema } from "@aperturs/db";
 
 import { env } from "~/env.mjs";
+import { api } from "~/trpc/server";
 
 export async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
@@ -75,8 +75,9 @@ export async function GET(req: NextRequest) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const id = (await redis.get(userId))! as string;
       const isPersonal = id === "personal";
+
       if (isPersonal) {
-        await db.insert(schema.linkedInToken).values({
+        await api.linkedin.addLinkedlnToDatabase({
           profileId: user.id,
           accessToken: data.access_token,
           refreshToken: data.refresh_token,
@@ -90,7 +91,7 @@ export async function GET(req: NextRequest) {
         const url = `${domain}/socials`;
         return NextResponse.redirect(url);
       } else {
-        await db.insert(schema.linkedInToken).values({
+        await api.linkedin.addLinkedlnToDatabase({
           profileId: user.id,
           accessToken: data.access_token,
           refreshToken: data.refresh_token,
@@ -105,8 +106,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.redirect(url);
       }
     }
-    const url = req.nextUrl.clone();
-    url.pathname = "/socials";
+    const url = `${env.DOMAIN}/socials`;
     return NextResponse.redirect(url);
   } catch (e) {
     console.log(e, "error");
