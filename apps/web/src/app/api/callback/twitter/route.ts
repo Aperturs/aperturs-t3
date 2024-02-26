@@ -15,7 +15,7 @@ interface Response {
   expires_in: number;
 }
 
-export async function handler(req: NextRequest) {
+async function handler(req: NextRequest) {
   const { userId } = getAuth(req);
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");

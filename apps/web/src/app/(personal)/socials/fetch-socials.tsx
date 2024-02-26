@@ -1,4 +1,4 @@
-import { SocialIcon } from "~/components/profile/socials/add-socials";
+import { SocialIcon } from "~/components/post/common";
 import { ConnectedSocial } from "~/components/profile/socials/connected-social";
 import { api } from "~/trpc/server";
 
@@ -16,6 +16,7 @@ export default async function FetchPersonalSocials() {
           type={item.type}
         />
       ))}
+      test
     </>
   );
 }

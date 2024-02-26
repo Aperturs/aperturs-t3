@@ -172,15 +172,12 @@ export const posting = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        await limitDown(
-          () =>
-            // ctx.prisma.post.delete({
-            //   where: { id: input.id },
-            // }),
+        await limitDown({
+          func: () =>
             ctx.db.delete(schema.post).where(eq(schema.post.id, input.id)),
-          ctx.currentUser,
-          "drafts",
-        );
+          clerkUserId: ctx.currentUser,
+          limitType: "drafts",
+        });
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
