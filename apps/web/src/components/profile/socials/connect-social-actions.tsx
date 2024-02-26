@@ -101,8 +101,8 @@ export default function ConnectSocialsAction({
               await toast.promise(
                 removeAccount({ socialType: type, tokenId: id }),
                 {
-                  loading: "Removing User...",
-                  success: "User Removed",
+                  loading: "Removing Account...",
+                  success: "Account Removed",
                   error: "Failed to remove user",
                 },
               );
