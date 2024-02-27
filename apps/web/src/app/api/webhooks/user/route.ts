@@ -7,7 +7,7 @@ import { Webhook } from "svix";
 
 import { db, eq, schema } from "@aperturs/db";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
 
 const webhookSecret = env.WEBHOOK_SECRET || "";

@@ -6,7 +6,7 @@
 // import { db, schema } from "@aperturs/db";
 // import { GithubUser } from "@aperturs/validators/github";
 
-// import { env } from "~/env.mjs";
+// import { env } from "~/env";
 
 // // interface TokenData {
 // //   access_token: string;

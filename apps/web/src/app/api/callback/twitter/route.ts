@@ -6,7 +6,7 @@ import { Client } from "twitter-api-sdk";
 import type { SocialRedisKeyType } from "@aperturs/validators/socials";
 import { redis } from "@aperturs/api";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 import { api } from "~/trpc/server";
 
 interface Response {

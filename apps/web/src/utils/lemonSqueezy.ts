@@ -1,6 +1,6 @@
 import { LemonSqueezy } from "@lemonsqueezy/lemonsqueezy.js";
 
-import { env } from "~/env.mjs";
+import { env } from "~/env";
 
 // import { LemonsqueezyClient } from "lemonsqueezy.ts";
 
