@@ -8,11 +8,10 @@ import {
   ChevronRightIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import { BsFileCodeFill, BsFillClipboardDataFill } from "react-icons/bs";
+import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
 
-import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
@@ -40,11 +39,11 @@ const AccordanceMenuList = [
         subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
         url: "/post",
       },
-      {
-        subText: "Queue",
-        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
-        url: "/queue",
-      },
+      // {
+      //   subText: "Queue",
+      //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+      //   url: "/queue",
+      // },
     ],
   },
   {
@@ -57,33 +56,33 @@ const AccordanceMenuList = [
         subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
         url: "/drafts",
       },
-      {
-        subText: "Ideas",
-        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
-        url: "/ideas",
-      },
+      // {
+      //   subText: "Ideas",
+      //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+      //   url: "/ideas",
+      // },
     ],
   },
 
-  {
-    open: 3,
-    text: "Projects",
-    icon: <BsFileCodeFill className="h-5 w-5" />,
-    items: [
-      {
-        subText: "Connected Projects",
-        subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
-        url: "/project",
-      },
-    ],
-  },
+  // {
+  //   open: 3,
+  //   text: "Projects",
+  //   icon: <BsFileCodeFill className="h-5 w-5" />,
+  //   items: [
+  //     {
+  //       subText: "Connected Projects",
+  //       subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+  //       url: "/project",
+  //     },
+  //   ],
+  // },
 ];
 
 const bottomMenu = [
   {
     text: "Notifications",
     icon: <MdCircleNotifications className="h-5 w-5" />,
-    suffix: <Badge>14</Badge>,
+    // suffix: <Badge>14</Badge>,
     url: "/notifications",
   },
   {
