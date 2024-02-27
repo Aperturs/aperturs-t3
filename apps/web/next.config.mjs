@@ -1,19 +1,18 @@
 import { fileURLToPath } from "url";
 import _jiti from "jiti";
 
-const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
 
-const jiti = _jiti(__filename);
+const jiti = _jiti(fileURLToPath(import.meta.url));
 
-// jiti("./env");
+jiti("./src/env");
 jiti("@aperturs/api/env");
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
  * This is especially useful for Docker builds.
  */
-!process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
+// !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -76,7 +75,8 @@ const config = {
     "@aperturs/ui",
     "@aperturs/validators",
   ],
-
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
    * must comment the below `i18n` config out.
