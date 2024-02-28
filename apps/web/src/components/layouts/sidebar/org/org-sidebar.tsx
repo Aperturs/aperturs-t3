@@ -11,7 +11,6 @@ import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
 
-import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
@@ -40,11 +39,11 @@ function AccordanceMenuList(id: string) {
           subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
           url: `/organisation/${id}/post`,
         },
-        {
-          subText: "Queue",
-          subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
-          url: `/organisation/${id}/queue`,
-        },
+        // {
+        //   subText: "Queue",
+        //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+        //   url: `/organisation/${id}/queue`,
+        // },
       ],
     },
     {
@@ -57,11 +56,11 @@ function AccordanceMenuList(id: string) {
           subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
           url: `/organisation/${id}/drafts`,
         },
-        {
-          subText: "Ideas",
-          subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
-          url: `/organisation/${id}/ideas`,
-        },
+        // {
+        //   subText: "Ideas",
+        //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+        //   url: `/organisation/${id}/ideas`,
+        // },
       ],
     },
 
@@ -85,7 +84,7 @@ function bottomMenuList(id: string) {
     {
       text: "Notifications",
       icon: <MdCircleNotifications className="h-5 w-5" />,
-      suffix: <Badge>14</Badge>,
+      // suffix: <Badge>14</Badge>,
       url: `/organisation/${id}/notifications`,
     },
     {
