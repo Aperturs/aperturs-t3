@@ -16,7 +16,6 @@ export default async function FetchPersonalSocials() {
           type={item.type}
         />
       ))}
-      test
     </>
   );
 }
