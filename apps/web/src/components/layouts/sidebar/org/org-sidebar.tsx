@@ -11,7 +11,6 @@ import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
 import { TbSocial } from "react-icons/tb";
 
-import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
