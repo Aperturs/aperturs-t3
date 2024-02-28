@@ -1,3 +1,4 @@
+import type z from "zod";
 import { relations, sql } from "drizzle-orm";
 import {
   index,
@@ -7,6 +8,7 @@ import {
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { nanoid } from "nanoid";
 
 import { organization } from "./organisation";
@@ -29,16 +31,14 @@ export const githubToken = pgTable(
       { onDelete: "cascade" },
     ),
     profileId: varchar("profileId", { length: 191 }),
-    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    expiresIn: timestamp("expires_in", { withTimezone: true }),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
-      precision: 6,
       withTimezone: true,
     }),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
     organizationLsSubscriptionId: varchar("organizationLsSubscriptionId", {
@@ -50,7 +50,6 @@ export const githubToken = pgTable(
       clerkUserIdIdx: index("GithubToken_clerkUserId_idx").on(
         table.clerkUserId,
       ),
-      idIdx: index("GithubToken_id_idx").on(table.id),
       organizationIdIdx: index("GithubToken_organizationId_idx").on(
         table.organizationId,
       ),
@@ -60,12 +59,31 @@ export const githubToken = pgTable(
       githubTokenRefreshTokenKey: unique("GithubToken_refresh_token_key").on(
         table.refreshToken,
       ),
+      githubAccountPerOrg: unique("GithubToken_organizationId_clerkID").on(
+        table.organizationId,
+        table.clerkUserId,
+        table.profileId,
+      ),
     };
   },
 );
 
-export type githubTokenInsert = typeof githubToken.$inferInsert;
-export type githubTokenSelect = typeof githubToken.$inferSelect;
+export const githubTokenInsertSchema = createInsertSchema(githubToken);
+export const githubTokenSelectSchema = createSelectSchema(githubToken);
+
+export type githubTokenInsert = z.infer<typeof githubTokenInsertSchema>;
+export type githubTokenSelect = z.infer<typeof githubTokenSelectSchema>;
+
+export const githubTokenRelation = relations(githubToken, ({ one }) => ({
+  organization: one(organization, {
+    references: [organization.id],
+    fields: [githubToken.organizationId],
+  }),
+  clerkUser: one(user, {
+    references: [user.clerkUserId],
+    fields: [githubToken.clerkUserId],
+  }),
+}));
 
 export const linkedInToken = pgTable(
   "LinkedInToken",
@@ -84,16 +102,16 @@ export const linkedInToken = pgTable(
       () => user.clerkUserId,
       { onDelete: "cascade" },
     ),
-    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
+    expiresIn: timestamp("expires_in", { withTimezone: true }),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
-      precision: 6,
       withTimezone: true,
     }),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    fullName: varchar("fullName", { length: 191 }).default(""),
+    profilePicture: varchar("profilePicture", { length: 191 }).default(""),
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP(3)`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
   },
@@ -102,17 +120,24 @@ export const linkedInToken = pgTable(
       clerkUserIdIdx: index("LinkedInToken_clerkUserId_idx").on(
         table.clerkUserId,
       ),
-      idIdx: index("LinkedInToken_id_idx").on(table.id),
       organizationIdIdx: index("LinkedInToken_organizationId_idx").on(
         table.organizationId,
       ),
       profileIdIdx: index("LinkedInToken_profileId_idx").on(table.profileId),
+      linkedinAccountPerOrg: unique("LinkedInToken_organizationId_clerkID").on(
+        table.organizationId,
+        table.clerkUserId,
+        table.profileId,
+      ),
     };
   },
 );
 
-export type linkedInTokenInsert = typeof linkedInToken.$inferInsert;
-export type linkedInTokenSelect = typeof linkedInToken.$inferSelect;
+export const linkedInTokenInsertSchema = createInsertSchema(linkedInToken);
+export const linkedInTokenSelectSchema = createSelectSchema(linkedInToken);
+
+export type linkedInTokenInsert = z.infer<typeof linkedInTokenInsertSchema>;
+export type linkedInTokenSelect = z.infer<typeof linkedInTokenSelectSchema>;
 
 export const linkedinTokenRelations = relations(linkedInToken, ({ one }) => ({
   organization: one(organization, {
@@ -141,14 +166,19 @@ export const twitterToken = pgTable(
     ),
     clientId: varchar("client_id", { length: 191 }).notNull(),
     clientSecret: varchar("client_secret", { length: 191 }).notNull(),
-    accessToken: varchar("access_token", { length: 191 }),
-    refreshToken: varchar("refresh_token", { length: 191 }),
-    expiresIn: timestamp("expires_in", { precision: 6, withTimezone: true }),
-    profileId: varchar("profileId", { length: 191 }),
+    accessToken: varchar("access_token", { length: 191 }).notNull(),
+    refreshToken: varchar("refresh_token", { length: 191 }).notNull(),
+    expiresIn: timestamp("expires_in", { withTimezone: true }).notNull(),
+    profileId: varchar("profileId", { length: 191 }).notNull(),
     username: varchar("username", { length: 191 }),
-    fullname: varchar("fullname", { length: 191 }),
-    profileImage: varchar("profile_image", { length: 191 }),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    fullname: varchar("fullname", { length: 191 }).default(""),
+    profileImage: varchar("profile_image", { length: 191 }).default(""),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updatedAt", {
+      withTimezone: true,
+    })
       .defaultNow()
       .notNull(),
   },
@@ -161,18 +191,19 @@ export const twitterToken = pgTable(
         table.organizationId,
       ),
       profileIdIdx: index("TwitterToken_profileId_idx").on(table.profileId),
-      twitterTokenAccessTokenKey: unique("TwitterToken_access_token_key").on(
-        table.accessToken,
-      ),
-      twitterTokenRefreshTokenKey: unique("TwitterToken_refresh_token_key").on(
-        table.refreshToken,
+      twitterAccountPerOrg: unique("TwitterToken_Unique_ProfilePerApp").on(
+        table.clientId,
+        table.profileId,
       ),
     };
   },
 );
 
-export type twitterTokenInsert = typeof twitterToken.$inferInsert;
-export type twitterTokenSelect = typeof twitterToken.$inferSelect;
+export const twitterTokenInsertSchema = createInsertSchema(twitterToken);
+export const twitterTokenSelectSchema = createSelectSchema(twitterToken);
+
+export type twitterTokenInsert = z.infer<typeof twitterTokenInsertSchema>;
+export type twitterTokenSelect = z.infer<typeof twitterTokenSelectSchema>;
 
 export const twitterTokenRelations = relations(twitterToken, ({ one }) => ({
   organization: one(organization, {

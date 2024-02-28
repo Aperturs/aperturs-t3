@@ -1,5 +1,16 @@
-import React from "react";
+import type { OrgIdParams } from "@aperturs/validators/organisation";
 
-export default function Socials() {
-  return <div></div>;
-}
+import ConnectSocials from "~/components/profile/socials/socials";
+import FetchOrgSocials from "./fetch-socials";
+
+const SocialsPage = ({ params }: { params: OrgIdParams }) => {
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <ConnectSocials>
+        <FetchOrgSocials params={params} />
+      </ConnectSocials>
+    </div>
+  );
+};
+
+export default SocialsPage;

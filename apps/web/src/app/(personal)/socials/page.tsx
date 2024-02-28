@@ -1,11 +1,12 @@
-import ConnectSocials from "~/components/profile/ConnectSocials";
+import ConnectSocials from "~/components/profile/socials/socials";
+import FetchPersonalSocials from "./fetch-socials";
 
-const SocialsPage = () => {
+export default function SocialsPage() {
   return (
     <div className="flex flex-col items-center justify-center">
-      <ConnectSocials />
+      <ConnectSocials>
+        <FetchPersonalSocials />
+      </ConnectSocials>
     </div>
   );
-};
-
-export default SocialsPage;
+}

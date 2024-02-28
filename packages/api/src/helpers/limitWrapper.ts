@@ -46,17 +46,24 @@ export async function limitWrapper<T>(
     .update(schema.userUsage)
     .set({
       [limitType]: userUsage[limitType] - 1,
+      updatedAt: new Date(),
     })
     .where(eq(schema.userUsage.clerkUserId, clerkUserId));
+
+  console.log("limiting down for user", clerkUserId, limitType);
 
   return result;
 }
 
-export async function limitDown<T>(
-  func: () => Promise<T>,
-  clerkUserId: string,
-  limitType: LimitType,
-): Promise<T> {
+export async function limitDown<T>({
+  func,
+  clerkUserId,
+  limitType,
+}: {
+  func: () => Promise<T> | T;
+  clerkUserId: string;
+  limitType: LimitType;
+}): Promise<T> {
   const userUsage = await db.query.userUsage.findFirst({
     where: eq(schema.userUsage.clerkUserId, clerkUserId),
   });
@@ -67,7 +74,7 @@ export async function limitDown<T>(
       updatedAt: new Date(),
     });
 
-    return limitWrapper(func, clerkUserId, limitType);
+    return limitDown({ func, clerkUserId, limitType });
   }
 
   const result = func();
@@ -76,8 +83,39 @@ export async function limitDown<T>(
     .update(schema.userUsage)
     .set({
       [limitType]: userUsage[limitType] + 1,
+      updatedAt: new Date(),
     })
     .where(eq(schema.userUsage.clerkUserId, clerkUserId));
+
+  return result;
+}
+
+export async function verifyLimitAndRun<T>({
+  func,
+  clerkUserId,
+  limitType,
+}: {
+  func: () => Promise<T> | T;
+  clerkUserId: string;
+  limitType: LimitType;
+}): Promise<T> {
+  const userUsage = await db.query.userUsage.findFirst({
+    where: eq(schema.userUsage.clerkUserId, clerkUserId),
+  });
+  if (!userUsage) {
+    await db.insert(schema.userUsage).values({
+      clerkUserId: clerkUserId,
+      updatedAt: new Date(),
+    });
+    return verifyLimitAndRun({ func, clerkUserId, limitType });
+  }
+  if (userUsage[limitType] <= 0) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "You have reached your limit",
+    });
+  }
+  const result = await func();
 
   return result;
 }

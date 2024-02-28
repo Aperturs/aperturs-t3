@@ -29,5 +29,6 @@ type RouterInputs = inferRouterInputs<AppRouter>;
  **/
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export { createTRPCContext, appRouter, createCaller };
+export { redis } from "./utils/redis";
+export { appRouter, createCaller, createTRPCContext };
 export type { AppRouter, RouterInputs, RouterOutputs };

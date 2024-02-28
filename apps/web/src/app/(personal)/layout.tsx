@@ -5,9 +5,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    // <ThemeProvider>
-    <Layout>{children}</Layout>
-    // </ThemeProvider>
-  );
+  return <Layout>{children}</Layout>;
 }

@@ -28,18 +28,16 @@ export const user = pgTable(
     clerkUserId: varchar("clerkUserId", { length: 256 }).primaryKey(),
     userDetails: json("userDetails"),
     currentPlan: currentPlanEnum("currentPlan").default("FREE").notNull(),
-    createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+    createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", {
-      precision: 6,
       withTimezone: true,
     }).notNull(),
     lsSubscriptionId: varchar("ls_subscription_id", { length: 256 }),
     lsCustomerId: varchar("ls_customer_id", { length: 256 }),
     lsVariantId: integer("lsVariantId"),
     lsCurrentPeriodEnd: timestamp("ls_current_period_end", {
-      precision: 6,
       withTimezone: true,
     }),
   },
@@ -81,11 +79,10 @@ export const userUsage = pgTable("UserUsage", {
   drafts: integer("drafts").default(15).notNull(),
   ideas: integer("ideas").default(15).notNull(),
   organisation: integer("organisation").default(0).notNull(),
-  createdAt: timestamp("createdAt", { precision: 6, withTimezone: true })
+  createdAt: timestamp("createdAt", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt", {
-    precision: 6,
     withTimezone: true,
   }).notNull(),
 });

@@ -30,6 +30,7 @@ export const getLinkedinAccountDetails = async (
         },
       })
     ).json();
+    console.log(userObject, "userObject");
 
     linkedinDetails.push({
       tokenId: linkedinToken.id,

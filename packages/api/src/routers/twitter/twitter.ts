@@ -1,12 +1,17 @@
+import {
+  GetTwitterConnectUrl,
+  refreshTwitterDataInDatabase,
+  saveTwitterDataToDatabase,
+} from "@api/handlers/twitter/main";
+import { verifyLimitAndRun } from "@api/helpers/limitWrapper";
+import { redis } from "@api/index";
 import { TRPCError } from "@trpc/server";
-import { auth } from "twitter-api-sdk";
 import { z } from "zod";
 
-import { eq, schema } from "@aperturs/db";
+import { eq, schema, tokens } from "@aperturs/db";
 import { postTweetInputSchema } from "@aperturs/validators/post";
+import { addTwitterSchema } from "@aperturs/validators/socials";
 
-import { env } from "../../../env";
-import { ConnectSocial } from "../../helpers/misc";
 import { postToTwitter } from "../../helpers/twitter";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
@@ -25,47 +30,49 @@ export const twitterData = createTRPCRouter({
       }
     }),
 
-  addTwitter: protectedProcedure
+  getTwitterUrl: protectedProcedure
+    .input(addTwitterSchema)
+    .query(({ input, ctx }) => {
+      const res = verifyLimitAndRun({
+        func: async () => {
+          await redis.set(ctx.currentUser, input.redis, {
+            ex: 120,
+          });
+          return GetTwitterConnectUrl(input);
+        },
+        clerkUserId: ctx.currentUser,
+        limitType: "socialaccounts",
+      });
+      return res;
+    }),
+
+  saveDataToDataBase: protectedProcedure
+    .input(tokens.twitterTokenInsertSchema)
+    .mutation(async ({ ctx, input }) => {
+      console.log("saving data", input);
+      await saveTwitterDataToDatabase({
+        twitterData: input,
+        userId: ctx.currentUser,
+      });
+    }),
+
+  refreshTwitterToken: protectedProcedure
     .input(
       z.object({
-        clientId: z.string(),
-        clientSecret: z.string(),
+        tokenId: z.string(),
+        tokenData: tokens.twitterTokenInsertSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const canConnect = await ConnectSocial({ user: ctx.currentUser });
-      if (canConnect) {
-        const authClient = new auth.OAuth2User({
-          client_id: input.clientId,
-          client_secret: input.clientSecret,
-          callback: env.TWITTER_CALLBACK_URL,
-          scopes: [
-            "users.read",
-            "tweet.read",
-            "offline.access",
-            "tweet.write",
-            "follows.read",
-            "follows.write",
-            "like.write",
-            "list.read",
-            "list.write",
-            "bookmark.read",
-            "bookmark.write",
-          ],
+      try {
+        await refreshTwitterDataInDatabase({
+          twitterData: input.tokenData,
+          userId: ctx.currentUser,
+          tokenId: input.tokenId,
         });
-        const url = authClient.generateAuthURL({
-          state: `${input.clientId}-${input.clientSecret}`,
-          // state: org.id.toString(),
-          code_challenge_method: "plain",
-          code_challenge: "challenge",
-        });
-
-        return url;
-      } else {
-        throw new TRPCError({
-          message: "Upgrade to higher plan to connect more Socials",
-          code: "FORBIDDEN",
-        });
+        return { success: true, message: "Twitter refreshed successfully" };
+      } catch (error) {
+        return { success: false, message: "Error refreshing Twitter" };
       }
     }),
 
@@ -77,11 +84,6 @@ export const twitterData = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        // await ctx.prisma.twitterToken.delete({
-        //   where: {
-        //     id: input.tokenId,
-        //   },
-        // });
         await ctx.db
           .delete(schema.twitterToken)
           .where(eq(schema.twitterToken.id, input.tokenId));

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 "use client";
 
 import { useState } from "react";
@@ -8,11 +6,11 @@ import { IoIosArrowDown } from "react-icons/io";
 import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@aperturs/ui/dropdown-menu";
-import { Switch } from "@aperturs/ui/switch";
 import { SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
@@ -103,28 +101,25 @@ const MenuItems = ({
   };
 
   return (
-    <div key={type}>
-      <div
-        className="flex cursor-pointer items-center justify-between gap-2"
-        onClick={(event) => {
-          event.stopPropagation();
-          handleChange();
-        }}
-      >
-        <div className={`flex items-center gap-2 py-1`}>
-          <div className={`pl-[7px]`}>
-            <SocialIcon type={type} size="md" />
-          </div>
-          <span className={`text-sm`}>{name}</span>
+    <DropdownMenuCheckboxItem
+      key={type}
+      className="flex cursor-pointer items-center justify-between gap-2"
+      onCheckedChange={handleChange}
+      checked={checked}
+    >
+      <div className={`flex items-center gap-2 py-1`}>
+        <div className={`pl-[7px]`}>
+          <SocialIcon type={type} size="md" />
         </div>
-        <Switch
-          checked={checked}
-          // onChange={() => {
-          //   handleChange();
-          // }}
-          className="text-primary"
-        />
+        <span className={`text-sm`}>{name}</span>
       </div>
-    </div>
+      {/* <Switch
+        checked={checked}
+        // onChange={() => {
+        //   handleChange();
+        // }}
+        className="text-primary"
+      /> */}
+    </DropdownMenuCheckboxItem>
   );
 };

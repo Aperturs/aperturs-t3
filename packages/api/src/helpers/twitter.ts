@@ -46,6 +46,7 @@ export const getAccessToken = async (tokenId: string) => {
           );
 
           const data = await response.json();
+          console.log("new Token", data);
           if (data) {
             await db
               .update(schema.twitterToken)
@@ -55,6 +56,7 @@ export const getAccessToken = async (tokenId: string) => {
                 expiresIn: new Date(
                   new Date().getTime() + data.expires_in * 1000,
                 ),
+                updatedAt: new Date(),
               })
               .where(eq(schema.twitterToken.id, tokenId));
           }
@@ -99,6 +101,7 @@ export const getTwitterAccountDetails = async (
             username: userObject.username,
             profileImage: userObject.profile_image_url,
             fullname: userObject.name,
+            updatedAt: new Date(),
           })
           .where(eq(schema.twitterToken.id, twitterToken.id));
       }
