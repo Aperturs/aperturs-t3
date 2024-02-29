@@ -27,7 +27,7 @@ import {
 } from "@aperturs/ui/components/ui/dropdown-menu";
 
 import { api } from "~/trpc/react";
-import { handleLinkedinRedirect } from "./handle-socials";
+import { handleLinkedinRedirect } from "../../../utils/actions/handle-socials";
 
 export default function ConnectSocialsAction({
   id,

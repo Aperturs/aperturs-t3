@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { AiOutlineTwitter } from "react-icons/ai";
+import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { IoIosAddCircle } from "react-icons/io";
 
@@ -11,7 +11,11 @@ import { Button } from "@aperturs/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
 import { SocialType } from "@aperturs/validators/post";
 
-import { handleGithubRedirect, handleLinkedinRedirect } from "./handle-socials";
+import {
+  handleGithubRedirect,
+  handleInstagramRedirect,
+  handleLinkedinRedirect,
+} from "~/utils/actions/handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
   if (type === SocialType.Twitter) {
@@ -68,11 +72,22 @@ const Socials = () => {
     if (!params?.orgid) {
       await handleLinkedinRedirect({
         orgId: "personal",
+        tokenId: "new",
       });
       return;
     }
     await handleLinkedinRedirect({
       orgId: params?.orgid,
+      tokenId: "new",
+    });
+    setLocalLoading(false);
+  };
+
+  const handleInstagram = async () => {
+    setLocalLoading(true);
+    await handleInstagramRedirect({
+      orgId: params?.orgid ?? "personal",
+      tokenId: "new",
     });
     setLocalLoading(false);
   };
@@ -96,10 +111,15 @@ const Socials = () => {
         <AiOutlineTwitter className="mr-2 text-2xl " />
         <p>Twitter</p>
       </Button>
-      {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
-        <AiFillInstagram className="text-2xl " />
+      <Button
+        variant="secondary"
+        className="h-12"
+        onClick={handleInstagram}
+        disabled={localLoading}
+      >
+        <AiFillInstagram className="mr-2 text-2xl" />
         <p>Insta</p>
-      </button> */}
+      </Button>
       <Button
         variant="secondary"
         className="h-12"

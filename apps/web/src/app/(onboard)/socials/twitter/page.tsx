@@ -11,7 +11,7 @@ import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { Input } from "@aperturs/ui/input";
 
-import { handleTwitterRedirect } from "~/components/profile/socials/handle-socials";
+import { handleTwitterRedirect } from "~/utils/actions/handle-socials";
 
 const AddTwitter = () => {
   return (

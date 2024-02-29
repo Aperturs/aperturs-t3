@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs";
 
-import type { addTwitterType } from "@aperturs/validators/socials";
+import type {
+  addTwitterType,
+  SocialRedisKeyType,
+} from "@aperturs/validators/socials";
 import { redis } from "@aperturs/api";
 
 import { env } from "~/env";
@@ -12,10 +15,7 @@ import { api } from "~/trpc/server";
 export async function handleLinkedinRedirect({
   orgId,
   tokenId,
-}: {
-  orgId: string;
-  tokenId?: string;
-}) {
+}: SocialRedisKeyType) {
   const url = await api.linkedin.getLinkedinAuthUrl({ orgId, tokenId });
   redirect(url);
 }
@@ -37,5 +37,13 @@ export async function handleGithubRedirect({ orgId }: { orgId: string }) {
 
 export async function handleTwitterRedirect(input: addTwitterType) {
   const url = await api.twitter.getTwitterUrl(input);
+  redirect(url);
+}
+
+export async function handleInstagramRedirect({
+  orgId,
+  tokenId,
+}: SocialRedisKeyType) {
+  const url = await api.instagram.getInstagramRedirectUrl({ orgId, tokenId });
   redirect(url);
 }
