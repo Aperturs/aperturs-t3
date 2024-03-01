@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useOrganization } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -14,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@aperturs/ui/card";
-import { DialogClose } from "@aperturs/ui/components/ui/dialog";
+import { DialogClose } from "@aperturs/ui/dialog";
 import {
   Form,
   FormControl,
@@ -45,6 +46,7 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
     role: z.enum(["ADMIN", "EDITOR", "MEMBER"]),
     name: z.string(),
   });
+  const { organization } = useOrganization();
   const form = useForm<z.infer<typeof userDataSchema>>({
     resolver: zodResolver(userDataSchema),
     mode: "onChange",
@@ -60,18 +62,29 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
   const onSubmit = async (values: z.infer<typeof userDataSchema>) => {
     try {
       await toast.promise(
-        inviteUser({
-          name: values.name,
-          email: values.email,
-          role: values.role,
-          orgId: agencyId,
-        }),
+        (async () => {
+          if (!organization) {
+            throw new Error("Organization not found");
+          }
+          await organization.inviteMember({
+            emailAddress: values.email,
+            role: `org:${values.role.toLowerCase()}`,
+          });
+          return await inviteUser({
+            name: values.name,
+            email: values.email,
+            role: values.role,
+            orgId: agencyId,
+          });
+        })(),
         {
           loading: "Sending invitation",
           success: (res) => {
             return `Invitation sent to ${res[0].email}`;
           },
-          error: "Failed to send invitation",
+          error: (err) => {
+            return `Failed to send invitation: ${err}`;
+          },
         },
       );
       // await saveActivityLogsNotification({

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import MebersTable from "./fetcher";
+import MembersTable from "./fetcher";
 import TeamPageSkeleton from "./skeleton";
 
 export default function TeamPage({
@@ -12,7 +12,7 @@ export default function TeamPage({
 }) {
   return (
     <Suspense fallback={<TeamPageSkeleton />}>
-      <MebersTable params={params} />
+      <MembersTable params={params} />
     </Suspense>
   );
 }

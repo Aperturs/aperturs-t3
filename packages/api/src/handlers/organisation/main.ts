@@ -1,27 +1,21 @@
 import { updateUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
 
-import type { CreateOrganisation } from "@aperturs/validators/organisation";
+import type { organisation } from "@aperturs/db";
 import { db, eq, schema } from "@aperturs/db";
 
-export async function createOrganisation({
-  name,
-  logo,
-  clerkID,
-  category,
-}: CreateOrganisation) {
+export async function createOrganisation(
+  input: Omit<organisation.organisationInsertType, "updatedAt">,
+) {
   const resp = await db.transaction(async (tx) => {
     const [res] = await tx
       .insert(schema.organization)
       .values({
-        name,
-        logo,
-        category,
-        clerkUserId: clerkID,
+        ...input,
         updatedAt: new Date(),
       })
       .returning();
     await tx.insert(schema.organizationUser).values({
-      clerkUserId: clerkID,
+      clerkUserId: input.clerkUserId ?? "",
       organizationId: res?.id ?? "",
       role: "OWNER",
       updatedAt: new Date(),

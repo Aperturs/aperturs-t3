@@ -9,6 +9,7 @@ import * as tokens from "./schema/tokens";
 import * as user from "./schema/user";
 
 export * from "drizzle-orm";
+export * from "./utils";
 
 export { idea, organisation, post, project, tokens, user };
 

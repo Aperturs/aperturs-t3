@@ -6,16 +6,21 @@ import {
 import { limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 
-import { createOrganisationSchema } from "@aperturs/validators/organisation";
+import { organisation } from "@aperturs/db";
 
 export const organisationBasic = createTRPCRouter({
   createOrganisation: protectedProcedure
-    .input(createOrganisationSchema.omit({ clerkID: true }))
+    .input(
+      organisation.organisationInsertSchema.omit({
+        clerkUserId: true,
+        updatedAt: true,
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       const res = await limitWrapper(
         () =>
           createOrganisation({
-            clerkID: ctx.currentUser,
+            clerkUserId: ctx.currentUser,
             ...input,
           }),
         ctx.currentUser,

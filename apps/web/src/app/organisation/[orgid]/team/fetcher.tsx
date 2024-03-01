@@ -9,7 +9,7 @@ interface Props {
   params: { orgid: string };
 }
 
-async function MebersTable({ params }: Props) {
+async function MembersTable({ params }: Props) {
   const orgId = params.orgid;
 
   const team = await api.organisation.team.getOrganisationTeams({
@@ -32,4 +32,4 @@ async function MebersTable({ params }: Props) {
   );
 }
 
-export default MebersTable;
+export default MembersTable;

@@ -4,13 +4,24 @@ import { getAccounts } from "@api/helpers/get-socials";
 import { z } from "zod";
 
 import type { SocialType } from "@aperturs/validators/post";
-import { eq, schema } from "@aperturs/db";
+import { createUniqueIds, eq, schema } from "@aperturs/db";
 import { SocialTypeSchema } from "@aperturs/validators/post";
+import { UniqueIdsSchema } from "@aperturs/validators/user";
 
 import { getGithubAccountDetails } from "../helpers/github";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
+  getNanoId: protectedProcedure
+    .input(
+      z.object({
+        id: UniqueIdsSchema,
+        custom: z.boolean().optional(),
+      }),
+    )
+    .query(({ input }) => {
+      return createUniqueIds(input.id, input.custom);
+    }),
   createUser: publicProcedure
     .input(
       z.object({

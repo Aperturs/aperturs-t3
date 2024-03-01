@@ -4,14 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { useS3Upload } from "next-s3-upload";
 import toast from "react-hot-toast";
 import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
 
 import type { Option } from "@aperturs/ui/auto-complete";
-import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
+import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import {
@@ -44,6 +44,7 @@ export default function ProfileButton() {
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
+  const { setActive } = useOrganizationList();
 
   return (
     <Dialog>
@@ -58,7 +59,7 @@ export default function ProfileButton() {
           ) : (
             <CurrentOrganisation
               avatar={user?.imageUrl ?? "/user.png"}
-              name={`${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+              name={`${user?.firstName ?? ""}  ${user?.lastName ?? ""}`}
               email={user?.primaryEmailAddress?.emailAddress ?? ""}
             />
           )}
@@ -74,6 +75,7 @@ export default function ProfileButton() {
                   link="/dashboard"
                   current={!orgId}
                   subheading={"personal"}
+                  id="personal"
                 />
               </CommandGroup>
               <CommandGroup heading="Organisations">
@@ -86,6 +88,7 @@ export default function ProfileButton() {
                       link={`/organisation/${item.id}/dashboard`}
                       current={item.id === orgId}
                       subheading={item.category}
+                      id={item.clerkOrgId}
                     />
                   );
                 })}
@@ -129,7 +132,7 @@ function CurrentOrganisation({
       <div className="flex items-center gap-2">
         <Avatar>
           <AvatarImage src={avatar} alt="avatar" className="rounded-full" />
-          <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
+          {/* <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback> */}
         </Avatar>
         <div>
           <h3 className="capitalize">{name}</h3>
@@ -146,19 +149,27 @@ function CurrentOrganisation({
 
 function CreateOrganisationDialog() {
   const {
-    mutateAsync: createOrganisation,
+    mutateAsync: createOrganisationBackend,
     isPending: creatingOrganisation,
     error,
   } = api.organisation.basics.createOrganisation.useMutation();
+  const getNanoId = api.user.getNanoId.useQuery({
+    id: "org",
+    custom: true,
+  });
+
   const [name, setName] = useState("");
   const router = useRouter();
   const [value, setValue] = useState<Option>();
   const [image, setImage] = useState<File | undefined>();
   const { uploadToS3 } = useS3Upload();
+  const { createOrganization } = useOrganizationList();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
     if (!value) return toast.error("Organisation category is required");
+    if (!createOrganization)
+      return toast.error("Organisation creation is required");
     await toast
       .promise(
         (async () => {
@@ -167,7 +178,16 @@ function CreateOrganisationDialog() {
             const { url } = await uploadToS3(image);
             logo = url;
           }
-          const res = await createOrganisation({
+          const slug = getNanoId.data;
+          console.log(slug, "slug");
+          const clerkOrg = await createOrganization({ name, slug });
+          if (!clerkOrg.id) {
+            throw new Error("Failed to create organisation");
+          }
+          console.log(clerkOrg, "clerk org hey");
+          const res = await createOrganisationBackend({
+            id: slug,
+            clerkOrgId: clerkOrg.id,
             name,
             category: value.label,
             logo,
@@ -183,7 +203,7 @@ function CreateOrganisationDialog() {
       )
       .then((res) => {
         console.log(res, "res");
-        router.push(`/organisation/${res.id}/dashboard`);
+        router.push(`/organisation/${res?.id}/dashboard`);
         setTimeout(() => {
           router.refresh();
         }, 2000);
@@ -216,18 +236,31 @@ function CreateOrganisationDialog() {
 }
 
 function OrganisationItem({
+  id,
   name,
   logo,
   subheading,
   link,
   current,
 }: {
+  id: string;
   name: string;
   logo?: string;
   subheading?: string;
   link: string;
   current: boolean;
 }) {
+  const { setActive } = useOrganizationList();
+  const { organization } = useOrganization();
+  const handleOrganisationSwitch = async () => {
+    console.log("clicked");
+    if (!setActive) {
+      console.log("some error");
+      return;
+    }
+    await setActive({ organization: id });
+    console.log(organization?.name, "org name");
+  };
   return (
     <CommandItem
       className={cn(
@@ -235,6 +268,9 @@ function OrganisationItem({
         current &&
           "!bg-primary !text-white  hover:!bg-primary aria-selected:bg-primary",
       )}
+      onSelect={async () => {
+        await handleOrganisationSwitch();
+      }}
     >
       <Link
         href={`${link}`}

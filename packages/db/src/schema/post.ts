@@ -7,8 +7,8 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { nanoid } from "nanoid";
 
+import { createUniqueIds } from "../utils";
 import { organization } from "./organisation";
 import { project } from "./project";
 import { user } from "./user";
@@ -24,7 +24,7 @@ export const post = pgTable(
   {
     id: varchar("id", { length: 191 })
       .primaryKey()
-      .$defaultFn(() => nanoid(12)),
+      .$defaultFn(() => createUniqueIds("pst")),
     clerkUserId: varchar("clerkUserId", { length: 256 }).references(
       () => user.clerkUserId,
       {

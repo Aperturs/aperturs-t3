@@ -36,3 +36,17 @@ export const SocialAccounts = z.array(
 );
 
 export type SocialAccountsBackend = z.infer<typeof SocialAccounts>;
+
+export const UniqueIdsSchema = z.enum([
+  "usr",
+  "org",
+  "pst",
+  "orgusr",
+  "orginv",
+  "twt",
+  "lnk",
+  "fb",
+  "ig",
+]);
+
+export type UniqueIdsType = z.infer<typeof UniqueIdsSchema>;
