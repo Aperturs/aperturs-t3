@@ -241,6 +241,30 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
     devDependencies:
+      '@aperturs/api':
+        specifier: workspace:*
+        version: link:../../packages/api
+      '@aperturs/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@aperturs/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@aperturs/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@aperturs/tailwind-config':
+        specifier: workspace:*
+        version: link:../../tooling/tailwind
+      '@aperturs/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@aperturs/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@aperturs/validators':
+        specifier: workspace:*
+        version: link:../../packages/validators
       '@types/node':
         specifier: ^20.11.17
         version: 20.11.19

@@ -1,5 +1,5 @@
 import "~/styles/calendar.css";
-import "~/styles/globals.css";
+import "@aperturs/ui/globals.css";
 
 import { Inter } from "next/font/google";
 import { Toaster } from "react-hot-toast";
