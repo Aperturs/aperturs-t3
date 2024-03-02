@@ -16,6 +16,7 @@ export const env = createEnv({
     REDISURL: z.string().min(1),
     REDISTOKEN: z.string().min(1),
     REDISDATABASE: z.string().min(1),
+    DOMAIN: z.string().min(1),
   },
   client: {},
   experimental__runtimeEnv: {},

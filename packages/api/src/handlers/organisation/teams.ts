@@ -8,9 +8,10 @@ import type {
   InviteUserToOrganisation,
   sendInvitationViaEmailType,
 } from "@aperturs/validators/organisation";
-// import { prisma } from "~/server/db";
 import { db, eq, schema } from "@aperturs/db";
 import { InviteUserEmail } from "@aperturs/email/invite-user";
+
+import { env } from "../../../env";
 
 export async function getOrgnanisationTeams(orgId: string) {
   const res = await db.query.organizationUser.findMany({
@@ -45,17 +46,6 @@ export async function inviteUserToOrganisation({
   inviterId,
   inviterName,
 }: InviteUserToOrganisation) {
-  // const res = await prisma.organizationInvites.create({
-  //   data: {
-  //     email,
-  //     role,
-  //     name,
-  //     inviterClerkId: inviterId,
-  //     inviterName: inviterName,
-  //     organizationId: orgId,
-  //     status: "PENDING",
-  //   },
-  // });
   const [res] = await db
     .insert(schema.organizationInvites)
     .values({
@@ -90,7 +80,7 @@ export async function sendInvitationViaEmail({
     invitedByName: invitedByName,
     teamName: teamName,
     teamImage: teamImage,
-    inviteUrl: `http://localhost:3000/organisation/invite/${invitationId}`,
+    inviteUrl: `${env.DOMAIN}/organisation/invite/${invitationId}`,
   });
   const email = await resend.emails
     .send({
