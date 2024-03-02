@@ -8,7 +8,7 @@ import { Webhook } from "svix";
 import { db, eq, schema } from "@aperturs/db";
 
 import { env } from "~/env";
-import { updateUserPrivateMetadata } from "~/utils/actions/user-private-meta";
+import { api } from "~/trpc/server";
 
 const webhookSecret = env.WEBHOOK_SECRET || "";
 
@@ -81,9 +81,14 @@ async function handler(request: Request) {
         { status: 400 },
       );
     }
-    await updateUserPrivateMetadata({
+    // await updateUserPrivateMetadata({
+    //   organisations: [],
+    //   currentPlan: "FREE",
+    // });
+    await api.metadata.updateUserPrivateMetaData({
       organisations: [],
       currentPlan: "FREE",
+      userId: id,
     });
     const details = {
       primaryEmail: emailObject.email_address,
