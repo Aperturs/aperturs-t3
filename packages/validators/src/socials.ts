@@ -14,3 +14,38 @@ export const addTwitterSchema = z.object({
 });
 
 export type addTwitterType = z.infer<typeof addTwitterSchema>;
+
+export type SearchParams = Record<string, string | string[] | undefined>;
+
+export const addInstagramSchema = z.object({
+  data_access_expiration_time: z.number(),
+  access_token: z.string(),
+  expires_in: z.number(),
+  long_lived_token: z.string(),
+});
+
+export interface FBPageIgConnectDataArray {
+  data: FbPageConnectData[];
+  paging: {
+    cursors: {
+      before: string;
+      after: string;
+    };
+  };
+}
+
+export interface FbPageConnectData {
+  id: string;
+  name: string;
+  instagram_business_account?: {
+    id: string;
+  };
+  picture: {
+    data: {
+      url: string;
+    };
+  };
+  connected_instagram_account?: {
+    id: string;
+  };
+}

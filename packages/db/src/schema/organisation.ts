@@ -6,8 +6,10 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { nanoid } from "nanoid";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
+import { createUniqueIds } from "../utils";
 import { idea } from "./idea";
 import { post } from "./post";
 import { project } from "./project";
@@ -27,13 +29,14 @@ export const organization = pgTable(
   {
     id: varchar("id", { length: 256 })
       .primaryKey()
-      .$defaultFn(() => nanoid(12)),
+      .$defaultFn(() => createUniqueIds("org")),
     clerkUserId: varchar("clerkUserId", { length: 256 }).references(
       () => user.clerkUserId,
       {
         onDelete: "cascade",
       },
     ),
+    clerkOrgId: varchar("clerkOrgId", { length: 256 }).notNull(),
     name: varchar("name", { length: 256 }).notNull(),
     logo: varchar("logo", { length: 256 }),
     category: varchar("category", { length: 256 })
@@ -55,8 +58,11 @@ export const organization = pgTable(
   },
 );
 
-export type organisationInsert = typeof organization.$inferInsert;
-export type organisationSelect = typeof organization.$inferSelect;
+export const organisationInsertSchema = createInsertSchema(organization);
+export const organisationSelectSchema = createSelectSchema(organization);
+
+export type organisationInsertType = z.infer<typeof organisationInsertSchema>;
+export type organisationSelectType = z.infer<typeof organisationSelectSchema>;
 
 export const organisationRelations = relations(
   organization,
@@ -81,7 +87,7 @@ export const organizationInvites = pgTable(
   {
     id: varchar("id", { length: 256 })
       .primaryKey()
-      .$defaultFn(() => nanoid(12)),
+      .$defaultFn(() => createUniqueIds("orginv")),
     name: varchar("name", { length: 256 }).notNull(),
     email: varchar("email", { length: 256 }).notNull(),
     organizationId: varchar("organizationId", { length: 256 })
@@ -133,7 +139,7 @@ export const organizationUser = pgTable(
   {
     id: varchar("id", { length: 256 })
       .primaryKey()
-      .$defaultFn(() => nanoid(11)),
+      .$defaultFn(() => createUniqueIds("orginv")),
     organizationId: varchar("organizationId", { length: 256 }).notNull(),
     clerkUserId: varchar("clerkUserId", { length: 256 })
       .notNull()

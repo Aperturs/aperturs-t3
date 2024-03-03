@@ -6,6 +6,7 @@ export const createOrganisationSchema = z.object({
   clerkID: z.string(),
   logo: z.string().optional(),
   category: z.string().optional(),
+  orgId: z.string(),
 });
 
 export type CreateOrganisation = z.infer<typeof createOrganisationSchema>;

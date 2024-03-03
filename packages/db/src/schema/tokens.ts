@@ -11,6 +11,7 @@ import {
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { nanoid } from "nanoid";
 
+import { createUniqueIds } from "../utils";
 import { organization } from "./organisation";
 import { user } from "./user";
 
@@ -90,7 +91,7 @@ export const linkedInToken = pgTable(
   {
     id: varchar("id", { length: 191 })
       .primaryKey()
-      .$defaultFn(() => nanoid(12)),
+      .$defaultFn(() => createUniqueIds("lnk")),
     profileId: varchar("profileId", { length: 191 }),
     accessToken: text("access_token").notNull(),
     refreshToken: text("refresh_token"),
@@ -155,7 +156,7 @@ export const twitterToken = pgTable(
   {
     id: varchar("id", { length: 191 })
       .primaryKey()
-      .$defaultFn(() => nanoid(12)),
+      .$defaultFn(() => createUniqueIds("twt")),
     organizationId: varchar("organizationId", { length: 191 }).references(
       () => organization.id,
       { onDelete: "cascade" },
