@@ -124,14 +124,7 @@ async function handler(request: Request) {
       birthday: evt.data.birthday,
       profileImageUrl: evt.data.profile_image_url,
     };
-    // await prisma.user.update({
-    //   where: {
-    //     clerkUserId: id,
-    //   },
-    //   data: {
-    //     userDetails: userDetails,
-    //   },
-    // });
+
     await db
       .update(schema.user)
       .set({
@@ -141,11 +134,6 @@ async function handler(request: Request) {
       .where(eq(schema.user.clerkUserId, id));
   }
   if (eventType === "user.deleted") {
-    // await prisma.user.delete({
-    //   where: {
-    //     clerkUserId: id,
-    //   },
-    // });
     await db.delete(schema.user).where(eq(schema.user.clerkUserId, id));
   }
   return NextResponse.json({

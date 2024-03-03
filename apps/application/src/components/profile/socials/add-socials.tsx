@@ -77,7 +77,7 @@ const Socials = () => {
       return;
     }
     await handleLinkedinRedirect({
-      orgId: params?.orgid,
+      orgId: params.orgid,
       tokenId: "new",
     });
     setLocalLoading(false);

@@ -56,7 +56,7 @@ export default function InviteCard({
 
   if (!sameEmail) {
     return (
-      <Card className="dark bg-transparent text-center">
+      <Card className="dark border-none bg-transparent text-center">
         <CardHeader>
           <h1 className="text-xl font-bold">Oops this invite is not for you</h1>
         </CardHeader>
@@ -89,7 +89,7 @@ export default function InviteCard({
   }
 
   return (
-    <Card className="dark bg-transparent text-center">
+    <Card className="dark border-none bg-transparent text-center">
       <CardHeader className="flex w-full items-center justify-center gap-1">
         <Image
           src={organisationLogo}
