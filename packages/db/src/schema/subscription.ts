@@ -8,7 +8,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { createUniqueIds } from "..";
+import { createUniqueIds } from "../utils";
 import { user } from "./user";
 
 export const subscriptions = pgTable("subscription", {

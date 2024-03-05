@@ -1,1 +1,13 @@
-{ "version": "5", "dialect": "pg", "entries": [] }
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1709638077998,
+      "tag": "0000_rich_steel_serpent",
+      "breakpoints": true
+    }
+  ]
+}

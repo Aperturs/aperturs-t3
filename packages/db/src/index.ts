@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
+// import * as logs from "./schema/logs";
 import * as logs from "./schema/logs";
 import * as organisation from "./schema/organisation";
 import * as post from "./schema/post";
@@ -12,7 +13,7 @@ import * as user from "./schema/user";
 export * from "drizzle-orm";
 export * from "./utils";
 
-export { organisation, post, project, tokens, user };
+export { logs, organisation, post, project, subscriptions, tokens, user };
 
 export const schema = {
   ...user,

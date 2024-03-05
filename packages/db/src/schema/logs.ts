@@ -7,7 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { createUniqueIds } from "..";
+import { createUniqueIds } from "../utils";
 
 export const webhookEvents = pgTable("webhookEvent", {
   id: varchar("id", { length: 191 })
