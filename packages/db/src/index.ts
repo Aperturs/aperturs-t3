@@ -1,25 +1,27 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import * as idea from "./schema/idea";
+import * as logs from "./schema/logs";
 import * as organisation from "./schema/organisation";
 import * as post from "./schema/post";
 import * as project from "./schema/project";
+import * as subscriptions from "./schema/subscription";
 import * as tokens from "./schema/tokens";
 import * as user from "./schema/user";
 
 export * from "drizzle-orm";
 export * from "./utils";
 
-export { idea, organisation, post, project, tokens, user };
+export { organisation, post, project, tokens, user };
 
 export const schema = {
-  ...idea,
   ...user,
   ...organisation,
   ...post,
   ...tokens,
   ...project,
+  ...logs,
+  ...subscriptions,
 };
 
 const connectionString = process.env.DATABASE_URL;

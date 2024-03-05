@@ -1,1 +1,0 @@
-ALTER TABLE "LinkedInToken" ADD COLUMN "profilePicture" varchar(191);

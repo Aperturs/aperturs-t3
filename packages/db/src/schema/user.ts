@@ -9,10 +9,10 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { idea } from "./idea";
 import { organization, organizationUser } from "./organisation";
 import { post } from "./post";
 import { project } from "./project";
+import { subscriptions } from "./subscription";
 import { githubToken, linkedInToken, twitterToken } from "./tokens";
 
 export const currentPlanEnum = pgEnum("currentPlan", [
@@ -34,17 +34,11 @@ export const user = pgTable(
     updatedAt: timestamp("updatedAt", {
       withTimezone: true,
     }).notNull(),
-    lsSubscriptionId: varchar("ls_subscription_id", { length: 256 }),
     lsCustomerId: varchar("ls_customer_id", { length: 256 }),
-    lsVariantId: integer("lsVariantId"),
-    lsCurrentPeriodEnd: timestamp("ls_current_period_end", {
-      withTimezone: true,
-    }),
   },
   (table) => {
     return {
       userLsCustomerIdKey: unique().on(table.lsCustomerId),
-      userLsSubscriptionIdKey: unique().on(table.lsSubscriptionId),
     };
   },
 );
@@ -60,11 +54,11 @@ export const userRalations = relations(user, ({ one, many }) => ({
   userOwnedOrganisation: many(organization),
   userJoinedOrganisation: many(organizationUser),
   userCreatedProjects: many(project),
-  userCreatedIdeas: many(idea),
   userCreatedPosts: many(post),
   userTwitterAccounts: many(twitterToken),
   userLinkedinAccounts: many(linkedInToken),
   userGithubAccounts: many(githubToken),
+  userSubscriptions: many(subscriptions),
 }));
 
 export const userUsage = pgTable("UserUsage", {
