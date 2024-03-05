@@ -38,9 +38,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.3.4(react-hook-form@7.50.1)
-      '@lemonsqueezy/lemonsqueezy.js':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@octokit/plugin-paginate-rest':
         specifier: 8.0.0
         version: 8.0.0(@octokit/core@5.1.0)
@@ -301,6 +298,9 @@ importers:
       '@clerk/nextjs':
         specifier: ^4.29.5
         version: 4.29.7(next@14.1.1)(react-dom@18.2.0)(react@18.2.0)
+      '@lemonsqueezy/lemonsqueezy.js':
+        specifier: ^2.2.0
+        version: 2.2.0
       '@t3-oss/env-nextjs':
         specifier: ^0.9.2
         version: 0.9.2(typescript@5.3.3)(zod@3.22.4)
@@ -2943,8 +2943,9 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@lemonsqueezy/lemonsqueezy.js@1.2.5:
-    resolution: {integrity: sha512-T2XjKf5wgJcnZyY9ohZWUmaetzf2qGg0WfSbTsA1Mc9ubU/1w9T4BqsZagyyaXZjZ09SyLjvunzzivX5ppuohA==}
+  /@lemonsqueezy/lemonsqueezy.js@2.2.0:
+    resolution: {integrity: sha512-DsZTeowehSLTESUZ6xxoYPDhoE8BYepWsj3TCqibG7FvB8X1HERPXQlc6E/IeGj22SOfIM997b7GfFkeLWY8pA==}
+    engines: {node: '>=18'}
     dev: false
 
   /@next/env@14.0.5-canary.46:
