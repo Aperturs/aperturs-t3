@@ -92,6 +92,6 @@ export async function FetchPlans() {
       });
     }
   }
-  console.log(allPlans,'plans');
+  console.log(allPlans, "plans");
   return allPlans;
 }
