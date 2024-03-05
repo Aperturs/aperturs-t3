@@ -1,132 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Buffer } from "buffer";
-import crypto from "crypto";
-import { Readable } from "stream";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
-import rawBody from "raw-body";
+import crypto from "node:crypto";
 
-// import { prisma } from "~/server/db";
-import { db, eq, schema } from "@aperturs/db";
+import { leamonWebhookHasMeta } from "@aperturs/api";
 
-import ls from "~/utils/lemonSqueezy";
+import { api } from "~/trpc/server";
 
 export async function POST(request: Request) {
-  const body = await rawBody(Readable.from(Buffer.from(await request.text())));
-  const headersList = headers();
-  const payload = JSON.parse(body.toString());
-  const sigString = headersList.get("x-signature");
-  const secret = process.env.LEMONS_SQUEEZY_SIGNATURE_SECRET!;
+  if (!process.env.LEMONSQUEEZY_WEBHOOK_SECRET) {
+    return new Response("Lemon Squeezy Webhook Secret not set in .env", {
+      status: 500,
+    });
+  }
+  // First, make sure the request is from Lemon Squeezy.
+  const rawBody = await request.text();
+  const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
+
   const hmac = crypto.createHmac("sha256", secret);
-  const digest = Buffer.from(hmac.update(body).digest("hex"), "utf8");
+  const digest = Buffer.from(hmac.update(rawBody).digest("hex"), "utf8");
   const signature = Buffer.from(
-    Array.isArray(sigString) ? sigString.join("") : sigString ?? "",
+    request.headers.get("X-Signature") ?? "",
     "utf8",
   );
 
-  // Check if the webhook event was for this product or not
-  // if (
-  //   parseInt(payload.data.attributes.product_id) !==
-  //   parseInt(process.env.LEMONS_SQUEEZY_PRODUCT_ID as string)
-  // ) {
-  //   return NextResponse.json({ message: "Invalid product" }, { status: 403 });
-  // }
-
-  // validate signature
   if (!crypto.timingSafeEqual(digest, signature)) {
-    return NextResponse.json({ message: "Invalid signature" }, { status: 403 });
+    return new Response("Invalid signature", { status: 400 });
   }
 
-  const userId = payload.meta.custom_data.user_id as string;
-  console.log(payload.meta.custom_data.user_id);
+  const data = JSON.parse(rawBody) as unknown;
 
-  // Check if custom defined data i.e. the `userId` is there or not
-  if (!userId) {
-    return NextResponse.json(
-      { message: "No userId provided" },
-      { status: 403 },
-    );
+  // Type guard to check if the object has a 'meta' property.
+  if (leamonWebhookHasMeta(data)) {
+    const webhookEventId = await api.subscription.storeWebhookEvent({
+      eventName: data.meta.event_name,
+      body: data,
+    });
+    // Non-blocking call to process the webhook event.
+    void api.subscription.processWebhookEvent(webhookEventId);
+
+    return new Response("OK", { status: 200 });
   }
 
-  switch (payload.meta.event_name) {
-    case "subscription_created": {
-      const subscription = await ls.getSubscription({ id: payload.data.id });
-
-      // await prisma.user.update({
-      //   where: { clerkUserId: userId },
-      //   data: {
-      //     currentPlan: "PRO",
-      //     lsSubscriptionId: `${subscription.data.id}`,
-      //     lsCustomerId: `${payload.data.attributes.customer_id}`,
-      //     lsVariantId: subscription.data.attributes.variant_id,
-      //     lsCurrentPeriodEnd: new Date(
-      //       subscription.data.attributes.renews_at ?? "",
-      //     ),
-      //   },
-      // });
-      await db
-        .update(schema.user)
-        .set({
-          currentPlan: "PRO",
-          lsSubscriptionId: `${subscription.data.id}`,
-          lsCustomerId: `${payload.data.attributes.customer_id}`,
-          lsVariantId: subscription.data.attributes.variant_id,
-          lsCurrentPeriodEnd: new Date(
-            subscription.data.attributes.renews_at ?? "",
-          ),
-          updatedAt: new Date(),
-        })
-        .where(eq(schema.user.clerkUserId, userId));
-
-      return NextResponse.json(
-        { message: "Success Subscription Created" },
-        { status: 200 },
-      );
-    }
-
-    case "subscription_updated": {
-      const subscription = await ls.getSubscription({ id: payload.data.id });
-
-      if (!subscription.data.attributes.renews_at)
-        return NextResponse.json(
-          { message: "No renews_at date" },
-          { status: 501 },
-        );
-
-      // const user = await prisma.user.findUnique({
-      //   where: { lsSubscriptionId: `${subscription.data.id}` },
-      //   select: { lsSubscriptionId: true },
-      // });
-
-      const user = await db.query.user.findFirst({
-        where: eq(schema.user.lsSubscriptionId, `${subscription.data.id}`),
-      });
-
-      if (!user?.lsSubscriptionId) return;
-
-      // await prisma.user.update({
-      //   where: { lsSubscriptionId: user.lsSubscriptionId },
-      //   data: {
-      //     lsVariantId: subscription.data.attributes.variant_id,
-      //     lsCurrentPeriodEnd: subscription.data.attributes.renews_at,
-      //   },
-      // });
-
-      await db
-        .update(schema.user)
-        .set({
-          lsVariantId: subscription.data.attributes.variant_id,
-          lsCurrentPeriodEnd: new Date(subscription.data.attributes.renews_at),
-          updatedAt: new Date(),
-        })
-        .where(eq(schema.user.lsSubscriptionId, user.lsSubscriptionId));
-
-      return NextResponse.json(
-        { message: "Success Subscription Updated" },
-        { status: 200 },
-      );
-    }
-  }
-  return NextResponse.json({ message: "Success" }, { status: 200 });
+  return new Response("Data invalid", { status: 400 });
 }

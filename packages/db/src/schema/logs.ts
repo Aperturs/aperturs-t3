@@ -1,3 +1,4 @@
+import type { z } from "zod";
 import {
   boolean,
   jsonb,
@@ -6,6 +7,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 import { createUniqueIds } from "../utils";
 
@@ -19,3 +21,9 @@ export const webhookEvents = pgTable("webhookEvent", {
   body: jsonb("body").notNull(),
   processingError: text("processingError"),
 });
+
+export const webhookEventInsert = createInsertSchema(webhookEvents);
+export const webhookEventSelect = createSelectSchema(webhookEvents);
+
+export type WebhookEventInsert = z.infer<typeof webhookEventInsert>;
+export type WebhookEventSelect = z.infer<typeof webhookEventSelect>;

@@ -7,6 +7,8 @@ import {
   text,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { createUniqueIds } from "../utils";
 import { user } from "./user";
@@ -40,3 +42,9 @@ export const subscriptionRelations = relations(subscriptions, ({ one }) => ({
     references: [user.clerkUserId],
   }),
 }));
+
+export const SubscriptionInsertSchema = createInsertSchema(subscriptions);
+export const SubscriptionSelectSchema = createSelectSchema(subscriptions);
+
+export type SubscriptionInsert = z.infer<typeof SubscriptionInsertSchema>;
+export type SubscriptionSelect = z.infer<typeof SubscriptionSelectSchema>;
