@@ -25,6 +25,7 @@ import Receipt from "./receipt";
 import Send from "./send";
 import Settings from "./settings";
 import Shield from "./shield";
+import SocialAdd from "./social-add";
 import Star from "./star";
 import Tune from "./tune";
 import Video from "./video_recorder";
@@ -32,6 +33,7 @@ import Wallet from "./wallet";
 import Warning from "./warning";
 
 export {
+  SocialAdd,
   Network,
   Draft,
   Pencil,

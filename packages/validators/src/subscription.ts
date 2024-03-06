@@ -8,12 +8,14 @@ export const plansSchema = z.object({
   variantName: z.string(),
   description: z.string(),
   price: z.string(),
+  important: z.boolean().optional(),
   interval: z.string().optional(),
   intervalCount: z.number().optional(),
   trialInterval: z.string().optional(),
   trialIntervalCount: z.number().optional(),
   isUsageBased: z.boolean(),
   sort: z.number(),
+  power: z.number(),
 });
 
 export type PlansType = z.infer<typeof plansSchema>;

@@ -1,7 +1,8 @@
-import "~/styles/calendar.css";
 import "@aperturs/ui/globals.css";
+import "~/styles/calendar.css";
 
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 
 import ModalProvider from "~/components/custom/modals/modal-provider";
@@ -28,6 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${inter.variable}`}>
+        <Script
+          src="https://app.lemonsqueezy.com/js/lemon.js"
+          strategy="beforeInteractive"
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

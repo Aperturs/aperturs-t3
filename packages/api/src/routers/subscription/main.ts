@@ -13,6 +13,7 @@ import {
 import { configureLemonSqueezy } from "@api/utils/lemon-squeezy";
 import {
   cancelSubscription,
+  createCheckout,
   getPrice,
   getSubscription,
   updateSubscription,
@@ -20,7 +21,10 @@ import {
 import { z } from "zod";
 
 import type { subscriptions } from "@aperturs/db";
+import type { UserDetails } from "@aperturs/validators/user";
 import { db, eq, logs, schema } from "@aperturs/db";
+
+import { env } from "../../../env";
 
 export const subscriptionRouter = createTRPCRouter({
   fetchPlans: protectedProcedure.query(async () => {
@@ -73,9 +77,7 @@ export const subscriptionRouter = createTRPCRouter({
           const variantId = attributes.variant_id as string;
 
           // We assume that the Plan table is up to date.
-          const plan = Plans.map((p) => p).filter(
-            (p) => p.variantId.toString() === variantId,
-          );
+          const plan = Plans.filter((p) => p.variantId === parseInt(variantId));
 
           if (plan.length < 1 || !plan[0]) {
             processingError = `Plan with variantId ${variantId} not found.`;
@@ -314,5 +316,128 @@ export const subscriptionRouter = createTRPCRouter({
       return a.sort - b.sort;
     });
     return sortedPlans;
+  }),
+
+  getSubscriptionUrl: protectedProcedure
+    .input(
+      z.object({
+        variantId: z.number(),
+        embed: z.boolean(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      configureLemonSqueezy();
+
+      const fetchUser = await ctx.db.query.user.findFirst({
+        where: eq(schema.user.clerkUserId, ctx.currentUser),
+      });
+
+      const userDetails = fetchUser?.userDetails as UserDetails;
+
+      const checkout = await createCheckout(
+        env.LEMONSQUEEZY_STORE_ID,
+        input.variantId,
+        {
+          checkoutOptions: {
+            embed: input.embed,
+            media: false,
+            logo: input.embed,
+          },
+          checkoutData: {
+            email: userDetails.primaryEmail,
+            custom: {
+              user_id: ctx.currentUser,
+            },
+          },
+          productOptions: {
+            enabledVariants: [input.variantId],
+            redirectUrl: `${env.DOMAIN}/billing/`,
+            receiptButtonText: "Go to Dashboard",
+            receiptThankYouNote: "Thank you for signing up to Lemon Stand!",
+          },
+        },
+      );
+
+      return checkout.data?.data.attributes.url;
+    }),
+
+  changePlan: protectedProcedure
+    .input(
+      z.object({
+        currentPlanId: z.number(),
+        newPlanId: z.number(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      configureLemonSqueezy();
+
+      // // Get user subscriptions
+      // const userSubscriptions = await getUserSubscriptions();
+
+      // // Check if the subscription exists
+      // const subscription = userSubscriptions.find(
+      //   (sub) => sub.planId === input.currentPlanId,
+      // );
+
+      const subscription = await db.query.subscriptions.findFirst({
+        where: eq(schema.subscriptions.planId, input.currentPlanId),
+      });
+
+      if (!subscription) {
+        throw new Error(
+          `No subscription with plan id #${input.currentPlanId} was found.`,
+        );
+      }
+
+      // Get the new plan details from the database.
+
+      const newPlan = Plans.find((p) => p.variantId === input.newPlanId);
+
+      if (!newPlan) {
+        throw new Error(
+          `No plan with variant id #${input.newPlanId} was found.`,
+        );
+      }
+
+      // Send request to Lemon Squeezy to change the subscription.
+      const updatedSub = await updateSubscription(subscription.lemonSqueezyId, {
+        variantId: newPlan.variantId,
+      });
+
+      // Save in db
+      try {
+        await db
+          .update(schema.subscriptions)
+          .set({
+            planId: input.newPlanId,
+            price: newPlan.price,
+            endsAt: updatedSub.data?.data.attributes.ends_at,
+          })
+          .where(
+            eq(
+              schema.subscriptions.lemonSqueezyId,
+              subscription.lemonSqueezyId,
+            ),
+          );
+      } catch (error) {
+        throw new Error(
+          `Failed to update Subscription #${subscription.lemonSqueezyId} in the database.`,
+        );
+      }
+
+      return updatedSub;
+    }),
+
+  getCurrentSubscription: protectedProcedure.query(async ({ ctx }) => {
+    const subscription = await db.query.subscriptions.findMany({
+      where: eq(schema.subscriptions.userId, ctx.currentUser),
+      // orderBy: { createdAt: "desc" },
+    });
+
+    const currentSubscription = subscription.filter(
+      (s) => s.status === "active" || s.status === "on_trial",
+    );
+
+    return currentSubscription[0];
   }),
 });

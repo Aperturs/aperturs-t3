@@ -75,7 +75,7 @@ export function SubscriptionActionsDropdown({
                   });
                 }}
               >
-                Resume payments
+                Pause payments
               </DropdownMenuItem>
             )}
 
@@ -91,7 +91,7 @@ export function SubscriptionActionsDropdown({
                   });
                 }}
               >
-                Unpause payments
+                Resume payments
               </DropdownMenuItem>
             )}
 

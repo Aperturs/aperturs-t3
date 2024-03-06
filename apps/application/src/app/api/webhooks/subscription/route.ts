@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       body: data,
     });
     // Non-blocking call to process the webhook event.
-    void api.subscription.processWebhookEvent(webhookEventId);
+    await api.subscription.processWebhookEvent(webhookEventId);
 
     return new Response("OK", { status: 200 });
   }

@@ -12,7 +12,8 @@ export const Plans = [
     productName: "business",
     variantId: 224378,
     trialIntervalCount: 0,
-    sort: 2,
+    sort: 3,
+    power: 3,
   },
   {
     variantName: "Yearly",
@@ -27,6 +28,7 @@ export const Plans = [
     trialInterval: "day",
     trialIntervalCount: 14,
     sort: 3,
+    power: 6,
   },
   {
     variantName: "Monthly",
@@ -37,9 +39,11 @@ export const Plans = [
     isUsageBased: false,
     productId: 174106,
     productName: "small business",
+    important: true,
     variantId: 224369,
     trialIntervalCount: 0,
     sort: 2,
+    power: 2,
   },
   {
     variantName: "Yearly",
@@ -49,11 +53,13 @@ export const Plans = [
     intervalCount: 1,
     isUsageBased: false,
     productId: 174106,
+    important: true,
     productName: "small business",
     variantId: 224373,
     trialInterval: "day",
     trialIntervalCount: 14,
-    sort: 3,
+    sort: 2,
+    power: 5,
   },
   {
     variantName: "Yearly pricing",
@@ -67,7 +73,8 @@ export const Plans = [
     variantId: 129346,
     trialInterval: "day",
     trialIntervalCount: 14,
-    sort: 2,
+    sort: 1,
+    power: 4,
   },
   {
     variantName: "monthly",
@@ -81,6 +88,7 @@ export const Plans = [
     variantId: 129349,
     trialInterval: "day",
     trialIntervalCount: 14,
-    sort: 3,
+    sort: 1,
+    power: 1,
   },
 ] as PlansType[];

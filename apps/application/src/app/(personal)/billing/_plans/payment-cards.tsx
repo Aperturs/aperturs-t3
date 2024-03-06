@@ -1,27 +1,17 @@
 "use client";
 
-import { Button } from "@aperturs/ui/button";
+import type { PlansType } from "@aperturs/validators/subscription";
 import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
 
+import { formatPrice } from "~/utils/basic-functions";
+import { SignupButton } from "./plan-button";
+
 interface iFeatureList {
-  name: string;
-  pricing: number;
-  onClick?: () => void;
-  features: string[];
-  unavailableFeatures?: string[];
-  id: string;
-  currentPlan?: string;
+  plan: PlansType;
+  currentPlan?: PlansType;
 }
 
-export default function BillingCard({
-  name,
-  pricing,
-  onClick,
-  features,
-  id,
-  currentPlan,
-}: iFeatureList) {
-  const available = true;
+export default function BillingCard({ plan, currentPlan }: iFeatureList) {
   // const subscribe = api.subscriptions.createCheckout.useMutation();
 
   // const handleSubscribe = async (productId: string) => {
@@ -30,29 +20,38 @@ export default function BillingCard({
   //     // window.location.href = res;
   //   });
   // };
+
+  const isCurrentPlan = plan.variantId === currentPlan?.variantId;
+
+  const colorImportant = plan.important
+    ? "text-white"
+    : "text-gray-500 dark:text-gray-400";
+
+  const isChangingPlans = currentPlan && !isCurrentPlan;
+
   return (
     <Card
-      className={` ${
-        name === currentPlan ? "border-blue-gray-900 border-2" : ""
-      }`}
+      className={` ${isCurrentPlan ? "border-2 border-green-600 dark:border-2 " : ""} ${plan.important ? "bg-primary" : ""}`}
     >
       <CardHeader>
-        <h5 className="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">
-          {name}
+        <h5 className={`mb-4 text-xl font-medium ${colorImportant}`}>
+          {plan.productName}
         </h5>
-        <div className="flex items-baseline text-gray-900 dark:text-white">
+        <div
+          className={`flex items-baseline ${plan.important ? "text-white dark:text-white" : ""}`}
+        >
           <span className="text-3xl font-semibold">$</span>
           <span className="text-5xl font-extrabold tracking-tight">
-            {pricing}
+            {formatPrice(plan.price)}
           </span>
-          <span className="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400">
-            /month
+          <span className={`ml-1 text-xl font-normal  ${colorImportant}`}>
+            /{plan.interval}
           </span>
         </div>
       </CardHeader>
       <CardContent>
         <ul className="my-7 space-y-5">
-          {features.map((name) => (
+          {/* {features.map((name) => (
             <li
               className={`flex space-x-3 ${
                 !available ? "line-through decoration-gray-500" : ""
@@ -92,18 +91,24 @@ export default function BillingCard({
                 {name}
               </span>
             </li>
-          ))}
+          ))} */}
         </ul>
       </CardContent>
       <CardFooter>
-        <Button
-          className="w-full"
+        {/* <Button
+          className={`w-full ${plan.important ? "bg-white hover:bg-slate-50 text-primary dark:text-primary" : ""}`}
           // onClick={async () => {
           //   await subscribe.mutateAsync({ productId: parseInt(id) });
           // }}
         >
           Choose plan
-        </Button>
+        </Button> */}
+        <SignupButton
+          className={`w-full ${plan.important ? "bg-white text-primary hover:bg-slate-50 dark:text-primary" : ""}`}
+          plan={plan}
+          isChangingPlans={isChangingPlans}
+          currentPlan={currentPlan}
+        />
       </CardFooter>
     </Card>
   );
