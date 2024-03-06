@@ -135,14 +135,14 @@ export function SubscriptionStatus({
   isPaused?: boolean;
 }) {
   const statusColor: Record<SubscriptionStatusType, BadgeProps["color"]> = {
-    active: "green",
-    cancelled: "gray",
-    expired: "red",
-    past_due: "red",
+    active: "bg-green-600 hover:bg-green-700 ",
+    cancelled: "bg-gray-600 hover:bg-gray-700",
+    expired: "bg-red-600 hover:bg-red-700",
+    past_due: "bg-red-600 hover:bg-red-700",
     on_trial: "primary",
-    unpaid: "red",
-    pause: "yellow",
-    paused: "yellow",
+    unpaid: "bg-red-600 hover:bg-red-700",
+    pause: "bg-yellow-600 hover:bg-yellow-700",
+    paused: "bg-yellow-600 hover:bg-yellow-700",
   };
 
   const _status = isPaused ? "paused" : status;
@@ -155,7 +155,7 @@ export function SubscriptionStatus({
       )}
 
       <Badge
-        className="rounded-sm  text-xs  dark:text-white"
+        className={`rounded-sm  text-xs  dark:text-white ${statusColor[_status]}`}
         color={statusColor[_status]}
       >
         {_statusFormatted}
