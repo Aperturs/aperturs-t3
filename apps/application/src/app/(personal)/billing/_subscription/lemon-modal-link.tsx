@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useEffect } from "react";
 
-import { DropdownMenuItem } from "@aperturs/ui/components/ui/dropdown-menu";
+import { DropdownMenuItem } from "@aperturs/ui/dropdown-menu";
 
 export function LemonSqueezyModalLink({
   href,

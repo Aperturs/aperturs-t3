@@ -6,7 +6,7 @@ import { MoreVerticalIcon } from "lucide-react";
 
 import type { subscriptions } from "@aperturs/db";
 import type { SubscriptionUrlsType } from "@aperturs/validators/subscription";
-import { Button } from "@aperturs/ui/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

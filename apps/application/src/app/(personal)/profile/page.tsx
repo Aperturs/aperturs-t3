@@ -1,8 +1,9 @@
-import AccountTabs from "~/components/profile/account/tabs";
+import UserProfileComp from "~/components/profile/account/user-profile";
 
 const UserProfilePage = () => (
   <div className="mx-10 justify-center">
-    <AccountTabs />
+    {/* <AccountTabs /> */}
+    <UserProfileComp />
   </div>
 );
 

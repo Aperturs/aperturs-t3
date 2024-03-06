@@ -1,7 +1,7 @@
 import { UserProfile } from "@clerk/nextjs";
 
-const UserProfilePage = () => (
-  <div className="flex w-full justify-center">
+const UserProfileComp = () => (
+  <section className="flex w-full justify-center">
     <UserProfile
       appearance={{
         baseTheme: undefined,
@@ -18,7 +18,7 @@ const UserProfilePage = () => (
         },
       }}
     />
-  </div>
+  </section>
 );
 
-export default UserProfilePage;
+export default UserProfileComp;

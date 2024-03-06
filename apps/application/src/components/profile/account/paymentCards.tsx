@@ -3,18 +3,12 @@
 import { Button } from "@aperturs/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
 
-import { api } from "~/trpc/react";
-
-interface iFeature {
-  name: string;
-  available: boolean;
-}
-
 interface iFeatureList {
   name: string;
   pricing: number;
   onClick?: () => void;
-  features: iFeature[];
+  features: string[];
+  unavailableFeatures?: string[];
   id: string;
   currentPlan?: string;
 }
@@ -27,6 +21,7 @@ export default function BillingCard({
   id,
   currentPlan,
 }: iFeatureList) {
+  const available = true;
   // const subscribe = api.subscriptions.createCheckout.useMutation();
 
   // const handleSubscribe = async (productId: string) => {
@@ -57,7 +52,7 @@ export default function BillingCard({
       </CardHeader>
       <CardContent>
         <ul className="my-7 space-y-5">
-          {features.map(({ name, available }) => (
+          {features.map((name) => (
             <li
               className={`flex space-x-3 ${
                 !available ? "line-through decoration-gray-500" : ""

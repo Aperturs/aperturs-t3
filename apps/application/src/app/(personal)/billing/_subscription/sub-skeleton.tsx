@@ -1,4 +1,4 @@
-import { Skeleton } from "@aperturs/ui/components/ui/skeleton";
+import { Skeleton } from "@aperturs/ui/skeleton";
 
 export default function SubscriptionSkeleton() {
   return (

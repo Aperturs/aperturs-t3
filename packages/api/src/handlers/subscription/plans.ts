@@ -1,3 +1,5 @@
+import type { PlansType } from "@aperturs/validators/subscription";
+
 export const Plans = [
   {
     variantName: "montly",
@@ -81,4 +83,4 @@ export const Plans = [
     trialIntervalCount: 14,
     sort: 3,
   },
-];
+] as PlansType[];

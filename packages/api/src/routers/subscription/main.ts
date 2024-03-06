@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { FetchPlans } from "@api/handlers/subscription/main";
 import { Plans } from "@api/handlers/subscription/plans";
 import {
@@ -19,7 +20,6 @@ import {
 import { z } from "zod";
 
 import type { subscriptions } from "@aperturs/db";
-import type { PlansType } from "@aperturs/validators/subscription";
 import { db, eq, logs, schema } from "@aperturs/db";
 
 export const subscriptionRouter = createTRPCRouter({
@@ -75,7 +75,7 @@ export const subscriptionRouter = createTRPCRouter({
           // We assume that the Plan table is up to date.
           const plan = Plans.map((p) => p).filter(
             (p) => p.variantId.toString() === variantId,
-          ) as PlansType[];
+          );
 
           if (plan.length < 1 || !plan[0]) {
             processingError = `Plan with variantId ${variantId} not found.`;
@@ -300,4 +300,19 @@ export const subscriptionRouter = createTRPCRouter({
 
       return cancelledSub;
     }),
+
+  getAllPlans: protectedProcedure.query(() => {
+    const sortedPlans = Plans.sort((a, b) => {
+      if (
+        a.sort === undefined ||
+        a.sort === null ||
+        b.sort === undefined ||
+        b.sort === null
+      ) {
+        return 0;
+      }
+      return a.sort - b.sort;
+    });
+    return sortedPlans;
+  }),
 });

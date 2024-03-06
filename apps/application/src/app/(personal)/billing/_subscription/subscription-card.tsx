@@ -1,8 +1,8 @@
-import type { BadgeProps } from "@aperturs/ui/components/ui/badge";
+import type { BadgeProps } from "@aperturs/ui/badge";
 import type { SubscriptionStatusType } from "@aperturs/validators/subscription";
 import { Plans } from "@aperturs/api";
-import { Badge } from "@aperturs/ui/components/ui/badge";
-import { Card } from "@aperturs/ui/components/ui/card";
+import { Badge } from "@aperturs/ui/badge";
+import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { isValidSubscription } from "@aperturs/validators/subscription";
 
