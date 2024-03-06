@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+
+import SubscriptionSkeleton from "./_subscription/sub-skeleton";
 import SubscriptionCard from "./_subscription/subscription-card";
 
 export const metadata = {
@@ -8,7 +11,9 @@ export default async function Billing() {
   return (
     <section className="flex flex-col gap-2">
       <h1>Billing</h1>
-      <SubscriptionCard />
+      <Suspense fallback={<SubscriptionSkeleton />}>
+        <SubscriptionCard />
+      </Suspense>
     </section>
   );
 }

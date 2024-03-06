@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { MoreVerticalIcon } from "lucide-react";
 
 import type { subscriptions } from "@aperturs/db";
@@ -15,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@aperturs/ui/dropdown-menu";
 
-import Loading from "~/app/loading";
+import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
 import { LemonSqueezyModalLink } from "./lemon-modal-link";
 
@@ -27,6 +28,7 @@ export function SubscriptionActionsDropdown({
   urls: Awaited<SubscriptionUrlsType | undefined>;
 }) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const { mutateAsync: pauseUserSubscription } =
     api.subscription.pauseUserSubscription.useMutation();
@@ -49,7 +51,7 @@ export function SubscriptionActionsDropdown({
     <>
       {loading && (
         <div className="bg-surface-50/50 absolute inset-0 z-10 flex items-center justify-center rounded-md">
-          <Loading />
+          <SimpleLoader />
         </div>
       )}
       <DropdownMenu>
@@ -69,10 +71,11 @@ export function SubscriptionActionsDropdown({
                     id: subscription.lemonSqueezyId,
                   }).then(() => {
                     setLoading(false);
+                    router.refresh();
                   });
                 }}
               >
-                Pause payments
+                Resume payments
               </DropdownMenuItem>
             )}
 
@@ -84,6 +87,7 @@ export function SubscriptionActionsDropdown({
                     id: subscription.lemonSqueezyId,
                   }).then(() => {
                     setLoading(false);
+                    router.refresh();
                   });
                 }}
               >
@@ -115,6 +119,7 @@ export function SubscriptionActionsDropdown({
                     id: subscription.lemonSqueezyId,
                   }).then(() => {
                     setLoading(false);
+                    router.refresh();
                   });
                 }
               }}
