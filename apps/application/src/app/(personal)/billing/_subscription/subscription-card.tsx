@@ -1,5 +1,7 @@
+import type { BadgeProps } from "@aperturs/ui/components/ui/badge";
 import type { SubscriptionStatusType } from "@aperturs/validators/subscription";
 import { Plans } from "@aperturs/api";
+import { Badge } from "@aperturs/ui/components/ui/badge";
 import { Card } from "@aperturs/ui/components/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { isValidSubscription } from "@aperturs/validators/subscription";
@@ -43,7 +45,7 @@ export default async function SubscriptionCard() {
               <SubscriptionActions subscription={subscription} />
             </header>
 
-            {/* <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <SubscriptionPrice
                 endsAt={subscription.endsAt}
                 interval={plan.interval}
@@ -64,10 +66,136 @@ export default async function SubscriptionCard() {
                 status={status}
                 trialEndsAt={subscription.trialEndsAt}
               />
-            </div> */}
+            </div>
           </div>
         );
       })}
     </Card>
+  );
+}
+
+export function formatPrice(priceInCents: string) {
+  const price = parseFloat(priceInCents);
+  const dollars = price / 100;
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    // Use minimumFractionDigits to handle cases like $59.00 -> $59
+    minimumFractionDigits: dollars % 1 !== 0 ? 2 : 0,
+  }).format(dollars);
+}
+
+export function formatDate(date: string | number | Date | null | undefined) {
+  if (!date) return "";
+
+  return new Date(date).toLocaleString("en-US", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+export function SubscriptionPrice({
+  endsAt,
+  price,
+  interval,
+  intervalCount,
+  isUsageBased,
+}: {
+  endsAt?: string | null;
+  price: string;
+  interval?: string | null;
+  intervalCount?: number | null;
+  isUsageBased?: boolean;
+}) {
+  if (endsAt) return null;
+
+  let formattedPrice = formatPrice(price);
+
+  console.debug(formattedPrice, "formatted");
+
+  if (isUsageBased) {
+    formattedPrice += "/unit";
+  }
+
+  const formattedIntervalCount =
+    intervalCount && intervalCount !== 1 ? `every ${intervalCount} ` : "every";
+
+  return <p>{`${formattedPrice} ${formattedIntervalCount} ${interval}`}</p>;
+}
+
+export function SubscriptionStatus({
+  status,
+  statusFormatted,
+  isPaused,
+}: {
+  status: SubscriptionStatusType;
+  statusFormatted: string;
+  isPaused?: boolean;
+}) {
+  const statusColor: Record<SubscriptionStatusType, BadgeProps["color"]> = {
+    active: "green",
+    cancelled: "gray",
+    expired: "red",
+    past_due: "red",
+    on_trial: "primary",
+    unpaid: "red",
+    pause: "yellow",
+    paused: "yellow",
+  };
+
+  const _status = isPaused ? "paused" : status;
+  const _statusFormatted = isPaused ? "Paused" : statusFormatted;
+
+  return (
+    <>
+      {status !== "cancelled" && (
+        <span className="text-surface-200">&bull;</span>
+      )}
+
+      <Badge
+        className="rounded-sm  text-xs  dark:text-white"
+        color={statusColor[_status]}
+      >
+        {_statusFormatted}
+      </Badge>
+    </>
+  );
+}
+
+export function SubscriptionDate({
+  endsAt,
+  renewsAt,
+  trialEndsAt,
+}: {
+  endsAt?: string | null;
+  renewsAt?: string | null;
+  status: SubscriptionStatusType;
+  trialEndsAt?: string | null;
+}) {
+  const now = new Date();
+  const trialEndDate = trialEndsAt ? new Date(trialEndsAt) : null;
+  const endsAtDate = endsAt ? new Date(endsAt) : null;
+  let message = `Renews on ${formatDate(renewsAt)}`;
+
+  if (!trialEndsAt && !renewsAt) return null;
+
+  if (trialEndDate && trialEndDate > now) {
+    message = `Ends on ${formatDate(trialEndsAt)}`;
+  }
+
+  if (endsAt) {
+    message =
+      endsAtDate && endsAtDate < now
+        ? `Expired on ${formatDate(endsAt)}`
+        : `Expires on ${formatDate(endsAt)}`;
+  }
+
+  return (
+    <>
+      {<span className="text-surface-200">&bull;</span>}
+      <p>{message}</p>
+    </>
   );
 }

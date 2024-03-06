@@ -156,6 +156,9 @@ export const subscriptionRouter = createTRPCRouter({
       if (a.status === "active" && b.status !== "active") {
         return -1;
       }
+      if (a.status !== "on_trail" && b.status !== "on_trail") {
+        return -1;
+      }
       if (a.status === "paused" && b.status === "cancelled") {
         return -1;
       }
