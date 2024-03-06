@@ -1,3 +1,4 @@
+import type { z } from "zod";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -8,7 +9,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 
 import { createUniqueIds } from "../utils";
 import { user } from "./user";

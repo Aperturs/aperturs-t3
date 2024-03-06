@@ -20,7 +20,6 @@ export async function POST(request: Request) {
     request.headers.get("X-Signature") ?? "",
     "utf8",
   );
-
   if (!crypto.timingSafeEqual(digest, signature)) {
     return new Response("Invalid signature", { status: 400 });
   }

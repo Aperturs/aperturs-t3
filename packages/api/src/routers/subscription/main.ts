@@ -10,7 +10,13 @@ import {
   publicProcedure,
 } from "@api/trpc";
 import { configureLemonSqueezy } from "@api/utils/lemon-squeezy";
-import { getPrice } from "@lemonsqueezy/lemonsqueezy.js";
+import {
+  cancelSubscription,
+  getPrice,
+  getSubscription,
+  updateSubscription,
+} from "@lemonsqueezy/lemonsqueezy.js";
+import { z } from "zod";
 
 import type { subscriptions } from "@aperturs/db";
 import type { PlansType } from "@aperturs/validators/subscription";
@@ -105,7 +111,7 @@ export const subscriptionRouter = createTRPCRouter({
               subscriptionItemId: attributes.first_subscription_item.id,
               isUsageBased: attributes.first_subscription_item.is_usage_based,
               userId: eventBody.meta.custom_data.user_id,
-              planId: plan[0].productId,
+              planId: plan[0].variantId,
             };
 
             // Create/update subscription in the database.
@@ -139,5 +145,156 @@ export const subscriptionRouter = createTRPCRouter({
           })
           .where(eq(logs.webhookEvents.id, input.id));
       }
+    }),
+
+  getSubscriptions: protectedProcedure.query(async ({ ctx }) => {
+    const subscriptions = await db.query.subscriptions.findMany({
+      where: eq(schema.subscriptions.userId, ctx.currentUser),
+    });
+
+    const sortedSubscriptions = subscriptions.sort((a, b) => {
+      if (a.status === "active" && b.status !== "active") {
+        return -1;
+      }
+      if (a.status === "paused" && b.status === "cancelled") {
+        return -1;
+      }
+
+      return 0;
+    });
+    return sortedSubscriptions;
+  }),
+  getSubscriptionURLs: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      configureLemonSqueezy();
+      const subscription = await getSubscription(input.id);
+      if (subscription.error) {
+        throw new Error(subscription.error.message);
+      }
+
+      return subscription.data?.data.attributes.urls;
+    }),
+  pauseUserSubscription: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      configureLemonSqueezy();
+
+      // Get user subscriptions
+      const subscription = await db.query.subscriptions.findFirst({
+        where: eq(schema.subscriptions.lemonSqueezyId, input.id),
+      });
+
+      if (!subscription) {
+        throw new Error(`Subscription #${input.id} not found.`);
+      }
+
+      const returnedSub = await updateSubscription(input.id, {
+        pause: {
+          mode: "void",
+        },
+      });
+
+      // Update the db
+      try {
+        await db
+          .update(schema.subscriptions)
+          .set({
+            status: returnedSub.data?.data.attributes.status,
+            statusFormatted: returnedSub.data?.data.attributes.status_formatted,
+            endsAt: returnedSub.data?.data.attributes.ends_at,
+            isPaused: returnedSub.data?.data.attributes.pause !== null,
+          })
+          .where(eq(schema.subscriptions.lemonSqueezyId, input.id));
+      } catch (error) {
+        throw new Error(
+          `Failed to pause Subscription #${input.id} in the database.`,
+        );
+      }
+
+      // revalidatePath("/");
+
+      return returnedSub;
+    }),
+
+  resumeUserSubscription: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      configureLemonSqueezy();
+
+      // Get user subscriptions
+      const subscription = await db.query.subscriptions.findFirst({
+        where: eq(schema.subscriptions.lemonSqueezyId, input.id),
+      });
+
+      if (!subscription) {
+        throw new Error(`Subscription #${input.id} not found.`);
+      }
+
+      const returnedSub = await updateSubscription(input.id, {
+        // @ts-expect-error -- null is a valid value for pause
+        pause: null,
+      });
+
+      // Update the db
+      try {
+        await db
+          .update(schema.subscriptions)
+          .set({
+            status: returnedSub.data?.data.attributes.status,
+            statusFormatted: returnedSub.data?.data.attributes.status_formatted,
+            endsAt: returnedSub.data?.data.attributes.ends_at,
+            isPaused: returnedSub.data?.data.attributes.pause !== null,
+          })
+          .where(eq(schema.subscriptions.lemonSqueezyId, input.id));
+      } catch (error) {
+        throw new Error(
+          `Failed to pause Subscription #${input.id} in the database.`,
+        );
+      }
+      // revalidatePath("/");
+
+      return returnedSub;
+    }),
+
+  cancelUserSubscription: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      configureLemonSqueezy();
+
+      // Get user subscriptions
+      const subscription = await db.query.subscriptions.findFirst({
+        where: eq(schema.subscriptions.lemonSqueezyId, input.id),
+      });
+
+      if (!subscription) {
+        throw new Error(`Subscription #${input.id} not found.`);
+      }
+
+      const cancelledSub = await cancelSubscription(input.id);
+
+      // Update the db
+      try {
+        await db
+          .update(schema.subscriptions)
+          .set({
+            status: cancelledSub.data?.data.attributes.status,
+            statusFormatted:
+              cancelledSub.data?.data.attributes.status_formatted,
+            endsAt: cancelledSub.data?.data.attributes.ends_at,
+          })
+          .where(eq(schema.subscriptions.lemonSqueezyId, input.id));
+      } catch (error) {
+        throw new Error(
+          `Failed to cancel Subscription #${input.id} in the database.`,
+        );
+      }
+      // revalidatePath("/");
+
+      return cancelledSub;
     }),
 });

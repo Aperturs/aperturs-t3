@@ -1,3 +1,5 @@
+import Script from "next/script";
+
 import Layout from "~/components/layouts/final-layouts/personal-layout";
 
 export default function RootLayout({
@@ -5,5 +7,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Layout>{children}</Layout>;
+  return (
+    <Layout>
+      <Script
+        src="https://app.lemonsqueezy.com/js/lemon.js"
+        strategy="lazyOnload"
+      />
+      {children}
+    </Layout>
+  );
 }
