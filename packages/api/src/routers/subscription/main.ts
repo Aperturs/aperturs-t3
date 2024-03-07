@@ -22,7 +22,7 @@ import { z } from "zod";
 
 import type { subscriptions } from "@aperturs/db";
 import type { UserDetails } from "@aperturs/validators/user";
-import { db, eq, logs, schema } from "@aperturs/db";
+import { and, db, eq, like, logs, or, schema } from "@aperturs/db";
 
 import { env } from "../../../env";
 
@@ -430,14 +430,18 @@ export const subscriptionRouter = createTRPCRouter({
 
   getCurrentSubscription: protectedProcedure.query(async ({ ctx }) => {
     const subscription = await db.query.subscriptions.findMany({
-      where: eq(schema.subscriptions.userId, ctx.currentUser),
+      where: and(
+        eq(schema.subscriptions.userId, ctx.currentUser),
+        or(
+          like(schema.subscriptions.status, "active"),
+          like(schema.subscriptions.status, "on_trial"),
+        ),
+      ),
       // orderBy: { createdAt: "desc" },
     });
 
-    const currentSubscription = subscription.filter(
-      (s) => s.status === "active" || s.status === "on_trial",
-    );
+    const currentSubscription = subscription[0];
 
-    return currentSubscription[0];
+    return currentSubscription;
   }),
 });

@@ -4,19 +4,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 
 import FetchPlans from "./_plans/plans";
 import PlansSkeleton from "./_plans/skeleton";
+import FetchCurrentSubscription from "./_subscription/fetch-current-subscription";
+import HistoryIcon from "./_subscription/hisotry-icon";
 import SubscriptionSkeleton from "./_subscription/sub-skeleton";
-import SubscriptionCard from "./_subscription/subscription-card";
 
 export const metadata = {
-  title: "Billing",
+  title: "Aperturs | Billing",
 };
 
 export default async function Billing() {
   return (
     <section className="flex flex-col gap-2">
-      <h1>Billing</h1>
+      <div className="flex w-full items-center justify-between px-2">
+        <h1 className="text-2xl font-bold">Billing</h1>
+        <HistoryIcon />
+      </div>
       <Suspense fallback={<SubscriptionSkeleton />}>
-        <SubscriptionCard />
+        <FetchCurrentSubscription />
       </Suspense>
       <Tabs defaultValue="monthly">
         <div className="flex w-full items-center justify-center">

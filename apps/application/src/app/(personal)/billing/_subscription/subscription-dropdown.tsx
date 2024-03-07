@@ -50,7 +50,7 @@ export function SubscriptionActionsDropdown({
   return (
     <>
       {loading && (
-        <div className="bg-surface-50/50 absolute inset-0 z-10 flex items-center justify-center rounded-md">
+        <div className="absolute inset-0 z-10  flex items-center justify-center rounded-md bg-secondary opacity-35">
           <SimpleLoader />
         </div>
       )}

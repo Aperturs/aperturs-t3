@@ -1,3 +1,4 @@
+import type { subscriptions } from "@aperturs/db";
 import type { BadgeProps } from "@aperturs/ui/badge";
 import type { SubscriptionStatusType } from "@aperturs/validators/subscription";
 import { Plans } from "@aperturs/api";
@@ -6,15 +7,16 @@ import { Card } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { isValidSubscription } from "@aperturs/validators/subscription";
 
-import { api } from "~/trpc/server";
 import { formatDate, formatPrice } from "~/utils/basic-functions";
 import { SubscriptionActions } from "./subscription-actions";
 
-export default async function SubscriptionCard() {
-  const subscriptions = await api.subscription.getSubscriptions();
-
+export default async function SubscriptionCard({
+  subscriptions,
+}: {
+  subscriptions: subscriptions.SubscriptionSelect[];
+}) {
   return (
-    <Card className="my-4">
+    <Card className="relative my-4">
       {subscriptions.map((subscription) => {
         const plan = Plans.find((p) => p.variantId === subscription.planId);
         const status = subscription.status as SubscriptionStatusType;
