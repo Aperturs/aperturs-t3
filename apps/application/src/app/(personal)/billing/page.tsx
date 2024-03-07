@@ -28,6 +28,10 @@ export default async function Billing() {
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="yearly">Yearly</TabsTrigger>
           </TabsList>
+          <div className="mx-2 my-0 text-xs font-bold text-green-600 dark:text-green-400">
+            <p>Free 2 months</p>
+            <p>billed yearly</p>
+          </div>
           <div>
             {/* <span className="text-sm text-gray-500">Billed</span>
             <span className="text-sm text-gray-500">Annually</span>
