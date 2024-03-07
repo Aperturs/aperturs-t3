@@ -8,13 +8,13 @@ export async function SubscriptionActions({
 }: {
   subscription: subscriptions.SubscriptionSelect;
 }) {
-  if (
-    subscription.status === "expired" ||
-    subscription.status === "cancelled" ||
-    subscription.status === "unpaid"
-  ) {
-    return null;
-  }
+  // if (
+  //   subscription.status === "expired" ||
+  //   subscription.status === "cancelled" ||
+  //   subscription.status === "unpaid"
+  // ) {
+  //   return null;
+  // }
 
   const urls = await api.subscription.getSubscriptionURLs({
     id: subscription.lemonSqueezyId,

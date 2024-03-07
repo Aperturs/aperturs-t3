@@ -18,7 +18,10 @@ import {
 
 import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
-import { LemonSqueezyModalLink } from "./lemon-modal-link";
+import {
+  LemonSqueezyModaButton,
+  LemonSqueezyModalLink,
+} from "./lemon-modal-link";
 
 export function SubscriptionActionsDropdown({
   subscription,
@@ -43,12 +46,20 @@ export function SubscriptionActionsDropdown({
     id: subscription.lemonSqueezyId,
   });
 
+  console.log("subscription", subscription.id, subscription);
+
   if (
     subscription.status === "expired" ||
     subscription.status === "cancelled" ||
     subscription.status === "unpaid"
   ) {
-    return null;
+    return (
+      <>
+        <LemonSqueezyModaButton href={invoiceUrl}>
+          Generate Invoice
+        </LemonSqueezyModaButton>
+      </>
+    );
   }
 
   return (
@@ -64,7 +75,6 @@ export function SubscriptionActionsDropdown({
             <MoreVerticalIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
-
         <DropdownMenuContent side="bottom" className="z-10" align="end">
           <DropdownMenuGroup>
             {!subscription.isPaused && (
@@ -110,9 +120,7 @@ export function SubscriptionActionsDropdown({
           <LemonSqueezyModalLink href={invoiceUrl}>
             Generate Invoice
           </LemonSqueezyModalLink>
-
           <DropdownMenuSeparator />
-
           <DropdownMenuGroup>
             <DropdownMenuItem
               onClick={async () => {

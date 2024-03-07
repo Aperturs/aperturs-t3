@@ -67,6 +67,7 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
         disabled={loading ?? isCurrent ?? props.disabled}
         onClick={async () => {
           // If changing plans, call server action.
+          setLoading(true);
           if (isChangingPlans) {
             if (!currentPlan?.variantId) {
               throw new Error("Current plan not found.");
@@ -75,12 +76,10 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
             if (!plan.variantId) {
               throw new Error("New plan not found.");
             }
-            setLoading(true);
             await changePlan({
               currentPlanId: currentPlan.variantId,
               newPlanId: plan.variantId,
             });
-            setLoading(false);
 
             return;
           }
@@ -100,6 +99,7 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
           embed
             ? checkoutUrl && window.LemonSqueezy.Url.Open(checkoutUrl)
             : router.push(checkoutUrl ?? "/");
+          setLoading(false);
         }}
         {...otherProps}
       >
