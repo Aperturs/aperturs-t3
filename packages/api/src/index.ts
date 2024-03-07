@@ -1,8 +1,11 @@
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 
 import type { AppRouter } from "./root";
+import { Plans } from "./handlers/subscription/plans";
+import { leamonWebhookHasMeta } from "./helpers/type-guard";
 import { appRouter } from "./root";
 import { createCallerFactory, createTRPCContext } from "./trpc";
+import { configureLemonSqueezy } from "./utils/lemon-squeezy";
 
 /**
  * Create a server-side caller for the tRPC API
@@ -29,6 +32,14 @@ type RouterInputs = inferRouterInputs<AppRouter>;
  **/
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
+export * from "@lemonsqueezy/lemonsqueezy.js";
 export { redis } from "./utils/redis";
-export { appRouter, createCaller, createTRPCContext };
+export {
+  Plans,
+  appRouter,
+  configureLemonSqueezy,
+  createCaller,
+  createTRPCContext,
+  leamonWebhookHasMeta,
+};
 export type { AppRouter, RouterInputs, RouterOutputs };

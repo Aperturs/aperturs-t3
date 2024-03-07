@@ -27,7 +27,6 @@ export const env = createEnv({
     CRONJOB_AUTH: z.string(),
     CRONJOB_SCHEDULE_URL: z.string().url(),
     OPENAI_API_KEY: z.string(),
-    NEXT_PRIVATE_LEMONSQUEEZY_KEY: z.string(),
     RESEND_EMAIL_API: z.string(),
     DOMAIN: z.string(),
   },

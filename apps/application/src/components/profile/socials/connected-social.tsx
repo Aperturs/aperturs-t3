@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import type { SocialType } from "@aperturs/validators/post";
-import { Card } from "@aperturs/ui/components/ui/card";
+import { Card } from "@aperturs/ui/card";
 
 import ConnectSocialsAction from "./connect-social-actions";
 

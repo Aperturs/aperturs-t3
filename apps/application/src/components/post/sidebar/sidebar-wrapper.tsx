@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@aperturs/ui/components/ui/button";
+import { Button } from "@aperturs/ui/button";
 import {
   Sheet,
   SheetContent,

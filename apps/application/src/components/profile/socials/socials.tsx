@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { Card } from "@aperturs/ui/components/ui/card";
+import { Card } from "@aperturs/ui/card";
 
 import { AddSocial } from "./add-socials";
 import SocialsSkeleton from "./socials-skeleton";

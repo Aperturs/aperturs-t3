@@ -1,10 +1,6 @@
 import type { FbPageConnectData } from "@aperturs/validators/socials";
+import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
 import { Card } from "@aperturs/ui/card";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@aperturs/ui/components/ui/avatar";
 import { RadioGroupItem } from "@aperturs/ui/radio-group";
 
 export default function DisplayCard({

@@ -8,7 +8,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 
 import BillingTab from "./billingTab";
-import UserProfilePage from "./userprofile";
+import UserProfilePage from "./user-profile";
 
 const Test = () => {
   return <div className="w-full py-5">comming soon..</div>;

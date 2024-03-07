@@ -7,8 +7,8 @@
 //   CardContent,
 //   CardHeader,
 //   CardTitle,
-// } from "@aperturs/ui/components/ui/card";
-// import { RadioGroup } from "@aperturs/ui/components/ui/radio-group";
+// } from "@aperturs/ui/card";
+// import { RadioGroup } from "@aperturs/ui/radio-group";
 // import { addInstagramSchema } from "@aperturs/validators/socials";
 
 // import DisplayCard from "./display-card";

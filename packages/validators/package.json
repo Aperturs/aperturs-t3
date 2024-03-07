@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "@lemonsqueezy/lemonsqueezy.js": "^2.2.0"
   },
   "devDependencies": {
     "@aperturs/eslint-config": "workspace:^*",

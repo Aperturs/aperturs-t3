@@ -1,7 +1,3 @@
-import { api } from "~/trpc/server";
-import ManageSubscription from "./manageSubscription";
-import BillingCard from "./paymentCards";
-
 const soloCreatorFeatures = [
   {
     name: "testing something",

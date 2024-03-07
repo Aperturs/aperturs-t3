@@ -5,10 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
-import { IoIosAddCircle } from "react-icons/io";
 
 import { Button } from "@aperturs/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
+import { SocialAdd } from "@aperturs/ui/icons";
 import { SocialType } from "@aperturs/validators/post";
 
 import {
@@ -33,8 +33,8 @@ export const AddSocial = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
-        <Button className="h-20 w-full  whitespace-nowrap">
-          <IoIosAddCircle className="text-2xl" />
+        <Button className="flex h-20  w-full gap-2 whitespace-nowrap">
+          <SocialAdd />
           Add Socials
         </Button>
       </DialogTrigger>

@@ -16,15 +16,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@aperturs/ui/components/ui/alert-dialog";
-import { Button } from "@aperturs/ui/components/ui/button";
+} from "@aperturs/ui/alert-dialog";
+import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@aperturs/ui/components/ui/dropdown-menu";
+} from "@aperturs/ui/dropdown-menu";
 
 import { api } from "~/trpc/react";
 import { handleLinkedinRedirect } from "../../../utils/actions/handle-socials";

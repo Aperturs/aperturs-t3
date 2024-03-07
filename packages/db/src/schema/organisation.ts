@@ -1,3 +1,4 @@
+import type { z } from "zod";
 import { relations, sql } from "drizzle-orm";
 import {
   index,
@@ -7,10 +8,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 
 import { createUniqueIds } from "../utils";
-import { idea } from "./idea";
 import { post } from "./post";
 import { project } from "./project";
 import { githubToken, linkedInToken, twitterToken } from "./tokens";
@@ -74,7 +73,6 @@ export const organisationRelations = relations(
     invites: many(organizationInvites),
     members: many(organizationUser),
     orgCreatedProjects: many(project),
-    orgCreatedIdeas: many(idea),
     orgCreatedPosts: many(post),
     orgTwitterAccounts: many(twitterToken),
     orgLinkedinAccounts: many(linkedInToken),

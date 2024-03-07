@@ -70,8 +70,7 @@
     "./postcss.config": "./postcss.config.js",
     "./tailwind.config": "./tailwind.config.ts",
     "./lib/*": "./src/lib/*.ts",
-    "./components/*": "./src/components/*.tsx",
     "./*": "./src/components/ui/*.tsx",
-    "./icons/*": "./src/components/icons/*.tsx"
+    "./icons": "./src/icons/index.ts"
   }
 }

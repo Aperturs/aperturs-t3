@@ -15,6 +15,9 @@ export default {
       },
     },
     extend: {
+      colors: {
+        myaccent: "#FFD700",
+      },
       boxShadow: {
         custom: "0px 6px 10px rgba(0, 0, 0, 0.1)",
         sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",

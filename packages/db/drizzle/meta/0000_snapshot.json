@@ -1,96 +1,56 @@
 {
-  "id": "9e28c37d-6e7d-4c51-a907-7ea7de88ea40",
+  "id": "c2e292bb-8383-4c06-b437-f3128e155772",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
   "tables": {
-    "Idea": {
-      "name": "Idea",
+    "webhookEvent": {
+      "name": "webhookEvent",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(191)",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "varchar(191)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "clerkUserId": {
-          "name": "clerkUserId",
-          "type": "varchar(191)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "organizationId": {
-          "name": "organizationId",
-          "type": "varchar(191)",
-          "primaryKey": false,
-          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "date",
+        "eventName": {
+          "name": "eventName",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
-        }
-      },
-      "indexes": {
-        "Idea_clerkUserId_idx": {
-          "name": "Idea_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
         },
-        "Idea_organizationId_idx": {
-          "name": "Idea_organizationId_idx",
-          "columns": ["organizationId"],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "Idea_clerkUserId_User_clerkUserId_fk": {
-          "name": "Idea_clerkUserId_User_clerkUserId_fk",
-          "tableFrom": "Idea",
-          "tableTo": "User",
-          "columnsFrom": ["clerkUserId"],
-          "columnsTo": ["clerkUserId"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+        "processed": {
+          "name": "processed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
-        "Idea_organizationId_Organization_id_fk": {
-          "name": "Idea_organizationId_Organization_id_fk",
-          "tableFrom": "Idea",
-          "tableTo": "Organization",
-          "columnsFrom": ["organizationId"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+        "body": {
+          "name": "body",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processingError": {
+          "name": "processingError",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "compositePrimaryKeys": {
-        "Idea_id": {
-          "name": "Idea_id",
-          "columns": ["id"]
-        }
-      },
-      "uniqueConstraints": {
-        "Idea_clerkUserId_key": {
-          "name": "Idea_clerkUserId_key",
-          "nullsNotDistinct": false,
-          "columns": ["clerkUserId"]
-        }
-      }
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "Organization": {
       "name": "Organization",
@@ -107,6 +67,12 @@
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
+        },
+        "clerkOrgId": {
+          "name": "clerkOrgId",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -129,14 +95,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
+          "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -216,14 +182,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -288,14 +254,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -350,7 +316,7 @@
         },
         "scheduledAt": {
           "name": "scheduledAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
@@ -374,14 +340,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -392,19 +358,9 @@
           "columns": ["clerkUserId"],
           "isUnique": false
         },
-        "Post_id_idx": {
-          "name": "Post_id_idx",
-          "columns": ["id"],
-          "isUnique": false
-        },
         "Post_organizationId_idx": {
           "name": "Post_organizationId_idx",
           "columns": ["organizationId"],
-          "isUnique": false
-        },
-        "Post_projectId_idx": {
-          "name": "Post_projectId_idx",
-          "columns": ["projectId"],
           "isUnique": false
         }
       },
@@ -437,12 +393,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Post_id": {
-          "name": "Post_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "Project": {
@@ -500,14 +451,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
@@ -517,11 +468,6 @@
         "Project_clerkUserId_idx": {
           "name": "Project_clerkUserId_idx",
           "columns": ["clerkUserId"],
-          "isUnique": false
-        },
-        "Project_id_idx": {
-          "name": "Project_id_idx",
-          "columns": ["id"],
           "isUnique": false
         },
         "Project_organizationId_idx": {
@@ -550,17 +496,130 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "Project_id": {
-          "name": "Project_id",
-          "columns": ["id"]
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "subscription": {
+      "name": "subscription",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lemonSqueezyId": {
+          "name": "lemonSqueezyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orderId": {
+          "name": "orderId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "statusFormatted": {
+          "name": "statusFormatted",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "renewsAt": {
+          "name": "renewsAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "endsAt": {
+          "name": "endsAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "trialEndsAt": {
+          "name": "trialEndsAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isUsageBased": {
+          "name": "isUsageBased",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "isPaused": {
+          "name": "isPaused",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "subscriptionItemId": {
+          "name": "subscriptionItemId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "planId": {
+          "name": "planId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
         }
       },
+      "indexes": {},
+      "foreignKeys": {
+        "subscription_userId_User_clerkUserId_fk": {
+          "name": "subscription_userId_User_clerkUserId_fk",
+          "tableFrom": "subscription",
+          "tableTo": "User",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["clerkUserId"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "Project_repoUrl_key": {
-          "name": "Project_repoUrl_key",
+        "subscription_lemonSqueezyId_unique": {
+          "name": "subscription_lemonSqueezyId_unique",
           "nullsNotDistinct": false,
-          "columns": ["repoUrl"]
+          "columns": ["lemonSqueezyId"]
         }
       }
     },
@@ -606,26 +665,26 @@
         },
         "expires_in": {
           "name": "expires_in",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "refresh_token_expires_in": {
           "name": "refresh_token_expires_in",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -640,11 +699,6 @@
         "GithubToken_clerkUserId_idx": {
           "name": "GithubToken_clerkUserId_idx",
           "columns": ["clerkUserId"],
-          "isUnique": false
-        },
-        "GithubToken_id_idx": {
-          "name": "GithubToken_id_idx",
-          "columns": ["id"],
           "isUnique": false
         },
         "GithubToken_organizationId_idx": {
@@ -673,12 +727,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "GithubToken_id": {
-          "name": "GithubToken_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "GithubToken_access_token_key": {
           "name": "GithubToken_access_token_key",
@@ -689,6 +738,11 @@
           "name": "GithubToken_refresh_token_key",
           "nullsNotDistinct": false,
           "columns": ["refresh_token"]
+        },
+        "GithubToken_organizationId_clerkID": {
+          "name": "GithubToken_organizationId_clerkID",
+          "nullsNotDistinct": false,
+          "columns": ["organizationId", "clerkUserId", "profileId"]
         }
       }
     },
@@ -734,26 +788,40 @@
         },
         "expires_in": {
           "name": "expires_in",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "refresh_token_expires_in": {
           "name": "refresh_token_expires_in",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
+        "fullName": {
+          "name": "fullName",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "profilePicture": {
+          "name": "profilePicture",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -762,11 +830,6 @@
         "LinkedInToken_clerkUserId_idx": {
           "name": "LinkedInToken_clerkUserId_idx",
           "columns": ["clerkUserId"],
-          "isUnique": false
-        },
-        "LinkedInToken_id_idx": {
-          "name": "LinkedInToken_id_idx",
-          "columns": ["id"],
           "isUnique": false
         },
         "LinkedInToken_organizationId_idx": {
@@ -800,13 +863,14 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "LinkedInToken_id": {
-          "name": "LinkedInToken_id",
-          "columns": ["id"]
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "LinkedInToken_organizationId_clerkID": {
+          "name": "LinkedInToken_organizationId_clerkID",
+          "nullsNotDistinct": false,
+          "columns": ["organizationId", "clerkUserId", "profileId"]
         }
-      },
-      "uniqueConstraints": {}
+      }
     },
     "TwitterToken": {
       "name": "TwitterToken",
@@ -846,25 +910,25 @@
           "name": "access_token",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "refresh_token": {
           "name": "refresh_token",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "expires_in": {
           "name": "expires_in",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "profileId": {
           "name": "profileId",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "username": {
           "name": "username",
@@ -876,24 +940,35 @@
           "name": "fullname",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "''"
         },
         "profile_image": {
           "name": "profile_image",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "''"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
         "TwitterToken_clerkUserId_idx": {
           "name": "TwitterToken_clerkUserId_idx",
           "columns": ["clerkUserId"],
-          "isUnique": false
-        },
-        "TwitterToken_id_idx": {
-          "name": "TwitterToken_id_idx",
-          "columns": ["id"],
           "isUnique": false
         },
         "TwitterToken_organizationId_idx": {
@@ -927,22 +1002,12 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "TwitterToken_id": {
-          "name": "TwitterToken_id",
-          "columns": ["id"]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "TwitterToken_access_token_key": {
-          "name": "TwitterToken_access_token_key",
+        "TwitterToken_Unique_ProfilePerApp": {
+          "name": "TwitterToken_Unique_ProfilePerApp",
           "nullsNotDistinct": false,
-          "columns": ["access_token"]
-        },
-        "TwitterToken_refresh_token_key": {
-          "name": "TwitterToken_refresh_token_key",
-          "nullsNotDistinct": false,
-          "columns": ["refresh_token"]
+          "columns": ["client_id", "profileId"]
         }
       }
     },
@@ -971,49 +1036,25 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
-        },
-        "ls_subscription_id": {
-          "name": "ls_subscription_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
         },
         "ls_customer_id": {
           "name": "ls_customer_id",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
-        },
-        "lsVariantId": {
-          "name": "lsVariantId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ls_current_period_end": {
-          "name": "ls_current_period_end",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": false
         }
       },
-      "indexes": {
-        "User_clerkUserId_idx": {
-          "name": "User_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -1021,11 +1062,6 @@
           "name": "User_ls_customer_id_unique",
           "nullsNotDistinct": false,
           "columns": ["ls_customer_id"]
-        },
-        "User_ls_subscription_id_unique": {
-          "name": "User_ls_subscription_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["ls_subscription_id"]
         }
       }
     },
@@ -1097,25 +1133,19 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "date",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
       },
-      "indexes": {
-        "UserUsage_clerkUserId_idx": {
-          "name": "UserUsage_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "UserUsage_clerkUserId_User_clerkUserId_fk": {
           "name": "UserUsage_clerkUserId_User_clerkUserId_fk",
@@ -1131,7 +1161,43 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
+  "enums": {
+    "status": {
+      "name": "status",
+      "values": {
+        "PENDING": "PENDING",
+        "ACCEPTED": "ACCEPTED",
+        "REJECTED": "REJECTED",
+        "CANCELLED": "CANCELLED"
+      }
+    },
+    "role": {
+      "name": "role",
+      "values": {
+        "OWNER": "OWNER",
+        "ADMIN": "ADMIN",
+        "EDITOR": "EDITOR",
+        "MEMBER": "MEMBER"
+      }
+    },
+    "postStatus": {
+      "name": "postStatus",
+      "values": {
+        "SAVED": "SAVED",
+        "PUBLISHED": "PUBLISHED",
+        "SCHEDULED": "SCHEDULED"
+      }
+    },
+    "currentPlan": {
+      "name": "currentPlan",
+      "values": {
+        "FREE": "FREE",
+        "PRO": "PRO",
+        "PRO2": "PRO2",
+        "PRO3": "PRO3"
+      }
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},

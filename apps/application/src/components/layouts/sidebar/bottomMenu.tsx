@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
-import { PowerIcon } from "@heroicons/react/24/solid";
 import toast from "react-hot-toast";
 
 import {
@@ -12,6 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from "@aperturs/ui/command";
+import { Power } from "@aperturs/ui/icons";
 
 import type { BottomMenuItem } from "./accordian-menu-type";
 
@@ -54,7 +54,7 @@ function BottomMenu({ bottomMenu }: { bottomMenu: BottomMenuItem[] }) {
                   });
               }}
             >
-              <PowerIcon className="h-5 w-5" />
+              <Power />
               <span>SignOut</span>
             </div>
           </CommandItem>
