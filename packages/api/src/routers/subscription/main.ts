@@ -16,6 +16,7 @@ import {
   createCheckout,
   getPrice,
   getSubscription,
+  listSubscriptionInvoices,
   updateSubscription,
 } from "@lemonsqueezy/lemonsqueezy.js";
 import { z } from "zod";
@@ -444,4 +445,34 @@ export const subscriptionRouter = createTRPCRouter({
 
     return currentSubscription;
   }),
+
+  getInvoice: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      configureLemonSqueezy();
+
+      const invoice = await listSubscriptionInvoices({
+        filter: {
+          subscriptionId: input.id,
+        },
+      });
+
+      const current = invoice.data?.data[0];
+
+      if (!current) {
+        throw new Error(`No invoice found for subscription #${input.id}`);
+      }
+
+      const url = current.attributes.urls.invoice_url;
+
+      if (!url) {
+        throw new Error(`No invoice URL found for subscription #${input.id}`);
+      }
+
+      return url;
+    }),
 });

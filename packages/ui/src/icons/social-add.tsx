@@ -9,6 +9,7 @@ export default function SocialAdd({ className }: { className?: string }) {
       y="0"
       viewBox="0 0 24 24"
       xmlSpace="preserve"
+      className="invert-[70%] dark:invert-0"
     >
       <g>
         <path

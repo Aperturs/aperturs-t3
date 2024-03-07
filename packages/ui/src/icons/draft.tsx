@@ -9,23 +9,20 @@ export default function Draft() {
       y="0"
       viewBox="0 0 512 512"
       xmlSpace="preserve"
-      className=""
     >
       <g>
         <g fillRule="evenodd" clipRule="evenodd">
           <path
-            fill="#C8CDD8"
             d="M464.05 115.826V504H91.601V8h264.622v107.826z"
             opacity="1"
             data-original="#e9eef2"
-            className=""
+            className="fill-[#70799A] dark:fill-[#C8CDD8]"
           ></path>
           <path
-            fill="#707999"
             d="M356.223 115.826H464.05L356.223 8z"
             opacity="1"
             data-original="#d0d2d4"
-            className=""
+            className="fill-[#C8CDD8] dark:fill-[#70799A]"
           ></path>
         </g>
       </g>

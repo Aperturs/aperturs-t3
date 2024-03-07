@@ -17,7 +17,7 @@ export default function Network({ className }: { className?: string }) {
           fill="#C8CDD8"
           opacity="1"
           data-original="#000000"
-          className=""
+          className="invert-[70%] dark:invert-0"
         ></path>
       </g>
     </svg>

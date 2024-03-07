@@ -39,6 +39,10 @@ export function SubscriptionActionsDropdown({
   const { mutateAsync: cancelUserSubscription } =
     api.subscription.cancelUserSubscription.useMutation();
 
+  const { data: invoiceUrl } = api.subscription.getInvoice.useQuery({
+    id: subscription.lemonSqueezyId,
+  });
+
   if (
     subscription.status === "expired" ||
     subscription.status === "cancelled" ||
@@ -103,6 +107,9 @@ export function SubscriptionActionsDropdown({
               Update payment method
             </LemonSqueezyModalLink>
           </DropdownMenuGroup>
+          <LemonSqueezyModalLink href={invoiceUrl}>
+            Generate Invoice
+          </LemonSqueezyModalLink>
 
           <DropdownMenuSeparator />
 

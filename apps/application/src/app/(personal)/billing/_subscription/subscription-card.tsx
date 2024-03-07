@@ -73,6 +73,13 @@ export default async function SubscriptionCard({
           </div>
         );
       })}
+      {subscriptions.length === 0 && (
+        <div className="flex items-center justify-center p-5">
+          <p className="text-surface-300">
+            You currently dont have any subscriptions
+          </p>
+        </div>
+      )}
     </Card>
   );
 }
