@@ -1,8 +1,8 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import https from "https";
+import { Readable } from "stream";
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { google } from "googleapis";
-import { Readable } from "stream";
-import https from "https";
 
 function log(message: string) {
   console.log(message);
@@ -15,7 +15,7 @@ function errorLog(message: string) {
 async function streamVideoFromS3(
   s3BucketName: string,
   s3Key: string,
-  awsRegion: string
+  awsRegion: string,
 ): Promise<Readable> {
   log(`Streaming video from S3: Bucket - ${s3BucketName}, Key - ${s3Key}`);
   const s3Client = new S3Client({
@@ -40,7 +40,7 @@ async function streamVideoFromS3(
       https
         .get(signedUrl, (response) => {
           log(
-            `Received response from S3 with status code: ${response.statusCode}`
+            `Received response from S3 with status code: ${response.statusCode}`,
           );
           if (response.statusCode !== 200) {
             const errorMessage = `Failed to get video stream from S3. Status Code: ${response.statusCode}`;
@@ -66,7 +66,7 @@ async function getAccessToken(refreshToken: string): Promise<string> {
   log(`Obtaining YouTube access token.`);
   const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
-    process.env.CLIENT_SECRET
+    process.env.CLIENT_SECRET,
   );
 
   oauth2Client.setCredentials({
@@ -82,7 +82,7 @@ async function getAccessToken(refreshToken: string): Promise<string> {
     return token;
   } catch (error: any) {
     errorLog(
-      `Error in getAccessToken function: ${JSON.stringify(error, null, 2)}`
+      `Error in getAccessToken function: ${JSON.stringify(error, null, 2)}`,
     );
     throw error;
   }
@@ -92,7 +92,7 @@ async function uploadVideoToYoutube(
   videoStream: Readable,
   videoTitle: string,
   videoDescription: string,
-  youtubeAccessToken: string
+  youtubeAccessToken: string,
 ): Promise<any> {
   log(`Uploading video to YouTube: Title - ${videoTitle}`);
 
@@ -127,12 +127,14 @@ async function uploadVideoToYoutube(
       media,
     });
     log(
-      `Video uploaded to YouTube successfully. Video ID: ${response.data.id}`
+      `Video uploaded to YouTube successfully. Video ID: ${response.data.id}`,
     );
     return response.data;
   } catch (error: any) {
     if (error.code === 401) {
-      throw new Error("Invalid YouTube access token. Please refresh the token.");
+      throw new Error(
+        "Invalid YouTube access token. Please refresh the token.",
+      );
     }
     errorLog(`Error in uploadVideoToYoutube function: ${error.message}`);
     throw error;
@@ -174,7 +176,7 @@ async function main(): Promise<void> {
         videoStream,
         videoTitle,
         videoDescription,
-        youtubeAccessToken
+        youtubeAccessToken,
       );
     } catch (error: any) {
       if (error.message.includes("Invalid YouTube access token")) {
@@ -184,7 +186,7 @@ async function main(): Promise<void> {
           videoStream,
           videoTitle,
           videoDescription,
-          youtubeAccessToken
+          youtubeAccessToken,
         );
       } else {
         throw error;

@@ -1,11 +1,11 @@
+import { join } from "path";
 import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
+import * as ec2 from "aws-cdk-lib/aws-ec2";
+import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as logs from "aws-cdk-lib/aws-logs";
-import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
-import { join } from "path";
-import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import { Construct } from "constructs";
 
 export class CdkApertursStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -25,13 +25,13 @@ export class CdkApertursStack extends cdk.Stack {
     const uploaderTaskDefinition = new ecs.FargateTaskDefinition(
       this,
       "UploaderTaskDefinition",
-      {  
+      {
         cpu: 1024,
         memoryLimitMiB: 1024,
         runtimePlatform: {
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
         },
-      }
+      },
     );
 
     // Create a new S3 bucket with public access blocked
@@ -58,7 +58,7 @@ export class CdkApertursStack extends cdk.Stack {
         vpc,
         allowAllOutbound: true,
         description: "Security group for Uploader ECS task",
-      }
+      },
     );
 
     new cdk.CfnOutput(this, "YoutubeUploadsBucketName", {

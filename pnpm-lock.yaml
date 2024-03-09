@@ -238,6 +238,12 @@ importers:
         specifier: ^0.5.21
         version: 0.5.21
     devDependencies:
+      '@aperturs/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@aperturs/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
       '@types/jest':
         specifier: ^29.5.11
         version: 29.5.12
