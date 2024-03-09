@@ -20,10 +20,10 @@
   },
   "devDependencies": {
     "@aperturs/prettier-config": "workspace:^0.1.0",
+    "dotenv-cli": "^7.3.0",
     "husky": "^9.0.0",
     "prettier": "^3.2.5",
-    "turbo": "latest",
-    "dotenv-cli": "^7.3.0"
+    "turbo": "^1.12.4"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {
