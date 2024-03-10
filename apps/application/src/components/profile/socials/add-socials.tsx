@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
 import {
   AiFillInstagram,
   AiFillYoutube,
@@ -16,7 +15,6 @@ import { SocialAdd } from "@aperturs/ui/icons";
 import { SocialType } from "@aperturs/validators/post";
 
 import {
-  handleGithubRedirect,
   handleInstagramRedirect,
   handleLinkedinRedirect,
   handleYoutubeRedirect,
@@ -38,7 +36,10 @@ export const AddSocial = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
-        <Button className="flex h-20  w-full gap-2 whitespace-nowrap">
+        <Button
+          className="flex h-full min-h-32  w-full gap-2 whitespace-nowrap"
+          variant="secondary"
+        >
           <SocialAdd />
           Add Socials
         </Button>
@@ -54,23 +55,22 @@ export const AddSocial = () => {
 const Socials = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
-  const { userId } = useAuth();
 
   const params = useParams<{ orgid: string }>();
 
-  const handleGithub = async () => {
-    setLocalLoading(true);
-    if (!params?.orgid) {
-      await handleGithubRedirect({
-        orgId: "personal",
-      });
-      return;
-    }
-    await handleGithubRedirect({
-      orgId: params?.orgid,
-    });
-    setLocalLoading(false);
-  };
+  // const handleGithub = async () => {
+  //   setLocalLoading(true);
+  //   if (!params?.orgid) {
+  //     await handleGithubRedirect({
+  //       orgId: "personal",
+  //     });
+  //     return;
+  //   }
+  //   await handleGithubRedirect({
+  //     orgId: params?.orgid,
+  //   });
+  //   setLocalLoading(false);
+  // };
 
   const handleLinkedln = async () => {
     setLocalLoading(true);

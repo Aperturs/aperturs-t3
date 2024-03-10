@@ -1,6 +1,7 @@
 import {
   getOrganisationsLinkedinAccounts,
   getOrganisationsTwitterAccounts,
+  getOrganisationsYoutubeAccounts,
 } from "@api/handlers/organisation/socials";
 import { getAccounts } from "@api/helpers/get-socials";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
@@ -16,7 +17,8 @@ export const organisationSocials = createTRPCRouter({
     .query(async ({ input }) => {
       const linkedin = await getOrganisationsLinkedinAccounts(input.orgId);
       const twitter = await getOrganisationsTwitterAccounts(input.orgId);
-      const accounts = getAccounts(linkedin, twitter);
+      const youtube = await getOrganisationsYoutubeAccounts(input.orgId);
+      const accounts = getAccounts(linkedin, twitter, youtube);
       return accounts;
     }),
 });

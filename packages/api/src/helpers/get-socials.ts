@@ -7,6 +7,7 @@ import { getTwitterAccountDetails } from "./twitter";
 export async function getAccounts(
   linkedin: tokens.linkedInTokenSelect[],
   twitter: tokens.twitterTokenSelect[],
+  youtube: tokens.youtubeTokenSelect[],
 ): Promise<SocialAccountsBackend> {
   const accounts: SocialAccountsBackend = [];
 
@@ -26,6 +27,8 @@ export async function getAccounts(
           name: twitterDetail.full_name,
           profile_image_url: twitterDetail.profile_image_url,
           profileId: twitterDetail.profileId,
+          username: twitterDetail.username,
+          connectedAt: twitterDetail.createdAt.toLocaleDateString(),
         },
         type: SocialType.Twitter,
       });
@@ -47,6 +50,26 @@ export async function getAccounts(
           name: linkedinDetail.fullName,
           profile_image_url: linkedinDetail.profilePicture,
           profileId: linkedinDetail.profileId,
+          connectedAt: linkedinDetail.createdAt.toLocaleDateString(),
+        },
+      });
+    }
+  }
+
+  for (const youtubeDetail of youtube) {
+    if (
+      youtubeDetail.id &&
+      youtubeDetail.channelName &&
+      youtubeDetail.channelId
+    ) {
+      accounts.push({
+        type: SocialType.Youtube,
+        data: {
+          tokenId: youtubeDetail.id,
+          name: youtubeDetail.channelName,
+          profile_image_url: youtubeDetail.channelPicture ?? "",
+          profileId: youtubeDetail.channelId,
+          connectedAt: youtubeDetail.createdAt.toLocaleDateString(),
         },
       });
     }

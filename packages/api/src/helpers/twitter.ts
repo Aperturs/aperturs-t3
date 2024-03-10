@@ -12,7 +12,7 @@ import { db, eq, schema } from "@aperturs/db";
 interface TwitterAccountDetails
   extends Pick<
     tokens.twitterTokenSelect,
-    "accessToken" | "refreshToken" | "profileId"
+    "accessToken" | "refreshToken" | "profileId" | "createdAt"
   > {
   full_name: string;
   username?: string;
@@ -94,6 +94,7 @@ export const getTwitterAccountDetails = async (
           full_name: userObject.name,
           profile_image_url: userObject.profile_image_url,
           username: userObject.username,
+          createdAt: twitterToken.createdAt,
         } as TwitterAccountDetails);
         await db
           .update(schema.twitterToken)
@@ -112,6 +113,7 @@ export const getTwitterAccountDetails = async (
         full_name: twitterToken.fullname,
         profile_image_url: twitterToken.profileImage,
         username: twitterToken.username,
+        createdAt: twitterToken.createdAt,
       } as TwitterAccountDetails);
     }
   }

@@ -56,7 +56,10 @@ export const userRouter = createTRPCRouter({
     const linkedin = await ctx.db.query.linkedInToken.findMany({
       where: eq(schema.linkedInToken.clerkUserId, ctx.currentUser),
     });
-    const accounts = getAccounts(linkedin, twitter);
+    const youtube = await ctx.db.query.youtubeToken.findMany({
+      where: eq(schema.youtubeToken.clerkUserId, ctx.currentUser),
+    });
+    const accounts = getAccounts(linkedin, twitter, youtube);
     return accounts;
   }),
 

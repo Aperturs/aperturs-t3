@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes } from "react";
 import Image from "next/image";
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { AiOutlineTwitter } from "react-icons/ai";
+import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 
 import { Button } from "@aperturs/ui/button";
@@ -49,6 +49,8 @@ export const SocialIcon = ({ type, className, size }: SocialIconProps) => {
     return <AiOutlineTwitter className={cn("h-3 w-3", className, sizeClass)} />;
   } else if (type === SocialType.Linkedin) {
     return <FaLinkedinIn className={cn("h-3 w-3", className, sizeClass)} />;
+  } else if (type === SocialType.Youtube) {
+    return <AiFillYoutube className={cn("h-3 w-3", className, sizeClass)} />;
   } else if (type === SocialType.Lens) {
     return <Image src="/lens.svg" width={30} height={30} alt="lens" />;
   } else {

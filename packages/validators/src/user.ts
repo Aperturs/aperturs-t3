@@ -31,6 +31,8 @@ export const SocialAccounts = z.array(
       name: z.string(),
       profile_image_url: z.string(),
       profileId: z.string(),
+      connectedAt: z.string().optional(),
+      username: z.string().optional(),
     }),
   }),
 );

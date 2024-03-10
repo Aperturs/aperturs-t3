@@ -20,3 +20,10 @@ export async function getOrganisationsGithubAccounts(orgId: string) {
   });
   return res;
 }
+
+export async function getOrganisationsYoutubeAccounts(orgId: string) {
+  const res = await db.query.youtubeToken.findMany({
+    where: eq(schema.youtubeToken.organizationId, orgId),
+  });
+  return res;
+}
