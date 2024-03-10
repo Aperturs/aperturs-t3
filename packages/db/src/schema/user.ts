@@ -13,7 +13,12 @@ import { organization, organizationUser } from "./organisation";
 import { post } from "./post";
 import { project } from "./project";
 import { subscriptions } from "./subscription";
-import { githubToken, linkedInToken, twitterToken } from "./tokens";
+import {
+  githubToken,
+  linkedInToken,
+  twitterToken,
+  youtubeToken,
+} from "./tokens";
 
 export const currentPlanEnum = pgEnum("currentPlan", [
   "FREE",
@@ -57,6 +62,7 @@ export const userRalations = relations(user, ({ one, many }) => ({
   userCreatedPosts: many(post),
   userTwitterAccounts: many(twitterToken),
   userLinkedinAccounts: many(linkedInToken),
+  userYoutubeAccounts: many(youtubeToken),
   userGithubAccounts: many(githubToken),
   userSubscriptions: many(subscriptions),
 }));

@@ -47,3 +47,11 @@ export async function handleInstagramRedirect({
   const url = await api.instagram.getInstagramRedirectUrl({ orgId, tokenId });
   redirect(url);
 }
+
+export async function handleYoutubeRedirect({
+  orgId,
+  tokenId,
+}: SocialRedisKeyType) {
+  const url = await api.youtube.getYoutubeAuthURl({ orgId, tokenId });
+  redirect(url);
+}

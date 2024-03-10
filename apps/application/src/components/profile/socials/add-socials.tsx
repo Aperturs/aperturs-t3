@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
+import {
+  AiFillInstagram,
+  AiFillYoutube,
+  AiOutlineTwitter,
+} from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 import { Button } from "@aperturs/ui/button";
@@ -15,6 +19,7 @@ import {
   handleGithubRedirect,
   handleInstagramRedirect,
   handleLinkedinRedirect,
+  handleYoutubeRedirect,
 } from "~/utils/actions/handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
@@ -92,6 +97,15 @@ const Socials = () => {
     setLocalLoading(false);
   };
 
+  const handleYoutube = async () => {
+    setLocalLoading(true);
+    await handleYoutubeRedirect({
+      orgId: params?.orgid ?? "personal",
+      tokenId: "new",
+    });
+    setLocalLoading(false);
+  };
+
   return (
     <div className="grid grid-cols-3 gap-4 py-4">
       {/* <button className="btn hover:bg-primary hover:text-white hover:border-0  gap-2">
@@ -123,6 +137,15 @@ const Socials = () => {
       <Button
         variant="secondary"
         className="h-12"
+        onClick={handleYoutube}
+        disabled={localLoading}
+      >
+        <AiFillYoutube className="mr-2 text-2xl" />
+        <p>Youtube</p>
+      </Button>
+      <Button
+        variant="secondary"
+        className="h-12"
         onClick={handleLinkedln}
         disabled={localLoading}
       >
@@ -136,7 +159,7 @@ const Socials = () => {
         <Image src="/lens.svg" alt="lens" width={40} height={40} />
         <p>Lens </p>
       </button> */}
-      <Button
+      {/* <Button
         variant="secondary"
         className="h-12"
         onClick={async () => {
@@ -146,7 +169,7 @@ const Socials = () => {
       >
         <FaGithub className="mr-2 text-2xl" />
         <p>Github </p>
-      </Button>
+      </Button> */}
     </div>
   );
 };

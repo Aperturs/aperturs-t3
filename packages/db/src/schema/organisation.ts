@@ -12,7 +12,12 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createUniqueIds } from "../utils";
 import { post } from "./post";
 import { project } from "./project";
-import { githubToken, linkedInToken, twitterToken } from "./tokens";
+import {
+  githubToken,
+  linkedInToken,
+  twitterToken,
+  youtubeToken,
+} from "./tokens";
 import { user } from "./user";
 
 export const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
@@ -77,6 +82,7 @@ export const organisationRelations = relations(
     orgTwitterAccounts: many(twitterToken),
     orgLinkedinAccounts: many(linkedInToken),
     orgGithubAccounts: many(githubToken),
+    orgYoutubeAccounts: many(youtubeToken),
   }),
 );
 

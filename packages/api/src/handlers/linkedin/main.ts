@@ -1,4 +1,4 @@
-import { limitDown } from "@api/helpers/limitWrapper";
+import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 
 import type { tokens } from "@aperturs/db";
 import { db, eq, schema } from "@aperturs/db";
@@ -27,30 +27,22 @@ export async function saveLinkedinDataToDatabase({
   linkedinData: tokens.linkedInTokenInsert;
   userId: string;
 }) {
-  await limitDown({
-    func: async () =>
-      await db.insert(schema.linkedInToken).values(linkedinData),
-    clerkUserId: userId,
-    limitType: "socialaccounts",
-  });
+  await limitWrapper(
+    async () => await db.insert(schema.linkedInToken).values(linkedinData),
+    userId,
+    "socialaccounts",
+  );
 }
 
 export async function refreshLinkedinDataInDatabase({
   tokenId,
   linkedinData,
-  userId,
 }: {
   tokenId: string;
   linkedinData: tokens.linkedInTokenInsert;
-  userId: string;
 }) {
-  await limitDown({
-    func: async () =>
-      await db
-        .update(schema.linkedInToken)
-        .set(linkedinData)
-        .where(eq(schema.linkedInToken.id, tokenId)),
-    clerkUserId: userId,
-    limitType: "socialaccounts",
-  });
+  await db
+    .update(schema.linkedInToken)
+    .set(linkedinData)
+    .where(eq(schema.linkedInToken.id, tokenId));
 }
