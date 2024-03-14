@@ -31,6 +31,7 @@ interface DataTableProps<TData, TValue> {
   actionButtonText?: React.ReactNode;
   modalChildren?: React.ReactNode;
 }
+
 export default function DataTable<TData, TValue>({
   columns,
   data,

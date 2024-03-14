@@ -8,6 +8,7 @@ export const OrganizationUserSchema = z.object({
   role: z.string(),
   email: z.string(),
   avatarUrl: z.string().optional().default("/profile.jpeg"),
+  userId: z.string(),
 });
 
 export type OrganizationUser = z.infer<typeof OrganizationUserSchema>;

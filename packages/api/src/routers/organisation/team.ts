@@ -1,7 +1,4 @@
-import {
-  changeUserRoleMetaData,
-  removeUserPrivateMetadata,
-} from "@api/handlers/metadata/user-private-meta";
+import { removeUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
 import {
   acceptInvite,
   getInviteDetails,
@@ -48,6 +45,7 @@ export const OrganizationTeam = createTRPCRouter({
           email: (team.user.userDetails as UserDetails).primaryEmail,
           avatarUrl: (team.user.userDetails as UserDetails).profileImageUrl,
           id: team.id,
+          userId: team.clerkUserId,
         };
       });
 
@@ -72,17 +70,24 @@ export const OrganizationTeam = createTRPCRouter({
           updatedAt: new Date(),
         })
         .where(eq(schema.organizationUser.id, input.orgUserId))
-        .returning();
+        .returning()
+        .catch((err) => {
+          console.log(err);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: err as string,
+          });
+        });
       if (!res) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Error changing role",
         });
       }
-      await changeUserRoleMetaData({
-        orgId: res.organizationId,
-        newRole: input.newRole,
-      });
+      // await changeUserRoleMetaData({
+      //   orgId: res.organizationId,
+      //   newRole: input.newRole,
+      // });
       return res;
     }),
 
