@@ -1,11 +1,9 @@
-import {
-  removeUserPrivateMetadata,
-  updateUserPrivateMetadata,
-} from "@api/handlers/metadata/user-private-meta";
+import { removeUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
 import { resend } from "@api/utils/emails";
 
 import type {
   InviteUserToOrganisation,
+  OrganisationRole,
   sendInvitationViaEmailType,
 } from "@aperturs/validators/organisation";
 import { db, eq, schema } from "@aperturs/db";
@@ -45,10 +43,12 @@ export async function inviteUserToOrganisation({
   name,
   inviterId,
   inviterName,
+  inviteId,
 }: InviteUserToOrganisation) {
   const [res] = await db
     .insert(schema.organizationInvites)
     .values({
+      id: inviteId,
       email,
       role,
       name,
@@ -96,22 +96,12 @@ export async function sendInvitationViaEmail({
 }
 
 export async function getInviteDetails({ inviteId }: { inviteId: string }) {
-  // const res = await prisma.organizationInvites.findUnique({
-  //   where: {
-  //     id: inviteId,
-  //   },
-  // });
   const res = await db.query.organizationInvites.findFirst({
     where: eq(schema.organizationInvites.id, inviteId),
   });
   if (!res) {
     return undefined;
   }
-  // const orgDetails = await prisma.organization.findUnique({
-  //   where: {
-  //     id: res?.organizationId,
-  //   },
-  // });
   const orgDetails = await db.query.organization.findFirst({
     where: eq(schema.organization.id, res?.organizationId),
   });
@@ -121,13 +111,29 @@ export async function getInviteDetails({ inviteId }: { inviteId: string }) {
   };
 }
 
-export async function acceptInvite({
-  inviteId,
+export async function organisationMembershipAdded({
+  orgId,
   userId,
+  role,
 }: {
-  inviteId: string;
+  orgId: string;
   userId: string;
+  role: OrganisationRole;
 }) {
+  const [user] = await db
+    .insert(schema.organizationUser)
+    .values({
+      organizationId: orgId,
+      clerkUserId: userId,
+      role: role,
+      updatedAt: new Date(),
+    })
+    .returning();
+
+  return user;
+}
+
+export async function acceptInvite({ inviteId }: { inviteId: string }) {
   //TODO: add transactions rollback
   const [res] = await db
     .update(schema.organizationInvites)
@@ -139,28 +145,27 @@ export async function acceptInvite({
   if (!res) {
     throw new Error("Error accepting invite");
   }
-  const orgId = res.organizationId;
-  const role = res.role;
-  const [user] = await db
-    .insert(schema.organizationUser)
-    .values({
-      organizationId: orgId,
-      clerkUserId: userId,
-      role: role,
-      updatedAt: new Date(),
-    })
-    .returning();
-  await updateUserPrivateMetadata({
-    organisations: [
-      {
-        orgId: orgId,
-        role: role,
-      },
-    ],
-  });
+  // const orgId = res.organizationId;
+  // const role = res.role;
+  // const [user] = await db
+  //   .insert(schema.organizationUser)
+  //   .values({
+  //     organizationId: orgId,
+  //     clerkUserId: userId,
+  //     role: role,
+  //     updatedAt: new Date(),
+  //   })
+  //   .returning();
+  // await updateUserPrivateMetadata({
+  //   organisations: [
+  //     {
+  //       orgId: orgId,
+  //       role: role,
+  //     },
+  //   ],
+  // });
   return {
     res,
-    user,
   };
 }
 

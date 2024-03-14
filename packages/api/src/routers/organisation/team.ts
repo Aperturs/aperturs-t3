@@ -7,11 +7,16 @@ import {
   getInviteDetails,
   getOrgnanisationTeams,
   inviteUserToOrganisation,
+  organisationMembershipAdded,
   rejectInvite,
   removeUserFromOrganisation,
   sendInvitationViaEmail,
 } from "@api/handlers/organisation/teams";
-import { createTRPCRouter, protectedProcedure } from "@api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@api/trpc";
 import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -21,6 +26,7 @@ import { eq, schema } from "@aperturs/db";
 import {
   changeUserRoleSchema,
   inviteUserToOrganisationSchema,
+  organisationRoleSchema,
 } from "@aperturs/validators/organisation";
 
 export const OrganizationTeam = createTRPCRouter({
@@ -140,18 +146,13 @@ export const OrganizationTeam = createTRPCRouter({
       return res;
     }),
 
-  acceptInvite: protectedProcedure
+  acceptInvite: publicProcedure
     .input(
       z.object({
         inviteId: z.string(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      // const inviteDetails = await ctx.prisma.organizationInvites.findUnique({
-      //   where: {
-      //     id: input.inviteId,
-      //   },
-      // });
       const inviteDetails = await ctx.db.query.organizationInvites.findFirst({
         where: eq(schema.organizationInvites.id, input.inviteId),
       });
@@ -166,21 +167,26 @@ export const OrganizationTeam = createTRPCRouter({
             "This invitation has already been accepted or rejected or cancelled",
         });
       }
-      const user = await clerkClient.users.getUser(ctx.currentUser);
-      const primaryEmail = user.emailAddresses.find(
-        (email) => email.id === user.primaryEmailAddressId,
-      )?.emailAddress;
-      if (primaryEmail !== inviteDetails?.email) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "This invitation is not for you",
-        });
-      }
       const final = await acceptInvite({
         inviteId: input.inviteId,
-        userId: ctx.currentUser,
       });
       return final;
+    }),
+
+  organisationMembershipCreated: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+        orgId: z.string(),
+        role: organisationRoleSchema,
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await organisationMembershipAdded({
+        orgId: input.orgId,
+        userId: input.userId,
+        role: input.role,
+      });
     }),
 
   rejectInvite: protectedProcedure

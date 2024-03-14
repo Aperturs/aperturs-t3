@@ -9,6 +9,7 @@ export default authMiddleware({
     "/api/test",
     "/api/callback/github",
     "/api/webhooks/subscription",
+    "/api/webhooks/invite",
   ],
   apiRoutes: ["/api/callback/linkedin"],
   ignoredRoutes: ["/api/trigger"],

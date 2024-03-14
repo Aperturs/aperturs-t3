@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-import { organisationRole } from "@aperturs/validators/organisation";
+import { organisationRoleSchema } from "@aperturs/validators/organisation";
 
 export const privateMetaDataSchema = z.object({
   organisations: z.array(
     z.object({
       orgId: z.string(),
-      role: organisationRole,
+      role: organisationRoleSchema,
     }),
   ),
   currentPlan: z.enum(["FREE", "PRO", "PRO2", "PRO3"]),

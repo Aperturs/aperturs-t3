@@ -6,7 +6,16 @@ import { FaLinkedinIn } from "react-icons/fa";
 
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
-import { SocialType } from "@aperturs/validators/post";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@aperturs/ui/select";
+import { postType, SocialType } from "@aperturs/validators/post";
 
 interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -57,3 +66,24 @@ export const SocialIcon = ({ type, className, size }: SocialIconProps) => {
     return null; // Return null or a default icon for other types
   }
 };
+
+export function PostTypeSelect() {
+  return (
+    <Select defaultValue={postType.normal}>
+      <div className="flex items-center">
+        <p className="my-0 ml-1 text-sm text-muted-foreground">Post Type</p>
+      </div>
+      <SelectTrigger className="mx-0 mb-2 w-full">
+        <SelectValue placeholder="Select a PostType" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Post Type</SelectLabel>
+          <SelectItem value={postType.normal}>Default</SelectItem>
+          <SelectItem value={postType.short}>Short Video</SelectItem>
+          <SelectItem value={postType.longVideo}>Long Videos</SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}

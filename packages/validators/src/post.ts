@@ -56,6 +56,15 @@ export enum SocialType {
 
 export const SocialTypeSchema = z.nativeEnum(SocialType);
 
+export const postType = {
+  normal: "NORMAL",
+  short: "SHORT",
+  longVideo: "LONG_VIDEO",
+} as const;
+
+export type PostType = (typeof postType)[keyof typeof postType];
+export const PostTypeSchema = z.nativeEnum(postType);
+
 // might use these types later
 
 // interface Tweet {

@@ -29,6 +29,7 @@ export const env = createEnv({
     OPENAI_API_KEY: z.string(),
     RESEND_EMAIL_API: z.string(),
     DOMAIN: z.string(),
+    INIVITE_WEBHOOK: z.string(),
   },
   /**
    * Specify your client-side environment variables schema here.

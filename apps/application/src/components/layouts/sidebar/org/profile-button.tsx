@@ -44,7 +44,6 @@ export default function ProfileButton() {
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
-  const { setActive } = useOrganizationList();
 
   return (
     <Dialog>
@@ -164,6 +163,7 @@ function CreateOrganisationDialog() {
   const [image, setImage] = useState<File | undefined>();
   const { uploadToS3 } = useS3Upload();
   const { createOrganization } = useOrganizationList();
+  const { setActive } = useOrganizationList();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
@@ -185,6 +185,7 @@ function CreateOrganisationDialog() {
             throw new Error("Failed to create organisation");
           }
           console.log(clerkOrg, "clerk org hey");
+          await setActive?.({ organization: clerkOrg.id });
           const res = await createOrganisationBackend({
             id: slug,
             clerkOrgId: clerkOrg.id,
@@ -252,6 +253,7 @@ function OrganisationItem({
 }) {
   const { setActive } = useOrganizationList();
   const { organization } = useOrganization();
+  const router = useRouter();
   const handleOrganisationSwitch = async () => {
     console.log("clicked");
     if (!setActive) {
@@ -259,6 +261,7 @@ function OrganisationItem({
       return;
     }
     await setActive({ organization: id });
+    router.push(link);
     console.log(organization?.name, "org name");
   };
   return (
