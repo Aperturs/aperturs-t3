@@ -43,6 +43,7 @@ import {
 
 import CustomModal from "~/components/custom/modals/custom-modal";
 import { useModal } from "~/components/custom/modals/modal-provider";
+import useOrgCurrentRole from "~/hooks/useOrgCurrentRole";
 import { api } from "~/trpc/react";
 
 export const columns: ColumnDef<OrganizationUser>[] = [
@@ -105,7 +106,10 @@ export const columns: ColumnDef<OrganizationUser>[] = [
     id: "actions",
     cell: ({ row }) => {
       const rowData = row.original;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { isAdmin } = useOrgCurrentRole();
 
+      if (!isAdmin) return null;
       return <CellActions rowData={rowData} />;
     },
   },

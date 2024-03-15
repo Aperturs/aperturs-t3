@@ -9,5 +9,9 @@ export default function useOrgCurrentRole() {
     .toUpperCase()
     .replace("ORG:", "") as OrganisationRole;
 
-  return { currentRole };
+  const isAdmin = currentRole === "ADMIN" || currentRole === "OWNER";
+  const isEditor = currentRole === "EDITOR" || isAdmin;
+  const isMember = currentRole === "MEMBER";
+
+  return { currentRole, isAdmin, isEditor, isMember };
 }

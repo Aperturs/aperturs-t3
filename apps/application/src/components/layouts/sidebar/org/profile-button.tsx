@@ -162,8 +162,8 @@ function CreateOrganisationDialog() {
   const [value, setValue] = useState<Option>();
   const [image, setImage] = useState<File | undefined>();
   const { uploadToS3 } = useS3Upload();
-  const { createOrganization } = useOrganizationList();
-  const { setActive } = useOrganizationList();
+  const { createOrganization, setActive } = useOrganizationList();
+  const { organization } = useOrganization();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
@@ -173,7 +173,7 @@ function CreateOrganisationDialog() {
     await toast
       .promise(
         (async () => {
-          let logo = undefined;
+          let logo = "";
           if (image) {
             const { url } = await uploadToS3(image);
             logo = url;
@@ -184,8 +184,10 @@ function CreateOrganisationDialog() {
           if (!clerkOrg.id) {
             throw new Error("Failed to create organisation");
           }
-          console.log(clerkOrg, "clerk org hey");
           await setActive?.({ organization: clerkOrg.id });
+          if (image) {
+            await organization?.setLogo({ file: image });
+          }
           const res = await createOrganisationBackend({
             id: slug,
             clerkOrgId: clerkOrg.id,

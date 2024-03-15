@@ -23,6 +23,7 @@ import {
 
 import CustomModal from "~/components/custom/modals/custom-modal";
 import { useModal } from "~/components/custom/modals/modal-provider";
+import useOrgCurrentRole from "~/hooks/useOrgCurrentRole";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +48,7 @@ export default function DataTable<TData, TValue>({
   });
 
   const { setOpen } = useModal();
+  const { isAdmin } = useOrgCurrentRole();
   return (
     <>
       <div className="flex items-center justify-between">
@@ -63,23 +65,25 @@ export default function DataTable<TData, TValue>({
             className="h-12"
           />
         </div>
-        <Button
-          className="flex gap-2"
-          onClick={() => {
-            if (modalChildren) {
-              setOpen(
-                <CustomModal
-                  title="Add a team member"
-                  subheading="Send an invitation"
-                >
-                  {modalChildren}
-                </CustomModal>,
-              );
-            }
-          }}
-        >
-          {actionButtonText}
-        </Button>
+        {isAdmin && (
+          <Button
+            className="flex gap-2"
+            onClick={() => {
+              if (modalChildren) {
+                setOpen(
+                  <CustomModal
+                    title="Add a team member"
+                    subheading="Send an invitation"
+                  >
+                    {modalChildren}
+                  </CustomModal>,
+                );
+              }
+            }}
+          >
+            {actionButtonText}
+          </Button>
+        )}
       </div>
       <div className="rounded-lg border bg-background">
         <Table>
