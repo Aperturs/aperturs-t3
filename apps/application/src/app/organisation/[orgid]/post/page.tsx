@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import LogoLoad from "~/components/custom/loading/logoLoad";
 import OrgPostWrapper from "~/components/post/wrappers/org-post-wrapper";
-import PostView from "~/components/post/wrappers/post-wrapper";
 import { useStore } from "~/store/post-store";
 
 export default function PostContent({

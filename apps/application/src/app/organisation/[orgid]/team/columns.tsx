@@ -223,7 +223,7 @@ function EditDetails({
   const { mutateAsync: updateRole } =
     api.organisation.team.changeUserRole.useMutation();
   const router = useRouter();
-  const { organization } = useOrganization();
+  const { organization, invitations } = useOrganization();
   const [newRole, setNewRole] = useState<roles>(role as roles);
 
   const handleRoleChange = async () => {
@@ -234,6 +234,8 @@ function EditDetails({
     });
     router.refresh();
   };
+
+  console.log(invitations, "inv");
 
   return (
     <div>
