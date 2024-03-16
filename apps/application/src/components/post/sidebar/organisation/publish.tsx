@@ -1,9 +1,14 @@
 import Picker from "~/components/custom/datepicker/picker";
+import useOrgCurrentRole from "~/hooks/useOrgCurrentRole";
 import { SimpleButton } from "../../common";
-import usePublishing from "./usePosting";
+import usePublishing from "../personal/usePosting";
 
-function Publish({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function OrgPublish({
+  params,
+}: {
+  params: { postId: string; orgid: string };
+}) {
+  const { postId } = params;
 
   const {
     handlePublish,
@@ -18,7 +23,9 @@ function Publish({ params }: { params: { id: string } }) {
     // scheduling,
     updating,
     uploadingFiles,
-  } = usePublishing({ id });
+  } = usePublishing({ id: postId });
+
+  const { isAdmin } = useOrgCurrentRole();
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
@@ -33,14 +40,16 @@ function Publish({ params }: { params: { id: string } }) {
           }}
         />
       </div>
-      <SimpleButton
-        isLoading={tweeting || linkedinPosting}
-        text="Publish Now"
-        disabled={isDisabled}
-        onClick={async () => {
-          await handlePublish();
-        }}
-      />
+      {isAdmin && (
+        <SimpleButton
+          isLoading={tweeting || linkedinPosting}
+          text="Publish Now"
+          disabled={isDisabled}
+          onClick={async () => {
+            await handlePublish();
+          }}
+        />
+      )}
       {/* <PostWeb content={defaultContent} /> */}
       {isUploaded ? (
         <SimpleButton
@@ -64,5 +73,3 @@ function Publish({ params }: { params: { id: string } }) {
     </div>
   );
 }
-
-export default Publish;

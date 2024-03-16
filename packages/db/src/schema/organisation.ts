@@ -5,6 +5,7 @@ import {
   pgEnum,
   pgTable,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -168,6 +169,7 @@ export const organizationUser = pgTable(
       organizationIdIdx: index("OrganizationUser_organizationId_idx").on(
         table.organizationId,
       ),
+      orgIdClerkId: unique().on(table.organizationId, table.clerkUserId),
     };
   },
 );

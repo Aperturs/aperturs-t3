@@ -1,7 +1,7 @@
 import { shallow } from "zustand/shallow";
 
 import type { SocialType } from "@aperturs/validators/post";
-import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
@@ -42,6 +42,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
       ]);
     }
   };
+  console.log(profilePic, "p");
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -58,7 +59,8 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           withBorder={true}
         /> */}
         <Avatar className="p-0.5 ring-4 ring-primary ring-offset-1">
-          <AvatarImage src={profilePic} alt="avatar" className=" " />
+          <AvatarImage src={profilePic} alt="avatar" />
+          <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="absolute bottom-0 left-[-15px] flex h-6 w-6 items-center justify-center rounded-full bg-card  shadow-md ">
           <SocialIcon type={type} />
