@@ -3,7 +3,9 @@ import Image from "next/image";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
+import { shallow } from "zustand/shallow";
 
+import type { PostType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
 import {
@@ -16,6 +18,8 @@ import {
   SelectValue,
 } from "@aperturs/ui/select";
 import { postType, SocialType } from "@aperturs/validators/post";
+
+import { useStore } from "~/store/post-store";
 
 interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -68,8 +72,19 @@ export const SocialIcon = ({ type, className, size }: SocialIconProps) => {
 };
 
 export function PostTypeSelect() {
+  const { posttype, setPostType } = useStore(
+    (state) => ({
+      posttype: state.postType,
+      setPostType: state.setPostType,
+    }),
+    shallow,
+  );
+
   return (
-    <Select defaultValue={postType.normal}>
+    <Select
+      defaultValue={posttype}
+      onValueChange={(value) => setPostType(value as PostType)}
+    >
       <div className="flex items-center">
         <p className="my-0 ml-1 text-sm text-muted-foreground">Post Type</p>
       </div>
@@ -79,7 +94,7 @@ export function PostTypeSelect() {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Post Type</SelectLabel>
-          <SelectItem value={postType.normal}>Default</SelectItem>
+          <SelectItem value={postType.normal}>Regular Post</SelectItem>
           <SelectItem value={postType.short}>Short Video</SelectItem>
           <SelectItem value={postType.longVideo}>Long Videos</SelectItem>
         </SelectGroup>

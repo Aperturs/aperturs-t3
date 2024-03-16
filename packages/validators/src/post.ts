@@ -52,6 +52,8 @@ export enum SocialType {
   Lens = "LENS",
   Github = "Github",
   Youtube = "YOUTUBE",
+  Instagram = "INSTAGRAM",
+  Facebook = "FACEBOOK",
 }
 
 export const SocialTypeSchema = z.nativeEnum(SocialType);

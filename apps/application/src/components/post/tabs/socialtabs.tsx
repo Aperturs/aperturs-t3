@@ -1,10 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
-import { SocialType } from "@aperturs/validators/post";
-
 import { useStore } from "~/store/post-store";
-import { SocialIcon } from "../common";
-import ContentPostCard from "../content/ContentPostCard";
-import SocialsMenu from "./menu";
+import Youtube from "../content/youtube";
 
 export default function SocialTabs() {
   const { content } = useStore((state) => ({
@@ -13,7 +8,7 @@ export default function SocialTabs() {
 
   return (
     <div className="w-full">
-      {content.length > 2 ? (
+      {/* {content.length > 2 ? (
         <Tabs defaultValue={SocialType.Default}>
           <TabsList>
             {content.map(
@@ -45,7 +40,8 @@ export default function SocialTabs() {
         </Tabs>
       ) : (
         <ContentPostCard id={SocialType.Default} />
-      )}
+      )} */}
+      <Youtube />
     </div>
   );
 }

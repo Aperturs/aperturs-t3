@@ -29,26 +29,28 @@ export default function OrgPublish({
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
-      <div className="grid grid-cols-2 gap-1">
-        <Picker />
-        <SimpleButton
-          text="Schedule"
-          // isLoading={scheduling}
-          disabled={isDisabled}
-          onClick={async () => {
-            await handleSchedule();
-          }}
-        />
-      </div>
       {isAdmin && (
-        <SimpleButton
-          isLoading={tweeting || linkedinPosting}
-          text="Publish Now"
-          disabled={isDisabled}
-          onClick={async () => {
-            await handlePublish();
-          }}
-        />
+        <>
+          <div className="grid grid-cols-2 gap-1">
+            <Picker />
+            <SimpleButton
+              text="Schedule"
+              // isLoading={scheduling}
+              disabled={isDisabled}
+              onClick={async () => {
+                await handleSchedule();
+              }}
+            />
+          </div>
+          <SimpleButton
+            isLoading={tweeting || linkedinPosting}
+            text="Publish Now"
+            disabled={isDisabled}
+            onClick={async () => {
+              await handlePublish();
+            }}
+          />
+        </>
       )}
       {/* <PostWeb content={defaultContent} /> */}
       {isUploaded ? (

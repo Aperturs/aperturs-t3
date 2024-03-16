@@ -1,11 +1,9 @@
 "use client";
 
-import { SocialType } from "@aperturs/validators/post";
-
 import SimpleLoader from "~/components/custom/loading/simple-loading";
 import { api } from "~/trpc/react";
 import { PostTypeSelect } from "../../common";
-import ConnectedAccount from "../connections";
+import ConnectedAccounts from "../filter-connection";
 import Publish from "./publish";
 
 const SideBar = ({ params }: { params: { id: string } }) => {
@@ -22,19 +20,9 @@ const SideBar = ({ params }: { params: { id: string } }) => {
         {isLoading ? (
           <SimpleLoader />
         ) : (
-          <div className="grid grid-cols-3 place-items-start gap-3">
-            {data?.map((item) =>
-              (item.type as SocialType) === SocialType.Youtube ? null : (
-                <ConnectedAccount
-                  key={item.data.tokenId}
-                  name={item.data.name ?? ""}
-                  type={item.type}
-                  profilePic={item.data.profile_image_url ?? "/user.png"}
-                  id={item.data.tokenId}
-                />
-              ),
-            )}
-          </div>
+          <>
+            <ConnectedAccounts data={data} />
+          </>
         )}
       </div>
     </div>

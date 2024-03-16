@@ -83,9 +83,6 @@ importers:
       framer-motion:
         specifier: ^10.16.3
         version: 10.18.0(react-dom@18.2.0)(react@18.2.0)
-      googleapis:
-        specifier: ^133.0.0
-        version: 133.0.0
       https:
         specifier: ^1.0.0
         version: 1.0.0
