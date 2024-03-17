@@ -8,6 +8,13 @@
       "when": 1709638077998,
       "tag": "0000_rich_steel_serpent",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710690321700,
+      "tag": "0001_premium_talisman",
+      "breakpoints": true
     }
   ]
 }
