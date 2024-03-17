@@ -2,12 +2,16 @@ import React, { useRef, useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 
 import { Card, CardContent } from "@aperturs/ui/card";
+import { cn } from "@aperturs/ui/lib/utils";
 
 // Define the props expected by the Dropzone component
 interface DropzoneProps {
   onChange: React.Dispatch<React.SetStateAction<string[]>>;
   className?: string;
   fileExtension?: string;
+  explaination?: string;
+  icon?: React.ReactNode;
+  id?: string;
 }
 
 // Create the Dropzone component receiving props
@@ -15,6 +19,9 @@ export function Dropzone({
   onChange,
   className,
   fileExtension,
+  explaination,
+  icon,
+  id,
   ...props
 }: DropzoneProps) {
   // Initialize state variables using the useState hook
@@ -72,26 +79,35 @@ export function Dropzone({
   return (
     <>
       <Card
-        className={`bg-muted hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-800 ${className} py-6`}
+        className={cn(
+          `flex items-center justify-center bg-muted py-6 hover:cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-800`,
+          className,
+        )}
         {...props}
         onChange={handleButtonClick}
       >
-        <label htmlFor="fileupload" className="cursor-pointer">
+        <label
+          htmlFor={id ?? "fileupload"}
+          className="flex  h-full w-full cursor-pointer items-center justify-center"
+        >
           <CardContent onDragOver={handleDragOver} onDrop={handleDrop}>
             {/* <label htmlFor="file" className="text-muted-foreground"> */}
             <div className=" text-center">
               <div className="mx-auto max-w-min rounded-md border border-gray-900 p-2 dark:border-gray-300">
-                <IoCloudUploadOutline
-                  size="1.6em"
-                  className="text-black dark:text-white "
-                />
+                {!icon ? (
+                  <IoCloudUploadOutline
+                    size="1.6em"
+                    className="text-black dark:text-white "
+                  />
+                ) : (
+                  icon
+                )}
               </div>
               <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                <span className="font-semibold">Drag an image</span>
+                <span className="font-semibold">Drag your file</span>
               </p>
               <p className="text-xs text-gray-400 dark:text-gray-400">
-                Click to upload &#40; image should be 500x500 px & under 10 MB
-                &#41;
+                {!explaination ? "Click to upload" : explaination}
               </p>
             </div>
             <div className="flex items-center justify-center text-muted-foreground">
@@ -102,12 +118,12 @@ export function Dropzone({
                 onChange={handleFileInputChange}
                 className="hidden"
                 multiple
-                id="fileupload"
+                id={id ?? "fileupload"}
               />
             </div>
 
-            {/* {fileInfo && <p className="text-muted-foreground">{fileInfo}</p>}
-            {error && <span className="text-red-500">{error}</span>} */}
+            {/* {fileInfo && <p className="text-muted-foreground">{fileInfo}</p>} */}
+            {error && <span className="text-red-500">{error}</span>}
           </CardContent>
         </label>
       </Card>

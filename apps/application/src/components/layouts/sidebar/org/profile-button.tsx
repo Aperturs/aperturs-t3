@@ -34,12 +34,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 
 import { api } from "~/trpc/react";
 import { BusinessCategory } from "./business-catagories";
+import OrgDetailsSkeleton from "./org-details-skeleton";
 import UploadImage from "./upload-image";
 
 export default function ProfileButton() {
   const { user } = useUser();
   console.log(user?.imageUrl, "user");
-  const { data, isLoading } =
+  const { data, isLoading: orgDetailsLoading } =
     api.organisation.basics.getAllUserOrganisations.useQuery();
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
@@ -78,6 +79,12 @@ export default function ProfileButton() {
                 />
               </CommandGroup>
               <CommandGroup heading="Organisations">
+                {orgDetailsLoading && (
+                  <>
+                    <OrgDetailsSkeleton />
+                    <OrgDetailsSkeleton />
+                  </>
+                )}
                 {data?.map((item) => {
                   return (
                     <OrganisationItem
