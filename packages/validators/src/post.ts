@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+export const postType = {
+  normal: "NORMAL",
+  short: "SHORT",
+  longVideo: "LONG_VIDEO",
+} as const;
+
+export type PostType = (typeof postType)[keyof typeof postType];
+export const PostTypeSchema = z.nativeEnum(postType);
+
 const postSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -11,6 +20,18 @@ const postSchema = z.object({
 });
 
 export type PostContentType = z.infer<typeof postSchema>;
+
+const youtubeContentSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  thumbnail: z.string(),
+  videoUrl: z.string(),
+  videoTags: z.array(z.string()),
+  videoTitle: z.string(),
+  videoDescription: z.string(),
+});
+
+export type youtubeContentType = z.infer<typeof youtubeContentSchema>;
 
 export const savePostInputSchema = z.object({
   postContent: z.array(postSchema.omit({ files: true })),
@@ -57,15 +78,6 @@ export enum SocialType {
 }
 
 export const SocialTypeSchema = z.nativeEnum(SocialType);
-
-export const postType = {
-  normal: "NORMAL",
-  short: "SHORT",
-  longVideo: "LONG_VIDEO",
-} as const;
-
-export type PostType = (typeof postType)[keyof typeof postType];
-export const PostTypeSchema = z.nativeEnum(postType);
 
 // might use these types later
 

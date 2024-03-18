@@ -15,6 +15,13 @@
       "when": 1710690321700,
       "tag": "0001_premium_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1710722889313,
+      "tag": "0002_safe_union_jack",
+      "breakpoints": true
     }
   ]
 }

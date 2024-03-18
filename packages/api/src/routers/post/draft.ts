@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { PostContentType } from "@aperturs/validators/post";
-import { desc, eq, schema } from "@aperturs/db";
+import { desc, eq, post, schema } from "@aperturs/db";
 import {
   savePostInputSchema,
   updatePostInputSchema,
@@ -55,11 +55,6 @@ export const posting = createTRPCRouter({
     }),
 
   getRecentDrafts: protectedProcedure.query(async ({ ctx }) => {
-    // const posts = await ctx.prisma.post.findMany({
-    //   where: { clerkUserId: ctx.currentUser, status: "SAVED" },
-    //   orderBy: [{ updatedAt: "desc" }],
-    //   take: 5,
-    // });
     const posts = await ctx.db.query.post.findMany({
       where: eq(schema.post.clerkUserId, ctx.currentUser),
       orderBy: desc(schema.post.updatedAt),
@@ -73,17 +68,6 @@ export const posting = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log(input.postContent);
       try {
-        // await ctx.prisma.post.update({
-        //   where: { id: input.postId },
-        //   data: {
-        //     status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-        //     scheduledAt: input.scheduledTime
-        //       ? new Date(input.scheduledTime)
-        //       : null,
-        //     content: input.postContent,
-        //   },
-        // });
-
         await ctx.db
           .update(schema.post)
           .set({
@@ -109,10 +93,6 @@ export const posting = createTRPCRouter({
     }),
 
   getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
-    // const posts = await ctx.prisma.post.findMany({
-    //   where: { clerkUserId: ctx.currentUser, status: "SAVED" },
-    //   orderBy: [{ updatedAt: "desc" }],
-    // });
     const posts = await ctx.db.query.post.findMany({
       where: eq(schema.post.clerkUserId, ctx.currentUser),
       orderBy: desc(schema.post.updatedAt),
@@ -148,10 +128,6 @@ export const posting = createTRPCRouter({
     .input(z.string())
     .query(async ({ ctx, input }) => {
       try {
-        // const posts = await ctx.prisma.post.findMany({
-        //   where: { projectId: input, status: "SAVED" },
-        //   orderBy: [{ updatedAt: "desc" }],
-        // });
         const posts = await ctx.db.query.post.findMany({
           where: eq(schema.post.projectId, input),
           orderBy: desc(schema.post.updatedAt),
@@ -164,6 +140,7 @@ export const posting = createTRPCRouter({
         });
       }
     }),
+
   deleteSavedPostById: protectedProcedure
     .input(
       z.object({
@@ -184,5 +161,34 @@ export const posting = createTRPCRouter({
           message: "Error deleting post",
         });
       }
+    }),
+  saveYoutubePost: protectedProcedure
+    .input(post.YoutubeContentInsertSchema)
+    .mutation(async ({ ctx, input }) => {
+      const post = ctx.db.transaction(async (db) => {
+        const postContent = await db
+          .insert(schema.post)
+          .values({
+            content: {},
+            status: "SAVED",
+            updatedAt: new Date(),
+            postType: "LONG_VIDEO",
+          })
+          .returning();
+        if (!postContent[0]) {
+          throw new Error("Failed to save post");
+        }
+        const content = await ctx.db
+          .insert(schema.youtubeContent)
+          .values({
+            ...input,
+            videoTags: input.videoTags as string[],
+            postId: postContent[0].id,
+          })
+          .returning();
+        return content;
+      });
+
+      return post;
     }),
 });

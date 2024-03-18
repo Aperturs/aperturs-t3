@@ -10,11 +10,16 @@ import { TagInput } from "@aperturs/ui/tag-input";
 import { Textarea } from "@aperturs/ui/textarea";
 
 import { Dropzone } from "~/components/custom/dropzone";
+import { api } from "~/trpc/react";
 
 export default function Youtube() {
   const [video, setVideo] = useState<string[]>([]);
   const [thumbnail, setThumbnail] = useState<string[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+
+  const { mutateAsync: saveToYoutube, isPending: savingToYoutube } =
+    api.savepost.saveYoutubePost.useMutation();
+
   return (
     <>
       <div className="flex flex-col gap-3">
