@@ -163,9 +163,9 @@ export const posting = createTRPCRouter({
       }
     }),
   saveYoutubePost: protectedProcedure
-    .input(post.YoutubeContentInsertSchema)
+    .input(post.YoutubeContentInsertSchema.omit({ postId: true }))
     .mutation(async ({ ctx, input }) => {
-      const post = ctx.db.transaction(async (db) => {
+      const post = await ctx.db.transaction(async (db) => {
         const postContent = await db
           .insert(schema.post)
           .values({
@@ -189,6 +189,11 @@ export const posting = createTRPCRouter({
         return content;
       });
 
-      return post;
+      return {
+        data: post,
+        success: true,
+        message: "Saved to draft successfully",
+        state: 200,
+      };
     }),
 });

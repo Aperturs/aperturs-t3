@@ -5,7 +5,7 @@ import type { PostContentType, PostType } from "@aperturs/validators/post";
 import { SocialType } from "@aperturs/validators/post";
 
 interface StateValues {
-  date: Date | null;
+  date: Date | undefined;
   time: string | null;
   content: PostContentType[];
   postType: PostType;
@@ -14,7 +14,7 @@ interface StateValues {
 interface StateSetters {
   shouldReset: boolean;
   setShouldReset: (shouldReset: boolean) => void;
-  setDate: (date: Date | null) => void;
+  setDate: (date: Date | undefined) => void;
   setTime: (time: string | null) => void;
   reset: () => void;
   setContent: (content: PostContentType[]) => void;
@@ -25,7 +25,7 @@ type State = StateValues & StateSetters;
 
 const initialState: StateValues = {
   postType: "NORMAL",
-  date: null,
+  date: undefined,
   time: "00:00",
   content: [
     {

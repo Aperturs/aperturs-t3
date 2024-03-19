@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { toast } from "react-hot-toast";
 
 import { Button } from "@aperturs/ui/button";
+import { Calendar } from "@aperturs/ui/calendar";
 import {
   Dialog,
   DialogClose,
@@ -13,7 +14,6 @@ import {
 } from "@aperturs/ui/dialog";
 
 import { useStore } from "~/store/post-store";
-import CalendarComponent from "./calender";
 
 function formatDate(date: Date): string {
   return format(date, "dd MMMM yyyy");
@@ -77,14 +77,14 @@ export default function Picker() {
       setOpen(true);
     }
     if (open) {
-      setDate(null);
+      setDate(undefined);
       setTime(null);
       setOpen(false);
     }
   };
 
   const handleCancel = () => {
-    setDate(null);
+    setDate(undefined);
     setTime(null);
     setOpen(false);
   };
@@ -116,7 +116,8 @@ export default function Picker() {
         <p className="w-full text-center text-xs font-bold text-red-700 sm:text-sm">
           {displayMessage}
         </p>
-        <CalendarComponent handleDate={setDate} />
+        {/* <CalendarComponent handleDate={setDate} /> */}
+        <Calendar className="w-full" />
         <input
           type="time"
           value={time ?? ""}

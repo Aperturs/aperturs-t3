@@ -52,6 +52,9 @@ export default function usePublishing({ id }: { id: string }) {
   const { mutateAsync: updatePost, isPending: updating } =
     api.savepost.updatePost.useMutation();
 
+  const { mutateAsync: saveYoutubePost, isPending: savingYoutube } =
+    api.savepost.saveYoutubePost.useMutation();
+
   // const { mutateAsync: Schedule, isPending: scheduling } =
   //   api.post.schedule.useMutation();
 
@@ -122,7 +125,6 @@ export default function usePublishing({ id }: { id: string }) {
       (async () => {
         // Upload files and modify content
         const newContent = await uploadFilesAndModifyContent();
-
         // Save to drafts
         const response = await saveToDrafts({
           postContent: newContent,
@@ -146,6 +148,34 @@ export default function usePublishing({ id }: { id: string }) {
     );
 
     return postId;
+  };
+
+  const handleSaveYoutube = async () => {
+    await toast.promise(
+      (async () => {
+        // Upload files and modify content
+        const newContent = await uploadFilesAndModifyContent();
+        // Save to drafts
+        const response = await saveYoutubePost({
+          description: "",
+          thumbnail: "",
+          title: "",
+          updatedAt: new Date(),
+          videoTags: [""],
+          YoutubeTokenId: "",
+        });
+
+        if (response.success) {
+          reset();
+          router.push("/drafts");
+        }
+      })(),
+      {
+        loading: "Saving to drafts...",
+        success: "Saved to drafts",
+        error: "Failed to save to drafts",
+      },
+    );
   };
 
   const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {

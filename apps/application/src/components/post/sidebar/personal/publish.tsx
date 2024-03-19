@@ -1,9 +1,12 @@
-import Picker from "~/components/custom/datepicker/picker";
+import { DateTimePicker } from "~/components/custom/datepicker/date-time";
+import { useStore } from "~/store/post-store";
 import { SimpleButton } from "../../common";
 import usePublishing from "./usePosting";
 
 function Publish({ params }: { params: { id: string } }) {
   const { id } = params;
+  const date = useStore((state) => state.date);
+  const setDate = useStore((state) => state.setDate);
 
   const {
     handlePublish,
@@ -22,17 +25,20 @@ function Publish({ params }: { params: { id: string } }) {
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
-      <div className="grid grid-cols-2 gap-1">
-        <Picker />
-        <SimpleButton
-          text="Schedule"
-          // isLoading={scheduling}
-          disabled={isDisabled}
-          onClick={async () => {
-            await handleSchedule();
-          }}
-        />
-      </div>
+      {/* <Picker /> */}
+      <DateTimePicker
+        date={date}
+        setDate={setDate}
+        // key={new Date().getTime()}
+      />
+      <SimpleButton
+        text="Schedule"
+        // isLoading={scheduling}
+        disabled={isDisabled}
+        onClick={async () => {
+          await handleSchedule();
+        }}
+      />
       <SimpleButton
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
