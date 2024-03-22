@@ -33,6 +33,11 @@ const config = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname:
+          "cdkapertursstack-youtubeuploadsbucketb855ba46-ppocdos2sz5k.s3.us-east-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.unsplash.com",
       },
       {

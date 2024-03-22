@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
@@ -63,36 +63,41 @@ export default function usePublishing({ id }: { id: string }) {
   const router = useRouter();
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  const uploadFiles = useCallback(
-    async (acceptedFile: File) => {
-      let filekey = "";
-      try {
-        const id = orgid ?? user?.id ?? "";
-        filekey = `${id}/youtube/${acceptedFile.name}`;
-        const uploadUrl = await getPresignedUrl({
-          filekey,
-          fileType: acceptedFile.type,
-        });
-        // showAlert('Upload has begun.', 'info');
-        await axios.put(uploadUrl, acceptedFile, {
-          headers: {
-            "Content-Type": acceptedFile.type,
-          },
-          onUploadProgress: (progressEvent) => {
-            const progress = Math.round(
-              (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
-            );
-            setUploadProgress(progress);
-          },
-        });
-        return filekey;
-      } catch (error) {
-        console.error("Failed to upload file:", error);
-        return;
-      }
-    },
-    [getPresignedUrl, orgid, user?.id],
-  );
+  const uploadFiles = async (acceptedFile: File) => {
+    let filekey = "";
+    try {
+      const id = orgid ?? user?.id ?? "";
+      filekey = `${id}/youtube/${acceptedFile.name}`;
+      const uploadUrl = await getPresignedUrl({
+        filekey,
+        fileType: acceptedFile.type,
+      });
+      // const response = await axios.post<{
+      //   uploadUrl: string;
+      //   fileKey: string;
+      // }>('/api/upload-url', {
+      //   fileName: filekey,
+      //   fileType: acceptedFile.type,
+      // });
+      // const { uploadUrl, fileKey: key } = response.data;
+      // showAlert('Upload has begun.', 'info');
+      await axios.put(uploadUrl, acceptedFile, {
+        headers: {
+          "Content-Type": acceptedFile.type,
+        },
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round(
+            (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+          );
+          setUploadProgress(progress);
+        },
+      });
+      return filekey;
+    } catch (error) {
+      console.error("Failed to upload file:", error);
+      return;
+    }
+  };
 
   const handlePublish = async () => {
     content.forEach(async (item) => {
@@ -207,26 +212,39 @@ export default function usePublishing({ id }: { id: string }) {
       (async () => {
         // Upload files and modify content
         // Save to drafts
-        const thumbnail = await uploadFiles(thumbnailFile);
-        const video = await uploadFiles(videoFile);
+        let thumbnail = "";
+        if (youtubeContent.thumbnail.includes("https://")) {
+          thumbnail = youtubeContent.thumbnail;
+        } else {
+          const k = await uploadFiles(thumbnailFile);
+          if (!k) {
+            toast.error("Failed to upload thumbnail");
+            return;
+          }
+          thumbnail = k;
+        }
+        let video = "";
+        if (youtubeContent.videoUrl.includes("https://")) {
+          video = youtubeContent.videoUrl;
+        } else {
+          const k = await uploadFiles(videoFile);
+          if (!k) {
+            toast.error("Failed to upload video");
+            return;
+          }
+          video = k;
+        }
+
         console.log(thumbnail, "thumbnail");
         console.log(video, "video");
 
-        if (!thumbnail) {
-          toast.error("Failed to upload thumbnail");
-          return;
-        }
-        if (!video) {
-          toast.error("Failed to upload video");
-          return;
-        }
         const response = await saveYoutubePost({
           description: youtubeContent.videoDescription,
           thumbnail: thumbnail,
           title: youtubeContent.videoTitle,
           updatedAt: new Date(),
           videoTags: youtubeContent.videoTags,
-          YoutubeTokenId: youtubeContent.youtubeId,
+          // YoutubeTokenId: youtubeContent.youtubeId,
           video: video,
         });
 

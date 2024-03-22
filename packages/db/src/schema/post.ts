@@ -106,11 +106,12 @@ export const youtubeContent = pgTable(
     id: varchar("id", { length: 191 })
       .primaryKey()
       .$defaultFn(() => createUniqueIds("ytc")),
-    YoutubeTokenId: varchar("channelId", { length: 256 })
-      .references(() => youtubeToken.id, {
+    YoutubeTokenId: varchar("channelId", { length: 256 }).references(
+      () => youtubeToken.id,
+      {
         onDelete: "cascade",
-      })
-      .notNull(),
+      },
+    ),
     postId: varchar("postId", { length: 191 })
       .references(() => post.id, {
         onDelete: "cascade",

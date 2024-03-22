@@ -1,3 +1,4 @@
+import { getFileDetails } from "@api/handlers/posts/uploads";
 import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
@@ -97,6 +98,7 @@ export const posting = createTRPCRouter({
       where: eq(schema.post.clerkUserId, ctx.currentUser),
       orderBy: desc(schema.post.updatedAt),
     });
+    console.log(posts);
     return posts;
   }),
 
@@ -109,19 +111,45 @@ export const posting = createTRPCRouter({
 
       const post = await ctx.db.query.post.findFirst({
         where: eq(schema.post.id, input),
+        with: {
+          youtubeContent: true,
+        },
       });
 
-      const localPost = post?.content as PostContentType[];
-      const contentWithEmptyFiles = localPost.map((post) => ({
-        ...post,
-        files: post.files ?? [],
-      }));
+      if (post?.postType === "NORMAL") {
+        const localPost = post?.content as PostContentType[];
+        const contentWithEmptyFiles = localPost.map((post) => ({
+          ...post,
+          files: post.files ?? [],
+        }));
 
-      return {
-        scheduledAt: post?.scheduledAt,
-        organizationId: post?.organizationId,
-        content: contentWithEmptyFiles,
-      };
+        return {
+          postType: post?.postType,
+          scheduledAt: post?.scheduledAt,
+          organizationId: post?.organizationId,
+          content: contentWithEmptyFiles,
+        };
+      }
+      if (post?.postType === "LONG_VIDEO") {
+        if (!post.youtubeContent) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error youtube post",
+          });
+        }
+        const video = await getFileDetails(post.youtubeContent.video);
+        const thumbnail = await getFileDetails(post.youtubeContent.thumbnail);
+
+        return {
+          postType: post?.postType,
+          ...post.youtubeContent,
+          video,
+          thumbnail,
+          scheduledAt: post?.scheduledAt,
+          organizationId: post?.organizationId,
+          content: post?.content,
+        };
+      }
     }),
 
   getSavedPostsByProjectId: protectedProcedure
@@ -169,6 +197,7 @@ export const posting = createTRPCRouter({
         const postContent = await db
           .insert(schema.post)
           .values({
+            clerkUserId: ctx.currentUser,
             content: {},
             status: "SAVED",
             updatedAt: new Date(),
@@ -178,12 +207,14 @@ export const posting = createTRPCRouter({
         if (!postContent[0]) {
           throw new Error("Failed to save post");
         }
-        const content = await ctx.db
+        const postId = postContent[0].id;
+        console.log(postId, "postId");
+        const content = await db
           .insert(schema.youtubeContent)
           .values({
             ...input,
             videoTags: input.videoTags as string[],
-            postId: postContent[0].id,
+            postId: postId,
           })
           .returning();
 

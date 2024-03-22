@@ -14,11 +14,6 @@ import { Dropzone } from "~/components/custom/dropzone";
 import { useStore } from "~/store/post-store";
 
 export default function Youtube() {
-  const [video, setVideo] = useState<string[]>([]);
-  const [thumbnail, setThumbnail] = useState<string[]>([]);
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [videoFile, setVideoFile] = useState<File[]>([]);
-  const [thumbnailFile, setThumbnailFile] = useState<File[]>([]);
   const { setYoutubeContent, youtubeContent } = useStore(
     (state) => ({
       youtubeContent: state.youtubeContent,
@@ -26,6 +21,15 @@ export default function Youtube() {
     }),
     shallow,
   );
+  const [video, setVideo] = useState<string[]>([youtubeContent.videoUrl]);
+  const [thumbnail, setThumbnail] = useState<string[]>([
+    youtubeContent.thumbnail,
+  ]);
+  const [tags, setTags] = useState<Tag[]>(
+    youtubeContent.videoTags.map((tag) => ({ text: tag, id: tag })),
+  );
+  const [videoFile, setVideoFile] = useState<File[]>([]);
+  const [thumbnailFile, setThumbnailFile] = useState<File[]>([]);
 
   useEffect(() => {
     const videotags = tags.map((tag) => tag.text);
@@ -109,6 +113,7 @@ export default function Youtube() {
             placeholder="Video about socail media"
             id="video-title"
             className="w-full"
+            value={youtubeContent.videoTitle}
             onChange={(e) => {
               setYoutubeContent({
                 ...youtubeContent,
@@ -123,6 +128,7 @@ export default function Youtube() {
             placeholder="Video description"
             id="video-description"
             className="min-h-36 w-full"
+            value={youtubeContent.videoDescription}
             onChange={(e) => {
               setYoutubeContent({
                 ...youtubeContent,
