@@ -1,3 +1,5 @@
+import { Card } from "@aperturs/ui/card";
+
 import { DateTimePicker } from "~/components/custom/datepicker/date-time";
 import { useStore } from "~/store/post-store";
 import { SimpleButton } from "../../common";
@@ -17,7 +19,9 @@ function Publish({ params }: { params: { id: string } }) {
     isUploaded,
     linkedinPosting,
     saving,
+    disablePosting,
     tweeting,
+    uploadProgress,
     // scheduling,
     updating,
     uploadingFiles,
@@ -26,6 +30,7 @@ function Publish({ params }: { params: { id: string } }) {
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       {/* <Picker /> */}
+      {uploadProgress > 0 && <Card>uploading {uploadProgress}%</Card>}
       <DateTimePicker
         date={date}
         setDate={setDate}
@@ -34,7 +39,7 @@ function Publish({ params }: { params: { id: string } }) {
       <SimpleButton
         text="Schedule"
         // isLoading={scheduling}
-        disabled={isDisabled}
+        disabled={isDisabled || disablePosting}
         onClick={async () => {
           await handleSchedule();
         }}
@@ -42,7 +47,7 @@ function Publish({ params }: { params: { id: string } }) {
       <SimpleButton
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
-        disabled={isDisabled}
+        disabled={isDisabled || disablePosting}
         onClick={async () => {
           await handlePublish();
         }}

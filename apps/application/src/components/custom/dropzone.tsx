@@ -12,6 +12,7 @@ interface DropzoneProps {
   explaination?: string;
   icon?: React.ReactNode;
   id?: string;
+  onChangeFile?: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
 // Create the Dropzone component receiving props
@@ -22,6 +23,7 @@ export function Dropzone({
   explaination,
   icon,
   id,
+  onChangeFile,
   ...props
 }: DropzoneProps) {
   // Initialize state variables using the useState hook
@@ -59,6 +61,7 @@ export function Dropzone({
 
     const fileSizeInKB = Math.round(uploadedFile.size / 1024); // Convert to KB
 
+    onChangeFile && onChangeFile(Array.from(files));
     const fileList = Array.from(files).map((file) => URL.createObjectURL(file));
     onChange((prevFiles) => [...prevFiles, ...fileList]);
 

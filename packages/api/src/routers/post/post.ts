@@ -1,3 +1,4 @@
+import { GetPresignedUrl } from "@api/handlers/posts/uploads";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -7,7 +8,11 @@ import { SocialType } from "@aperturs/validators/post";
 
 import { postToLinkedin } from "../../helpers/linkedln";
 import { postToTwitter } from "../../helpers/twitter";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
 
 export const post = createTRPCRouter({
   postByPostId: publicProcedure
@@ -18,11 +23,6 @@ export const post = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       try {
-        // const post = await ctx.prisma.post.findUnique({
-        //   where: {
-        //     id: input.postId,
-        //   },
-        // });
         const post = await ctx.db.query.post.findFirst({
           where: eq(schema.post.id, input.postId),
         });
@@ -52,37 +52,8 @@ export const post = createTRPCRouter({
                 break;
             }
           }
-          // content.forEach(async (item) => {
-          //   switch (item.socialType) {
-          //     case `${SocialType.Twitter}`:
-          //       await postToTwitter({
-          //         tokenId: item.id,
-          //         tweets: [
-          //           {
-          //             id: 0,
-          //             text: item.content,
-          //           },
-          //         ],
-          //       });
-          //       break;
-          //     case `${SocialType.Linkedin}`:
-          //       await postToLinkedin({
-          //         tokenId: item.id,
-          //         content: item.content,
-          //       });
-          //       //post to linkedin
-          //       break;
-          //     default:
-          //       break;
-          //   }
-          // });
         }
-        // await ctx.prisma.post.update({
-        //   where: { id: input.postId },
-        //   data: {
-        //     status: "PUBLISHED",
-        //   },
-        // });
+
         await ctx.db
           .update(schema.post)
           .set({
@@ -96,6 +67,20 @@ export const post = createTRPCRouter({
           message: "Error fetching post",
         });
       }
+    }),
+
+  getPresignedUrl: protectedProcedure
+    .input(
+      z.object({
+        filekey: z.string(),
+        fileType: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await GetPresignedUrl({
+        fileKey: input.filekey,
+        fileType: input.fileType,
+      });
     }),
 
   // schedule: protectedProcedure

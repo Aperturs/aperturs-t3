@@ -120,6 +120,7 @@ export const youtubeContent = pgTable(
     title: varchar("title", { length: 256 }).notNull(),
     description: varchar("description", { length: 256 }).notNull(),
     thumbnail: varchar("thumbnail", { length: 256 }).notNull(),
+    video: varchar("video", { length: 256 }).notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .defaultNow()
       .notNull(),

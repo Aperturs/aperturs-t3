@@ -186,7 +186,14 @@ export const posting = createTRPCRouter({
             postId: postContent[0].id,
           })
           .returning();
-        return content;
+
+        const contentRes = content[0];
+        const postRes = postContent[0];
+
+        return {
+          ...postRes,
+          content: contentRes,
+        };
       });
 
       return {

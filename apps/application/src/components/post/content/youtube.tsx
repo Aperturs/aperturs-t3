@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { shallow } from "zustand/shallow";
 
 import type { Tag } from "@aperturs/ui/tag-input";
 import { Button } from "@aperturs/ui/button";
@@ -10,11 +11,35 @@ import { TagInput } from "@aperturs/ui/tag-input";
 import { Textarea } from "@aperturs/ui/textarea";
 
 import { Dropzone } from "~/components/custom/dropzone";
+import { useStore } from "~/store/post-store";
 
 export default function Youtube() {
   const [video, setVideo] = useState<string[]>([]);
   const [thumbnail, setThumbnail] = useState<string[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [videoFile, setVideoFile] = useState<File[]>([]);
+  const [thumbnailFile, setThumbnailFile] = useState<File[]>([]);
+  const { setYoutubeContent, youtubeContent } = useStore(
+    (state) => ({
+      youtubeContent: state.youtubeContent,
+      setYoutubeContent: state.setYoutubeContent,
+    }),
+    shallow,
+  );
+
+  useEffect(() => {
+    const videotags = tags.map((tag) => tag.text);
+
+    setYoutubeContent({
+      ...youtubeContent,
+      videoUrl: video[0] ?? "",
+      thumbnail: thumbnail[0] ?? "",
+      videoTags: videotags,
+      videoFile: videoFile[0] ?? undefined,
+      thumbnailFile: thumbnailFile[0] ?? undefined,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video, thumbnail, tags]);
 
   return (
     <>
@@ -40,6 +65,7 @@ export default function Youtube() {
             <>
               <Dropzone
                 onChange={setVideo}
+                onChangeFile={setVideoFile}
                 fileExtension="video/*"
                 explaination="Upload a video to be posted on youtube"
                 className="aspect-video w-full"
@@ -68,6 +94,7 @@ export default function Youtube() {
           ) : (
             <Dropzone
               onChange={setThumbnail}
+              onChangeFile={setThumbnailFile}
               fileExtension="image/*"
               explaination="Upload a thumbnail for the video to be posted on youtube"
               id="thumbnail"
@@ -82,6 +109,12 @@ export default function Youtube() {
             placeholder="Video about socail media"
             id="video-title"
             className="w-full"
+            onChange={(e) => {
+              setYoutubeContent({
+                ...youtubeContent,
+                videoTitle: e.target.value,
+              });
+            }}
           />
         </>
         <>
@@ -90,6 +123,12 @@ export default function Youtube() {
             placeholder="Video description"
             id="video-description"
             className="min-h-36 w-full"
+            onChange={(e) => {
+              setYoutubeContent({
+                ...youtubeContent,
+                videoDescription: e.target.value,
+              });
+            }}
           />
         </>
         <>

@@ -1,0 +1,1 @@
+ALTER TABLE "YoutubeContent" ADD COLUMN "video" varchar(256) NOT NULL;

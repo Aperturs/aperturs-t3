@@ -4,12 +4,12 @@ import { addHours } from "date-fns";
 import { CalendarIcon, X } from "lucide-react";
 import { DateTime } from "luxon";
 
-import { Button } from "@aperturs/ui/Button";
-import { Calendar } from "@aperturs/ui/Calendar";
-import { Input } from "@aperturs/ui/Input";
-import { Label } from "@aperturs/ui/Label";
+import { Button } from "@aperturs/ui/button";
+import { Calendar } from "@aperturs/ui/calendar";
+import { Input } from "@aperturs/ui/input";
+import { Label } from "@aperturs/ui/label";
 import { cn } from "@aperturs/ui/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/Popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 
 interface DateTimePickerProps {
   date: Date | undefined;
@@ -67,7 +67,7 @@ export function DateTimePicker({ date, setDate }: DateTimePickerProps) {
           <Button
             variant="outline"
             className={cn(
-              "flex-1 justify-start py-6 text-left font-normal",
+              "flex-1 justify-start  text-left font-normal",
               !date && "text-muted-foreground",
             )}
           >
@@ -86,7 +86,7 @@ export function DateTimePicker({ date, setDate }: DateTimePickerProps) {
             setDate(undefined);
             setSelectedDateTime(undefined);
           }}
-          className="py-6 "
+          // className="py-6 "
         >
           <X />
         </Button>

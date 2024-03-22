@@ -49,13 +49,14 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
     <div
       className={`${
         isSelected ? "opacity-100" : "opacity-25"
-      } flex cursor-pointer flex-col items-center justify-center  transition-all duration-200 ease-out hover:scale-105`}
+      } flex cursor-pointer flex-col items-center justify-center  transition-all
+      duration-200 ease-out hover:scale-105`}
       onClick={handleClick}
     >
       <div className="relative">
         {/* <Avatar
           src={profilePic}
-          alt="avatar"
+          alt="avatar" 
           withBorder={true}
         /> */}
         <Avatar className="p-0.5 ring-4 ring-primary ring-offset-1">

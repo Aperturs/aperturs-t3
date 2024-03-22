@@ -22,13 +22,15 @@ const postSchema = z.object({
 export type PostContentType = z.infer<typeof postSchema>;
 
 const youtubeContentSchema = z.object({
-  id: z.string(),
+  youtubeId: z.string(),
   name: z.string(),
   thumbnail: z.string(),
   videoUrl: z.string(),
   videoTags: z.array(z.string()),
   videoTitle: z.string(),
   videoDescription: z.string(),
+  thumbnailFile: z.instanceof(File).optional(),
+  videoFile: z.instanceof(File).optional(),
 });
 
 export type youtubeContentType = z.infer<typeof youtubeContentSchema>;

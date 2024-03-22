@@ -1,4 +1,7 @@
-import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
@@ -12,24 +15,22 @@ export default function usePublishing({ id }: { id: string }) {
   const {
     content,
     date,
-    time,
     reset,
+    youtubeContent,
+    postType,
     shouldReset: isUploaded,
   } = useStore(
     (state) => ({
       content: state.content,
       date: state.date,
-      time: state.time,
       reset: state.reset,
       shouldReset: state.shouldReset,
+      youtubeContent: state.youtubeContent,
+      postType: state.postType,
     }),
     shallow,
   );
-  const {
-    uploadFilesAndModifyContent,
-    error: uploadingFilesError,
-    loading: uploadingFiles,
-  } = usePost();
+  const { uploadFilesAndModifyContent, loading: uploadingFiles } = usePost();
 
   const {
     mutateAsync: createTweet,
@@ -41,6 +42,9 @@ export default function usePublishing({ id }: { id: string }) {
     isPending: linkedinPosting,
     error: linkedinError,
   } = api.linkedin.postToLinkedin.useMutation();
+
+  const { mutateAsync: getPresignedUrl, isPending: gettingPresignedUrl } =
+    api.post.getPresignedUrl.useMutation();
 
   const {
     mutateAsync: saveToDrafts,
@@ -54,11 +58,41 @@ export default function usePublishing({ id }: { id: string }) {
 
   const { mutateAsync: saveYoutubePost, isPending: savingYoutube } =
     api.savepost.saveYoutubePost.useMutation();
-
-  // const { mutateAsync: Schedule, isPending: scheduling } =
-  //   api.post.schedule.useMutation();
-
+  const { orgid } = useParams<{ orgid: string }>();
+  const { user } = useUser();
   const router = useRouter();
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const uploadFiles = useCallback(
+    async (acceptedFile: File) => {
+      let filekey = "";
+      try {
+        const id = orgid ?? user?.id ?? "";
+        filekey = `${id}/youtube/${acceptedFile.name}`;
+        const uploadUrl = await getPresignedUrl({
+          filekey,
+          fileType: acceptedFile.type,
+        });
+        // showAlert('Upload has begun.', 'info');
+        await axios.put(uploadUrl, acceptedFile, {
+          headers: {
+            "Content-Type": acceptedFile.type,
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+            );
+            setUploadProgress(progress);
+          },
+        });
+        return filekey;
+      } catch (error) {
+        console.error("Failed to upload file:", error);
+        return;
+      }
+    },
+    [getPresignedUrl, orgid, user?.id],
+  );
 
   const handlePublish = async () => {
     content.forEach(async (item) => {
@@ -105,15 +139,22 @@ export default function usePublishing({ id }: { id: string }) {
   };
 
   const handleSave = async ({ isScheduling }: { isScheduling: boolean }) => {
-    let postId = "";
-    if (!time) {
-      return toast.error("Please select a time");
+    if (postType === "NORMAL") {
+      return await handleSavePost({ isScheduling });
     }
-    const [hours, minutes] = time.split(":");
-    const scheduledTime =
-      date && hours !== undefined && minutes !== undefined
-        ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
-        : undefined;
+    if (postType === "LONG_VIDEO") {
+      console.log("here");
+      return await handleSaveYoutube();
+    }
+  };
+
+  const handleSavePost = async ({
+    isScheduling,
+  }: {
+    isScheduling: boolean;
+  }) => {
+    let postId = "";
+    const scheduledTime = date;
     if (isScheduling && !scheduledTime) {
       return toast.error("Please select a date and time");
     }
@@ -151,19 +192,45 @@ export default function usePublishing({ id }: { id: string }) {
   };
 
   const handleSaveYoutube = async () => {
+    if (!youtubeContent.thumbnailFile) {
+      toast.error("Please add a thumbnail");
+      return;
+    }
+    if (!youtubeContent.videoFile) {
+      toast.error("Please add a video");
+      return;
+    }
+    const thumbnailFile = youtubeContent.thumbnailFile;
+    const videoFile = youtubeContent.videoFile;
+    let postId = "";
     await toast.promise(
       (async () => {
         // Upload files and modify content
-        const newContent = await uploadFilesAndModifyContent();
         // Save to drafts
+        const thumbnail = await uploadFiles(thumbnailFile);
+        const video = await uploadFiles(videoFile);
+        console.log(thumbnail, "thumbnail");
+        console.log(video, "video");
+
+        if (!thumbnail) {
+          toast.error("Failed to upload thumbnail");
+          return;
+        }
+        if (!video) {
+          toast.error("Failed to upload video");
+          return;
+        }
         const response = await saveYoutubePost({
-          description: "",
-          thumbnail: "",
-          title: "",
+          description: youtubeContent.videoDescription,
+          thumbnail: thumbnail,
+          title: youtubeContent.videoTitle,
           updatedAt: new Date(),
-          videoTags: [""],
-          YoutubeTokenId: "",
+          videoTags: youtubeContent.videoTags,
+          YoutubeTokenId: youtubeContent.youtubeId,
+          video: video,
         });
+
+        postId = response.data.id;
 
         if (response.success) {
           reset();
@@ -173,28 +240,19 @@ export default function usePublishing({ id }: { id: string }) {
       {
         loading: "Saving to drafts...",
         success: "Saved to drafts",
-        error: "Failed to save to drafts",
+        error: (err) => `Failed to save to drafts ${err}`,
       },
     );
+    return postId;
   };
 
   const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
-    if (!time) {
-      return toast.error("Please select a time");
-    }
-    const [hours, minutes] = time.split(":");
-    const scheduledTime =
-      date && hours !== undefined && minutes !== undefined
-        ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
-        : undefined;
+    const scheduledTime = date;
     try {
       await toast.promise(
         (async () => {
           // Update post
-          console.log("updating files");
           const newContent = await uploadFilesAndModifyContent();
-          console.log("files updated", newContent);
-
           const response = await updatePost({
             postId: id,
             postContent: newContent,
@@ -203,7 +261,6 @@ export default function usePublishing({ id }: { id: string }) {
                 ? new Date(scheduledTime)
                 : undefined,
           });
-
           if (response.success) {
             if (!isScheduling) {
               reset();
@@ -230,15 +287,7 @@ export default function usePublishing({ id }: { id: string }) {
   };
 
   const handleSchedule = async () => {
-    if (!time) {
-      return toast.error("Please select a time");
-    }
-    const [hours, minutes] = time.split(":");
-    const scheduledTime =
-      date && hours !== undefined && minutes !== undefined
-        ? new Date(date).setHours(parseInt(hours), parseInt(minutes))
-        : undefined;
-
+    const scheduledTime = date;
     if (!scheduledTime) {
       return toast.error("Please select a date and time");
     }
@@ -248,6 +297,10 @@ export default function usePublishing({ id }: { id: string }) {
         await handleUpdate({ isScheduling: true });
       } else {
         const postId = await handleSave({ isScheduling: true });
+        if (!postId) {
+          toast.error("post id is not available");
+          return;
+        }
         id = postId;
       }
       console.log(id, "id");
@@ -283,11 +336,15 @@ export default function usePublishing({ id }: { id: string }) {
     isDisabled:
       !content || uploadingFiles || saving || linkedinPosting || tweeting,
     isUploaded,
+    disablePosting: content.length < 2,
     // scheduling,
     linkedinPosting,
     tweeting,
     uploadingFiles,
     saving,
     updating,
+    handleSaveYoutube,
+    uploadProgress,
+    uploadFiles,
   };
 }
