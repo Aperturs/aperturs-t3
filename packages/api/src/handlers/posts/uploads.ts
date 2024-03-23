@@ -1,5 +1,6 @@
 import { s3Client } from "@api/utils/aws";
 import {
+  DeleteObjectsCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
@@ -92,4 +93,24 @@ export async function getFileDetails(fileKey: string) {
   };
 
   return fileDetails;
+}
+
+export async function deleteFileFromAws(fileKeys: string[]) {
+  const deleteParams = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Delete: {
+      Objects: fileKeys.map((key: string) => ({ Key: key })),
+    },
+  };
+  console.log("deleteParams", deleteParams);
+  try {
+    await s3Client.send(new DeleteObjectsCommand(deleteParams));
+    console.log("Files deleted successfully");
+    return Response.json(
+      { message: "Files deleted successfully" },
+      { status: 200 },
+    );
+  } catch {
+    return Response.json({ message: "Error deleting files" }, { status: 500 });
+  }
 }

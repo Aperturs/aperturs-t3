@@ -6,7 +6,7 @@ import { PostTypeSelect } from "../../common";
 import ConnectedAccounts from "../filter-connection";
 import Publish from "./publish";
 
-const SideBar = ({ params }: { params: { id: string } }) => {
+const SideBar = ({ params }: { params: { postid: string } }) => {
   const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
   console.log(data);
 

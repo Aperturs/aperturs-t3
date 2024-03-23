@@ -76,7 +76,7 @@ export default function Youtube() {
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           {video.length > 0 ? (
-            <div className="flex max-w-[50%] flex-col gap-2">
+            <div className="flex max-w-[50%] flex-col gap-2 rounded-lg">
               <video
                 src={video[0]}
                 className="aspect-video w-full  object-cover"

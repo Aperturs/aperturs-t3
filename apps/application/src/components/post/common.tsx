@@ -72,9 +72,9 @@ export const SocialIcon = ({ type, className, size }: SocialIconProps) => {
 };
 
 export function PostTypeSelect() {
-  const { posttype, setPostType } = useStore(
+  const { statePosttype, setPostType } = useStore(
     (state) => ({
-      posttype: state.postType,
+      statePosttype: state.postType,
       setPostType: state.setPostType,
     }),
     shallow,
@@ -82,7 +82,8 @@ export function PostTypeSelect() {
 
   return (
     <Select
-      defaultValue={posttype}
+      defaultValue={statePosttype}
+      value={statePosttype}
       onValueChange={(value) => setPostType(value as PostType)}
     >
       <div className="flex items-center">

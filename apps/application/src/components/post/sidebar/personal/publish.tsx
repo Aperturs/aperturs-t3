@@ -5,8 +5,8 @@ import { useStore } from "~/store/post-store";
 import { SimpleButton } from "../../common";
 import usePublishing from "./usePosting";
 
-function Publish({ params }: { params: { id: string } }) {
-  const { id } = params;
+function Publish({ params }: { params: { postid: string } }) {
+  const { postid } = params;
   const date = useStore((state) => state.date);
   const setDate = useStore((state) => state.setDate);
 
@@ -25,7 +25,7 @@ function Publish({ params }: { params: { id: string } }) {
     // scheduling,
     updating,
     uploadingFiles,
-  } = usePublishing({ id });
+  } = usePublishing({ id: postid });
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">

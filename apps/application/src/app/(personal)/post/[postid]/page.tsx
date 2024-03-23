@@ -10,10 +10,10 @@ import PostView from "~/components/post/wrappers/post-wrapper";
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
 
-export default function Post({ params }: { params: { id: string } }) {
+export default function Post({ params }: { params: { postid: string } }) {
   // const router = useRouter()
 
-  const { id } = params;
+  const { postid } = params;
   // const { data, isLoading, error } = api.userPost.getSavedPostById.useQuery(
   //   id as string
   // );
@@ -29,7 +29,7 @@ export default function Post({ params }: { params: { id: string } }) {
       shallow,
     );
 
-  const getData = api.savepost.getSavedPostById.useQuery(id);
+  const getData = api.savepost.getSavedPostById.useQuery(postid);
 
   const fetchData = useMemo(() => {
     return () => {

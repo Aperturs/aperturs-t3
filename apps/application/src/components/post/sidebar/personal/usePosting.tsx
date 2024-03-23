@@ -5,6 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
+import type { UpdateYoutubePostInput } from "@aperturs/validators/post";
 import { SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
@@ -42,6 +43,12 @@ export default function usePublishing({ id }: { id: string }) {
     isPending: linkedinPosting,
     error: linkedinError,
   } = api.linkedin.postToLinkedin.useMutation();
+
+  const {
+    mutateAsync: updateYoutubePost,
+    isPending: updatingYoutube,
+    error: updateYoutubeError,
+  } = api.savepost.updateYoutubePost.useMutation();
 
   const { mutateAsync: getPresignedUrl, isPending: gettingPresignedUrl } =
     api.post.getPresignedUrl.useMutation();
@@ -196,6 +203,15 @@ export default function usePublishing({ id }: { id: string }) {
     return postId;
   };
 
+  const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
+    if (postType === "NORMAL") {
+      return await handleUpdatePost({ isScheduling });
+    }
+    if (postType === "LONG_VIDEO") {
+      return await handleUpdateYoutube();
+    }
+  };
+
   const handleSaveYoutube = async () => {
     if (!youtubeContent.thumbnailFile) {
       toast.error("Please add a thumbnail");
@@ -212,29 +228,18 @@ export default function usePublishing({ id }: { id: string }) {
       (async () => {
         // Upload files and modify content
         // Save to drafts
-        let thumbnail = "";
-        if (youtubeContent.thumbnail.includes("https://")) {
-          thumbnail = youtubeContent.thumbnail;
-        } else {
-          const k = await uploadFiles(thumbnailFile);
-          if (!k) {
-            toast.error("Failed to upload thumbnail");
-            return;
-          }
-          thumbnail = k;
-        }
-        let video = "";
-        if (youtubeContent.videoUrl.includes("https://")) {
-          video = youtubeContent.videoUrl;
-        } else {
-          const k = await uploadFiles(videoFile);
-          if (!k) {
-            toast.error("Failed to upload video");
-            return;
-          }
-          video = k;
+
+        const thumbnail = await uploadFiles(thumbnailFile);
+        if (!thumbnail) {
+          toast.error("Failed to upload thumbnail");
+          return;
         }
 
+        const video = await uploadFiles(videoFile);
+        if (!video) {
+          toast.error("Failed to upload video");
+          return;
+        }
         console.log(thumbnail, "thumbnail");
         console.log(video, "video");
 
@@ -271,7 +276,105 @@ export default function usePublishing({ id }: { id: string }) {
     return postId;
   };
 
-  const handleUpdate = async ({ isScheduling }: { isScheduling: boolean }) => {
+  const handleUpdateYoutube = async () => {
+    let postId = "";
+    await toast.promise(
+      (async () => {
+        // Upload files and modify content
+        // Save to drafts
+        let thumbnail = "";
+        let thumbnailChanged = false;
+
+        let videoChanged = false;
+        if (!youtubeContent.thumbnail.includes("amazonaws.com")) {
+          if (!youtubeContent.thumbnailFile) {
+            toast.error("Please add a thumbnail");
+            return;
+          }
+          const thumbnailFile = youtubeContent.thumbnailFile;
+          const k = await uploadFiles(thumbnailFile);
+          thumbnailChanged = true;
+          if (!k) {
+            toast.error("Failed to upload thumbnail");
+            return;
+          }
+          thumbnail = k;
+        }
+        let video = "";
+        if (!youtubeContent.videoUrl.includes("amazonaws.com")) {
+          if (!youtubeContent.videoFile) {
+            toast.error("Please add a video");
+            return;
+          }
+          const videoFile = youtubeContent.videoFile;
+          videoChanged = true;
+          const k = await uploadFiles(videoFile);
+          if (!k) {
+            toast.error("Failed to upload video");
+            return;
+          }
+          video = k;
+        }
+        let data = {
+          postId: id,
+          description: youtubeContent.videoDescription,
+          title: youtubeContent.videoTitle,
+          updatedAt: new Date(),
+          videoTags: youtubeContent.videoTags,
+          content: content.filter(
+            (item) =>
+              item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
+          ),
+          YoutubeTokenId:
+            youtubeContent.youtubeId.length > 0
+              ? youtubeContent.youtubeId
+              : undefined,
+        } as UpdateYoutubePostInput;
+
+        if (thumbnailChanged) {
+          data = { ...data, thumbnail: thumbnail };
+        }
+        if (videoChanged) {
+          data = { ...data, video: video };
+        }
+        console.log(data, "data");
+        const response = await updateYoutubePost(data);
+        // const response = await updateYoutubePost({
+        //   description: youtubeContent.videoDescription,
+        //   thumbnail: thumbnail,
+        //   title: youtubeContent.videoTitle,
+        //   updatedAt: new Date(),
+        //   videoTags: youtubeContent.videoTags,
+        //   content: content.filter(
+        //     (item) =>
+        //       item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
+        //   ),
+        //   YoutubeTokenId:
+        //     youtubeContent.youtubeId.length > 0
+        //       ? youtubeContent.youtubeId
+        //       : undefined,
+        //   video: video,
+        // });
+        postId = response.data.id;
+        if (response.success) {
+          reset();
+          router.push("/drafts");
+        }
+      })(),
+      {
+        loading: "Updating draft...",
+        success: "Updated draft",
+        error: (err) => `Failed to update drafts ${err}`,
+      },
+    );
+    return postId;
+  };
+
+  const handleUpdatePost = async ({
+    isScheduling,
+  }: {
+    isScheduling: boolean;
+  }) => {
     const scheduledTime = date;
     try {
       await toast.promise(
@@ -365,7 +468,9 @@ export default function usePublishing({ id }: { id: string }) {
       linkedinPosting ||
       tweeting ||
       savingYoutube ||
-      gettingPresignedUrl,
+      gettingPresignedUrl ||
+      updatingYoutube ||
+      uploadProgress > 0,
     isUploaded,
     disablePosting: content.length < 2,
     // scheduling,

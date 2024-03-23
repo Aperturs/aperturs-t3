@@ -47,6 +47,25 @@ export const updatePostInputSchema = z.object({
   postId: z.string(),
 });
 
+export const YoutubeContentType = z.object({
+  id: z.string(),
+  YoutubeTokenId: z.string(),
+  postId: z.string(),
+  videoTags: z.array(z.string()),
+  title: z.string(),
+  description: z.string(),
+  thumbnail: z.string(),
+  video: z.string(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export const updateYoutubePostSchema = YoutubeContentType.partial().extend({
+  content: z.array(postSchema.omit({ files: true })),
+});
+
+export type UpdateYoutubePostInput = z.infer<typeof updateYoutubePostSchema>;
+
 export type SavePostInput = z.infer<typeof savePostInputSchema>;
 
 export const postTweetInputSchema = z.object({

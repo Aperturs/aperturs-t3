@@ -1,4 +1,4 @@
-import { getFileDetails } from "@api/handlers/posts/uploads";
+import { deleteFileFromAws, getFileDetails } from "@api/handlers/posts/uploads";
 import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
@@ -10,6 +10,7 @@ import {
   postSchema,
   savePostInputSchema,
   updatePostInputSchema,
+  updateYoutubePostSchema,
 } from "@aperturs/validators/post";
 
 export const posting = createTRPCRouter({
@@ -173,10 +174,24 @@ export const posting = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const res = await ctx.db.query.post.findFirst({
+        where: eq(schema.post.id, input.id),
+        with: {
+          youtubeContent: true,
+        },
+      });
       try {
         await limitDown({
           func: () =>
-            ctx.db.delete(schema.post).where(eq(schema.post.id, input.id)),
+            ctx.db.transaction(async (db) => {
+              await db.delete(schema.post).where(eq(schema.post.id, input.id));
+              if (res?.postType === "LONG_VIDEO") {
+                await deleteFileFromAws([
+                  res.youtubeContent.video,
+                  res.youtubeContent.thumbnail,
+                ]);
+              }
+            }),
           clerkUserId: ctx.currentUser,
           limitType: "drafts",
         });
@@ -218,6 +233,74 @@ export const posting = createTRPCRouter({
             postId: postId,
           })
           .returning();
+
+        const contentRes = content[0];
+        const postRes = postContent[0];
+
+        return {
+          ...postRes,
+          content: contentRes,
+        };
+      });
+
+      return {
+        data: post,
+        success: true,
+        message: "Saved to draft successfully",
+        state: 200,
+      };
+    }),
+  updateYoutubePost: protectedProcedure
+    .input(updateYoutubePostSchema)
+    .mutation(async ({ ctx, input }) => {
+      console.log(input);
+      const post = await ctx.db.transaction(async (db) => {
+        if (!input.postId) {
+          throw new Error("Post Id is required");
+        }
+        console.log("started");
+        const postContent = await db
+          .update(schema.post)
+          .set({
+            content: input.content,
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.post.id, input.postId))
+          .returning();
+
+        if (!postContent[0]) {
+          throw new Error("Failed to save post");
+        }
+        console.log("postContent", postContent);
+        const postId = postContent[0].id;
+        if (input.video ?? input.thumbnail) {
+          const youtubeContent = await db.query.youtubeContent.findFirst({
+            where: eq(schema.youtubeContent.postId, postId),
+          });
+
+          if (youtubeContent && input.video) {
+            await deleteFileFromAws([youtubeContent.video]);
+          }
+          if (youtubeContent && input.thumbnail) {
+            await deleteFileFromAws([youtubeContent.thumbnail]);
+          }
+        }
+        const content = await db
+          .update(schema.youtubeContent)
+          .set({
+            description: input.description,
+            title: input.title,
+            video: input.video,
+            thumbnail: input.thumbnail,
+            postId: postId,
+            YoutubeTokenId: input.YoutubeTokenId ? input.YoutubeTokenId : null,
+            videoTags: input.videoTags ? input.videoTags : [],
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.youtubeContent.postId, postId))
+          .returning();
+
+        console.log("content", content);
 
         const contentRes = content[0];
         const postRes = postContent[0];
