@@ -14,19 +14,32 @@ interface IConnection {
 }
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
-  const { setContent, content } = useStore(
-    (state) => ({
-      setContent: state.setContent,
-      content: state.content,
-    }),
-    shallow,
-  );
+  const { setContent, content, setYoutubeContent, postType, youtubeContent } =
+    useStore(
+      (state) => ({
+        setContent: state.setContent,
+        content: state.content,
+        setYoutubeContent: state.setYoutubeContent,
+        postType: state.postType,
+        youtubeContent: state.youtubeContent,
+      }),
+      shallow,
+    );
 
-  const isSelected = content.some((item) => item.id === id);
+  const isSelected =
+    content.some((item) => item.id === id) || youtubeContent.youtubeId === id;
 
   const handleClick = () => {
     if (isSelected) {
       setContent(content.filter((item) => item.id !== id));
+
+      if (postType === "LONG_VIDEO") {
+        setYoutubeContent({
+          ...youtubeContent,
+          name: "",
+          youtubeId: "",
+        });
+      }
     } else {
       setContent([
         ...content,
@@ -40,9 +53,15 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           uploadedFiles: [],
         },
       ]);
+      if (postType === "LONG_VIDEO") {
+        setYoutubeContent({
+          ...youtubeContent,
+          name: name,
+          youtubeId: id,
+        });
+      }
     }
   };
-  console.log(profilePic, "p");
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -54,11 +73,6 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
       onClick={handleClick}
     >
       <div className="relative">
-        {/* <Avatar
-          src={profilePic}
-          alt="avatar" 
-          withBorder={true}
-        /> */}
         <Avatar className="p-0.5 ring-4 ring-primary ring-offset-1">
           <AvatarImage src={profilePic} alt="avatar" />
           <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>

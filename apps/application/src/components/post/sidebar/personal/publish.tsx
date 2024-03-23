@@ -30,7 +30,9 @@ function Publish({ params }: { params: { id: string } }) {
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       {/* <Picker /> */}
-      {uploadProgress > 0 && <Card>uploading {uploadProgress}%</Card>}
+      {uploadProgress > 0 && (
+        <Card className="p-3">uploading {uploadProgress}%</Card>
+      )}
       <DateTimePicker
         date={date}
         setDate={setDate}

@@ -11,25 +11,51 @@ import { TagInput } from "@aperturs/ui/tag-input";
 import { Textarea } from "@aperturs/ui/textarea";
 
 import { Dropzone } from "~/components/custom/dropzone";
+import { useDebounce } from "~/hooks/useDebounce";
 import { useStore } from "~/store/post-store";
 
 export default function Youtube() {
-  const { setYoutubeContent, youtubeContent } = useStore(
+  const { setYoutubeContent, youtubeContent, setContent, content } = useStore(
     (state) => ({
       youtubeContent: state.youtubeContent,
       setYoutubeContent: state.setYoutubeContent,
+      setContent: state.setContent,
+      content: state.content,
     }),
     shallow,
   );
-  const [video, setVideo] = useState<string[]>([youtubeContent.videoUrl]);
-  const [thumbnail, setThumbnail] = useState<string[]>([
-    youtubeContent.thumbnail,
-  ]);
+  const [video, setVideo] = useState<string[]>(
+    youtubeContent.videoTitle.length > 0 ? [youtubeContent.videoUrl] : [],
+  );
+  const [thumbnail, setThumbnail] = useState<string[]>(
+    youtubeContent.thumbnail.length > 0 ? [youtubeContent.thumbnail] : [],
+  );
   const [tags, setTags] = useState<Tag[]>(
     youtubeContent.videoTags.map((tag) => ({ text: tag, id: tag })),
   );
+  const [description, setDescription] = useState<string>(
+    youtubeContent.videoDescription,
+  );
+  const debounceDescription = useDebounce(description, 1000);
   const [videoFile, setVideoFile] = useState<File[]>([]);
   const [thumbnailFile, setThumbnailFile] = useState<File[]>([]);
+
+  useEffect(() => {
+    const updatedContent = content.map((item) => {
+      if (item.socialType === "YOUTUBE" || item.socialType === "DEFAULT") {
+        return { ...item, content: debounceDescription };
+      } else {
+        return item;
+      }
+    });
+    setYoutubeContent({
+      ...youtubeContent,
+      videoDescription: debounceDescription,
+    });
+    setContent(updatedContent);
+    console.log(youtubeContent, "content");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debounceDescription]);
 
   useEffect(() => {
     const videotags = tags.map((tag) => tag.text);
@@ -78,13 +104,13 @@ export default function Youtube() {
             </>
           )}
           {thumbnail.length > 0 ? (
-            <div className="flex max-w-[50%] flex-col gap-2">
+            <div className="flex w-1/2 flex-col gap-2">
               <Image
                 src={thumbnail[0] ?? ""}
                 alt="thumbnail"
                 width={300}
                 height={200}
-                className="aspect-video w-full  rounded-lg object-cover"
+                className="aspect-video w-full rounded-lg object-cover"
               />
               <Button
                 onClick={() => {
@@ -128,12 +154,9 @@ export default function Youtube() {
             placeholder="Video description"
             id="video-description"
             className="min-h-36 w-full"
-            value={youtubeContent.videoDescription}
+            value={description}
             onChange={(e) => {
-              setYoutubeContent({
-                ...youtubeContent,
-                videoDescription: e.target.value,
-              });
+              setDescription(e.target.value);
             }}
           />
         </>

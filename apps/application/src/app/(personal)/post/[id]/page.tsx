@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
-import { PostType } from "@aperturs/validators/post";
+import type { PostType } from "@aperturs/validators/post";
 
 import LogoLoad from "~/components/custom/loading/logoLoad";
 import PostView from "~/components/post/wrappers/post-wrapper";
@@ -34,19 +34,17 @@ export default function Post({ params }: { params: { id: string } }) {
   const fetchData = useMemo(() => {
     return () => {
       try {
-        console.log("runing fetchData");
         const data = getData.data;
         if (!data) return;
         setPostType(data.postType as PostType);
-        if (data.postType === "NORMAL") {
-          const localContent = data.content;
-          setContent(localContent);
-          console.log("localContent", localContent);
-        } else if (data.postType === "LONG_VIDEO") {
+        const localContent = data.content;
+        setContent(localContent);
+        console.log("localContent", localContent);
+        if (data.postType === "LONG_VIDEO") {
           setYoutubeContent({
             thumbnail: data.thumbnail.url,
             name: data.id,
-            youtubeId: data.postId,
+            youtubeId: data.YoutubeTokenId ?? "",
             videoUrl: data.video.url,
             videoTags: data.videoTags,
             videoTitle: data.title,

@@ -7,6 +7,11 @@ import { HiPaperAirplane, HiQueueList } from "react-icons/hi2";
 import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
 
+import type {
+  PostContentType,
+  SocialType,
+  youtubeContentType,
+} from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
 import { Dialog, DialogTrigger } from "@aperturs/ui/dialog";
@@ -14,14 +19,23 @@ import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
 import ConfirmationModal from "~/components/custom/modals/modal";
 import { api } from "~/trpc/react";
+import { SocialIcon } from "../post/common";
 
 interface IDarfCard {
   id: string;
   content: string;
+  contentT?: PostContentType[];
+  youtubeContent?: youtubeContentType;
   refetch?: () => void;
 }
 
-export default function DraftCard({ id, content, refetch }: IDarfCard) {
+export default function DraftCard({
+  id,
+  content,
+  refetch,
+  contentT,
+  youtubeContent,
+}: IDarfCard) {
   const router = useRouter();
   const { mutateAsync: DeleteDraft, isPending: deleting } =
     api.savepost.deleteSavedPostById.useMutation();
@@ -40,8 +54,19 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
   return (
     <Dialog>
       <Card className="mt-6 ">
-        <CardHeader className="relative ">
+        <CardHeader className="relative flex flex-row items-center justify-between">
           <p>Draft</p>
+          <div className="flex items-center gap-2">
+            {contentT &&
+              contentT.length > 0 &&
+              contentT?.map((item, index) => (
+                <AllSocials
+                  key={index}
+                  name={item.name}
+                  socialType={item.socialType as SocialType}
+                />
+              ))}
+          </div>
         </CardHeader>
         <ConfirmationModal
           DialogBodyContent="Are you sure you want to delete this draft?"
@@ -106,5 +131,21 @@ export default function DraftCard({ id, content, refetch }: IDarfCard) {
         </CardFooter>
       </Card>
     </Dialog>
+  );
+}
+
+function AllSocials({
+  name,
+  socialType,
+}: {
+  name: string;
+  socialType: SocialType;
+}) {
+  return (
+    <ToolTipSimple content={name} duration={30}>
+      <div className="rounded-full p-2">
+        <SocialIcon type={socialType} size="md" />
+      </div>
+    </ToolTipSimple>
   );
 }

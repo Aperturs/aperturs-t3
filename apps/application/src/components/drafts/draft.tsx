@@ -37,8 +37,11 @@ async function DraftPage() {
               key={item.id}
               id={item.id}
               content={
-                (item.content as any as PostContentType[])[0]?.content ?? ""
+                (item.content as any as PostContentType[])[0]?.content ??
+                item.youtubeContent.description ??
+                ""
               }
+              contentT={item.content as any as PostContentType[]}
             />
           ))
         ) : (

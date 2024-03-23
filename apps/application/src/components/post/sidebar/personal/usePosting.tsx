@@ -68,7 +68,7 @@ export default function usePublishing({ id }: { id: string }) {
     try {
       const id = orgid ?? user?.id ?? "";
       filekey = `${id}/youtube/${acceptedFile.name}`;
-      const uploadUrl = await getPresignedUrl({
+      const res = await getPresignedUrl({
         filekey,
         fileType: acceptedFile.type,
       });
@@ -81,7 +81,7 @@ export default function usePublishing({ id }: { id: string }) {
       // });
       // const { uploadUrl, fileKey: key } = response.data;
       // showAlert('Upload has begun.', 'info');
-      await axios.put(uploadUrl, acceptedFile, {
+      await axios.put(res.uploadUrl, acceptedFile, {
         headers: {
           "Content-Type": acceptedFile.type,
         },
@@ -92,7 +92,7 @@ export default function usePublishing({ id }: { id: string }) {
           setUploadProgress(progress);
         },
       });
-      return filekey;
+      return res.fileKey;
     } catch (error) {
       console.error("Failed to upload file:", error);
       return;
@@ -244,7 +244,14 @@ export default function usePublishing({ id }: { id: string }) {
           title: youtubeContent.videoTitle,
           updatedAt: new Date(),
           videoTags: youtubeContent.videoTags,
-          // YoutubeTokenId: youtubeContent.youtubeId,
+          content: content.filter(
+            (item) =>
+              item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
+          ),
+          YoutubeTokenId:
+            youtubeContent.youtubeId.length > 0
+              ? youtubeContent.youtubeId
+              : undefined,
           video: video,
         });
 
@@ -352,7 +359,13 @@ export default function usePublishing({ id }: { id: string }) {
     handleUpdate,
     handleSchedule,
     isDisabled:
-      !content || uploadingFiles || saving || linkedinPosting || tweeting,
+      !content ||
+      uploadingFiles ||
+      saving ||
+      linkedinPosting ||
+      tweeting ||
+      savingYoutube ||
+      gettingPresignedUrl,
     isUploaded,
     disablePosting: content.length < 2,
     // scheduling,

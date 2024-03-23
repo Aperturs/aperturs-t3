@@ -9,7 +9,7 @@ export const postType = {
 export type PostType = (typeof postType)[keyof typeof postType];
 export const PostTypeSchema = z.nativeEnum(postType);
 
-const postSchema = z.object({
+export const postSchema = z.object({
   id: z.string(),
   name: z.string(),
   socialType: z.string(),

@@ -51,7 +51,7 @@ export async function GetPresignedUrl({
     throw new Error("Error getting presigned URL");
   });
   console.log(uploadUrl);
-  return uploadUrl;
+  return { uploadUrl, fileKey };
 }
 
 export async function getFileDetails(fileKey: string) {

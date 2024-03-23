@@ -7,6 +7,7 @@ import { z } from "zod";
 import type { PostContentType } from "@aperturs/validators/post";
 import { desc, eq, post, schema } from "@aperturs/db";
 import {
+  postSchema,
   savePostInputSchema,
   updatePostInputSchema,
 } from "@aperturs/validators/post";
@@ -97,32 +98,28 @@ export const posting = createTRPCRouter({
     const posts = await ctx.db.query.post.findMany({
       where: eq(schema.post.clerkUserId, ctx.currentUser),
       orderBy: desc(schema.post.updatedAt),
+      with: {
+        youtubeContent: true,
+      },
     });
-    console.log(posts);
     return posts;
   }),
 
   getSavedPostById: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      // const post = await ctx.prisma.post.findUnique({
-      //   where: { id: input },
-      // });
-
       const post = await ctx.db.query.post.findFirst({
         where: eq(schema.post.id, input),
         with: {
           youtubeContent: true,
         },
       });
-
+      const localPost = post?.content as PostContentType[];
+      const contentWithEmptyFiles = localPost.map((post) => ({
+        ...post,
+        files: post.files ?? [],
+      }));
       if (post?.postType === "NORMAL") {
-        const localPost = post?.content as PostContentType[];
-        const contentWithEmptyFiles = localPost.map((post) => ({
-          ...post,
-          files: post.files ?? [],
-        }));
-
         return {
           postType: post?.postType,
           scheduledAt: post?.scheduledAt,
@@ -147,7 +144,7 @@ export const posting = createTRPCRouter({
           thumbnail,
           scheduledAt: post?.scheduledAt,
           organizationId: post?.organizationId,
-          content: post?.content,
+          content: contentWithEmptyFiles,
         };
       }
     }),
@@ -191,14 +188,18 @@ export const posting = createTRPCRouter({
       }
     }),
   saveYoutubePost: protectedProcedure
-    .input(post.YoutubeContentInsertSchema.omit({ postId: true }))
+    .input(
+      post.YoutubeContentInsertSchema.omit({ postId: true }).extend({
+        content: z.array(postSchema.omit({ files: true })),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
       const post = await ctx.db.transaction(async (db) => {
         const postContent = await db
           .insert(schema.post)
           .values({
             clerkUserId: ctx.currentUser,
-            content: {},
+            content: input.content,
             status: "SAVED",
             updatedAt: new Date(),
             postType: "LONG_VIDEO",
