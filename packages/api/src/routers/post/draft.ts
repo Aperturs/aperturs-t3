@@ -99,16 +99,33 @@ export const posting = createTRPCRouter({
       }
     }),
 
-  getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.db.query.post.findMany({
-      where: eq(schema.post.clerkUserId, ctx.currentUser),
-      orderBy: desc(schema.post.updatedAt),
-      with: {
-        youtubeContent: true,
-      },
-    });
-    return posts;
-  }),
+  getSavedPosts: protectedProcedure
+    .input(
+      z.object({
+        orgid: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.orgid) {
+        const posts = await ctx.db.query.post.findMany({
+          where: eq(schema.post.organizationId, input.orgid),
+          orderBy: desc(schema.post.updatedAt),
+          with: {
+            youtubeContent: true,
+          },
+        });
+        return posts;
+      } else {
+        const posts = await ctx.db.query.post.findMany({
+          where: eq(schema.post.clerkUserId, ctx.currentUser),
+          orderBy: desc(schema.post.updatedAt),
+          with: {
+            youtubeContent: true,
+          },
+        });
+        return posts;
+      }
+    }),
 
   getSavedPostById: protectedProcedure
     .input(z.string())
