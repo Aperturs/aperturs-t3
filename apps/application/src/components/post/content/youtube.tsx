@@ -59,7 +59,6 @@ export default function Youtube() {
 
   useEffect(() => {
     const videotags = tags.map((tag) => tag.text);
-
     setYoutubeContent({
       ...youtubeContent,
       videoUrl: video[0] ?? "",
@@ -71,12 +70,14 @@ export default function Youtube() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [video, thumbnail, tags]);
 
+  console.log(youtubeContent, "youtube content");
+
   return (
     <>
       <div className="flex flex-col gap-3">
         <div className="flex flex-col items-center gap-2 sm:flex-row lg:flex-col  2xl:flex-row">
           {video.length > 0 ? (
-            <div className="flex max-w-[50%] flex-col gap-2 rounded-lg">
+            <div className="flex flex-col gap-2 rounded-lg sm:max-w-[50%] lg:max-w-full 2xl:max-w-[50%]">
               <video
                 src={video[0]}
                 className="aspect-video w-full  object-cover"
@@ -104,7 +105,7 @@ export default function Youtube() {
             </>
           )}
           {thumbnail.length > 0 ? (
-            <div className="flex w-1/2 flex-col gap-2">
+            <div className="flex flex-col gap-2 sm:w-[50%] lg:w-full 2xl:w-[50%]">
               <Image
                 src={thumbnail[0] ?? ""}
                 alt="thumbnail"

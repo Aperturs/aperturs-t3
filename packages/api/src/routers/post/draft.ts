@@ -73,7 +73,7 @@ export const posting = createTRPCRouter({
   updatePost: protectedProcedure
     .input(updatePostInputSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log(input.postContent);
+      console.log(input, "input");
       try {
         await ctx.db
           .update(schema.post)
@@ -213,6 +213,7 @@ export const posting = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log(input, "input");
       const post = await saveYoutubeContent({
         ...input,
         userId: ctx.currentUser,

@@ -103,7 +103,8 @@ export default function usePublishing({ id }: { id: string }) {
   };
 
   const handlePublish = async () => {
-    content.forEach(async (item) => {
+    // Array to store all promises
+    const promises = content.map(async (item) => {
       switch (item.socialType) {
         case `${SocialType.Twitter}`:
           setLoading(true);
@@ -154,6 +155,10 @@ export default function usePublishing({ id }: { id: string }) {
           console.log("hey brooo");
       }
     });
+    // Wait for all promises to resolve
+    await Promise.all(promises);
+
+    // After all promises are resolved
     if (!twitterError || !linkedinError || loading) {
       reset();
     }
@@ -167,16 +172,15 @@ export default function usePublishing({ id }: { id: string }) {
 
       let videoChanged = false;
       if (!youtubeContent.thumbnail.includes("amazonaws.com")) {
+        console.log("it dosnt belong to aws");
         if (!youtubeContent.thumbnailFile) {
-          toast.error("Please add a thumbnail");
-          return;
+          throw new Error("Please add a thumbnail");
         }
         const thumbnailFile = youtubeContent.thumbnailFile;
         const k = await uploadFiles(thumbnailFile);
         thumbnailChanged = true;
         if (!k) {
-          toast.error("Failed to upload thumbnail");
-          return;
+          throw new Error("Failed to upload thumbnail");
         }
         thumbnail = k;
       }
@@ -190,8 +194,7 @@ export default function usePublishing({ id }: { id: string }) {
         videoChanged = true;
         const k = await uploadFiles(videoFile);
         if (!k) {
-          toast.error("Failed to upload video");
-          return;
+          throw new Error("Failed to upload video");
         }
         video = k;
       }
@@ -201,7 +204,6 @@ export default function usePublishing({ id }: { id: string }) {
         title: youtubeContent.videoTitle,
         updatedAt: new Date(),
         videoTags: youtubeContent.videoTags,
-
         YoutubeTokenId:
           youtubeContent.youtubeId.length > 0
             ? youtubeContent.youtubeId
@@ -215,36 +217,31 @@ export default function usePublishing({ id }: { id: string }) {
         data = { ...data, video: video };
       }
       await postToYoutube({
+        ...data,
         postId: id,
         shouldUpdate: true,
-        ...date,
         content: content.filter(
           (item) =>
             item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
         ),
       });
-    }
-    {
+    } else {
       if (!youtubeContent.thumbnailFile) {
-        toast.error("Please add a thumbnail");
-        return;
+        throw new Error("Please add a thumbnail");
       }
       if (!youtubeContent.videoFile) {
-        toast.error("Please add a video");
-        return;
+        throw new Error("Please add a video");
       }
       const thumbnailFile = youtubeContent.thumbnailFile;
       const videoFile = youtubeContent.videoFile;
 
       const thumbnail = await uploadFiles(thumbnailFile);
       if (!thumbnail) {
-        toast.error("Failed to upload thumbnail");
-        return;
+        throw new Error("Failed to upload thumbnail");
       }
       const video = await uploadFiles(videoFile);
       if (!video) {
-        toast.error("Failed to upload video");
-        return;
+        throw new Error("Failed to upload video");
       }
       const data = {
         description: youtubeContent.videoDescription,

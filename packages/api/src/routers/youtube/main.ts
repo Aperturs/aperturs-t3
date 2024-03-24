@@ -77,6 +77,8 @@ export const youtubeRouter = createTRPCRouter({
         if (!input.postId) {
           throw new Error("postId is required to update");
         }
+        console.log(input, "input update content from posting");
+
         const postUpdate = await updateYoutubeContent(input);
         postId = postUpdate.id;
       } else {

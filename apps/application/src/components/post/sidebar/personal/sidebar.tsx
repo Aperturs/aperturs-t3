@@ -8,7 +8,6 @@ import Publish from "./publish";
 
 const SideBar = ({ params }: { params: { postid: string } }) => {
   const { data, isLoading } = api.user.fetchConnectedAccounts.useQuery();
-  console.log(data);
 
   return (
     <div>

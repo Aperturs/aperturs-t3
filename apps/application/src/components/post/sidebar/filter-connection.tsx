@@ -44,8 +44,6 @@ export default function ConnectedAccounts({
 
   const filteredAccounts = filterConnectedAccounts(data);
 
-  console.log(filteredAccounts, "filteredAccounts");
-
   if (!filteredAccounts || filteredAccounts.length === 0)
     return <p className="w-full text-center">No accounts found</p>;
 
