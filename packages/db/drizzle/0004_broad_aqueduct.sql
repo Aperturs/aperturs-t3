@@ -1,0 +1,1 @@
+ALTER TABLE "YoutubeContent" ALTER COLUMN "channelId" DROP NOT NULL;

@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
-import { AiFillInstagram, AiOutlineTwitter } from "react-icons/ai";
+import {
+  AiFillInstagram,
+  AiFillYoutube,
+  AiOutlineTwitter,
+} from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 import { Button } from "@aperturs/ui/button";
@@ -12,9 +15,9 @@ import { SocialAdd } from "@aperturs/ui/icons";
 import { SocialType } from "@aperturs/validators/post";
 
 import {
-  handleGithubRedirect,
   handleInstagramRedirect,
   handleLinkedinRedirect,
+  handleYoutubeRedirect,
 } from "~/utils/actions/handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
@@ -33,7 +36,10 @@ export const AddSocial = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
-        <Button className="flex h-20  w-full gap-2 whitespace-nowrap">
+        <Button
+          className="flex h-full min-h-32  w-full gap-2 whitespace-nowrap"
+          variant="secondary"
+        >
           <SocialAdd />
           Add Socials
         </Button>
@@ -49,23 +55,22 @@ export const AddSocial = () => {
 const Socials = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
-  const { userId } = useAuth();
 
   const params = useParams<{ orgid: string }>();
 
-  const handleGithub = async () => {
-    setLocalLoading(true);
-    if (!params?.orgid) {
-      await handleGithubRedirect({
-        orgId: "personal",
-      });
-      return;
-    }
-    await handleGithubRedirect({
-      orgId: params?.orgid,
-    });
-    setLocalLoading(false);
-  };
+  // const handleGithub = async () => {
+  //   setLocalLoading(true);
+  //   if (!params?.orgid) {
+  //     await handleGithubRedirect({
+  //       orgId: "personal",
+  //     });
+  //     return;
+  //   }
+  //   await handleGithubRedirect({
+  //     orgId: params?.orgid,
+  //   });
+  //   setLocalLoading(false);
+  // };
 
   const handleLinkedln = async () => {
     setLocalLoading(true);
@@ -86,6 +91,15 @@ const Socials = () => {
   const handleInstagram = async () => {
     setLocalLoading(true);
     await handleInstagramRedirect({
+      orgId: params?.orgid ?? "personal",
+      tokenId: "new",
+    });
+    setLocalLoading(false);
+  };
+
+  const handleYoutube = async () => {
+    setLocalLoading(true);
+    await handleYoutubeRedirect({
       orgId: params?.orgid ?? "personal",
       tokenId: "new",
     });
@@ -123,6 +137,15 @@ const Socials = () => {
       <Button
         variant="secondary"
         className="h-12"
+        onClick={handleYoutube}
+        disabled={localLoading}
+      >
+        <AiFillYoutube className="mr-2 text-2xl" />
+        <p>Youtube</p>
+      </Button>
+      <Button
+        variant="secondary"
+        className="h-12"
         onClick={handleLinkedln}
         disabled={localLoading}
       >
@@ -136,7 +159,7 @@ const Socials = () => {
         <Image src="/lens.svg" alt="lens" width={40} height={40} />
         <p>Lens </p>
       </button> */}
-      <Button
+      {/* <Button
         variant="secondary"
         className="h-12"
         onClick={async () => {
@@ -146,7 +169,7 @@ const Socials = () => {
       >
         <FaGithub className="mr-2 text-2xl" />
         <p>Github </p>
-      </Button>
+      </Button> */}
     </div>
   );
 };

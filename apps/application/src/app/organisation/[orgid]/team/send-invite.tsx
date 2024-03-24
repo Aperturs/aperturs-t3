@@ -66,11 +66,12 @@ const SendInvitation: React.FC<SendInvitationProps> = ({ agencyId }) => {
           if (!organization) {
             throw new Error("Organization not found");
           }
-          await organization.inviteMember({
+          const inv = await organization.inviteMember({
             emailAddress: values.email,
             role: `org:${values.role.toLowerCase()}`,
           });
           return await inviteUser({
+            inviteId: inv.id,
             name: values.name,
             email: values.email,
             role: values.role,

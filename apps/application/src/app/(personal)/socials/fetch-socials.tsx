@@ -10,10 +10,12 @@ export default async function FetchPersonalSocials() {
         <ConnectedSocial
           key={key}
           name={item.data.name ?? ""}
-          icon={<SocialIcon type={item.type} />}
+          icon={<SocialIcon type={item.type} size="xl" />}
           profilePic={item.data.profile_image_url ?? "/user.png"}
           id={item.data.tokenId}
           type={item.type}
+          connectedAt={item.data.connectedAt}
+          username={item.data.username}
         />
       ))}
     </>

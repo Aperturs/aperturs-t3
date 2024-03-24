@@ -32,7 +32,7 @@ export const subscriptions = pgTable("subscription", {
   subscriptionItemId: serial("subscriptionItemId"),
   userId: text("userId")
     .notNull()
-    .references(() => user.clerkUserId),
+    .references(() => user.clerkUserId, { onDelete: "cascade" }),
   planId: integer("planId").notNull(),
 });
 

@@ -8,6 +8,34 @@
       "when": 1709638077998,
       "tag": "0000_rich_steel_serpent",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710690321700,
+      "tag": "0001_premium_talisman",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1710722889313,
+      "tag": "0002_safe_union_jack",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1711030583106,
+      "tag": "0003_cynical_krista_starr",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1711070809098,
+      "tag": "0004_broad_aqueduct",
+      "breakpoints": true
     }
   ]
 }

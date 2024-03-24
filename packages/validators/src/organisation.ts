@@ -11,7 +11,13 @@ export const createOrganisationSchema = z.object({
 
 export type CreateOrganisation = z.infer<typeof createOrganisationSchema>;
 
-export const organisationRole = z.enum(["ADMIN", "EDITOR", "MEMBER", "OWNER"]);
+export const organisationRoleSchema = z.enum([
+  "ADMIN",
+  "EDITOR",
+  "MEMBER",
+  "OWNER",
+]);
+export type OrganisationRole = z.infer<typeof organisationRoleSchema>;
 
 export const inviteUserToOrganisationSchema = z.object({
   name: z.string(),
@@ -19,7 +25,8 @@ export const inviteUserToOrganisationSchema = z.object({
   orgId: z.string(),
   inviterId: z.string(),
   inviterName: z.string(),
-  role: organisationRole,
+  role: organisationRoleSchema,
+  inviteId: z.string(),
 });
 
 export type InviteUserToOrganisation = z.infer<

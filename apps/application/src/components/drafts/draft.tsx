@@ -1,17 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import Link from "next/link";
+import { Suspense } from "react";
 import { BsFillCalendarFill } from "react-icons/bs";
 
-import type { PostContentType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
-import { api } from "~/trpc/server";
-import PostCard from "./darfCard";
+import DraftSkeleton from "./draft-skeleton";
 
-async function DraftPage() {
-  const getSavedPosts = await api.savepost.getSavedPosts();
-
+async function DraftPage({ children }: { children: React.ReactNode }) {
   return (
     <div className=" relative flex w-full flex-col">
       <div className="flex justify-between">
@@ -31,26 +26,17 @@ async function DraftPage() {
         xl:grid-cols-3
         "
       >
-        {getSavedPosts.length > 0 ? (
-          getSavedPosts.map((item) => (
-            <PostCard
-              key={item.id}
-              id={item.id}
-              content={
-                (item.content as any as PostContentType[])[0]?.content ?? ""
-              }
-            />
-          ))
-        ) : (
-          <div className="absolute top-[40dvh] grid w-full place-content-center">
-            <h1 className="mb-2 text-center text-xl font-semibold">
-              No Drafts Available
-            </h1>
-            <Link href="/post">
-              <Button>Create New Draft</Button>
-            </Link>
-          </div>
-        )}
+        <Suspense
+          fallback={
+            <>
+              <DraftSkeleton />
+              <DraftSkeleton />
+              <DraftSkeleton />
+            </>
+          }
+        >
+          {children}
+        </Suspense>
       </div>
     </div>
   );

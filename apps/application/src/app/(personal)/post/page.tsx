@@ -6,7 +6,11 @@ import LogoLoad from "~/components/custom/loading/logoLoad";
 import PostView from "~/components/post/wrappers/post-wrapper";
 import { useStore } from "~/store/post-store";
 
-export default function PostContent({ params }: { params: { id: string } }) {
+export default function PostContent({
+  params,
+}: {
+  params: { postid: string };
+}) {
   const { reset, shouldReset, setShouldReset } = useStore((state) => ({
     reset: state.reset,
     shouldReset: state.shouldReset,

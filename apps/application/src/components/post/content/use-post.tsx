@@ -20,9 +20,7 @@ export default function usePost() {
     const localUploadedFiles: Record<string, string> = {};
     setLoading(true);
     console.log("uploading files");
-
     const updatedContent = [];
-
     for (const post of content) {
       console.log("inside for loop", post.files?.length);
       if (post.files && post.files.length > 0) {

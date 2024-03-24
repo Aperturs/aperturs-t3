@@ -34,17 +34,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 
 import { api } from "~/trpc/react";
 import { BusinessCategory } from "./business-catagories";
+import OrgDetailsSkeleton from "./org-details-skeleton";
 import UploadImage from "./upload-image";
 
 export default function ProfileButton() {
   const { user } = useUser();
   console.log(user?.imageUrl, "user");
-  const { data, isLoading } =
+  const { data, isLoading: orgDetailsLoading } =
     api.organisation.basics.getAllUserOrganisations.useQuery();
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
-  const { setActive } = useOrganizationList();
 
   return (
     <Dialog>
@@ -79,6 +79,12 @@ export default function ProfileButton() {
                 />
               </CommandGroup>
               <CommandGroup heading="Organisations">
+                {orgDetailsLoading && (
+                  <>
+                    <OrgDetailsSkeleton />
+                    <OrgDetailsSkeleton />
+                  </>
+                )}
                 {data?.map((item) => {
                   return (
                     <OrganisationItem
@@ -163,7 +169,8 @@ function CreateOrganisationDialog() {
   const [value, setValue] = useState<Option>();
   const [image, setImage] = useState<File | undefined>();
   const { uploadToS3 } = useS3Upload();
-  const { createOrganization } = useOrganizationList();
+  const { createOrganization, setActive } = useOrganizationList();
+  const { organization } = useOrganization();
 
   const handleCreateOrganisation = async () => {
     if (!name) return toast.error("Organisation name is required");
@@ -173,7 +180,7 @@ function CreateOrganisationDialog() {
     await toast
       .promise(
         (async () => {
-          let logo = undefined;
+          let logo = "";
           if (image) {
             const { url } = await uploadToS3(image);
             logo = url;
@@ -184,7 +191,10 @@ function CreateOrganisationDialog() {
           if (!clerkOrg.id) {
             throw new Error("Failed to create organisation");
           }
-          console.log(clerkOrg, "clerk org hey");
+          await setActive?.({ organization: clerkOrg.id });
+          if (image) {
+            await organization?.setLogo({ file: image });
+          }
           const res = await createOrganisationBackend({
             id: slug,
             clerkOrgId: clerkOrg.id,
@@ -252,6 +262,7 @@ function OrganisationItem({
 }) {
   const { setActive } = useOrganizationList();
   const { organization } = useOrganization();
+  const router = useRouter();
   const handleOrganisationSwitch = async () => {
     console.log("clicked");
     if (!setActive) {
@@ -259,6 +270,7 @@ function OrganisationItem({
       return;
     }
     await setActive({ organization: id });
+    router.push(link);
     console.log(organization?.name, "org name");
   };
   return (

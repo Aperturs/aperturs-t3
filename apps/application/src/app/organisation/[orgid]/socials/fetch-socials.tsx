@@ -22,6 +22,8 @@ export default async function FetchOrgSocials({
           profilePic={item.data.profile_image_url ?? "/user.png"}
           id={item.data.tokenId}
           type={item.type}
+          connectedAt={item.data.connectedAt}
+          username={item.data.username}
         />
       ))}
     </>

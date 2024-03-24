@@ -5,6 +5,7 @@ import { Plans } from "./handlers/subscription/plans";
 import { leamonWebhookHasMeta } from "./helpers/type-guard";
 import { appRouter } from "./root";
 import { createCallerFactory, createTRPCContext } from "./trpc";
+import { googleAuth2Client, youtubeClient } from "./utils/googe-yt";
 import { configureLemonSqueezy } from "./utils/lemon-squeezy";
 
 /**
@@ -40,6 +41,8 @@ export {
   configureLemonSqueezy,
   createCaller,
   createTRPCContext,
+  googleAuth2Client,
   leamonWebhookHasMeta,
+  youtubeClient,
 };
 export type { AppRouter, RouterInputs, RouterOutputs };

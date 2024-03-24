@@ -4,7 +4,6 @@ import _jiti from "jiti";
 // const __dirname = dirname(__filename);
 
 const jiti = _jiti(fileURLToPath(import.meta.url));
-
 jiti("./src/env");
 jiti("@aperturs/api/env");
 
@@ -17,7 +16,6 @@ jiti("@aperturs/api/env");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-
   experimental: {
     turbo: {
       rules: {
@@ -31,9 +29,13 @@ const config = {
     //   ? { outputFileTracingRoot: path.join(__dirname, "../../") }
     //   : null),
   },
-
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname:
+          "cdkapertursstack-youtubeuploadsbucketb855ba46-ppocdos2sz5k.s3.us-east-1.amazonaws.com",
+      },
       {
         protocol: "https",
         hostname: "images.unsplash.com",
@@ -64,19 +66,30 @@ const config = {
       },
       {
         protocol: "https",
+        hostname: "img.clerk.com",
+      },
+      {
+        protocol: "https",
         hostname: "media.licdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "yt3.ggpht.com",
       },
     ],
   },
-
   transpilePackages: [
     "@aperturs/api",
     "@aperturs/db",
     "@aperturs/ui",
     "@aperturs/validators",
   ],
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
    * must comment the below `i18n` config out.
@@ -88,4 +101,9 @@ const config = {
     defaultLocale: "en",
   },
 };
+
+// export default MillionLint.next({
+//   rsc: true
+// })(config);
+
 export default config;

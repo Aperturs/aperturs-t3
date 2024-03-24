@@ -27,7 +27,10 @@ import {
 } from "@aperturs/ui/dropdown-menu";
 
 import { api } from "~/trpc/react";
-import { handleLinkedinRedirect } from "../../../utils/actions/handle-socials";
+import {
+  handleLinkedinRedirect,
+  handleYoutubeRedirect,
+} from "~/utils/actions/handle-socials";
 
 export default function ConnectSocialsAction({
   id,
@@ -55,12 +58,22 @@ export default function ConnectSocialsAction({
         tokenId: id,
       });
     }
+    if (type === ("YOUTUBE" as SocialType)) {
+      await handleYoutubeRedirect({
+        orgId: params?.orgid ?? "personal",
+        tokenId: id,
+      });
+    }
   };
+
   return (
     <AlertDialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+          <Button
+            variant="ghost"
+            className="absolute right-3 top-3 h-8 w-8 p-0"
+          >
             <span className="sr-only">Open menu</span>
             <MoreVertical className="h-4 w-4" />
           </Button>

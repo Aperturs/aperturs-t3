@@ -1,9 +1,14 @@
-import Picker from "~/components/custom/datepicker/picker";
-import { SimpleButton } from "../../common";
-import usePublishing from "./usePosting";
+import { Card } from "@aperturs/ui/card";
 
-function Publish({ params }: { params: { id: string } }) {
-  const { id } = params;
+import { DateTimePicker } from "~/components/custom/datepicker/date-time";
+import { useStore } from "~/store/post-store";
+import { SimpleButton } from "../../common";
+import usePublishing from "../usePosting";
+
+function Publish({ params }: { params: { postid: string } }) {
+  const { postid } = params;
+  const date = useStore((state) => state.date);
+  const setDate = useStore((state) => state.setDate);
 
   const {
     handlePublish,
@@ -14,29 +19,40 @@ function Publish({ params }: { params: { id: string } }) {
     isUploaded,
     linkedinPosting,
     saving,
+    disablePosting,
     tweeting,
+    uploadProgress,
     // scheduling,
     updating,
     uploadingFiles,
-  } = usePublishing({ id });
+    uploadingFileName,
+  } = usePublishing({ id: postid });
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
-      <div className="grid grid-cols-2 gap-1">
-        <Picker />
-        <SimpleButton
-          text="Schedule"
-          // isLoading={scheduling}
-          disabled={isDisabled}
-          onClick={async () => {
-            await handleSchedule();
-          }}
-        />
-      </div>
+      {/* <Picker /> */}
+      {uploadProgress > 0 && (
+        <Card className="p-3">
+          {uploadingFileName} {uploadProgress}%
+        </Card>
+      )}
+      <DateTimePicker
+        date={date}
+        setDate={setDate}
+        // key={new Date().getTime()}
+      />
+      <SimpleButton
+        text="Schedule"
+        // isLoading={scheduling}
+        disabled={isDisabled || disablePosting}
+        onClick={async () => {
+          await handleSchedule();
+        }}
+      />
       <SimpleButton
         isLoading={tweeting || linkedinPosting}
         text="Publish Now"
-        disabled={isDisabled}
+        disabled={isDisabled || disablePosting}
         onClick={async () => {
           await handlePublish();
         }}
@@ -61,14 +77,6 @@ function Publish({ params }: { params: { id: string } }) {
           }}
         />
       )}
-      {/* <SimpleButton
-        text="Add to Queue"
-        
-        onClick={() => {
-          // console.log("onClick event is triggered");
-        }}
-        disabled={content.length === 0}
-      /> */}
     </div>
   );
 }

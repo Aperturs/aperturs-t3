@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useOrganization } from "@clerk/nextjs";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -21,6 +22,7 @@ import {
 } from "@aperturs/ui/alert-dialog";
 import { Badge } from "@aperturs/ui/badge";
 import { Button } from "@aperturs/ui/button";
+import { DialogClose } from "@aperturs/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,6 +43,7 @@ import {
 
 import CustomModal from "~/components/custom/modals/custom-modal";
 import { useModal } from "~/components/custom/modals/modal-provider";
+import useOrgCurrentRole from "~/hooks/useOrgCurrentRole";
 import { api } from "~/trpc/react";
 
 export const columns: ColumnDef<OrganizationUser>[] = [
@@ -103,7 +106,10 @@ export const columns: ColumnDef<OrganizationUser>[] = [
     id: "actions",
     cell: ({ row }) => {
       const rowData = row.original;
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { isAdmin } = useOrgCurrentRole();
 
+      if (!isAdmin) return null;
       return <CellActions rowData={rowData} />;
     },
   },
@@ -116,6 +122,7 @@ interface CellActionsProps {
 const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { organization } = useOrganization();
   const { setOpen } = useModal();
   const { mutateAsync: removeUser } =
     api.organisation.team.removeUserFromOrganisation.useMutation();
@@ -192,6 +199,7 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
                 success: "User Removed",
                 error: "Failed to remove user",
               });
+              await organization?.removeMember(rowData.userId);
               setLoading(false);
               setTimeout(() => {
                 router.refresh();
@@ -208,11 +216,30 @@ const CellActions: React.FC<CellActionsProps> = ({ rowData }) => {
 
 type roles = "ADMIN" | "EDITOR" | "MEMBER";
 
-function EditDetails({ name, email, role, avatarUrl, id }: OrganizationUser) {
+function EditDetails({
+  name,
+  email,
+  role,
+  avatarUrl,
+  id,
+  userId,
+}: OrganizationUser) {
   const { mutateAsync: updateRole } =
     api.organisation.team.changeUserRole.useMutation();
-
+  const router = useRouter();
+  const { organization, invitations } = useOrganization();
   const [newRole, setNewRole] = useState<roles>(role as roles);
+
+  const handleRoleChange = async () => {
+    await updateRole({ orgUserId: id, newRole });
+    await organization?.updateMember({
+      role: `org:${newRole.toLowerCase()}`,
+      userId,
+    });
+    router.refresh();
+  };
+
+  console.log(invitations, "inv");
 
   return (
     <div>
@@ -248,18 +275,20 @@ function EditDetails({ name, email, role, avatarUrl, id }: OrganizationUser) {
           </Select>
         </div>
       </div>
-      <Button
-        className="w-full"
-        onClick={async () => {
-          await toast.promise(updateRole({ orgUserId: id, newRole }), {
-            loading: "Updating Role...",
-            success: "Role Updated",
-            error: "Failed to update role",
-          });
-        }}
-      >
-        Change Role
-      </Button>
+      <DialogClose asChild>
+        <Button
+          className="w-full"
+          onClick={async () => {
+            await toast.promise(handleRoleChange(), {
+              loading: "Updating Role...",
+              success: "Role Updated",
+              error: (err) => `Failed to update role: ${err}`,
+            });
+          }}
+        >
+          Change Role
+        </Button>
+      </DialogClose>
     </div>
   );
 }

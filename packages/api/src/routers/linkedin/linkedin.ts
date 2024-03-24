@@ -57,11 +57,10 @@ export const linkedin = createTRPCRouter({
         linkedinData: tokens.linkedInTokenInsertSchema,
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       try {
         await refreshLinkedinDataInDatabase({
           linkedinData: input.linkedinData,
-          userId: ctx.currentUser,
           tokenId: input.tokenId,
         });
         return {
