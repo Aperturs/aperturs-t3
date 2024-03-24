@@ -39,6 +39,7 @@ export const savePostInputSchema = z.object({
   postContent: z.array(postSchema.omit({ files: true })),
   scheduledTime: z.date().optional(),
   projectId: z.string().optional(),
+  orgId: z.string().optional(),
 });
 
 export const updatePostInputSchema = z.object({
@@ -58,6 +59,7 @@ export const YoutubeContentType = z.object({
   video: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
+  orgId: z.string().optional(),
 });
 
 export const updateYoutubePostSchema = YoutubeContentType.partial().extend({

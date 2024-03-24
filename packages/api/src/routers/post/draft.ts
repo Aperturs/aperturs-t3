@@ -27,7 +27,8 @@ export const posting = createTRPCRouter({
             ctx.db
               .insert(schema.post)
               .values({
-                clerkUserId: ctx.currentUser,
+                organizationId: input.orgId ? input.orgId : undefined,
+                clerkUserId: input.orgId ? undefined : ctx.currentUser,
                 status: input.scheduledTime ? "SCHEDULED" : "SAVED",
                 scheduledAt: input.scheduledTime
                   ? new Date(input.scheduledTime)

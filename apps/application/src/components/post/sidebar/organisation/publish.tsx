@@ -1,14 +1,19 @@
-import Picker from "~/components/custom/datepicker/picker";
+import { Card } from "@aperturs/ui/card";
+
+import { DateTimePicker } from "~/components/custom/datepicker/date-time";
 import useOrgCurrentRole from "~/hooks/useOrgCurrentRole";
+import { useStore } from "~/store/post-store";
 import { SimpleButton } from "../../common";
-import usePublishing from "../personal/usePosting";
+import usePublishing from "../usePosting";
 
 export default function OrgPublish({
   params,
 }: {
-  params: { postId: string; orgid: string };
+  params: { postid: string; orgid: string };
 }) {
-  const { postId } = params;
+  const { postid } = params;
+  const date = useStore((state) => state.date);
+  const setDate = useStore((state) => state.setDate);
 
   const {
     handlePublish,
@@ -23,25 +28,30 @@ export default function OrgPublish({
     // scheduling,
     updating,
     uploadingFiles,
-  } = usePublishing({ id: postId });
+    uploadProgress,
+    uploadingFileName,
+  } = usePublishing({ id: postid });
 
   const { isAdmin } = useOrgCurrentRole();
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
+      {uploadProgress > 0 && (
+        <Card className="p-3">
+          {uploadingFileName} {uploadProgress}%
+        </Card>
+      )}
       {isAdmin && (
         <>
-          <div className="grid grid-cols-2 gap-1">
-            <Picker />
-            <SimpleButton
-              text="Schedule"
-              // isLoading={scheduling}
-              disabled={isDisabled}
-              onClick={async () => {
-                await handleSchedule();
-              }}
-            />
-          </div>
+          <DateTimePicker date={date} setDate={setDate} />
+          <SimpleButton
+            text="Schedule"
+            // isLoading={scheduling}
+            disabled={isDisabled}
+            onClick={async () => {
+              await handleSchedule();
+            }}
+          />
           <SimpleButton
             isLoading={tweeting || linkedinPosting}
             text="Publish Now"

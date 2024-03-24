@@ -3,7 +3,7 @@ import { Card } from "@aperturs/ui/card";
 import { DateTimePicker } from "~/components/custom/datepicker/date-time";
 import { useStore } from "~/store/post-store";
 import { SimpleButton } from "../../common";
-import usePublishing from "./usePosting";
+import usePublishing from "../usePosting";
 
 function Publish({ params }: { params: { postid: string } }) {
   const { postid } = params;
@@ -25,13 +25,16 @@ function Publish({ params }: { params: { postid: string } }) {
     // scheduling,
     updating,
     uploadingFiles,
+    uploadingFileName,
   } = usePublishing({ id: postid });
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       {/* <Picker /> */}
       {uploadProgress > 0 && (
-        <Card className="p-3">uploading {uploadProgress}%</Card>
+        <Card className="p-3">
+          {uploadingFileName} {uploadProgress}%
+        </Card>
       )}
       <DateTimePicker
         date={date}

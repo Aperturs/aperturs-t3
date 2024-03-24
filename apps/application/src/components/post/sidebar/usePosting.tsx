@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
+import { set } from "date-fns";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
@@ -10,7 +11,7 @@ import { SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
-import usePost from "../../content/use-post";
+import usePost from "../content/use-post";
 
 export default function usePublishing({ id }: { id: string }) {
   const {
@@ -74,6 +75,7 @@ export default function usePublishing({ id }: { id: string }) {
   const router = useRouter();
   const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [uploadingFileName, setUploadingFileName] = useState("");
 
   const uploadFiles = async (acceptedFile: File) => {
     let filekey = "";
@@ -177,6 +179,8 @@ export default function usePublishing({ id }: { id: string }) {
           throw new Error("Please add a thumbnail");
         }
         const thumbnailFile = youtubeContent.thumbnailFile;
+
+        setUploadingFileName("Uploading thumbnail");
         const k = await uploadFiles(thumbnailFile);
         thumbnailChanged = true;
         if (!k) {
@@ -192,6 +196,7 @@ export default function usePublishing({ id }: { id: string }) {
         }
         const videoFile = youtubeContent.videoFile;
         videoChanged = true;
+        setUploadingFileName("Uploading video");
         const k = await uploadFiles(videoFile);
         if (!k) {
           throw new Error("Failed to upload video");
@@ -203,6 +208,7 @@ export default function usePublishing({ id }: { id: string }) {
         description: youtubeContent.videoDescription,
         title: youtubeContent.videoTitle,
         updatedAt: new Date(),
+        orgId: orgid ? orgid : undefined,
         videoTags: youtubeContent.videoTags,
         YoutubeTokenId:
           youtubeContent.youtubeId.length > 0
@@ -234,11 +240,12 @@ export default function usePublishing({ id }: { id: string }) {
       }
       const thumbnailFile = youtubeContent.thumbnailFile;
       const videoFile = youtubeContent.videoFile;
-
+      setUploadingFileName("Uploading thumbnail");
       const thumbnail = await uploadFiles(thumbnailFile);
       if (!thumbnail) {
         throw new Error("Failed to upload thumbnail");
       }
+      setUploadingFileName("Uploading video");
       const video = await uploadFiles(videoFile);
       if (!video) {
         throw new Error("Failed to upload video");
@@ -293,18 +300,24 @@ export default function usePublishing({ id }: { id: string }) {
     await toast.promise(
       (async () => {
         // Upload files and modify content
+        setUploadingFileName("Uploading files");
         const newContent = await uploadFilesAndModifyContent();
         // Save to drafts
         const response = await saveToDrafts({
           postContent: newContent,
           scheduledTime:
             isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
+          orgId: orgid,
         });
 
         if (response.success) {
           if (!isScheduling) {
             reset();
-            router.push("/drafts");
+            if (orgid) {
+              router.push(`/organisation/${orgid}/drafts`);
+            } else {
+              router.push("/drafts");
+            }
           }
           postId = response.data;
         }
@@ -342,11 +355,13 @@ export default function usePublishing({ id }: { id: string }) {
     let postId = "";
     await toast.promise(
       (async () => {
+        setUploadingFileName("Uploading thumbnail");
         const thumbnail = await uploadFiles(thumbnailFile);
         if (!thumbnail) {
           toast.error("Failed to upload thumbnail");
           return;
         }
+        setUploadingFileName("Uploading video");
         const video = await uploadFiles(videoFile);
         if (!video) {
           toast.error("Failed to upload video");
@@ -355,6 +370,7 @@ export default function usePublishing({ id }: { id: string }) {
         const response = await saveYoutubePost({
           description: youtubeContent.videoDescription,
           thumbnail: thumbnail,
+          orgId: orgid,
           title: youtubeContent.videoTitle,
           updatedAt: new Date(),
           videoTags: youtubeContent.videoTags,
@@ -373,7 +389,11 @@ export default function usePublishing({ id }: { id: string }) {
 
         if (response.success) {
           reset();
-          router.push("/drafts");
+          if (orgid) {
+            router.push(`/organisation/${orgid}/drafts`);
+          } else {
+            router.push("/drafts");
+          }
         }
       })(),
       {
@@ -401,6 +421,7 @@ export default function usePublishing({ id }: { id: string }) {
             return;
           }
           const thumbnailFile = youtubeContent.thumbnailFile;
+          setUploadingFileName("Uploading thumbnail");
           const k = await uploadFiles(thumbnailFile);
           thumbnailChanged = true;
           if (!k) {
@@ -417,6 +438,7 @@ export default function usePublishing({ id }: { id: string }) {
           }
           const videoFile = youtubeContent.videoFile;
           videoChanged = true;
+          setUploadingFileName("Uploading video");
           const k = await uploadFiles(videoFile);
           if (!k) {
             toast.error("Failed to upload video");
@@ -448,26 +470,15 @@ export default function usePublishing({ id }: { id: string }) {
         }
         console.log(data, "data");
         const response = await updateYoutubePost(data);
-        // const response = await updateYoutubePost({
-        //   description: youtubeContent.videoDescription,
-        //   thumbnail: thumbnail,
-        //   title: youtubeContent.videoTitle,
-        //   updatedAt: new Date(),
-        //   videoTags: youtubeContent.videoTags,
-        //   content: content.filter(
-        //     (item) =>
-        //       item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
-        //   ),
-        //   YoutubeTokenId:
-        //     youtubeContent.youtubeId.length > 0
-        //       ? youtubeContent.youtubeId
-        //       : undefined,
-        //   video: video,
-        // });
+
         postId = response.data.id;
         if (response.success) {
           reset();
-          router.push("/drafts");
+          if (orgid) {
+            router.push(`/organisation/${orgid}/drafts`);
+          } else {
+            router.push("/drafts");
+          }
         }
       })(),
       {
@@ -501,7 +512,11 @@ export default function usePublishing({ id }: { id: string }) {
           if (response.success) {
             if (!isScheduling) {
               reset();
-              router.push("/drafts");
+              if (orgid) {
+                router.push(`/organisation/${orgid}/drafts`);
+              } else {
+                router.push("/drafts");
+              }
               console.log(response, "response");
             }
           }
@@ -592,5 +607,6 @@ export default function usePublishing({ id }: { id: string }) {
     handleSaveYoutube,
     uploadProgress,
     uploadFiles,
+    uploadingFileName,
   };
 }

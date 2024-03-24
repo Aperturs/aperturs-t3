@@ -27,6 +27,7 @@ interface IDarfCard {
   contentT?: PostContentType[];
   youtubeContent?: youtubeContentType;
   refetch?: () => void;
+  orgid?: string;
 }
 
 export default function DraftCard({
@@ -34,6 +35,7 @@ export default function DraftCard({
   content,
   refetch,
   contentT,
+  orgid,
   youtubeContent,
 }: IDarfCard) {
   const router = useRouter();
@@ -97,7 +99,12 @@ export default function DraftCard({
               variant="secondary"
               className="btn w-full"
               onClick={() => {
-                router.push(`/post/${id}`);
+                if (orgid) {
+                  router.push(`/organisation/${orgid}/post/${id}`);
+                } else {
+                  router.push(`/post/${id}`);
+                }
+                // router.push(`/post/${id}`);
               }}
             >
               <IoPencilSharp />

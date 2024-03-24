@@ -121,6 +121,7 @@ export const saveYoutubeContentSchema = post.YoutubeContentInsertSchema.omit({
 }).extend({
   content: z.array(postSchema.omit({ files: true })),
   userId: z.string(),
+  orgId: z.string().optional(),
 });
 
 type saveYoutubeContentInput = z.infer<typeof saveYoutubeContentSchema>;
@@ -130,7 +131,8 @@ export async function saveYoutubeContent(input: saveYoutubeContentInput) {
     const postContent = await db
       .insert(schema.post)
       .values({
-        clerkUserId: input.userId,
+        organizationId: input.orgId ? input.orgId : undefined,
+        clerkUserId: !input.orgId ? input.userId : undefined,
         content: input.content,
         status: "SAVED",
         updatedAt: new Date(),

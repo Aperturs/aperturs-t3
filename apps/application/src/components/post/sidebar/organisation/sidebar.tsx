@@ -9,7 +9,7 @@ import ConnectedAccounts from "../filter-connection";
 import OrgPublish from "./publish";
 
 export default function OrgSideBar() {
-  const params = useParams<{ orgid: string; postId: string }>();
+  const params = useParams<{ orgid: string; postid: string }>();
   const { data, isLoading } = api.organisation.socials.getAllSocials.useQuery({
     orgId: params.orgid,
   });

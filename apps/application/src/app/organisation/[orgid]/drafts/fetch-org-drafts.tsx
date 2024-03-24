@@ -23,6 +23,7 @@ export default async function FetchOrgDrafts({
           <DraftCard
             key={item.id}
             id={item.id}
+            orgid={params.orgid}
             content={
               (item.content as any as PostContentType[])[0]?.content ??
               item.youtubeContent.description ??
