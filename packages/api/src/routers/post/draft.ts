@@ -1,13 +1,17 @@
 import { deleteFileFromAws, getFileDetails } from "@api/handlers/posts/uploads";
+import {
+  saveYoutubeContent,
+  saveYoutubeContentSchema,
+  updateYoutubeContent,
+} from "@api/handlers/youtube/main";
 import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { PostContentType } from "@aperturs/validators/post";
-import { desc, eq, post, schema } from "@aperturs/db";
+import { desc, eq, schema } from "@aperturs/db";
 import {
-  postSchema,
   savePostInputSchema,
   updatePostInputSchema,
   updateYoutubePostSchema,
@@ -204,43 +208,14 @@ export const posting = createTRPCRouter({
     }),
   saveYoutubePost: protectedProcedure
     .input(
-      post.YoutubeContentInsertSchema.omit({ postId: true }).extend({
-        content: z.array(postSchema.omit({ files: true })),
+      saveYoutubeContentSchema.omit({
+        userId: true,
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const post = await ctx.db.transaction(async (db) => {
-        const postContent = await db
-          .insert(schema.post)
-          .values({
-            clerkUserId: ctx.currentUser,
-            content: input.content,
-            status: "SAVED",
-            updatedAt: new Date(),
-            postType: "LONG_VIDEO",
-          })
-          .returning();
-        if (!postContent[0]) {
-          throw new Error("Failed to save post");
-        }
-        const postId = postContent[0].id;
-        console.log(postId, "postId");
-        const content = await db
-          .insert(schema.youtubeContent)
-          .values({
-            ...input,
-            videoTags: input.videoTags as string[],
-            postId: postId,
-          })
-          .returning();
-
-        const contentRes = content[0];
-        const postRes = postContent[0];
-
-        return {
-          ...postRes,
-          content: contentRes,
-        };
+      const post = await saveYoutubeContent({
+        ...input,
+        userId: ctx.currentUser,
       });
 
       return {
@@ -252,65 +227,8 @@ export const posting = createTRPCRouter({
     }),
   updateYoutubePost: protectedProcedure
     .input(updateYoutubePostSchema)
-    .mutation(async ({ ctx, input }) => {
-      console.log(input);
-      const post = await ctx.db.transaction(async (db) => {
-        if (!input.postId) {
-          throw new Error("Post Id is required");
-        }
-        console.log("started");
-        const postContent = await db
-          .update(schema.post)
-          .set({
-            content: input.content,
-            updatedAt: new Date(),
-          })
-          .where(eq(schema.post.id, input.postId))
-          .returning();
-
-        if (!postContent[0]) {
-          throw new Error("Failed to save post");
-        }
-        console.log("postContent", postContent);
-        const postId = postContent[0].id;
-        if (input.video ?? input.thumbnail) {
-          const youtubeContent = await db.query.youtubeContent.findFirst({
-            where: eq(schema.youtubeContent.postId, postId),
-          });
-
-          if (youtubeContent && input.video) {
-            await deleteFileFromAws([youtubeContent.video]);
-          }
-          if (youtubeContent && input.thumbnail) {
-            await deleteFileFromAws([youtubeContent.thumbnail]);
-          }
-        }
-        const content = await db
-          .update(schema.youtubeContent)
-          .set({
-            description: input.description,
-            title: input.title,
-            video: input.video,
-            thumbnail: input.thumbnail,
-            postId: postId,
-            YoutubeTokenId: input.YoutubeTokenId ? input.YoutubeTokenId : null,
-            videoTags: input.videoTags ? input.videoTags : [],
-            updatedAt: new Date(),
-          })
-          .where(eq(schema.youtubeContent.postId, postId))
-          .returning();
-
-        console.log("content", content);
-
-        const contentRes = content[0];
-        const postRes = postContent[0];
-
-        return {
-          ...postRes,
-          content: contentRes,
-        };
-      });
-
+    .mutation(async ({ input }) => {
+      const post = await updateYoutubeContent(input);
       return {
         data: post,
         success: true,

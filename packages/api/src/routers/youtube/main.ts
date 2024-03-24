@@ -1,5 +1,8 @@
 import {
+  postToYoutube,
   refreshYoutubeDataInDatabase,
+  saveYoutubeContent,
+  updateYoutubeContent,
   youtubeAuthUrl,
 } from "@api/handlers/youtube/main";
 import { limitWrapper, verifyLimitAndRun } from "@api/helpers/limitWrapper";
@@ -7,6 +10,7 @@ import { redis } from "@api/index";
 import { z } from "zod";
 
 import { db, schema, tokens } from "@aperturs/db";
+import { updateYoutubePostSchema } from "@aperturs/validators/post";
 import { SocialRedisKeySchema } from "@aperturs/validators/socials";
 
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
@@ -57,5 +61,39 @@ export const youtubeRouter = createTRPCRouter({
       } catch (error) {
         return { success: false, message: "Error refreshing Twitter" };
       }
+    }),
+
+  postToYoutube: protectedProcedure
+    .input(
+      updateYoutubePostSchema.extend({
+        shouldUpdate: z.boolean(),
+        postId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      let postId = "";
+
+      if (input.shouldUpdate) {
+        if (!input.postId) {
+          throw new Error("postId is required to update");
+        }
+        const postUpdate = await updateYoutubeContent(input);
+        postId = postUpdate.id;
+      } else {
+        const postSave = await saveYoutubeContent({
+          ...input,
+          video: input.video ?? " ",
+          thumbnail: input.thumbnail ?? " ",
+          title: input.title ?? " ",
+          videoTags: input.videoTags ?? [],
+          description: input.description ?? " ",
+          userId: ctx.currentUser,
+          updatedAt: new Date(),
+        });
+
+        postId = postSave.id;
+      }
+      const post = await postToYoutube(postId);
+      return post;
     }),
 });

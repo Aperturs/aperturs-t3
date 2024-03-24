@@ -74,7 +74,7 @@ export default function Youtube() {
   return (
     <>
       <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center gap-2 sm:flex-row lg:flex-col  2xl:flex-row">
           {video.length > 0 ? (
             <div className="flex max-w-[50%] flex-col gap-2 rounded-lg">
               <video
