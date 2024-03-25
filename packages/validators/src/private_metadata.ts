@@ -9,6 +9,7 @@ export const privateMetaDataSchema = z.object({
       role: organisationRoleSchema,
     }),
   ),
+  userId: z.string().optional(),
   currentPlan: z.enum(["FREE", "PRO", "PRO2", "PRO3"]),
   lsSubscriptionId: z.string().optional(),
   lsCustomerId: z.string().optional(),

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
+import { updateUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
 import { FetchPlans } from "@api/handlers/subscription/main";
 import { Plans } from "@api/handlers/subscription/plans";
 import {
@@ -90,7 +91,7 @@ export const subscriptionRouter = createTRPCRouter({
             // Get the price data from Lemon Squeezy.
             const priceData = await getPrice(priceId);
             if (priceData.error) {
-              processingError = `Failed to get the price data for the subscription ${eventBody.data.id}.`;
+              processingError = `Failed to get the price data for the subscription ${eventBody.data.id}.  Error: ${priceData.error.message}`;
             }
 
             const isUsageBased =
@@ -119,15 +120,43 @@ export const subscriptionRouter = createTRPCRouter({
 
             // Create/update subscription in the database.
             try {
-              await db
-                .insert(schema.subscriptions)
-                .values(updateData)
-                .onConflictDoUpdate({
-                  target: schema.subscriptions.lemonSqueezyId,
-                  set: updateData,
+              await db.transaction(async (tx) => {
+                await tx
+                  .insert(schema.subscriptions)
+                  .values(updateData)
+                  .onConflictDoUpdate({
+                    target: schema.subscriptions.lemonSqueezyId,
+                    set: updateData,
+                  });
+                await tx
+                  .update(schema.user)
+                  .set({
+                    currentPlan:
+                      plan[0]?.sort === 1
+                        ? "PRO"
+                        : plan[0]?.sort === 2
+                          ? "PRO2"
+                          : "PRO3",
+                    lsCustomerId: attributes.customer_id as string,
+                  })
+                  .where(eq(schema.user.clerkUserId, updateData.userId));
+
+                await updateUserPrivateMetadata({
+                  userId: updateData.userId,
+                  currentPlan:
+                    plan[0]?.sort === 1
+                      ? "PRO"
+                      : plan[0]?.sort === 2
+                        ? "PRO2"
+                        : "PRO3",
+                  lsCustomerId: attributes.customer_id as string,
+                  lsCurrentPeriodEnd:
+                    (attributes.ends_at as string) ??
+                    (attributes.trial_ends_at as string),
                 });
+              });
             } catch (error) {
-              processingError = `Failed to upsert Subscription #${updateData.lemonSqueezyId} to the database.`;
+              processingError = `Failed to upsert Subscription #${updateData.lemonSqueezyId} to the database. Error: ${error as string}`;
               console.error(error);
             }
           }

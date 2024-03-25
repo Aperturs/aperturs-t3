@@ -7,7 +7,8 @@ export async function updateUserPrivateMetadata(
   data: Partial<PrivateMetaData>,
 ) {
   const { userId, user } = auth();
-  if (!userId) {
+  const id = userId ?? data.userId;
+  if (!id) {
     throw new Error("No user ID found");
   }
 
@@ -23,7 +24,7 @@ export async function updateUserPrivateMetadata(
   } else {
     updatedOrganisations = [...(data.organisations ?? [])];
   }
-  await clerkClient.users.updateUserMetadata(userId, {
+  await clerkClient.users.updateUserMetadata(id, {
     privateMetadata: {
       organisations: updatedOrganisations,
       lsSubscriptionId: data.lsSubscriptionId,
