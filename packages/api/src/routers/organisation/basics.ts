@@ -6,7 +6,7 @@ import {
 import { limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 
-import { organisation } from "@aperturs/db";
+import { eq, organisation, schema } from "@aperturs/db";
 
 export const organisationBasic = createTRPCRouter({
   createOrganisation: protectedProcedure
@@ -41,6 +41,21 @@ export const organisationBasic = createTRPCRouter({
 
       return res;
     }),
+
+  checkOrganisationCreationLimit: protectedProcedure.query(async ({ ctx }) => {
+    const limit = await ctx.db.query.userUsage.findFirst({
+      where: eq(schema.userUsage.clerkUserId, ctx.currentUser),
+    });
+
+    if (!limit) {
+      throw new Error("Uplease upgrade your plan to create an organisation");
+    }
+
+    const available = limit?.organisation > 0;
+    if (!available) {
+      throw new Error("Organisation Creation limit reached");
+    }
+  }),
 
   getAllUserOrganisations: protectedProcedure.query(async ({ ctx }) => {
     const res = await getUserOrganisations(ctx.currentUser);

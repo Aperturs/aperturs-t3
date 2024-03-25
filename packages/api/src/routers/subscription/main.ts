@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { updateUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
-import { FetchPlans } from "@api/handlers/subscription/main";
+import { FetchPlans, UpgradeLimits } from "@api/handlers/subscription/main";
 import { Plans } from "@api/handlers/subscription/plans";
 import {
   leamonWebhookHasData,
@@ -23,6 +23,7 @@ import {
 import { z } from "zod";
 
 import type { subscriptions } from "@aperturs/db";
+import type { CurrentPlan } from "@aperturs/validators/private_metadata";
 import type { UserDetails } from "@aperturs/validators/user";
 import { and, db, eq, like, logs, or, schema } from "@aperturs/db";
 
@@ -118,6 +119,13 @@ export const subscriptionRouter = createTRPCRouter({
               planId: plan[0].variantId,
             };
 
+            const currentPlan =
+              plan[0].sort === 1
+                ? "PRO"
+                : plan[0].sort === 2
+                  ? "PRO2"
+                  : ("PRO3" as CurrentPlan);
+
             // Create/update subscription in the database.
             try {
               await db.transaction(async (tx) => {
@@ -131,24 +139,17 @@ export const subscriptionRouter = createTRPCRouter({
                 await tx
                   .update(schema.user)
                   .set({
-                    currentPlan:
-                      plan[0]?.sort === 1
-                        ? "PRO"
-                        : plan[0]?.sort === 2
-                          ? "PRO2"
-                          : "PRO3",
+                    currentPlan: currentPlan,
                     lsCustomerId: attributes.customer_id as string,
                   })
                   .where(eq(schema.user.clerkUserId, updateData.userId));
-
+                await UpgradeLimits({
+                  currentPlan,
+                  userId: updateData.userId,
+                });
                 await updateUserPrivateMetadata({
                   userId: updateData.userId,
-                  currentPlan:
-                    plan[0]?.sort === 1
-                      ? "PRO"
-                      : plan[0]?.sort === 2
-                        ? "PRO2"
-                        : "PRO3",
+                  currentPlan: currentPlan,
                   lsCustomerId: attributes.customer_id as string,
                   lsCurrentPeriodEnd:
                     (attributes.ends_at as string) ??

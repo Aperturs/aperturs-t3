@@ -6,7 +6,10 @@ import {
   listProducts,
 } from "@api/index";
 
+import type { user } from "@aperturs/db";
+import type { CurrentPlan } from "@aperturs/validators/private_metadata";
 import type { PlansType } from "@aperturs/validators/subscription";
+import { db, eq, schema } from "@aperturs/db";
 
 /**
  * This action will sync the product variants from Lemon Squeezy with the
@@ -89,9 +92,77 @@ export async function FetchPlans() {
         trialInterval: trialInterval?.toString(),
         trialIntervalCount: trialIntervalCount ?? 0,
         sort: variant.sort,
+        power: variant.sort,
       });
     }
   }
   console.log(allPlans, "plans");
   return allPlans;
+}
+
+export async function UpgradeLimits({
+  currentPlan,
+  userId,
+}: {
+  currentPlan: CurrentPlan;
+  userId: string;
+}) {
+  let data = {
+    clerkUserId: userId,
+    updatedAt: new Date(),
+  } as user.UserUsageInsert;
+  if (currentPlan === "PRO") {
+    data = {
+      updatedAt: new Date(),
+      clerkUserId: userId,
+      organisation: 5,
+      drafts: 30,
+      generatedposts: 30,
+      scheduledposts: 10,
+      ideas: 20,
+      projects: 5,
+      scheduledtime: 30,
+      socialaccounts: 10,
+    };
+  }
+  if (currentPlan === "PRO2") {
+    data = {
+      updatedAt: new Date(),
+      clerkUserId: userId,
+      organisation: 10,
+      drafts: 50,
+      generatedposts: 50,
+      scheduledposts: 20,
+      ideas: 50,
+      projects: 10,
+      scheduledtime: 50,
+      socialaccounts: 20,
+    };
+  }
+  if (currentPlan === "PRO3") {
+    data = {
+      updatedAt: new Date(),
+      clerkUserId: userId,
+      organisation: 40,
+      drafts: 1000,
+      generatedposts: 200,
+      scheduledposts: 1000,
+      ideas: 1000,
+      projects: 100,
+      scheduledtime: 200,
+      socialaccounts: 50,
+    };
+  }
+  const usage = await db.query.userUsage.findFirst({
+    where: eq(schema.userUsage.clerkUserId, userId),
+  });
+
+  if (usage) {
+    await db
+      .update(schema.userUsage)
+      .set(data)
+      .where(eq(schema.userUsage.clerkUserId, userId));
+  } else {
+    await db.insert(schema.userUsage).values(data);
+  }
 }

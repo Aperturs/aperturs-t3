@@ -159,10 +159,7 @@ function CreateOrganisationDialog() {
     isPending: creatingOrganisation,
     error,
   } = api.organisation.basics.createOrganisation.useMutation();
-  const getNanoId = api.user.getNanoId.useQuery({
-    id: "org",
-    custom: true,
-  });
+  const getNanoId = api.user.getNanoId.useMutation();
 
   const [name, setName] = useState("");
   const router = useRouter();
@@ -185,7 +182,10 @@ function CreateOrganisationDialog() {
             const { url } = await uploadToS3(image);
             logo = url;
           }
-          const slug = getNanoId.data;
+          const slug = await getNanoId.mutateAsync({
+            id: "org",
+            custom: true,
+          });
           console.log(slug, "slug");
           const clerkOrg = await createOrganization({ name, slug });
           if (!clerkOrg.id) {
