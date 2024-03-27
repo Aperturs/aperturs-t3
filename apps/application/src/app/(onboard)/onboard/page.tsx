@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { Button } from "@aperturs/ui/button";
+
 export default function Example() {
   const router = useRouter();
 
@@ -22,14 +24,13 @@ export default function Example() {
         <h2 className="text-center" color="gray">
           Aperturs gives you marketing superpowers with powerful features
         </h2>
-        <button
-          className="btn btn-primary btn-wide my-3 text-white"
+        <Button
           onClick={() => {
-            router.push("/onboarding/addSocial");
+            router.push("/onboard/add-social");
           }}
         >
           Get Started
-        </button>
+        </Button>
       </div>
     </div>
   );

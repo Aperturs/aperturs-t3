@@ -2,26 +2,26 @@
 
 import { useRouter } from "next/navigation";
 
+import { Button } from "@aperturs/ui/button";
+
 export default function Controls() {
   const router = useRouter();
   return (
     <div className="flex justify-between">
-      <button
-        className="btn btn-primary btn-wide my-3 text-white"
+      <Button
         onClick={() => {
-          router.push("/onboarding");
+          router.push("/onboard");
         }}
       >
         Back
-      </button>
-      <button
-        className="btn btn-primary btn-wide my-3 text-white"
+      </Button>
+      <Button
         onClick={() => {
           router.push("/dashboard");
         }}
       >
         Next
-      </button>
+      </Button>
     </div>
   );
 }

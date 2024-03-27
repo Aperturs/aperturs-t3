@@ -7,7 +7,6 @@ import {
   organisationMembershipAdded,
   rejectInvite,
   removeUserFromOrganisation,
-  sendInvitationViaEmail,
 } from "@api/handlers/organisation/teams";
 import {
   createTRPCRouter,
@@ -128,19 +127,19 @@ export const OrganizationTeam = createTRPCRouter({
         inviterId: ctx.currentUser,
         inviterName: userName,
       });
-      const inviteId = res.id;
-      const sendEmail = await sendInvitationViaEmail({
-        invitationId: inviteId,
-        teamName: teamName ?? "team",
-        teamImage: teamImage ?? "https://app.aperturs.com/profile.jpeg",
-        userImage: userImage ?? "https://app.aperturs.com/user.png",
-        userName: input.name,
-        toEmail: input.email,
-        inviteFromIp: "",
-        inviteFromLocation: "São Paulo, Brazil",
-        invitedByName: userName,
-      });
-      const final = Promise.all([res, sendEmail]);
+      // const inviteId = res.id;
+      // const sendEmail = await sendInvitationViaEmail({
+      //   invitationId: inviteId,
+      //   teamName: teamName ?? "team",
+      //   teamImage: teamImage ?? "https://app.aperturs.com/profile.jpeg",
+      //   userImage: userImage ?? "https://app.aperturs.com/user.png",
+      //   userName: input.name,
+      //   toEmail: input.email,
+      //   inviteFromIp: "",
+      //   inviteFromLocation: "São Paulo, Brazil",
+      //   invitedByName: userName,
+      // });
+      const final = Promise.all([res]);
       return final;
     }),
 
