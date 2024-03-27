@@ -2,17 +2,20 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import {
-  Bars2Icon,
-  ChevronRightIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
+import { Bars2Icon } from "@heroicons/react/24/outline";
 import { BsFillClipboardDataFill } from "react-icons/bs";
-import { MdCircleNotifications, MdSpaceDashboard } from "react-icons/md";
-import { TbSocial } from "react-icons/tb";
+import { MdSpaceDashboard } from "react-icons/md";
 
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
+import {
+  Draft,
+  Home,
+  Network,
+  Notification,
+  Pencil,
+  Person,
+} from "@aperturs/ui/icons";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
@@ -31,12 +34,12 @@ function AccordanceMenuList(id: string) {
       items: [
         {
           subText: "Home",
-          subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+          subIcon: <Home />,
           url: `/organisation/${id}/dashboard`,
         },
         {
           subText: "New Post",
-          subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+          subIcon: <Pencil />,
           url: `/organisation/${id}/post`,
         },
         // {
@@ -53,7 +56,7 @@ function AccordanceMenuList(id: string) {
       items: [
         {
           subText: "Drafts",
-          subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
+          subIcon: <Draft />,
           url: `/organisation/${id}/drafts`,
         },
         // {
@@ -83,18 +86,18 @@ function bottomMenuList(id: string) {
   return [
     {
       text: "Notifications",
-      icon: <MdCircleNotifications className="h-5 w-5" />,
+      icon: <Notification />,
       // suffix: <Badge>14</Badge>,
       url: `/organisation/${id}/notifications`,
     },
     {
       text: "Team",
-      icon: <UserCircleIcon className="h-5 w-5" />,
+      icon: <Person />,
       url: `/organisation/${id}/team`,
     },
     {
       text: "Socials",
-      icon: <TbSocial className="h-5 w-5" />,
+      icon: <Network />,
       url: `/organisation/${id}/socials`,
     },
   ];
