@@ -21,10 +21,15 @@ export const youtubeAuthUrl = () => {
   const scopes = [
     "https://www.googleapis.com/auth/youtube",
     "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/yt-analytics.readonly",
+    "https://www.googleapis.com/auth/yt-analytics-monetary.readonly",
+    "https://www.googleapis.com/auth/youtubepartner",
   ];
+
   const url = googleAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: scopes,
+    prompt: "consent",
   });
   return url;
 };
