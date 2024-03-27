@@ -13,7 +13,6 @@ async function handler(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
   //   const { state, code } = req.query;
-  console.log(userId, "userId");
   if (!userId) {
     // return res.status(400).send("You denied the app or your session expired!");
     return NextResponse.json(

@@ -144,7 +144,7 @@ export const organizationUser = pgTable(
   {
     id: varchar("id", { length: 256 })
       .primaryKey()
-      .$defaultFn(() => createUniqueIds("orginv")),
+      .$defaultFn(() => createUniqueIds("orgusr")),
     organizationId: varchar("organizationId", { length: 256 }).notNull(),
     clerkUserId: varchar("clerkUserId", { length: 256 })
       .notNull()

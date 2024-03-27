@@ -25,6 +25,7 @@ export default function OrgPublish({
     linkedinPosting,
     saving,
     tweeting,
+    disablePosting,
     // scheduling,
     updating,
     uploadingFiles,
@@ -47,7 +48,7 @@ export default function OrgPublish({
           <SimpleButton
             text="Schedule"
             // isLoading={scheduling}
-            disabled={isDisabled}
+            disabled={isDisabled || disablePosting}
             onClick={async () => {
               await handleSchedule();
             }}
@@ -55,7 +56,7 @@ export default function OrgPublish({
           <SimpleButton
             isLoading={tweeting || linkedinPosting}
             text="Publish Now"
-            disabled={isDisabled}
+            disabled={isDisabled || disablePosting}
             onClick={async () => {
               await handlePublish();
             }}

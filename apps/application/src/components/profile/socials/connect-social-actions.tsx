@@ -89,7 +89,7 @@ export default function ConnectSocialsAction({
           </DropdownMenuItem>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem className="flex gap-2">
-              <Trash size={15} /> Remove User
+              <Trash size={15} /> Remove Account
             </DropdownMenuItem>
           </AlertDialogTrigger>
         </DropdownMenuContent>

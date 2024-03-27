@@ -19,7 +19,7 @@ export const userRouter = createTRPCRouter({
         custom: z.boolean().optional(),
       }),
     )
-    .query(({ input }) => {
+    .mutation(({ input }) => {
       return createUniqueIds(input.id, input.custom);
     }),
   createUser: publicProcedure
