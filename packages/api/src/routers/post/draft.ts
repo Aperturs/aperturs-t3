@@ -62,14 +62,28 @@ export const posting = createTRPCRouter({
       }
     }),
 
-  getRecentDrafts: protectedProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.db.query.post.findMany({
-      where: eq(schema.post.clerkUserId, ctx.currentUser),
-      orderBy: desc(schema.post.updatedAt),
-      limit: 5,
-    });
-    return posts;
-  }),
+  getRecentDrafts: protectedProcedure
+    .input(
+      z.object({
+        orgid: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.orgid) {
+        const posts = await ctx.db.query.post.findMany({
+          where: eq(schema.post.organizationId, input.orgid),
+          orderBy: desc(schema.post.updatedAt),
+          limit: 5,
+        });
+        return posts;
+      }
+      const posts = await ctx.db.query.post.findMany({
+        where: eq(schema.post.clerkUserId, ctx.currentUser),
+        orderBy: desc(schema.post.updatedAt),
+        limit: 5,
+      });
+      return posts;
+    }),
 
   updatePost: protectedProcedure
     .input(updatePostInputSchema)

@@ -86,19 +86,34 @@ export const githubProject = createTRPCRouter({
     return projects;
   }),
 
-  getRecentProjects: protectedProcedure.query(async ({ ctx }) => {
-    // const projects = await ctx.prisma.project.findMany({
-    //   where: { clerkUserId: ctx.currentUser },
-    //   orderBy: { createdAt: "desc" },
-    //   take: 5,
-    // });
-    const recentProjects = await ctx.db.query.project.findMany({
-      where: eq(schema.project.clerkUserId, ctx.currentUser),
-      orderBy: desc(schema.project.createdAt),
-      limit: 5,
-    });
-    return recentProjects;
-  }),
+  getRecentProjects: protectedProcedure
+    .input(
+      z.object({
+        orgId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      // const projects = await ctx.prisma.project.findMany({
+      //   where: { clerkUserId: ctx.currentUser },
+      //   orderBy: { createdAt: "desc" },
+      //   take: 5,
+      // });
+
+      if (input.orgId) {
+        const recentProjects = await ctx.db.query.project.findMany({
+          where: eq(schema.project.clerkUserId, ctx.currentUser),
+          orderBy: desc(schema.project.createdAt),
+          limit: 5,
+        });
+        return recentProjects;
+      }
+      const recentProjects = await ctx.db.query.project.findMany({
+        where: eq(schema.project.clerkUserId, ctx.currentUser),
+        orderBy: desc(schema.project.createdAt),
+        limit: 5,
+      });
+      return recentProjects;
+    }),
 
   getProject: protectedProcedure
     .input(z.string())

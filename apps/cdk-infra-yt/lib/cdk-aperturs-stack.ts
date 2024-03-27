@@ -1,11 +1,11 @@
 import { join } from "path";
+import type { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as s3 from "aws-cdk-lib/aws-s3";
-import { Construct } from "constructs";
 
 export class CdkApertursStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
