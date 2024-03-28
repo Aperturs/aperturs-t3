@@ -32,7 +32,6 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
   const handleClick = () => {
     if (isSelected) {
       setContent(content.filter((item) => item.id !== id));
-
       if (postType === "LONG_VIDEO") {
         setYoutubeContent({
           ...youtubeContent,
@@ -41,24 +40,60 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
         });
       }
     } else {
-      setContent([
-        ...content,
-        {
-          socialType: type,
-          id,
-          name,
-          unique: false,
-          content: content[0]?.content ?? "",
-          files: [],
-          uploadedFiles: [],
-        },
-      ]);
+      console.log(content, "content select social");
       if (postType === "LONG_VIDEO") {
         setYoutubeContent({
           ...youtubeContent,
           name: name,
           youtubeId: id,
         });
+        const existingYoutubeContentIndex = content.findIndex(
+          (item) => item.socialType === "YOUTUBE",
+        );
+        console.log(existingYoutubeContentIndex, "existing index");
+
+        if (existingYoutubeContentIndex !== -1) {
+          // If there's existing youtube content, update it
+          const updatedContent = content.map((item, index) => {
+            if (index === existingYoutubeContentIndex) {
+              return {
+                ...item,
+                name: name,
+                id: id,
+              };
+            }
+            return item;
+          });
+          console.log(updatedContent, "update");
+          setContent(updatedContent);
+        } else {
+          // If there's no existing youtube content, add new content
+          setContent([
+            ...content,
+            {
+              socialType: type,
+              id,
+              name,
+              unique: false,
+              content: content[0]?.content ?? "",
+              files: [],
+              uploadedFiles: [],
+            },
+          ]);
+        }
+      } else {
+        setContent([
+          ...content,
+          {
+            socialType: type,
+            id,
+            name,
+            unique: false,
+            content: content[0]?.content ?? "",
+            files: [],
+            uploadedFiles: [],
+          },
+        ]);
       }
     }
   };
