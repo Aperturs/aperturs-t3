@@ -153,6 +153,21 @@ export async function UpgradeLimits({
       socialaccounts: 50,
     };
   }
+
+  if (currentPlan === "FREE") {
+    data = {
+      updatedAt: new Date(),
+      clerkUserId: userId,
+      organisation: 0,
+      drafts: 15,
+      generatedposts: 20,
+      scheduledposts: 15,
+      ideas: 15,
+      projects: 2,
+      scheduledtime: 7,
+      socialaccounts: 5,
+    };
+  }
   const usage = await db.query.userUsage.findFirst({
     where: eq(schema.userUsage.clerkUserId, userId),
   });

@@ -23,7 +23,6 @@ import {
 import { z } from "zod";
 
 import type { subscriptions } from "@aperturs/db";
-import type { CurrentPlan } from "@aperturs/validators/private_metadata";
 import type { UserDetails } from "@aperturs/validators/user";
 import { and, db, eq, gte, logs, schema } from "@aperturs/db";
 
@@ -124,7 +123,9 @@ export const subscriptionRouter = createTRPCRouter({
                 ? "PRO"
                 : plan[0].sort === 2
                   ? "PRO2"
-                  : ("PRO3" as CurrentPlan);
+                  : attributes.status === "expired"
+                    ? "FREE"
+                    : "PRO3";
 
             // Create/update subscription in the database.
             try {

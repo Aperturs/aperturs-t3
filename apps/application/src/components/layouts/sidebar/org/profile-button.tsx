@@ -7,7 +7,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { useS3Upload } from "next-s3-upload";
 import toast from "react-hot-toast";
-import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
 
 import type { Option } from "@aperturs/ui/auto-complete";
@@ -31,7 +30,9 @@ import {
 import { Input } from "@aperturs/ui/input";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
+import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
+import useCurrentPlan from "~/hooks/useCurrentPlan";
 import { api } from "~/trpc/react";
 import { BusinessCategory } from "./business-catagories";
 import OrgDetailsSkeleton from "./org-details-skeleton";
@@ -45,6 +46,7 @@ export default function ProfileButton() {
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
+  const { currentPlan } = useCurrentPlan();
 
   return (
     <Dialog>
@@ -100,15 +102,20 @@ export default function ProfileButton() {
                 })}
               </CommandGroup>
               <DialogTrigger asChild>
-                <Button
-                  className="my-2 flex w-full gap-3"
-                  onClick={() => {
-                    console.log("clicked");
-                  }}
+                <ToolTipSimple
+                  content={`${currentPlan === "FREE" ? "Please upgrade to create an organization" : "Create an Organisation"}`}
                 >
-                  <FaPlusCircle className="text-lg" />
-                  Create New Organisation
-                </Button>
+                  <Button
+                    className="my-2 flex w-full gap-3"
+                    onClick={() => {
+                      console.log("clicked");
+                    }}
+                    disabled={orgDetailsLoading || currentPlan === "FREE"}
+                  >
+                    {/* <FaPlusCircle className="text-lg" /> */}
+                    Create New Organisation
+                  </Button>
+                </ToolTipSimple>
               </DialogTrigger>
             </CommandList>
           </Command>
