@@ -30,7 +30,6 @@ import {
 import { Input } from "@aperturs/ui/input";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
-import ToolTipSimple from "@aperturs/ui/tooltip-final";
 
 import useCurrentPlan from "~/hooks/useCurrentPlan";
 import { api } from "~/trpc/react";
@@ -102,20 +101,18 @@ export default function ProfileButton() {
                 })}
               </CommandGroup>
               <DialogTrigger asChild>
-                <ToolTipSimple
-                  content={`${currentPlan === "FREE" ? "Please upgrade to create an organization" : "Create an Organisation"}`}
+                <Button
+                  className="my-2 flex w-full gap-3"
+                  onClick={() => {
+                    console.log("clicked");
+                  }}
+                  disabled={orgDetailsLoading || currentPlan === "FREE"}
                 >
-                  <Button
-                    className="my-2 flex w-full gap-3"
-                    onClick={() => {
-                      console.log("clicked");
-                    }}
-                    disabled={orgDetailsLoading || currentPlan === "FREE"}
-                  >
-                    {/* <FaPlusCircle className="text-lg" /> */}
-                    Create New Organisation
-                  </Button>
-                </ToolTipSimple>
+                  {/* <FaPlusCircle className="text-lg" /> */}
+                  {currentPlan === "FREE"
+                    ? "please, upgrade to create org"
+                    : "Create New Organisation"}
+                </Button>
               </DialogTrigger>
             </CommandList>
           </Command>
