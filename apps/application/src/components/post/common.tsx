@@ -96,7 +96,7 @@ export function PostTypeSelect() {
         <SelectGroup>
           <SelectLabel>Post Type</SelectLabel>
           <SelectItem value={postType.normal}>Regular Post</SelectItem>
-          <SelectItem value={postType.short}>Short Video</SelectItem>
+          {/* <SelectItem value={postType.short}>Short Video</SelectItem> */}
           <SelectItem value={postType.longVideo}>Long Videos</SelectItem>
         </SelectGroup>
       </SelectContent>

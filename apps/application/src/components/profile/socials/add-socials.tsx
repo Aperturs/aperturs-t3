@@ -2,11 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import {
-  AiFillInstagram,
-  AiFillYoutube,
-  AiOutlineTwitter,
-} from "react-icons/ai";
+import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 import { Button } from "@aperturs/ui/button";
@@ -125,7 +121,7 @@ const Socials = () => {
         <AiOutlineTwitter className="mr-2 text-2xl " />
         <p>Twitter</p>
       </Button>
-      <Button
+      {/* <Button
         variant="secondary"
         className="h-12"
         onClick={handleInstagram}
@@ -133,16 +129,18 @@ const Socials = () => {
       >
         <AiFillInstagram className="mr-2 text-2xl" />
         <p>Insta</p>
-      </Button>
-      <Button
-        variant="secondary"
-        className="h-12"
-        onClick={handleYoutube}
-        disabled={localLoading}
-      >
-        <AiFillYoutube className="mr-2 text-2xl" />
-        <p>Youtube</p>
-      </Button>
+      </Button> */}
+      {params.orgid && (
+        <Button
+          variant="secondary"
+          className="h-12"
+          onClick={handleYoutube}
+          disabled={localLoading}
+        >
+          <AiFillYoutube className="mr-2 text-2xl" />
+          <p>Youtube</p>
+        </Button>
+      )}
       <Button
         variant="secondary"
         className="h-12"
