@@ -7,7 +7,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { useS3Upload } from "next-s3-upload";
 import toast from "react-hot-toast";
-import { FaPlusCircle } from "react-icons/fa";
 import { LuChevronsUpDown } from "react-icons/lu";
 
 import type { Option } from "@aperturs/ui/auto-complete";
@@ -32,6 +31,7 @@ import { Input } from "@aperturs/ui/input";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 
+import useCurrentPlan from "~/hooks/useCurrentPlan";
 import { api } from "~/trpc/react";
 import { BusinessCategory } from "./business-catagories";
 import OrgDetailsSkeleton from "./org-details-skeleton";
@@ -45,6 +45,7 @@ export default function ProfileButton() {
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
   const currentOrg = data?.find((org) => org.id === orgId);
+  const { currentPlan } = useCurrentPlan();
 
   return (
     <Dialog>
@@ -105,9 +106,12 @@ export default function ProfileButton() {
                   onClick={() => {
                     console.log("clicked");
                   }}
+                  disabled={orgDetailsLoading || currentPlan === "FREE"}
                 >
-                  <FaPlusCircle className="text-lg" />
-                  Create New Organisation
+                  {/* <FaPlusCircle className="text-lg" /> */}
+                  {currentPlan === "FREE"
+                    ? "please, upgrade to create org"
+                    : "Create New Organisation"}
                 </Button>
               </DialogTrigger>
             </CommandList>
