@@ -145,7 +145,11 @@ export const organizationUser = pgTable(
     id: varchar("id", { length: 256 })
       .primaryKey()
       .$defaultFn(() => createUniqueIds("orgusr")),
-    organizationId: varchar("organizationId", { length: 256 }).notNull(),
+    organizationId: varchar("organizationId", { length: 256 })
+      .notNull()
+      .references(() => organization.id, {
+        onDelete: "cascade",
+      }),
     clerkUserId: varchar("clerkUserId", { length: 256 })
       .notNull()
       .references(() => user.clerkUserId, {

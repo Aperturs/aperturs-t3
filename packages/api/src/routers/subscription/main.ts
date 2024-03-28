@@ -25,7 +25,7 @@ import { z } from "zod";
 import type { subscriptions } from "@aperturs/db";
 import type { CurrentPlan } from "@aperturs/validators/private_metadata";
 import type { UserDetails } from "@aperturs/validators/user";
-import { and, db, eq, like, logs, or, schema } from "@aperturs/db";
+import { and, db, eq, gte, logs, schema } from "@aperturs/db";
 
 import { env } from "../../../env";
 
@@ -463,10 +463,11 @@ export const subscriptionRouter = createTRPCRouter({
     const subscription = await db.query.subscriptions.findMany({
       where: and(
         eq(schema.subscriptions.userId, ctx.currentUser),
-        or(
-          like(schema.subscriptions.status, "active"),
-          like(schema.subscriptions.status, "on_trial"),
-        ),
+        // or(
+        //   like(schema.subscriptions.status, "active"),
+        //   like(schema.subscriptions.status, "on_trial"),
+        // ),
+        gte(schema.subscriptions.endsAt, new Date().toISOString()),
       ),
       // orderBy: { createdAt: "desc" },
     });
