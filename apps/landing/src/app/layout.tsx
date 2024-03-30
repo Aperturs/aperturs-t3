@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import '@aperturs/ui/globals.css';
+
+import "@aperturs/ui/globals.css";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// const mona = localFont({
+//   src: 'mona-sans.woff2',
+//   display: 'swap',
+// })
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +23,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <link rel="preload" href="Mona-Sans.woff2" as="font" type="font/woff2" crossOrigin="anonymous"></link>
+      <body>{children}</body>
     </html>
   );
 }
