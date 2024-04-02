@@ -2,13 +2,17 @@ export default function Comp() {
   return (
     <svg
       aria-hidden="true"
-      className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full fill-neutral-50 stroke-neutral-950/5 [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)]"
+      className="absolute inset-x-0 -top-14 -z-[0] h-[1000px] w-full fill-neutral-50 stroke-neutral-950/5 [mask-image:linear-gradient(to_bottom_left,white_40%,transparent_50%)]"
     >
       <rect width="100%" height="100%" fill="url(#:rc:)" strokeWidth="0"></rect>
       <svg x="50%" y="-96" strokeWidth="0" className="overflow-visible">
         <path
           transform="translate(64 160)"
           d="M45.119 4.5a11.5 11.5 0 0 0-11.277 9.245l-25.6 128C6.82 148.861 12.262 155.5 19.52 155.5h63.366a11.5 11.5 0 0 0 11.277-9.245l25.6-128c1.423-7.116-4.02-13.755-11.277-13.755H45.119Z"
+        ></path>
+        <path
+          transform="translate(64 160)"
+          className="bg-green-900 w-20"
         ></path>
         <path
           transform="translate(128 320)"
