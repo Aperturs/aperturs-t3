@@ -1,11 +1,9 @@
 import "@aperturs/ui/globals.css";
+import "./globals.css";
 
 import type { Metadata } from "next";
 
-import Center from "~/components/center";
 import Navbar from "~/components/navbar";
-
-import "./globals.css";
 
 // const mona = localFont({
 //   src: 'mona-sans.woff2',
@@ -35,7 +33,9 @@ export default function RootLayout({
       <body>
         <div className="bg-black">
           <Navbar />
-          <Center>{children}</Center>
+          <div className="pt-1">
+            <div className="rounded-t-[40px] bg-white">{children}</div>
+          </div>
         </div>
       </body>
     </html>

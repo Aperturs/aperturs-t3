@@ -13,16 +13,17 @@
     "framer-motion": "^10.16.3",
     "next": "14.1.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.9.0"
   },
   "devDependencies": {
-    "@aperturs/ui": "workspace:*",
     "@aperturs/api": "workspace:*",
     "@aperturs/db": "workspace:*",
     "@aperturs/eslint-config": "workspace:*",
     "@aperturs/prettier-config": "workspace:*",
     "@aperturs/tailwind-config": "workspace:*",
     "@aperturs/tsconfig": "workspace:*",
+    "@aperturs/ui": "workspace:*",
     "@aperturs/validators": "workspace:*",
     "@types/node": "^20.11.17",
     "@types/react": "^18.2.46",
