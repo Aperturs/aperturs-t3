@@ -2,18 +2,13 @@ import "@aperturs/ui/globals.css";
 import "./globals.css";
 
 import type { Metadata } from "next";
-
 import Navbar from "~/components/navbar";
-
-// const mona = localFont({
-//   src: 'mona-sans.woff2',
-//   display: 'swap',
-// })
 
 export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
   description:
     "social media management for the modern age, with a focus on privacy and security",
+ 
 };
 
 export default function RootLayout({
