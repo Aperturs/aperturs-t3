@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
 import "@aperturs/ui/globals.css";
 
+import type { Metadata } from "next";
+
+import Center from "~/components/center";
 import Navbar from "~/components/navbar";
 
 import "./globals.css";
@@ -33,7 +35,7 @@ export default function RootLayout({
       <body>
         <div className="bg-black">
           <Navbar />
-          {children}
+          <Center>{children}</Center>
         </div>
       </body>
     </html>

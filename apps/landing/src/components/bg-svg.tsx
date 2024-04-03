@@ -1,4 +1,4 @@
-export default function Comp() {
+export default function BgSvg() {
   return (
     <svg
       aria-hidden="true"

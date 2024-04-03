@@ -1,12 +1,10 @@
-import Comp from "./comp";
-import { BoxesCore } from "./test";
-import { BackgroundBoxesDemo } from "./test2";
+import BgSvg from "~/components/bg-svg";
 
 export default function Home() {
   return (
-    <section className="relative rounded-t-[50px] bg-white">
-      {/* <main className="relative  flex min-h-screen flex-col items-center justify-between rounded-lg  p-24">
-        <div className="mx-auto max-w-2xl lg:max-w-none">
+    <section className="relative">
+      <main className="relative z-10 flex min-h-[70vh] flex-col items-start justify-center ">
+        <div className="flex max-w-2xl justify-start lg:max-w-none">
           <div className="max-w-3xl">
             <h1 className="font-display text-5xl font-medium tracking-tight  text-neutral-950 [text-wrap:balance] sm:text-7xl">
               Just testing some landing page design
@@ -19,8 +17,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <Comp /> */}
-      <BackgroundBoxesDemo />
     </section>
   );
 }
