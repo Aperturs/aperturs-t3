@@ -64,7 +64,7 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
     return (
       <Button
         ref={ref}
-        disabled={loading ?? isCurrent ?? props.disabled}
+        disabled={loading || isCurrent || props.disabled}
         onClick={async () => {
           // If changing plans, call server action.
           setLoading(true);

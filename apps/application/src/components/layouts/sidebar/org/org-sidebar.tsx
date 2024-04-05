@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
+import { useOrganizationList } from "@clerk/nextjs";
 import { Bars2Icon } from "@heroicons/react/24/outline";
 import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdSpaceDashboard } from "react-icons/md";
@@ -19,6 +21,7 @@ import {
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
+import { api } from "~/trpc/react";
 import { ModeToggle } from "../../theme-toggle";
 import BottomMenu from "../bottomMenu";
 import AccordanceMenu from "../command-group";
@@ -106,6 +109,27 @@ function bottomMenuList(id: string) {
 export default function OrgSidebar() {
   const params = useParams<{ orgid: string }>();
   const orgId = params?.orgid;
+  const { mutateAsync } = api.organisation.basics.getOrgIdfromSlug.useMutation(
+    {},
+  );
+
+  const { setActive } = useOrganizationList();
+
+  useEffect(() => {
+    const setOrgActive = async () => {
+      const id = await mutateAsync({ orgslug: orgId });
+      if (!setActive) {
+        throw new Error("setActive is not defined");
+      }
+      await setActive({
+        organization: id,
+      });
+    };
+    setOrgActive().catch((error) => {
+      console.error("Error setting org active", error);
+    });
+    console.log("orgId", orgId);
+  }, [mutateAsync, orgId, setActive]);
 
   return (
     <Sheet>

@@ -12,15 +12,6 @@ interface iFeatureList {
 }
 
 export default function BillingCard({ plan, currentPlan }: iFeatureList) {
-  // const subscribe = api.subscriptions.createCheckout.useMutation();
-
-  // const handleSubscribe = async (productId: string) => {
-  //   await subscribe({ productId: parseInt(productId) }).then((res) => {
-  //     console.log(res);
-  //     // window.location.href = res;
-  //   });
-  // };
-
   const isCurrentPlan = plan.variantId === currentPlan?.variantId;
 
   const colorImportant = plan.important

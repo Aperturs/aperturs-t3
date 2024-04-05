@@ -164,6 +164,8 @@ function CreateOrganisationDialog() {
     error,
   } = api.organisation.basics.createOrganisation.useMutation();
   const getNanoId = api.user.getNanoId.useMutation();
+  const { mutateAsync: getOrgCreationLimit } =
+    api.organisation.basics.checkOrganisationCreationLimit.useMutation();
 
   const [name, setName] = useState("");
   const router = useRouter();
@@ -174,6 +176,10 @@ function CreateOrganisationDialog() {
   const { organization } = useOrganization();
 
   const handleCreateOrganisation = async () => {
+    const available = await getOrgCreationLimit();
+    if (!available) {
+      toast.error("Organisation Creation limit reached");
+    }
     if (!name) return toast.error("Organisation name is required");
     if (!value) return toast.error("Organisation category is required");
     if (!createOrganization)

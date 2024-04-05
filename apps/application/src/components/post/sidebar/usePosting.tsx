@@ -163,7 +163,12 @@ export default function usePublishing({ id }: { id: string }) {
     if (!twitterError || !linkedinError || loading) {
       reset();
     }
-    router.push("/post");
+
+    if (orgid) {
+      router.push(`/organisation/${orgid}/post`);
+    } else {
+      router.push("/post");
+    }
   };
 
   const handlePostYoutube = async () => {
