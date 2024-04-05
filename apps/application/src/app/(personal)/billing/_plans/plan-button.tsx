@@ -79,6 +79,8 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
             await changePlan({
               currentPlanId: currentPlan.variantId,
               newPlanId: plan.variantId,
+            }).then(() => {
+              router.refresh();
             });
 
             return;

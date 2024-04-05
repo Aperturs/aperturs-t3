@@ -101,7 +101,7 @@ export const subscriptionRouter = createTRPCRouter({
               : priceData.data?.data.attributes.unit_price;
 
             const updateData: subscriptions.SubscriptionInsert = {
-              lemonSqueezyId: eventBody.data.id,
+              subscriptionId: eventBody.data.id,
               orderId: attributes.order_id as number,
               name: attributes.user_name as string,
               email: attributes.user_email as string,
@@ -112,7 +112,8 @@ export const subscriptionRouter = createTRPCRouter({
               trialEndsAt: attributes.trial_ends_at as string,
               price: price?.toString() ?? "",
               isPaused: false,
-              subscriptionItemId: attributes.first_subscription_item.id,
+              subscriptionItemId:
+                attributes.first_subscription_item.subscription_id,
               isUsageBased: attributes.first_subscription_item.is_usage_based,
               userId: eventBody.meta.custom_data.user_id,
               planId: plan[0].variantId,
@@ -134,7 +135,7 @@ export const subscriptionRouter = createTRPCRouter({
                   .insert(schema.subscriptions)
                   .values(updateData)
                   .onConflictDoUpdate({
-                    target: schema.subscriptions.lemonSqueezyId,
+                    target: schema.subscriptions.subscriptionId,
                     set: updateData,
                   });
                 await tx
@@ -158,7 +159,7 @@ export const subscriptionRouter = createTRPCRouter({
                 });
               });
             } catch (error) {
-              processingError = `Failed to upsert Subscription #${updateData.lemonSqueezyId} to the database. Error: ${error as string}`;
+              processingError = `Failed to upsert Subscription #${updateData.subscriptionId} to the database. Error: ${error as string}`;
               console.error(error);
             }
           }
@@ -224,7 +225,7 @@ export const subscriptionRouter = createTRPCRouter({
 
       // Get user subscriptions
       const subscription = await db.query.subscriptions.findFirst({
-        where: eq(schema.subscriptions.lemonSqueezyId, input.id),
+        where: eq(schema.subscriptions.subscriptionId, input.id),
       });
 
       if (!subscription) {
@@ -247,7 +248,7 @@ export const subscriptionRouter = createTRPCRouter({
             endsAt: returnedSub.data?.data.attributes.ends_at,
             isPaused: returnedSub.data?.data.attributes.pause !== null,
           })
-          .where(eq(schema.subscriptions.lemonSqueezyId, input.id));
+          .where(eq(schema.subscriptions.subscriptionId, input.id));
       } catch (error) {
         throw new Error(
           `Failed to pause Subscription #${input.id} in the database.`,
@@ -266,7 +267,7 @@ export const subscriptionRouter = createTRPCRouter({
 
       // Get user subscriptions
       const subscription = await db.query.subscriptions.findFirst({
-        where: eq(schema.subscriptions.lemonSqueezyId, input.id),
+        where: eq(schema.subscriptions.subscriptionId, input.id),
       });
 
       if (!subscription) {
@@ -288,7 +289,7 @@ export const subscriptionRouter = createTRPCRouter({
             endsAt: returnedSub.data?.data.attributes.ends_at,
             isPaused: returnedSub.data?.data.attributes.pause !== null,
           })
-          .where(eq(schema.subscriptions.lemonSqueezyId, input.id));
+          .where(eq(schema.subscriptions.subscriptionId, input.id));
       } catch (error) {
         throw new Error(
           `Failed to pause Subscription #${input.id} in the database.`,
@@ -306,7 +307,7 @@ export const subscriptionRouter = createTRPCRouter({
 
       // Get user subscriptions
       const subscription = await db.query.subscriptions.findFirst({
-        where: eq(schema.subscriptions.lemonSqueezyId, input.id),
+        where: eq(schema.subscriptions.subscriptionId, input.id),
       });
 
       if (!subscription) {
@@ -325,7 +326,7 @@ export const subscriptionRouter = createTRPCRouter({
               cancelledSub.data?.data.attributes.status_formatted,
             endsAt: cancelledSub.data?.data.attributes.ends_at,
           })
-          .where(eq(schema.subscriptions.lemonSqueezyId, input.id));
+          .where(eq(schema.subscriptions.subscriptionId, input.id));
       } catch (error) {
         throw new Error(
           `Failed to cancel Subscription #${input.id} in the database.`,
@@ -433,8 +434,18 @@ export const subscriptionRouter = createTRPCRouter({
       }
 
       // Send request to Lemon Squeezy to change the subscription.
-      const updatedSub = await updateSubscription(subscription.lemonSqueezyId, {
-        variantId: newPlan.variantId,
+      const updatedSub = await updateSubscription(
+        subscription.subscriptionItemId,
+        {
+          variantId: newPlan.variantId,
+          cancelled: false,
+        },
+      ).catch((error) => {
+        throw new Error(
+          `Failed to update Subscription #${subscription.subscriptionId}. Error: ${
+            error as string
+          }`,
+        );
       });
 
       // Save in db
@@ -448,13 +459,13 @@ export const subscriptionRouter = createTRPCRouter({
           })
           .where(
             eq(
-              schema.subscriptions.lemonSqueezyId,
-              subscription.lemonSqueezyId,
+              schema.subscriptions.subscriptionId,
+              subscription.subscriptionId,
             ),
           );
       } catch (error) {
         throw new Error(
-          `Failed to update Subscription #${subscription.lemonSqueezyId} in the database.`,
+          `Failed to update Subscription #${subscription.subscriptionId} in the database.`,
         );
       }
 

@@ -42,6 +42,7 @@ export function leamonWebhookHasData(obj: unknown): obj is {
         id: number;
         price_id: number;
         is_usage_based: boolean;
+        subscription_id: number;
       };
     };
     id: string;
