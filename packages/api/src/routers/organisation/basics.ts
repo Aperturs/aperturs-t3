@@ -58,20 +58,24 @@ export const organisationBasic = createTRPCRouter({
       return res;
     }),
 
-  checkOrganisationCreationLimit: protectedProcedure.query(async ({ ctx }) => {
-    const limit = await ctx.db.query.userUsage.findFirst({
-      where: eq(schema.userUsage.clerkUserId, ctx.currentUser),
-    });
+  checkOrganisationCreationLimit: protectedProcedure.mutation(
+    async ({ ctx }) => {
+      const limit = await ctx.db.query.userUsage.findFirst({
+        where: eq(schema.userUsage.clerkUserId, ctx.currentUser),
+      });
 
-    if (!limit) {
-      throw new Error("Uplease upgrade your plan to create an organisation");
-    }
+      if (!limit) {
+        throw new Error("Uplease upgrade your plan to create an organisation");
+      }
 
-    const available = limit?.organisation > 0;
-    if (!available) {
-      throw new Error("Organisation Creation limit reached");
-    }
-  }),
+      const available = limit?.organisation > 0;
+      if (!available) {
+        throw new Error("Organisation Creation limit reached");
+      }
+
+      return available;
+    },
+  ),
 
   getAllUserOrganisations: protectedProcedure.query(async ({ ctx }) => {
     const res = await getUserOrganisations(ctx.currentUser);
