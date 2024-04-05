@@ -5,10 +5,26 @@ import {
 } from "@api/handlers/organisation/main";
 import { limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
+import { z } from "zod";
 
 import { eq, organisation, schema } from "@aperturs/db";
 
 export const organisationBasic = createTRPCRouter({
+  getOrgIdfromSlug: protectedProcedure
+    .input(
+      z.object({
+        orgslug: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const res = await ctx.db.query.organization.findFirst({
+        where: eq(schema.organization.id, input.orgslug),
+      });
+      if (!res) {
+        throw new Error("Organisation not found");
+      }
+      return res.clerkOrgId;
+    }),
   createOrganisation: protectedProcedure
     .input(
       organisation.organisationInsertSchema.omit({

@@ -68,6 +68,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           setContent(updatedContent);
         } else {
           // If there's no existing youtube content, add new content
+
           setContent([
             ...content,
             {
