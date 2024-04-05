@@ -17,7 +17,7 @@ export const subscriptions = pgTable("subscription", {
   id: varchar("id", { length: 191 })
     .primaryKey()
     .$defaultFn(() => createUniqueIds("sub")),
-  lemonSqueezyId: text("lemonSqueezyId").unique().notNull(),
+  subscriptionId: text("subscriptionId").unique().notNull(),
   orderId: integer("orderId").notNull(),
   name: text("name").notNull(),
   email: text("email").notNull(),

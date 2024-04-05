@@ -43,7 +43,7 @@ export function SubscriptionActionsDropdown({
     api.subscription.cancelUserSubscription.useMutation();
 
   const { data: invoiceUrl } = api.subscription.getInvoice.useQuery({
-    id: subscription.lemonSqueezyId,
+    id: subscription.subscriptionId,
   });
 
   console.log("subscription", subscription.id, subscription);
@@ -82,7 +82,7 @@ export function SubscriptionActionsDropdown({
                 onClick={async () => {
                   setLoading(true);
                   await pauseUserSubscription({
-                    id: subscription.lemonSqueezyId,
+                    id: subscription.subscriptionId,
                   }).then(() => {
                     setLoading(false);
                     router.refresh();
@@ -98,7 +98,7 @@ export function SubscriptionActionsDropdown({
                 onClick={async () => {
                   setLoading(true);
                   await resumeUserSubscription({
-                    id: subscription.lemonSqueezyId,
+                    id: subscription.subscriptionId,
                   }).then(() => {
                     setLoading(false);
                     router.refresh();
@@ -131,7 +131,7 @@ export function SubscriptionActionsDropdown({
                 ) {
                   setLoading(true);
                   await cancelUserSubscription({
-                    id: subscription.lemonSqueezyId,
+                    id: subscription.subscriptionId,
                   }).then(() => {
                     setLoading(false);
                     router.refresh();

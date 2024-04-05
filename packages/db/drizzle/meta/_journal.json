@@ -43,6 +43,13 @@
       "when": 1711556681073,
       "tag": "0005_regular_romulus",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1712319252639,
+      "tag": "0006_fixed_revanche",
+      "breakpoints": true
     }
   ]
 }

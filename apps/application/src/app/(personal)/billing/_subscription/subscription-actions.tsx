@@ -17,7 +17,7 @@ export async function SubscriptionActions({
   // }
 
   const urls = await api.subscription.getSubscriptionURLs({
-    id: subscription.lemonSqueezyId,
+    id: subscription.subscriptionId,
   });
 
   return (
