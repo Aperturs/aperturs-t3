@@ -95,9 +95,11 @@ async function getAccessToken(refreshToken: string): Promise<string> {
 
 async function uploadVideoToYoutube(
   videoStream: Readable,
+  thumbnailStream: Readable,
   videoTitle: string,
   videoDescription: string,
   youtubeAccessToken: string,
+  tags: string[],
 ): Promise<any> {
   log(`Uploading video to YouTube: Title - ${videoTitle}`);
 
@@ -126,14 +128,43 @@ async function uploadVideoToYoutube(
   };
 
   try {
-    const response = await youtube.videos.insert({
-      part: ["snippet", "status"],
-      requestBody,
-      media,
-    });
+    const response = await youtube.videos
+      .insert({
+        part: ["snippet", "status"],
+        requestBody: {
+          ...requestBody,
+          status: {
+            madeForKids: false,
+            privacyStatus: "private",
+          },
+        },
+        media,
+      })
+      .catch((error) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        log(error);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        throw new Error(error);
+      });
     log(
       `Video uploaded to YouTube successfully. Video ID: ${response.data.id}`,
     );
+
+    if (!response.data.id) {
+      throw new Error("Failed to get video ID from YouTube response.");
+    }
+
+    log(`Setting thumbnail for the uploaded video.`);
+
+    const thumb = await youtube.thumbnails.set({
+      videoId: "Fr438ocGhZQ",
+      access_token: youtubeAccessToken,
+      media: {
+        body: thumbnailStream,
+      },
+    });
+    log(`${thumb.data.eventId}`);
+
     return response.data;
   } catch (error: any) {
     if (error.code === 401) {
@@ -155,6 +186,8 @@ async function main(): Promise<void> {
     const videoTitle = process.env.VIDEO_TITLE!;
     const videoDescription = process.env.VIDEO_DESCRIPTION!;
     const youtubeRefreshToken = process.env.YOUTUBE_REFRESH_TOKEN!;
+    const s3ThumbnailKey = process.env.S3_THUMBNAIL_KEY!;
+    const tags: string[] = [""];
 
     if (
       !s3BucketName ||
@@ -175,13 +208,20 @@ async function main(): Promise<void> {
     }
 
     const videoStream = await streamVideoFromS3(s3BucketName, s3Key, awsRegion);
+    const thumbnailStream = await streamVideoFromS3(
+      s3BucketName,
+      s3ThumbnailKey,
+      awsRegion,
+    );
 
     try {
       await uploadVideoToYoutube(
         videoStream,
+        thumbnailStream,
         videoTitle,
         videoDescription,
         youtubeAccessToken,
+        tags,
       );
     } catch (error: any) {
       if (error.message.includes("Invalid YouTube access token")) {
@@ -189,9 +229,11 @@ async function main(): Promise<void> {
         youtubeAccessToken = await getAccessToken(youtubeRefreshToken);
         await uploadVideoToYoutube(
           videoStream,
+          thumbnailStream,
           videoTitle,
           videoDescription,
           youtubeAccessToken,
+          tags,
         );
       } else {
         throw error;

@@ -230,6 +230,10 @@ export async function postToYoutube(postId: string) {
           name: env.ECS_CONTAINER_NAME,
           environment: [
             {
+              name: "S3_THUMBNAIL_KEY",
+              value: post.youtubeContent.thumbnail,
+            },
+            {
               name: "AWS_S3_BUCKET_NAME",
               value: env.AWS_S3_BUCKET_NAME,
             },

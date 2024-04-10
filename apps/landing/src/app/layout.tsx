@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
   description:
     "social media management for the modern age, with a focus on privacy and security",
- 
 };
 
 export default function RootLayout({

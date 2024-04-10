@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "pnpm with-env node dist/index.js",
+    "with-env": "dotenv -e .env --"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +15,9 @@
     "@aws-sdk/client-cloudwatch-logs": "^3.525.0",
     "@aws-sdk/client-s3": "^3.525.0",
     "@aws-sdk/s3-request-presigner": "^3.525.0",
-    "googleapis": "^133.0.0"
+    "dotenv": "^16.4.5",
+    "googleapis": "^133.0.0",
+    "@aperturs/validators": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "20.11.6",
