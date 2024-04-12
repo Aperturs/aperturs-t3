@@ -10,8 +10,12 @@ import { RunTaskCommand } from "@aws-sdk/client-ecs";
 import { z } from "zod";
 
 import type { tokens } from "@aperturs/db";
-import type { UpdateYoutubePostInput } from "@aperturs/validators/post";
+import type {
+  FinalYoutubeContentType,
+  UpdateYoutubePostInput,
+} from "@aperturs/validators/post";
 import { db, eq, post, schema } from "@aperturs/db";
+import { redis } from "@aperturs/kv";
 import { postSchema } from "@aperturs/validators/post";
 
 import { env } from "../../../env";
@@ -212,6 +216,24 @@ export async function postToYoutube(postId: string) {
     where: eq(schema.youtubeToken.id, post.youtubeContent.YoutubeTokenId),
   });
 
+  if (!token) {
+    throw new Error("Youtube token not found");
+  }
+
+  const finalPostData = {
+    awsRegion: env.AWS_REGION,
+    name: "test",
+    s3BucketName: env.AWS_S3_BUCKET_NAME,
+    thumbnail: post.youtubeContent.thumbnail,
+    videoDescription: post.youtubeContent.description,
+    videoTags: post.youtubeContent.videoTags,
+    videoTitle: post.youtubeContent.title,
+    videoUrl: post.youtubeContent.video,
+    youtubeRefreshToken: token.refreshToken,
+  } as FinalYoutubeContentType;
+
+  await redis.set(post.id, finalPostData);
+
   const params: RunTaskCommandInput = {
     cluster: env.ECS_CLUSTER_NAME,
     taskDefinition: env.ECS_TASK_DEFINITION_ARN,
@@ -230,36 +252,16 @@ export async function postToYoutube(postId: string) {
           name: env.ECS_CONTAINER_NAME,
           environment: [
             {
-              name: "S3_THUMBNAIL_KEY",
-              value: post.youtubeContent.thumbnail,
+              name: "REDISURL",
+              value: env.REDISURL,
             },
             {
-              name: "AWS_S3_BUCKET_NAME",
-              value: env.AWS_S3_BUCKET_NAME,
+              name: "REDISTOKEN",
+              value: env.REDISTOKEN,
             },
             {
-              name: "S3_VIDEO_KEY",
-              value: post.youtubeContent.video,
-            },
-            {
-              name: "AWS_REGION",
-              value: process.env.AWS_REGION!,
-            },
-            {
-              name: "VIDEO_TITLE",
-              value: post.youtubeContent.title,
-            },
-            {
-              name: "VIDEO_DESCRIPTION",
-              value: post.youtubeContent.description,
-            },
-            {
-              name: "YOUTUBE_REFRESH_TOKEN",
-              value: token?.refreshToken,
-            },
-            {
-              name: "YOUTUBE_ACCESS_TOKEN",
-              value: token?.accessToken,
+              name: "REDISPOSTKEY",
+              value: post.id,
             },
             {
               name: "CLIENT_ID",

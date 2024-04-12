@@ -1,5 +1,5 @@
 {
-  "name": "uploader",
+  "name": "@aperturs/uploader",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,10 +17,10 @@
     "@aws-sdk/s3-request-presigner": "^3.525.0",
     "dotenv": "^16.4.5",
     "googleapis": "^133.0.0",
-    "@aperturs/validators": "workspace:*"
+    "@upstash/redis": "^1.28.4"
   },
   "devDependencies": {
-    "@types/node": "20.11.6",
-    "typescript": "~5.3.3"
+    "@types/node": "^20.11.17",
+    "typescript": "^5.3.3"
   }
 }

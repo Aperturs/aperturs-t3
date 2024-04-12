@@ -8,6 +8,8 @@ import type { Readable } from "stream";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { google } from "googleapis";
+import { Redis } from "@upstash/redis";
+
 
 function log(message: string) {
   console.log(message);
@@ -93,14 +95,21 @@ async function getAccessToken(refreshToken: string): Promise<string> {
   }
 }
 
-async function uploadVideoToYoutube(
-  videoStream: Readable,
-  thumbnailStream: Readable,
-  videoTitle: string,
-  videoDescription: string,
-  youtubeAccessToken: string,
-  tags: string[],
-): Promise<any> {
+async function uploadVideoToYoutube({
+  videoStream,
+  thumbnailStream,
+  videoTitle,
+  videoDescription,
+  youtubeAccessToken,
+  tags,
+}: {
+  videoStream: Readable;
+  thumbnailStream: Readable;
+  videoTitle: string;
+  videoDescription: string;
+  youtubeAccessToken: string;
+  tags: string[];
+}): Promise<any> {
   log(`Uploading video to YouTube: Title - ${videoTitle}`);
 
   const auth = new google.auth.OAuth2();
@@ -177,21 +186,49 @@ async function uploadVideoToYoutube(
   }
 }
 
+interface FinalYoutubeContentType {
+  name: string;
+  thumbnail: string;
+  videoUrl: string;
+  videoTags: string[];
+  videoTitle: string;
+  videoDescription: string;
+  awsRegion: string;
+  s3BucketName: string;
+  youtubeRefreshToken: string;
+  email: string;
+}
+
+
 async function main(): Promise<void> {
   try {
     log(`Starting video upload process.`);
-    const s3BucketName = process.env.AWS_S3_BUCKET_NAME!;
-    const s3Key = process.env.S3_VIDEO_KEY!;
-    const awsRegion = process.env.AWS_REGION!;
-    const videoTitle = process.env.VIDEO_TITLE!;
-    const videoDescription = process.env.VIDEO_DESCRIPTION!;
-    const youtubeRefreshToken = process.env.YOUTUBE_REFRESH_TOKEN!;
-    const s3ThumbnailKey = process.env.S3_THUMBNAIL_KEY!;
-    const tags: string[] = [""];
+
+    const redis = new Redis({
+      token: process.env.REDISTOKEN!,
+      url: process.env.REDISURL!,
+    });
+    
+    const rediskey = process.env.REDISPOSTKEY!;
+    if (!rediskey) {
+      throw new Error("Missing redis key in environment variables.");
+    }
+
+    const post = await redis.get(rediskey) as any as FinalYoutubeContentType;
+
+    console.log(post)
+    const s3BucketName = post.s3BucketName;
+    const videoKey = post.videoUrl;
+    const awsRegion = post.awsRegion;
+    const videoTitle = post.videoTitle;
+    const videoDescription = post.videoDescription;
+    const youtubeRefreshToken = post.youtubeRefreshToken;
+    const s3ThumbnailKey = post.thumbnail;
+    const tags: string[] = post.videoTags;
 
     if (
       !s3BucketName ||
-      !s3Key ||
+      !videoKey ||
       !awsRegion ||
       !videoTitle ||
       !videoDescription ||
@@ -206,35 +243,33 @@ async function main(): Promise<void> {
     } catch (error) {
       throw new Error("Failed to obtain YouTube access token.");
     }
-
-    const videoStream = await streamVideoFromS3(s3BucketName, s3Key, awsRegion);
+    const videoStream = await streamVideoFromS3(s3BucketName, videoKey, awsRegion);
     const thumbnailStream = await streamVideoFromS3(
       s3BucketName,
       s3ThumbnailKey,
       awsRegion,
     );
-
     try {
-      await uploadVideoToYoutube(
+      await uploadVideoToYoutube({
         videoStream,
         thumbnailStream,
         videoTitle,
         videoDescription,
         youtubeAccessToken,
         tags,
-      );
+      });
     } catch (error: any) {
       if (error.message.includes("Invalid YouTube access token")) {
         log("Refreshing YouTube access token.");
         youtubeAccessToken = await getAccessToken(youtubeRefreshToken);
-        await uploadVideoToYoutube(
+        await uploadVideoToYoutube({
           videoStream,
           thumbnailStream,
           videoTitle,
           videoDescription,
           youtubeAccessToken,
           tags,
-        );
+        });
       } else {
         throw error;
       }
