@@ -10,7 +10,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { PostContentType } from "@aperturs/validators/post";
-import { desc, eq, schema } from "@aperturs/db";
+import { and, desc, eq, schema } from "@aperturs/db";
 import {
   savePostInputSchema,
   updatePostInputSchema,
@@ -123,7 +123,10 @@ export const posting = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       if (input.orgid) {
         const posts = await ctx.db.query.post.findMany({
-          where: eq(schema.post.organizationId, input.orgid),
+          where: and(
+            eq(schema.post.organizationId, input.orgid),
+            eq(schema.post.status, "SAVED"),
+          ),
           orderBy: desc(schema.post.updatedAt),
           with: {
             youtubeContent: true,
@@ -132,7 +135,10 @@ export const posting = createTRPCRouter({
         return posts;
       } else {
         const posts = await ctx.db.query.post.findMany({
-          where: eq(schema.post.clerkUserId, ctx.currentUser),
+          where: and(
+            eq(schema.post.clerkUserId, ctx.currentUser),
+            eq(schema.post.status, "SAVED"),
+          ),
           orderBy: desc(schema.post.updatedAt),
           with: {
             youtubeContent: true,

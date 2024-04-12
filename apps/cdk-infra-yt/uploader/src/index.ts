@@ -152,6 +152,7 @@ async function uploadVideoToYoutube({
             privacyStatus: "private",
           },
           snippet: {
+            ...requestBody.snippet,
             tags: tags,
           },
         },
