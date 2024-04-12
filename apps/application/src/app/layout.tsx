@@ -3,6 +3,7 @@ import "~/styles/calendar.css";
 
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 
 import ModalProvider from "~/components/custom/modals/modal-provider";
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${inter.variable}`}>
+        <SpeedInsights />
         <Script
           src="https://app.lemonsqueezy.com/js/lemon.js"
           strategy="beforeInteractive"
