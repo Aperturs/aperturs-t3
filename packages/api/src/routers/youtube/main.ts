@@ -10,7 +10,7 @@ import { limitWrapper, verifyLimitAndRun } from "@api/helpers/limitWrapper";
 import { redis } from "@api/index";
 import { z } from "zod";
 
-import { db, schema, tokens } from "@aperturs/db";
+import { db, eq, schema, tokens } from "@aperturs/db";
 import { updateYoutubePostSchema } from "@aperturs/validators/post";
 import { SocialRedisKeySchema } from "@aperturs/validators/socials";
 
@@ -111,7 +111,13 @@ export const youtubeRouter = createTRPCRouter({
         youtubeurl: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      await ctx.db
+        .update(schema.post)
+        .set({
+          status: "PUBLISHED",
+        })
+        .where(eq(schema.post.id, input.postid));
       const final = await sendSuccessEmailYoutube(input);
       return final;
     }),
