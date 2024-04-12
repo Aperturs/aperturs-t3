@@ -5,6 +5,7 @@ import {
   updateYoutubeContent,
   youtubeAuthUrl,
 } from "@api/handlers/youtube/main";
+import { sendSuccessEmailYoutube } from "@api/handlers/youtube/success";
 import { limitWrapper, verifyLimitAndRun } from "@api/helpers/limitWrapper";
 import { redis } from "@api/index";
 import { z } from "zod";
@@ -13,7 +14,11 @@ import { db, schema, tokens } from "@aperturs/db";
 import { updateYoutubePostSchema } from "@aperturs/validators/post";
 import { SocialRedisKeySchema } from "@aperturs/validators/socials";
 
-import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
 
 export const youtubeRouter = createTRPCRouter({
   addYoutubeToDatabase: protectedProcedure
@@ -97,5 +102,17 @@ export const youtubeRouter = createTRPCRouter({
       }
       const post = await postToYoutube(postId);
       return post;
+    }),
+
+  sendSuccessEmail: publicProcedure
+    .input(
+      z.object({
+        postid: z.string(),
+        youtubeurl: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const final = await sendSuccessEmailYoutube(input);
+      return final;
     }),
 });
