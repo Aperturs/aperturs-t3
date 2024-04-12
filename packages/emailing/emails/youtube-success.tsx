@@ -19,7 +19,9 @@ interface YoutubeSuccessEmailProps {
   description: string;
 }
 
-const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : process.env.DOMAIN || "";
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : process.env.DOMAIN || "";
 
 export const YoutubeSuccessEmail = ({
   youtubeUrl,
@@ -50,7 +52,8 @@ export const YoutubeSuccessEmail = ({
       >
         <Body className="bg-offwhite font-sans text-base">
           <Img
-            src={`${baseUrl}/logo.svg`}
+            src={`${baseUrl}/logo.png`}
+            srcSet={`${baseUrl}/logo.svg`}
             width="184"
             height="75"
             alt="Aperutrs Logo"
@@ -62,7 +65,8 @@ export const YoutubeSuccessEmail = ({
             </Heading>
 
             <Img
-              src={`${baseUrl}/success-post.svg`}
+              src={`${baseUrl}/success-post.png`}
+              srcSet={`${baseUrl}/success-post.svg`}
               width="400"
               height="400"
               className="mx-auto my-20"
@@ -70,10 +74,10 @@ export const YoutubeSuccessEmail = ({
 
             <Section>
               <Row>
-                <Text className="text-base my-0">
-                <b>Your video with title</b>: {title}
+                <Text className="my-0 text-base">
+                  <b>Your video with title</b>: {title}
                 </Text>
-                <Text className="text-base mt-0">
+                <Text className="mt-0 text-base">
                   <b>and with description</b>: {description}
                 </Text>
                 <Text className="text-base">
@@ -101,9 +105,9 @@ export const YoutubeSuccessEmail = ({
 };
 
 YoutubeSuccessEmail.PreviewProps = {
-    description: "Somedescription here",
-    title: "Sometitle here",
-    youtubeUrl: "https://www.youtube.com/",
-  } as YoutubeSuccessEmailProps;
+  description: "Somedescription here",
+  title: "Sometitle here",
+  youtubeUrl: "https://www.youtube.com/",
+} as YoutubeSuccessEmailProps;
 
 export default YoutubeSuccessEmail;

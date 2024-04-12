@@ -10,6 +10,7 @@ export default authMiddleware({
     "/api/callback/github",
     "/api/webhooks/subscription",
     "/api/webhooks/invite",
+    "/api/success/youtube-post",
   ],
   apiRoutes: ["/api/callback/linkedin"],
   ignoredRoutes: ["/api/trigger"],

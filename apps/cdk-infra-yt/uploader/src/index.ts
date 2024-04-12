@@ -18,9 +18,9 @@ function errorLog(message: string) {
   console.error(message);
 }
 
-function sendSuccessEmail(postid: string, videoUrl: string) {
-  fetch(
-    `${process.env.BASEURL!}/success/youtube-post?postid=${postid}&videoUrl=${videoUrl}`,
+async function sendSuccessEmail(postid: string, videoUrl: string) {
+  await fetch(
+    `${process.env.DOMAIN!}/api/success/youtube-post?postid=${postid}&videoUrl=${videoUrl}`,
   );
 }
 
@@ -114,7 +114,7 @@ async function uploadVideoToYoutube({
   videoDescription: string;
   youtubeAccessToken: string;
   tags: string[];
-}): Promise<any> {
+}): Promise<string> {
   log(`Uploading video to YouTube: Title - ${videoTitle}`);
 
   const auth = new google.auth.OAuth2();
@@ -151,6 +151,9 @@ async function uploadVideoToYoutube({
             madeForKids: false,
             privacyStatus: "private",
           },
+          snippet: {
+            tags: tags,
+          },
         },
         media,
       })
@@ -171,7 +174,7 @@ async function uploadVideoToYoutube({
     log(`Setting thumbnail for the uploaded video.`);
 
     const thumb = await youtube.thumbnails.set({
-      videoId: "Fr438ocGhZQ",
+      videoId: response.data.id,
       access_token: youtubeAccessToken,
       media: {
         body: thumbnailStream,
@@ -257,8 +260,10 @@ async function main(): Promise<void> {
       s3ThumbnailKey,
       awsRegion,
     );
+
+    let videoid = "";
     try {
-      await uploadVideoToYoutube({
+      videoid = await uploadVideoToYoutube({
         videoStream,
         thumbnailStream,
         videoTitle,
@@ -270,7 +275,7 @@ async function main(): Promise<void> {
       if (error.message.includes("Invalid YouTube access token")) {
         log("Refreshing YouTube access token.");
         youtubeAccessToken = await getAccessToken(youtubeRefreshToken);
-        await uploadVideoToYoutube({
+        videoid = await uploadVideoToYoutube({
           videoStream,
           thumbnailStream,
           videoTitle,
@@ -282,6 +287,8 @@ async function main(): Promise<void> {
         throw error;
       }
     }
+
+    await sendSuccessEmail(rediskey, videoid);
 
     log(`Video upload process completed successfully.`);
   } catch (error: any) {
