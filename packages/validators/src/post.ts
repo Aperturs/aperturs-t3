@@ -33,16 +33,17 @@ const youtubeContentSchema = z.object({
   videoFile: z.instanceof(File).optional(),
 });
 
-
-export const finalYoutubeContentSchema = youtubeContentSchema.omit({
-  thumbnailFile: true,
-  videoFile: true,
-  youtubeId: true,
-}).extend({
-  awsRegion: z.string(),
-  s3BucketName: z.string(),
-  youtubeRefreshToken: z.string(),
-})
+export const finalYoutubeContentSchema = youtubeContentSchema
+  .omit({
+    thumbnailFile: true,
+    videoFile: true,
+    youtubeId: true,
+  })
+  .extend({
+    awsRegion: z.string(),
+    s3BucketName: z.string(),
+    youtubeRefreshToken: z.string(),
+  });
 
 export type FinalYoutubeContentType = z.infer<typeof finalYoutubeContentSchema>;
 

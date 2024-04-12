@@ -147,7 +147,8 @@ export default function usePublishing({ id }: { id: string }) {
           setLoading(true);
           await toast.promise(handlePostYoutube(), {
             loading: "Posting to Youtube...",
-            success: "Background processing started for Youtube post, it will be posted soon.",
+            success:
+              "Background processing started for Youtube post, it will be posted soon.",
             error: (err) => `Failed to post to Youtube ${err}`,
           });
           setLoading(false);

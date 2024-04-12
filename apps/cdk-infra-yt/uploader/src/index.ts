@@ -7,9 +7,8 @@ import https from "https";
 import type { Readable } from "stream";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { google } from "googleapis";
 import { Redis } from "@upstash/redis";
-
+import { google } from "googleapis";
 
 function log(message: string) {
   console.log(message);
@@ -199,7 +198,6 @@ interface FinalYoutubeContentType {
   email: string;
 }
 
-
 async function main(): Promise<void> {
   try {
     log(`Starting video upload process.`);
@@ -208,15 +206,15 @@ async function main(): Promise<void> {
       token: process.env.REDISTOKEN!,
       url: process.env.REDISURL!,
     });
-    
+
     const rediskey = process.env.REDISPOSTKEY!;
     if (!rediskey) {
       throw new Error("Missing redis key in environment variables.");
     }
 
-    const post = await redis.get(rediskey) as any as FinalYoutubeContentType;
+    const post = (await redis.get(rediskey)) as any as FinalYoutubeContentType;
 
-    console.log(post)
+    console.log(post);
     const s3BucketName = post.s3BucketName;
     const videoKey = post.videoUrl;
     const awsRegion = post.awsRegion;
@@ -243,7 +241,11 @@ async function main(): Promise<void> {
     } catch (error) {
       throw new Error("Failed to obtain YouTube access token.");
     }
-    const videoStream = await streamVideoFromS3(s3BucketName, videoKey, awsRegion);
+    const videoStream = await streamVideoFromS3(
+      s3BucketName,
+      videoKey,
+      awsRegion,
+    );
     const thumbnailStream = await streamVideoFromS3(
       s3BucketName,
       s3ThumbnailKey,
