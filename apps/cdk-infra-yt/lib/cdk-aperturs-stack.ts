@@ -26,7 +26,7 @@ export class CdkApertursStack extends cdk.Stack {
       this,
       "UploaderTaskDefinition",
       {
-        cpu: 1024,
+        cpu: 512,
         memoryLimitMiB: 1024,
         runtimePlatform: {
           cpuArchitecture: ecs.CpuArchitecture.ARM64,
