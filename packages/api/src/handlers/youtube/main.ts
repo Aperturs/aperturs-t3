@@ -256,6 +256,10 @@ export async function postToYoutube(postId: string) {
               value: env.REDISURL,
             },
             {
+              name: "DOMAIN",
+              value: env.DOMAIN,
+            },
+            {
               name: "REDISTOKEN",
               value: env.REDISTOKEN,
             },
