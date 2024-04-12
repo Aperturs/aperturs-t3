@@ -18,6 +18,12 @@ function errorLog(message: string) {
   console.error(message);
 }
 
+function sendSuccessEmail(postid: string, videoUrl: string) {
+  fetch(
+    `${process.env.BASEURL!}/success/youtube-post?postid=${postid}&videoUrl=${videoUrl}`,
+  );
+}
+
 async function streamVideoFromS3(
   s3BucketName: string,
   s3Key: string,
@@ -173,7 +179,7 @@ async function uploadVideoToYoutube({
     });
     log(`${thumb.data.eventId}`);
 
-    return response.data;
+    return response.data.id;
   } catch (error: any) {
     if (error.code === 401) {
       throw new Error(
