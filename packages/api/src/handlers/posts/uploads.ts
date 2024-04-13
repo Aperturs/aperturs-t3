@@ -1,11 +1,11 @@
-import { eventBridgeClient, s3Client } from "@api/utils/aws";
-import { PutEventsCommand } from "@aws-sdk/client-eventbridge";
+import { s3Client, scheduler } from "@api/utils/aws";
 import {
   DeleteObjectsCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
+import { CreateScheduleCommandInput } from "@aws-sdk/client-scheduler";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { env } from "../../../env";
@@ -116,48 +116,55 @@ export async function deleteFileFromAws(fileKeys: string[]) {
   }
 }
 
-function datetimeToCron(date: Date) {
-  // EventBridge uses UTC time in cron expressions
-  const minute = date.getUTCMinutes();
-  const hour = date.getUTCHours();
-  const day = date.getUTCDate();
-  const month = date.getUTCMonth() + 1; // getUTCMonth() returns 0-11
-  const dayOfWeek = "?"; // No specific day of the week
-  return `cron(${minute} ${hour} ${day} ${month} ${dayOfWeek} *)`;
+function formatUTCDate(date: Date): string {
+  const pad = (num: number) => num.toString().padStart(2, "0");
+
+  const year = date.getUTCFullYear();
+  const month = pad(date.getUTCMonth() + 1); // JavaScript months are zero-indexed
+  const day = pad(date.getUTCDate());
+  const hours = pad(date.getUTCHours());
+  const minutes = pad(date.getUTCMinutes());
+  const seconds = pad(date.getUTCSeconds());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
 export async function scheduleLambdaEvent({
   time,
   url,
+  postid,
 }: {
   time: Date;
   url: string;
+  postid: string;
 }) {
   const eventDetail = {
-    url: url, // URL to be requested by the Lambda function
+    detail: {
+      url: url, // URL to be requested by the Lambda function
+    },
   };
 
-  console.log("Scheduling event for:", time.toLocaleTimeString(), time);
+  console.log("Scheduling event for:", formatUTCDate(time), time);
   console.log("Event detail:", eventDetail);
 
-  const command = new PutEventsCommand({
-    Entries: [
-      {
-        Source: "custom.myapp.scheduler",
-        DetailType: "TriggerLambda",
-        Detail: JSON.stringify(eventDetail),
-        EventBusName: "ApertursSchedulerBus",
-        Time: time,
-      },
-    ],
-  });
-
-  console.log("Sending event to EventBridge:", command.input.Entries);
+  const schedularInput = {
+    FlexibleTimeWindow: {
+      Mode: "OFF",
+    },
+    ActionAfterCompletion: "DELETE",
+    Target: {
+      Arn: "arn",
+      RoleArn: "arn",
+      Input: JSON.stringify(eventDetail),
+    },
+    ScheduleExpression: `at(${formatUTCDate(time)})`,
+    ScheduleExpressionTimezone: "UTC",
+    Name: `scheduleforpost${postid.replaceAll(":", "").replaceAll(".", "")}`,
+  } as CreateScheduleCommandInput;
 
   try {
-    const response = await eventBridgeClient.send(command);
-    console.log("Event scheduled successfully:", response);
-    return response;
+    const res = await scheduler.createSchedule(schedularInput);
+    return res;
   } catch (error) {
     console.error("Failed to schedule event:", error);
     throw error;

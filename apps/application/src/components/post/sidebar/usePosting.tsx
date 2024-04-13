@@ -562,7 +562,7 @@ export default function usePublishing({ id }: { id: string }) {
         //   toast.error("post id is not available");
         //   return;
         // }
-        const postId = new Date().toLocaleTimeString();
+        const postId = new Date().toISOString();
         id = postId;
       }
       console.log(id, "id");

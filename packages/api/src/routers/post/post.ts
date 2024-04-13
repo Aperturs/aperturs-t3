@@ -99,6 +99,7 @@ export const post = createTRPCRouter({
         await scheduleLambdaEvent({
           time: input.date,
           url: `${env.DOMAIN}api/post/scheduled?postid=${input.id}`,
+          postid: input.id,
         });
         return {
           success: true,

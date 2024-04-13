@@ -4,11 +4,25 @@ import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
-import { CfnEventBusPolicy, EventBus, Rule } from "aws-cdk-lib/aws-events";
+import {
+  CfnEventBusPolicy,
+  EventBus,
+  EventField,
+  Rule,
+} from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import {
+  Effect,
+  Policy,
+  PolicyDocument,
+  PolicyStatement,
+  Role,
+  ServicePrincipal,
+} from "aws-cdk-lib/aws-iam";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as scheduler from "aws-cdk-lib/aws-scheduler";
 
 export class CdkApertursStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -63,36 +77,29 @@ export class CdkApertursStack extends cdk.Stack {
       },
     );
 
-    // Define the custom Event Bus
-    const apertursScheduleBus = new EventBus(this, "ApertursSchedulerBus", {
-      eventBusName: "ApertursSchedulerBus",
-    });
-
     const schedulerLambda = new lambda.Function(this, "SchedulerLambda", {
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: "scheduler.handler",
       code: lambda.Code.fromAsset(join(__dirname, "..", "lambda")),
     });
 
-    new CfnEventBusPolicy(this, "EventBusPolicy", {
-      statementId: "AllowPutEvents",
-      action: "events:PutEvents",
-      principal: "*", // Here you might want to restrict to specific principals
-      eventBusName: apertursScheduleBus.eventBusName,
-      condition: {
-        type: "StringEquals",
-        key: "aws:PrincipalOrgID",
-        value: process.env.AWS_ORGID, // Example, specify your AWS Organization ID or another condition
-      },
-    });
-    const rule = new Rule(this, "DynamicScheduleRule", {
-      eventBus: apertursScheduleBus,
-      eventPattern: {
-        source: ["custom.myapp.scheduler"],
-      },
+    const schedulerRole = new Role(this, "schedulerRole", {
+      assumedBy: new ServicePrincipal("scheduler.amazonaws.com"),
     });
 
-    rule.addTarget(new LambdaFunction(schedulerLambda));
+    const invokeLambdaPolicy = new Policy(this, "invokeLambdaPolicy", {
+      document: new PolicyDocument({
+        statements: [
+          new PolicyStatement({
+            actions: ["lambda:InvokeFunction"],
+            resources: [schedulerLambda.functionArn],
+            effect: Effect.ALLOW,
+          }),
+        ],
+      }),
+    });
+
+    schedulerRole.attachInlinePolicy(invokeLambdaPolicy);
 
     new cdk.CfnOutput(this, "YoutubeUploadsBucketName", {
       value: youtubeUploadsBucket.bucketName,
@@ -113,6 +120,16 @@ export class CdkApertursStack extends cdk.Stack {
     new cdk.CfnOutput(this, "TaskDefinitionName", {
       value: uploaderTaskDefinition.taskDefinitionArn,
       exportName: "CdkApertursStack-TaskDefinitionName",
+    });
+
+    new cdk.CfnOutput(this, "SchedulerLambdaArn", {
+      value: schedulerLambda.functionArn,
+      exportName: "CdkApertursStack-SchedulerLambdaArn",
+    });
+
+    new cdk.CfnOutput(this, "SchedulerRoleArn", {
+      value: schedulerRole.roleArn,
+      exportName: "CdkApertursStack-SchedulerRoleArn",
     });
   }
 }
