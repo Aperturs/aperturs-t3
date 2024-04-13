@@ -1,4 +1,5 @@
-import { s3Client } from "@api/utils/aws";
+import { eventBridgeClient, s3Client } from "@api/utils/aws";
+import { PutEventsCommand } from "@aws-sdk/client-eventbridge";
 import {
   DeleteObjectsCommand,
   GetObjectCommand,
@@ -112,5 +113,53 @@ export async function deleteFileFromAws(fileKeys: string[]) {
     );
   } catch {
     return Response.json({ message: "Error deleting files" }, { status: 500 });
+  }
+}
+
+function datetimeToCron(date: Date) {
+  // EventBridge uses UTC time in cron expressions
+  const minute = date.getUTCMinutes();
+  const hour = date.getUTCHours();
+  const day = date.getUTCDate();
+  const month = date.getUTCMonth() + 1; // getUTCMonth() returns 0-11
+  const dayOfWeek = "?"; // No specific day of the week
+  return `cron(${minute} ${hour} ${day} ${month} ${dayOfWeek} *)`;
+}
+
+export async function scheduleLambdaEvent({
+  time,
+  url,
+}: {
+  time: Date;
+  url: string;
+}) {
+  const eventDetail = {
+    url: url, // URL to be requested by the Lambda function
+  };
+
+  console.log("Scheduling event for:", time.toLocaleTimeString(), time);
+  console.log("Event detail:", eventDetail);
+
+  const command = new PutEventsCommand({
+    Entries: [
+      {
+        Source: "custom.myapp.scheduler",
+        DetailType: "TriggerLambda",
+        Detail: JSON.stringify(eventDetail),
+        EventBusName: "ApertursSchedulerBus",
+        Time: time,
+      },
+    ],
+  });
+
+  console.log("Sending event to EventBridge:", command.input.Entries);
+
+  try {
+    const response = await eventBridgeClient.send(command);
+    console.log("Event scheduled successfully:", response);
+    return response;
+  } catch (error) {
+    console.error("Failed to schedule event:", error);
+    throw error;
   }
 }

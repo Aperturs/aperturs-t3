@@ -19,6 +19,7 @@ export default function usePublishing({ id }: { id: string }) {
     reset,
     youtubeContent,
     postType,
+    time,
     shouldReset: isUploaded,
   } = useStore(
     (state) => ({
@@ -28,6 +29,7 @@ export default function usePublishing({ id }: { id: string }) {
       shouldReset: state.shouldReset,
       youtubeContent: state.youtubeContent,
       postType: state.postType,
+      time: state.time,
     }),
     shallow,
   );
@@ -68,6 +70,9 @@ export default function usePublishing({ id }: { id: string }) {
 
   const { mutateAsync: postToYoutube, isPending: postingToYoutube } =
     api.youtube.postToYoutube.useMutation();
+
+  const { mutateAsync: schedulePost, isPending: scheduling } =
+    api.post.schedule.useMutation();
 
   const { orgid } = useParams<{ orgid: string }>();
   const { user } = useUser();
@@ -517,11 +522,7 @@ export default function usePublishing({ id }: { id: string }) {
           if (response.success) {
             if (!isScheduling) {
               reset();
-              if (orgid) {
-                router.push(`/organisation/${orgid}/drafts`);
-              } else {
-                router.push("/drafts");
-              }
+              redirect("drafts");
               console.log(response, "response");
             }
           }
@@ -548,40 +549,53 @@ export default function usePublishing({ id }: { id: string }) {
     if (!scheduledTime) {
       return toast.error("Please select a date and time");
     }
+
+    console.log(scheduledTime, "scheduledTime");
+
     try {
       let id = "";
       if (isUploaded) {
         await handleUpdate({ isScheduling: true });
       } else {
-        const postId = await handleSave({ isScheduling: true });
-        if (!postId) {
-          toast.error("post id is not available");
-          return;
-        }
+        // const postId = await handleSave({ isScheduling: true });
+        // if (!postId) {
+        //   toast.error("post id is not available");
+        //   return;
+        // }
+        const postId = new Date().toLocaleTimeString();
         id = postId;
       }
       console.log(id, "id");
       console.log(saveData, "savedData");
-      // await toast
-      //   .promise(
-      //     Schedule({
-      //       id: id,
-      //       date: new Date(scheduledTime),
-      //     }),
-      //     {
-      //       loading: "Scheduling post...",
-      //       success: "Scheduled post",
-      //       error: "Failed to schedule post",
-      //     },
-      //   )
-      //   .then((response) => {
-      //     if (response) {
-      //       reset();
-      //       router.push("/post");
-      //     }
-      //   });
+      // const myDate = new Date(scheduledDate).setTime(scheduledTime);
+      await toast
+        .promise(
+          schedulePost({
+            id: id,
+            date: scheduledTime,
+          }),
+          {
+            loading: "Scheduling post...",
+            success: "Scheduled post",
+            error: "Failed to schedule post",
+          },
+        )
+        .then((response) => {
+          if (response) {
+            reset();
+            redirect("post");
+          }
+        });
     } catch (err) {
       toast.error(`Failed to schedule post`);
+    }
+  };
+
+  const redirect = (endpoint: string) => {
+    if (orgid) {
+      router.push(`/organisation/${orgid}/${endpoint}`);
+    } else {
+      router.push(`/${endpoint}`);
     }
   };
 

@@ -5,7 +5,7 @@ export default authMiddleware({
   publicRoutes: [
     "/api/webhooks/user",
     "/api/callback/twitter",
-    "/api/post/schedule",
+    "/api/post/scheduled",
     "/api/test",
     "/api/callback/github",
     "/api/webhooks/subscription",

@@ -4,6 +4,9 @@ import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
+import { CfnEventBusPolicy, EventBus, Rule } from "aws-cdk-lib/aws-events";
+import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
+import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as s3 from "aws-cdk-lib/aws-s3";
 
@@ -47,7 +50,6 @@ export class CdkApertursStack extends cdk.Stack {
         streamPrefix: "Uploader",
       }),
     });
-
     // Grant the ECS task read access to the S3 bucket
     youtubeUploadsBucket.grantRead(uploaderTaskDefinition.taskRole);
 
@@ -60,6 +62,37 @@ export class CdkApertursStack extends cdk.Stack {
         description: "Security group for Uploader ECS task",
       },
     );
+
+    // Define the custom Event Bus
+    const apertursScheduleBus = new EventBus(this, "ApertursSchedulerBus", {
+      eventBusName: "ApertursSchedulerBus",
+    });
+
+    const schedulerLambda = new lambda.Function(this, "SchedulerLambda", {
+      runtime: lambda.Runtime.NODEJS_20_X,
+      handler: "scheduler.handler",
+      code: lambda.Code.fromAsset(join(__dirname, "..", "lambda")),
+    });
+
+    new CfnEventBusPolicy(this, "EventBusPolicy", {
+      statementId: "AllowPutEvents",
+      action: "events:PutEvents",
+      principal: "*", // Here you might want to restrict to specific principals
+      eventBusName: apertursScheduleBus.eventBusName,
+      condition: {
+        type: "StringEquals",
+        key: "aws:PrincipalOrgID",
+        value: process.env.AWS_ORGID, // Example, specify your AWS Organization ID or another condition
+      },
+    });
+    const rule = new Rule(this, "DynamicScheduleRule", {
+      eventBus: apertursScheduleBus,
+      eventPattern: {
+        source: ["custom.myapp.scheduler"],
+      },
+    });
+
+    rule.addTarget(new LambdaFunction(schedulerLambda));
 
     new cdk.CfnOutput(this, "YoutubeUploadsBucketName", {
       value: youtubeUploadsBucket.bucketName,

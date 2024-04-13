@@ -44,7 +44,7 @@ function Publish({ params }: { params: { postid: string } }) {
       <SimpleButton
         text="Schedule"
         // isLoading={scheduling}
-        disabled={isDisabled || disablePosting}
+        // disabled={isDisabled || disablePosting}
         onClick={async () => {
           await handleSchedule();
         }}
