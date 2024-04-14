@@ -14,7 +14,6 @@ const config = {
   parserOptions: { project: true },
   plugins: ["@typescript-eslint", "import"],
   rules: {
-    files: ["*.d.ts", "*.js"],
     "turbo/no-undeclared-env-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
@@ -37,6 +36,8 @@ const config = {
     ".next",
     "dist",
     "pnpm-lock.yaml",
+    "*.js",
+    "*.d.ts"
   ],
   reportUnusedDisableDirectives: true,
 };
