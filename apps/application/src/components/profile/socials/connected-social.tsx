@@ -36,7 +36,7 @@ export const ConnectedSocial = ({
       <h2 className="break-words text-center text-sm leading-6 ">{name}</h2>
       <p className="text-xs text-gray-500">{username}</p>
       {/* <div className="h-0.5 w-full bg-gray-200" /> */}
-      <div className="absolute right-10 top-3">{icon}</div>
+      <div className="absolute right-10 top-4">{icon}</div>
       <ConnectSocialsAction id={id} type={type} />
       <p className="text-center text-xs font-bold text-gray-500">
         Connected on <span>{connectedAt}</span>

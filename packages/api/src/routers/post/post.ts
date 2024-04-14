@@ -110,6 +110,7 @@ export const post = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       try {
+        console.log("Scheduling post", input);
         await scheduleLambdaEvent({
           time: input.date,
           url: `${env.DOMAIN}api/post/scheduled?postid=${input.id}`,

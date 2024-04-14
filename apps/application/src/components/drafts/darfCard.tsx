@@ -42,6 +42,9 @@ export default function DraftCard({
   const { mutateAsync: DeleteDraft, isPending: deleting } =
     api.savepost.deleteSavedPostById.useMutation();
 
+  const { mutateAsync: postbyId, isPending: posting } =
+    api.post.postByPostId.useMutation();
+
   const [open, setOpen] = useState(false);
 
   const handleDelete = async () => {
@@ -50,6 +53,17 @@ export default function DraftCard({
       success: "Deleted",
       error: "Failed to delete",
     });
+    router.refresh();
+    refetch?.();
+  };
+
+  const handlePost = async () => {
+    await toast.promise(postbyId({ postId: id }), {
+      loading: "Posting...",
+      success: "Posted",
+      error: "Failed to post",
+    });
+    router.refresh();
     refetch?.();
   };
 
@@ -110,8 +124,13 @@ export default function DraftCard({
               <IoPencilSharp />
             </Button>
           </ToolTipSimple>
-          <ToolTipSimple content="Comming Soon...">
-            <Button variant="secondary" className="btn w-full">
+          <ToolTipSimple content="Post" duration={30}>
+            <Button
+              disabled={posting}
+              variant="secondary"
+              className="btn w-full"
+              onClick={handlePost}
+            >
               <HiPaperAirplane />
             </Button>
           </ToolTipSimple>

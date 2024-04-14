@@ -306,7 +306,6 @@ export default function usePublishing({ id }: { id: string }) {
       toast.error("Please add a post content");
       return;
     }
-
     await toast.promise(
       (async () => {
         // Upload files and modify content
@@ -553,21 +552,22 @@ export default function usePublishing({ id }: { id: string }) {
     console.log(scheduledTime, "scheduledTime");
 
     try {
-      let id = "";
+      let postid = "";
       if (isUploaded) {
         await handleUpdate({ isScheduling: true });
+        postid = id;
       } else {
         const postId = await handleSave({ isScheduling: true });
         if (!postId) {
           toast.error("post id is not available");
           return;
         }
-        id = postId;
+        postid = postId;
       }
       await toast
         .promise(
           schedulePost({
-            id: id,
+            id: postid,
             date: scheduledTime,
           }),
           {

@@ -159,7 +159,7 @@ export async function scheduleLambdaEvent({
     },
     ScheduleExpression: `at(${formatUTCDate(time)})`,
     ScheduleExpressionTimezone: "UTC",
-    Name: `scheduleforpost${postid.replaceAll(":", "").replaceAll(".", "")}`,
+    Name: `scheduleforpost${postid}`,
   } as CreateScheduleCommandInput;
 
   try {
