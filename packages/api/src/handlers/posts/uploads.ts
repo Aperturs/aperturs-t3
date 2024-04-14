@@ -1,10 +1,11 @@
-import { s3Client } from "@api/utils/aws";
+import { s3Client, scheduler } from "@api/utils/aws";
 import {
   DeleteObjectsCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
+import { CreateScheduleCommandInput } from "@aws-sdk/client-scheduler";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { env } from "../../../env";
@@ -112,5 +113,60 @@ export async function deleteFileFromAws(fileKeys: string[]) {
     );
   } catch {
     return Response.json({ message: "Error deleting files" }, { status: 500 });
+  }
+}
+
+function formatUTCDate(date: Date): string {
+  const pad = (num: number) => num.toString().padStart(2, "0");
+
+  const year = date.getUTCFullYear();
+  const month = pad(date.getUTCMonth() + 1); // JavaScript months are zero-indexed
+  const day = pad(date.getUTCDate());
+  const hours = pad(date.getUTCHours());
+  const minutes = pad(date.getUTCMinutes());
+  const seconds = pad(date.getUTCSeconds());
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
+export async function scheduleLambdaEvent({
+  time,
+  url,
+  postid,
+}: {
+  time: Date;
+  url: string;
+  postid: string;
+}) {
+  const eventDetail = {
+    detail: {
+      url: url, // URL to be requested by the Lambda function
+    },
+  };
+
+  console.log("Scheduling event for:", formatUTCDate(time), time);
+  console.log("Event detail:", eventDetail);
+
+  const schedularInput = {
+    FlexibleTimeWindow: {
+      Mode: "OFF",
+    },
+    ActionAfterCompletion: "DELETE",
+    Target: {
+      Arn: env.LAMBDA_HIT_ROUTE_ARN,
+      RoleArn: env.SCHEDULAR_IAM_ROLE_ARN,
+      Input: JSON.stringify(eventDetail),
+    },
+    ScheduleExpression: `at(${formatUTCDate(time)})`,
+    ScheduleExpressionTimezone: "UTC",
+    Name: `scheduleforpost${postid}`,
+  } as CreateScheduleCommandInput;
+
+  try {
+    const res = await scheduler.createSchedule(schedularInput);
+    return res;
+  } catch (error) {
+    console.error("Failed to schedule event:", error);
+    throw error;
   }
 }

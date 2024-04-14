@@ -4,6 +4,7 @@
     "module": "commonjs",
     "lib": ["es2020", "dom"],
     "declaration": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

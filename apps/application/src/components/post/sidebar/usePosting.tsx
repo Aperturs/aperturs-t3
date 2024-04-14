@@ -69,6 +69,9 @@ export default function usePublishing({ id }: { id: string }) {
   const { mutateAsync: postToYoutube, isPending: postingToYoutube } =
     api.youtube.postToYoutube.useMutation();
 
+  const { mutateAsync: schedulePost, isPending: scheduling } =
+    api.post.schedule.useMutation();
+
   const { orgid } = useParams<{ orgid: string }>();
   const { user } = useUser();
   const router = useRouter();
@@ -296,12 +299,13 @@ export default function usePublishing({ id }: { id: string }) {
     let postId = "";
     const scheduledTime = date;
     if (isScheduling && !scheduledTime) {
-      return toast.error("Please select a date and time");
+      toast.error("Please select a date and time");
+      return;
     }
     if (!content) {
-      return toast.error("Please add a post content");
+      toast.error("Please add a post content");
+      return;
     }
-
     await toast.promise(
       (async () => {
         // Upload files and modify content
@@ -517,11 +521,7 @@ export default function usePublishing({ id }: { id: string }) {
           if (response.success) {
             if (!isScheduling) {
               reset();
-              if (orgid) {
-                router.push(`/organisation/${orgid}/drafts`);
-              } else {
-                router.push("/drafts");
-              }
+              redirect("drafts");
               console.log(response, "response");
             }
           }
@@ -548,40 +548,50 @@ export default function usePublishing({ id }: { id: string }) {
     if (!scheduledTime) {
       return toast.error("Please select a date and time");
     }
+
+    console.log(scheduledTime, "scheduledTime");
+
     try {
-      let id = "";
+      let postid = "";
       if (isUploaded) {
         await handleUpdate({ isScheduling: true });
+        postid = id;
       } else {
         const postId = await handleSave({ isScheduling: true });
         if (!postId) {
           toast.error("post id is not available");
           return;
         }
-        id = postId;
+        postid = postId;
       }
-      console.log(id, "id");
-      console.log(saveData, "savedData");
-      // await toast
-      //   .promise(
-      //     Schedule({
-      //       id: id,
-      //       date: new Date(scheduledTime),
-      //     }),
-      //     {
-      //       loading: "Scheduling post...",
-      //       success: "Scheduled post",
-      //       error: "Failed to schedule post",
-      //     },
-      //   )
-      //   .then((response) => {
-      //     if (response) {
-      //       reset();
-      //       router.push("/post");
-      //     }
-      //   });
+      await toast
+        .promise(
+          schedulePost({
+            id: postid,
+            date: scheduledTime,
+          }),
+          {
+            loading: "Scheduling post...",
+            success: "Scheduled post",
+            error: "Failed to schedule post",
+          },
+        )
+        .then((response) => {
+          if (response) {
+            reset();
+            redirect("post");
+          }
+        });
     } catch (err) {
       toast.error(`Failed to schedule post`);
+    }
+  };
+
+  const redirect = (endpoint: string) => {
+    if (orgid) {
+      router.push(`/organisation/${orgid}/${endpoint}`);
+    } else {
+      router.push(`/${endpoint}`);
     }
   };
 
@@ -609,6 +619,7 @@ export default function usePublishing({ id }: { id: string }) {
     uploadingFiles,
     saving,
     updating,
+    scheduling,
     handleSaveYoutube,
     uploadProgress,
     uploadFiles,

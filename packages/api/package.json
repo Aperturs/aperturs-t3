@@ -16,9 +16,11 @@
   },
   "dependencies": {
     "@aperturs/db": "workspace:*",
-    "@aws-sdk/client-s3": "^3.525.0",
     "@aws-sdk/client-ec2": "^3.521.0",
     "@aws-sdk/client-ecs": "^3.521.0",
+    "@aws-sdk/client-eventbridge": "^3.554.0",
+    "@aws-sdk/client-s3": "^3.525.0",
+    "@aws-sdk/client-scheduler": "^3.554.0",
     "@aws-sdk/s3-request-presigner": "^3.525.0",
     "@clerk/nextjs": "^4.29.5",
     "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
@@ -38,9 +40,9 @@
   "devDependencies": {
     "@aperturs/email": "workspace:*",
     "@aperturs/eslint-config": "workspace:*",
+    "@aperturs/kv": "workspace:*",
     "@aperturs/prettier-config": "workspace:*",
     "@aperturs/tsconfig": "workspace:*",
-    "@aperturs/kv": "workspace:*",
     "@aperturs/validators": "workspace:*",
     "eslint": "^8.56.0",
     "prettier": "^3.2.5",

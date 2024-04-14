@@ -1,4 +1,7 @@
-import { GetPresignedUrl } from "@api/handlers/posts/uploads";
+import {
+  GetPresignedUrl,
+  scheduleLambdaEvent,
+} from "@api/handlers/posts/uploads";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -6,6 +9,7 @@ import type { PostContentType } from "@aperturs/validators/post";
 import { eq, schema } from "@aperturs/db";
 import { SocialType } from "@aperturs/validators/post";
 
+import { env } from "../../../env";
 import { postToLinkedin } from "../../helpers/linkedln";
 import { postToTwitter } from "../../helpers/twitter";
 import {
@@ -28,10 +32,10 @@ export const post = createTRPCRouter({
         });
         if (post) {
           const content = post.content as PostContentType[];
-          for (const item of content) {
+          const promises = content.map((item) => {
             switch (item.socialType) {
               case `${SocialType.Twitter}`:
-                await postToTwitter({
+                return postToTwitter({
                   tokenId: item.id,
                   tweets: [
                     {
@@ -39,19 +43,33 @@ export const post = createTRPCRouter({
                       text: item.content,
                     },
                   ],
-                });
-                break;
+                })
+                  .then(() => {
+                    console.log("Posted to Twitter");
+                  })
+                  .catch((error) => {
+                    console.error("Failed to post to Twitter", error);
+                  });
+
               case `${SocialType.Linkedin}`:
-                await postToLinkedin({
+                return postToLinkedin({
                   tokenId: item.id,
                   content: item.content,
-                });
-                //post to linkedin
-                break;
+                })
+                  .then(() => {
+                    console.log("Posted to LinkedIn");
+                  })
+                  .catch((error) => {
+                    console.error("Failed to post to LinkedIn", error);
+                  });
+
               default:
-                break;
+                return Promise.resolve(); // resolves immediately for unsupported types
             }
-          }
+          });
+
+          // Wait for all promises to resolve
+          await Promise.all(promises);
         }
 
         await ctx.db
@@ -61,6 +79,12 @@ export const post = createTRPCRouter({
             updatedAt: new Date(),
           })
           .where(eq(schema.post.id, input.postId));
+
+        return {
+          success: true,
+          message: "succesully published",
+          state: 200,
+        };
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -83,54 +107,32 @@ export const post = createTRPCRouter({
       });
     }),
 
-  // schedule: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       id: z.string(),
-  //       date: z.date(),
-  //     }),
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const inputDate = new Date(input.date.toUTCString());
-  //     const currentDate = new Date(new Date().toUTCString());
-  //     console.log(inputDate, currentDate);
-  //     try {
-  //       const delay = Math.round(
-  //         (inputDate.getTime() - currentDate.getTime()) / 1000,
-  //       );
-  //       // console.log(de)
-  //       const headers = {
-  //         Accept: "/",
-  //         url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
-  //         delay: `${input.date.toDateString()}`,
-  //         Authorization: env.CRONJOB_AUTH,
-  //       };
-  //       const url = "https://52.66.162.116/v1/publish";
-  //       await axios
-  //         .post(
-  //           url,
-  //           {},
-  //           {
-  //             headers,
-  //             httpsAgent: new https.Agent({
-  //               rejectUnauthorized: false,
-  //             }),
-  //           },
-  //         )
-  //         .catch((error) => {
-  //           console.error("Error:", error);
-  //         });
-  //       return {
-  //         success: true,
-  //         message: "Post scheduled successfully",
-  //         state: 200,
-  //       };
-  //     } catch (err) {
-  //       return {
-  //         success: false,
-  //         message: "Error scheduling post",
-  //         state: 500,
-  //       };
-  //     }
-  //   }),
+  schedule: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        date: z.date(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        console.log("Scheduling post", input);
+        await scheduleLambdaEvent({
+          time: input.date,
+          url: `${env.DOMAIN}api/post/scheduled?postid=${input.id}`,
+          postid: input.id,
+        });
+        return {
+          success: true,
+          message: "Post scheduled successfully",
+          state: 200,
+        };
+      } catch (err) {
+        return {
+          success: false,
+          message: "Error scheduling post",
+          state: 500,
+        };
+      }
+    }),
 });
