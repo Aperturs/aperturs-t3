@@ -153,7 +153,7 @@ export async function scheduleLambdaEvent({
     },
     ActionAfterCompletion: "DELETE",
     Target: {
-      Arn: "arn",
+      Arn: "arn-youcant see",
       RoleArn: "arn",
       Input: JSON.stringify(eventDetail),
     },
