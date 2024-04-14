@@ -22,7 +22,7 @@ function Publish({ params }: { params: { postid: string } }) {
     disablePosting,
     tweeting,
     uploadProgress,
-    // scheduling,
+    scheduling,
     updating,
     uploadingFiles,
     uploadingFileName,
@@ -43,8 +43,8 @@ function Publish({ params }: { params: { postid: string } }) {
       />
       <SimpleButton
         text="Schedule"
-        // isLoading={scheduling}
-        // disabled={isDisabled || disablePosting}
+        isLoading={scheduling}
+        disabled={isDisabled || disablePosting}
         onClick={async () => {
           await handleSchedule();
         }}

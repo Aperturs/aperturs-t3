@@ -19,7 +19,6 @@ export default function usePublishing({ id }: { id: string }) {
     reset,
     youtubeContent,
     postType,
-    time,
     shouldReset: isUploaded,
   } = useStore(
     (state) => ({
@@ -29,7 +28,6 @@ export default function usePublishing({ id }: { id: string }) {
       shouldReset: state.shouldReset,
       youtubeContent: state.youtubeContent,
       postType: state.postType,
-      time: state.time,
     }),
     shallow,
   );
@@ -301,10 +299,12 @@ export default function usePublishing({ id }: { id: string }) {
     let postId = "";
     const scheduledTime = date;
     if (isScheduling && !scheduledTime) {
-      return toast.error("Please select a date and time");
+      toast.error("Please select a date and time");
+      return;
     }
     if (!content) {
-      return toast.error("Please add a post content");
+      toast.error("Please add a post content");
+      return;
     }
 
     await toast.promise(
@@ -619,6 +619,7 @@ export default function usePublishing({ id }: { id: string }) {
     uploadingFiles,
     saving,
     updating,
+    scheduling,
     handleSaveYoutube,
     uploadProgress,
     uploadFiles,

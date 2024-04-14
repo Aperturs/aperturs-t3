@@ -1,18 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 import { api } from "~/trpc/server";
 
 const handler = async (req: NextRequest) => {
   const postid = req.nextUrl.searchParams.get("postid");
+
+  if (!postid) {
+    return NextResponse.json({ error: "Post ID not found" }, { status: 400 });
+  }
   console.log(postid);
+
   try {
-    const plans = {
-      postid: postid,
-    };
-    return NextResponse.json(plans);
+    const postAll = await api.post.postByPostId({
+      postId: postid,
+    });
+
+    return NextResponse.json(postAll, { status: 200 });
   } catch (e) {
     console.error(e);
-    return NextResponse.error();
+    return NextResponse.json(e, { status: 500 });
   }
 };
 
