@@ -79,6 +79,12 @@ export const post = createTRPCRouter({
             updatedAt: new Date(),
           })
           .where(eq(schema.post.id, input.postId));
+
+        return {
+          success: true,
+          message: "succesully published",
+          state: 200,
+        };
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
