@@ -94,7 +94,7 @@ export const post = createTRPCRouter({
         date: z.date(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       try {
         await scheduleLambdaEvent({
           time: input.date,
