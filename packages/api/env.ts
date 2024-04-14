@@ -31,6 +31,8 @@ export const env = createEnv({
     ECS_CLUSTER_NAME: z.string(),
     ECS_TASK_DEFINITION_ARN: z.string(),
     ECS_CONTAINER_NAME: z.string(),
+    LAMBDA_HIT_ROUTE_ARN: z.string(),
+    SCHEDULAR_IAM_ROLE_ARN: z.string(),
   },
   client: {},
   experimental__runtimeEnv: {},

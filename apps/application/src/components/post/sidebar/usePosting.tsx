@@ -557,17 +557,13 @@ export default function usePublishing({ id }: { id: string }) {
       if (isUploaded) {
         await handleUpdate({ isScheduling: true });
       } else {
-        // const postId = await handleSave({ isScheduling: true });
-        // if (!postId) {
-        //   toast.error("post id is not available");
-        //   return;
-        // }
-        const postId = new Date().toISOString();
+        const postId = await handleSave({ isScheduling: true });
+        if (!postId) {
+          toast.error("post id is not available");
+          return;
+        }
         id = postId;
       }
-      console.log(id, "id");
-      console.log(saveData, "savedData");
-      // const myDate = new Date(scheduledDate).setTime(scheduledTime);
       await toast
         .promise(
           schedulePost({
