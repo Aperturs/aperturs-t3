@@ -33,6 +33,8 @@ export default function OrgPublish({
     uploadingFileName,
   } = usePublishing({ id: postid });
 
+  console.log("saving", saving, uploadingFiles);
+
   const { isAdmin } = useOrgCurrentRole();
 
   return (

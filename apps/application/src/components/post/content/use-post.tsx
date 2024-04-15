@@ -57,6 +57,7 @@ export default function usePost() {
         updatedContent.push(post);
       }
     }
+    setLoading(false);
 
     // Update the global state with the modified content
     return updatedContent;
