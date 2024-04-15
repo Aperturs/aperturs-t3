@@ -1,5 +1,5 @@
 import type { RunTaskCommandInput } from "@aws-sdk/client-ecs";
-import { limitWrapper } from "@api/helpers/limitWrapper";
+import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { googleAuth2Client } from "@api/index";
 import { ec2Client, ecsClient } from "@api/utils/aws";
 import {
@@ -292,4 +292,21 @@ export async function postToYoutube(postId: string) {
   } catch (error) {
     console.error("Error running task:", error);
   }
+}
+
+export async function removeYoutubeDataFromDatabase({
+  tokenId,
+  userId,
+}: {
+  tokenId: string;
+  userId: string;
+}) {
+  await limitDown({
+    func: async () =>
+      await db
+        .delete(schema.youtubeToken)
+        .where(eq(schema.youtubeToken.id, tokenId)),
+    clerkUserId: userId,
+    limitType: "socialaccounts",
+  });
 }
