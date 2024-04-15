@@ -26,7 +26,7 @@ export default function OrgPublish({
     saving,
     tweeting,
     disablePosting,
-    // scheduling,
+    scheduling,
     updating,
     uploadingFiles,
     uploadProgress,
@@ -47,7 +47,7 @@ export default function OrgPublish({
           <DateTimePicker date={date} setDate={setDate} />
           <SimpleButton
             text="Schedule"
-            // isLoading={scheduling}
+            isLoading={scheduling}
             disabled={isDisabled || disablePosting}
             onClick={async () => {
               await handleSchedule();

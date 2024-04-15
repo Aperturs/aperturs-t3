@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { LuChevronsUpDown } from "react-icons/lu";
 
 import type { Option } from "@aperturs/ui/auto-complete";
-import { Avatar, AvatarImage } from "@aperturs/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import {
@@ -142,7 +142,7 @@ function CurrentOrganisation({
       <div className="flex items-center gap-2">
         <Avatar>
           <AvatarImage src={avatar} alt="avatar" className="rounded-full" />
-          {/* <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback> */}
+          <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div>
           <h3 className="capitalize">{name}</h3>
@@ -296,20 +296,25 @@ function OrganisationItem({
     >
       <Link
         href={`${link}`}
-        className="flex h-full w-full items-center justify-between gap-4 px-6"
+        className="flex h-full w-full items-center justify-between gap-4 px-2"
       >
         <div className="flex items-center gap-2">
-          <Image
-            src={logo ?? "/user.png"}
-            alt={name}
-            width={30}
-            height={30}
-            className="rounded-full object-contain"
-          />
+          <Avatar>
+            <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
+            <AvatarImage
+              src={logo ?? "/user.png"}
+              alt={name}
+              width={30}
+              height={30}
+              className="rounded-full object-contain"
+            />
+          </Avatar>
           <div className="relative flex flex-1 flex-col">
             {name}
             <span
-              className={cn(current ? "text-muted" : "text-muted-foreground")}
+              className={cn(
+                current ? "text-gray-300" : "text-muted-foreground",
+              )}
             >
               {subheading}
             </span>
