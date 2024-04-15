@@ -28,6 +28,8 @@ function Publish({ params }: { params: { postid: string } }) {
     uploadingFileName,
   } = usePublishing({ id: postid });
 
+  console.log(saving, "saving");
+
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       {/* <Picker /> */}

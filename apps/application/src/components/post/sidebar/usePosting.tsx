@@ -167,12 +167,7 @@ export default function usePublishing({ id }: { id: string }) {
     if (!twitterError || !linkedinError || loading) {
       reset();
     }
-
-    if (orgid) {
-      router.push(`/organisation/${orgid}/post`);
-    } else {
-      router.push("/post");
-    }
+    redirect("post");
   };
 
   const handlePostYoutube = async () => {
@@ -577,7 +572,9 @@ export default function usePublishing({ id }: { id: string }) {
           },
         )
         .then((response) => {
+          console.log(response, "before looking for res sch");
           if (response) {
+            console.log(response, "res after schedule");
             reset();
             redirect("post");
           }
@@ -589,9 +586,9 @@ export default function usePublishing({ id }: { id: string }) {
 
   const redirect = (endpoint: string) => {
     if (orgid) {
-      router.push(`/organisation/${orgid}/${endpoint}`);
+      return router.push(`/organisation/${orgid}/${endpoint}`);
     } else {
-      router.push(`/${endpoint}`);
+      return router.push(`/${endpoint}`);
     }
   };
 
@@ -624,5 +621,6 @@ export default function usePublishing({ id }: { id: string }) {
     uploadProgress,
     uploadFiles,
     uploadingFileName,
+    reset,
   };
 }

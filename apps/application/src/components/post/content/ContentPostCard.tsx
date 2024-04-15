@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Card } from "@aperturs/ui/card";
 
@@ -26,49 +26,32 @@ function ContentPostCard({ id }: { id: string }) {
   const { updateContent, contentValue, currentFiles } = usePostUpdate(id);
   const [content, setContent] = useState<string>(contentValue);
   const debounceContent = useDebounce(content, 1000);
+  const isExternalUpdate = useRef(false); // Ref to track the source of the update
 
-  useEffect(
-    () => {
+  useEffect(() => {
+    if (content !== contentValue) {
+      isExternalUpdate.current = true; // Marking this update as external
+      setContent(contentValue);
+    }
+  }, [contentValue]);
+
+  // Effect for debouncing content updates
+  useEffect(() => {
+    if (!isExternalUpdate.current) {
+      // Only update externally if the change did not originate from an external update
       updateContent(debounceContent);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [debounceContent],
-  );
-
-  // const onChangeContent = (textContent: string) => {
-  //   if (id === SocialType.Default) {
-  //     setDefaultContent(textContent);
-  //     const updatedContent = content.map((item) => {
-  //       if (!item.unique) {
-  //         return { ...item, content: textContent };
-  //       }
-  //       return item;
-  //     });
-  //     setContent(updatedContent);
-  //   } else {
-  //     const updatedContent = content.map((item) => {
-  //       if (item.id === id) {
-  //         return { ...item, content: textContent };
-  //       }
-  //       return item;
-  //     });
-  //     setContent(updatedContent);
-  //     console.log(content);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (sync) {
-  //     updateContent(defaultContent);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [sync, defaultContent]);
+    }
+    isExternalUpdate.current = false; // Resetting the flag after applying any kind of update
+  }, [debounceContent]);
 
   return (
     <Card className="my-2 w-full p-3">
       <ContentPostCreation
         content={content}
-        onContentChange={setContent}
+        onContentChange={(newContent) => {
+          isExternalUpdate.current = false; // User initiated change
+          setContent(newContent);
+        }}
         // sync={sync}
       />
       <FileUpload id={id} uploadedFiles={currentFiles} />

@@ -26,12 +26,14 @@ export default function OrgPublish({
     saving,
     tweeting,
     disablePosting,
-    // scheduling,
+    scheduling,
     updating,
     uploadingFiles,
     uploadProgress,
     uploadingFileName,
   } = usePublishing({ id: postid });
+
+  console.log("saving", saving, uploadingFiles);
 
   const { isAdmin } = useOrgCurrentRole();
 
@@ -47,7 +49,7 @@ export default function OrgPublish({
           <DateTimePicker date={date} setDate={setDate} />
           <SimpleButton
             text="Schedule"
-            // isLoading={scheduling}
+            isLoading={scheduling}
             disabled={isDisabled || disablePosting}
             onClick={async () => {
               await handleSchedule();
