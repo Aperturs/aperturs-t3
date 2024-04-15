@@ -32,10 +32,10 @@ export const post = createTRPCRouter({
         });
         if (post) {
           const content = post.content as PostContentType[];
-          const promises = content.map((item) => {
+          const promises = content.map(async (item) => {
             switch (item.socialType) {
               case `${SocialType.Twitter}`:
-                return postToTwitter({
+                return await postToTwitter({
                   tokenId: item.id,
                   tweets: [
                     {
@@ -52,7 +52,7 @@ export const post = createTRPCRouter({
                   });
 
               case `${SocialType.Linkedin}`:
-                return postToLinkedin({
+                return await postToLinkedin({
                   tokenId: item.id,
                   content: item.content,
                 })
@@ -67,11 +67,9 @@ export const post = createTRPCRouter({
                 return Promise.resolve(); // resolves immediately for unsupported types
             }
           });
-
           // Wait for all promises to resolve
           await Promise.all(promises);
         }
-
         await ctx.db
           .update(schema.post)
           .set({

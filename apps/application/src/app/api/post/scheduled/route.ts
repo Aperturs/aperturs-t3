@@ -9,12 +9,14 @@ const handler = async (req: NextRequest) => {
   if (!postid) {
     return NextResponse.json({ error: "Post ID not found" }, { status: 400 });
   }
-  console.log(postid);
+  console.log(postid, "post id");
 
   try {
     const postAll = await api.post.postByPostId({
       postId: postid,
     });
+
+    console.log(postAll);
 
     return NextResponse.json(postAll, { status: 200 });
   } catch (e) {
