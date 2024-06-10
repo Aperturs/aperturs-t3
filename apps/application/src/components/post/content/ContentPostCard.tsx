@@ -11,13 +11,11 @@ import usePostUpdate from "./use-post-update";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
-
 //   for (let i = 0; i < tweets.length; i++) {
 //     const tweet = tweets[i];
 //     if (tweet) plaintext += tweet.text + "\n\n"; // Now this will concatenate strings properly
 //   }
-
-//   return plaintext;
+//   return plaintext;x
 // }
 
 function ContentPostCard({ id }: { id: string }) {

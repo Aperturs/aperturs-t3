@@ -1,3 +1,4 @@
+import type { CreateScheduleCommandInput } from "@aws-sdk/client-scheduler";
 import { s3Client, scheduler } from "@api/utils/aws";
 import {
   DeleteObjectsCommand,
@@ -5,7 +6,6 @@ import {
   HeadObjectCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
-import { CreateScheduleCommandInput } from "@aws-sdk/client-scheduler";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { env } from "../../../env";
@@ -44,7 +44,6 @@ export async function GetPresignedUrl({
     Key: fileKey,
     ContentType: fileType,
   });
-  console.log("putParams", putParams);
 
   const uploadUrl = await getSignedUrl(s3Client, putParams, {
     expiresIn: 3600,

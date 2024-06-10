@@ -65,7 +65,7 @@ export const useStore = createWithEqualityFn<State>(
     setTime: (time) => set((state) => ({ ...state, time })),
     setContent: (content) => set((state) => ({ ...state, content })),
     setPostType: (postType) => set((state) => ({ ...state, postType })),
-    reset: () => set((state) => initialState),
+    reset: () => set(() => initialState),
     setYoutubeContent: (youtubeContent) =>
       set((state) => ({ ...state, youtubeContent })),
   }),

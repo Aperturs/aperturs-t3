@@ -16,7 +16,6 @@
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
     "lint:ws:fix": "pnpm dlx sherif@latest --fix",
-    "postinstall": "pnpm lint:ws",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
@@ -26,7 +25,7 @@
     "prettier": "^3.2.5",
     "turbo": "^1.13.2"
   },
-  "packageManager": "pnpm@8.9.0",
+  "packageManager": "pnpm@9.0.6",
   "engines": {
     "node": ">=20"
   },
