@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import axios from "axios";
 
 import type {
@@ -14,9 +12,6 @@ export const getUploadImageUrl = async ({
   token: string;
   ownerUrn: string;
 }): Promise<LinkedinMediaUploadResponse> => {
-  console.log("in geting image url");
-  console.log(ownerUrn, token, "token");
-
   const res = await axios
     .post(
       "https://api.linkedin.com/v2/assets?action=registerUpload",
@@ -43,10 +38,7 @@ export const getUploadImageUrl = async ({
       console.log(error, "error");
       throw new Error("Error getting image upload url");
     });
-
   const data = res.data as LinkedinMediaUploadResponse;
-  console.log(data, "url");
-
   return data;
 };
 

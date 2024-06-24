@@ -94,10 +94,10 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
         },
       };
 
-      axios
+      await axios
         .post("https://api.linkedin.com/v2/ugcPosts", data, {
           headers: {
-            "X-Restli-Protocol-Version": "2.0.0",
+            "X-Restli-Prot ocol-Version": "2.0.0",
             Authorization: `Bearer ${tokenData.accessToken}`,
           },
         })
@@ -110,8 +110,7 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
             };
           }
         })
-        .finally((res: any) => {
-          console.log(res);
+        .finally(() => {
           console.log("Posted to LinkedIn");
         })
         .catch((error) => {
