@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { Button } from "@aperturs/ui/button";
+
 import FadeIn from "~/components/fade-in";
 import { BorderBeam } from "~/components/ui/border-beam";
 import { SparklesCore } from "~/components/ui/sparkles";
@@ -7,16 +9,19 @@ import { SparklesCore } from "~/components/ui/sparkles";
 export default function page() {
   return (
     <section className="flex w-full flex-col items-center justify-center py-48">
-      <FadeIn>
+      <FadeIn className="flex flex-col gap-1 items-center justify-center py-10">
         <h1 className="mt-8 bg-gradient-to-br from-slate-300 to-slate-500 bg-clip-text py-4 text-center text-2xl font-medium tracking-tight text-transparent sm:text-4xl lg:text-7xl">
           Save Time Writing Content, <br /> Focus on What Matters Most
         </h1>
-        <p className="mb-12 mt-2 max-w-[60rem] translate-y-[-1rem]  text-center text-lg tracking-tight text-gray-400  md:text-xl">
+        <p className="mt-2 max-w-[60rem] translate-y-[-1rem]  text-center text-lg tracking-tight text-gray-400  md:text-xl">
           seamlessly integrate <b> posting, repurposing, and collaboration</b>,
           turning your chaotic workflow into an efficient and streamlined
           process. Say goodbye to manual adjustments and hello to more time for
           strategy and creativity.
         </p>
+        <Button>
+          Start Free Trial
+        </Button>
       </FadeIn>
       <FadeIn>
         <div className="relative h-40 md:w-[20rem] lg:w-[40rem]">
@@ -43,7 +48,7 @@ export default function page() {
             alt="App screenshot"
             width={1200}
             height={1200}
-            className="relative z-20 lg:w-[80vw]   rounded-lg border-2 border-white border-opacity-35 shadow-xl"
+            className="relative z-20 rounded-lg   border-2 border-white border-opacity-35 shadow-xl lg:w-[80vw]"
           />
           <BorderBeam
             duration={10}
@@ -54,7 +59,7 @@ export default function page() {
           />
         </FadeIn>
         <FadeIn duration={4} initialY={0}>
-          <div className="gradient absolute left-[50%] top-[-200px] h-[400px] md:w-[90vw] md:h-[700px] " />
+          <div className="gradient absolute left-[50%] top-[-200px] h-[400px] md:h-[700px] md:w-[90vw] " />
         </FadeIn>
         1
       </div>
