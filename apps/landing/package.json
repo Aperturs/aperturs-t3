@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.5",
+    "@heroicons/react": "^2.0.18",
     "@next/font": "^14.1.4",
     "@tsparticles/engine": "^3.4.0",
     "@tsparticles/react": "^3.0.0",
