@@ -1,7 +1,12 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 import "./step.css";
 
@@ -44,6 +49,11 @@ const CardSlider = () => {
       CardDescription:
         "Transform any block to any other and try different options without any design hassle",
     },
+    {
+      CardTitle: "A powerful assistant just a click away",
+      CardDescription:
+        "Insert blocks, perform powerful actions and leverage the limitless power of AI - all without leaving your keyboard",
+    },
   ];
 
   const Card = ({
@@ -54,13 +64,41 @@ const CardSlider = () => {
     CardDescription: string;
   }) => {
     return (
-      <div className="card">
+      <motion.div
+        initial={{
+          opacity: 0,
+          scale: 0.8,
+          y: 500,
+          rotateX: 20,
+          shadow: "20px",
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotateX: 0,
+          transition: { duration: 0.5 },
+        }}
+        exit={{
+          opacity: 0,
+          scale: 0.8,
+          y: 500,
+          rotateX: 20,
+          transition: { duration: 0.3},
+        }}
+        transition={{
+          type: "spring",
+          stiffness: 100,
+          damping: 50,
+        }}
+        className="card"
+      >
         <div className="card-pic"></div>
         <div className="card-info">
           <div className="card-title">{CardTitle}</div>
           <div className="card-description">{CardDescription}</div>
         </div>
-      </div>
+      </motion.div>
     );
   };
 
@@ -72,21 +110,8 @@ const CardSlider = () => {
     <section className="cardslider_container">
       <div className="section-2">
         <div className="scroll-card">
-          <div className="left-card">
-            <div className="left-title">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="mt-[3px]"
-              >
-                <path
-                  d="M8.75348 17.6952C7.72056 14.0706 3.94416 10.3084 0.305928 9.27938C-0.101976 9.14829 -0.101976 8.8599 0.305928 8.72226C3.95074 7.68666 7.72056 3.931 8.76005 0.299863C8.8719 -0.0999545 9.14164 -0.0999545 9.25349 0.299863C10.2864 3.931 14.0628 7.68666 17.6945 8.72226C18.1024 8.85335 18.1024 9.14829 17.6945 9.27938C14.0562 10.3084 10.2798 14.0706 9.24691 17.6952C9.13506 18.1016 8.86532 18.1016 8.75348 17.6952Z"
-                  fill="#A594FD"
-                ></path>
-              </svg>
+          <div className="left-card gird place-content-center">
+            <div className="text-md mb-4 font-medium text-primary">
               Workflow
             </div>
             <div className="left-heading">Create at the speed of thought.</div>
@@ -95,27 +120,30 @@ const CardSlider = () => {
               message while Chronicle does the heavy lifting for you
             </div>
           </div>
-          <div className="right-card">
-            {currentCard ? (
-              <Card
-                CardTitle={currentCard.CardTitle}
-                CardDescription={currentCard.CardDescription}
-              />
-            ) : (
-              <p>No cards available</p>
-            )}
+          <div className="right-card flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {currentCard ? (
+                <Card
+                  key={currentCard.CardTitle}
+                  CardTitle={currentCard.CardTitle}
+                  CardDescription={currentCard.CardDescription}
+                />
+              ) : (
+                <p>No cards available</p>
+              )}
+            </AnimatePresence>
             <div className="scroll">
               <span className="page">01</span>
-              <div className="scroll-bg">
+              <div className="scroll-bg bg-primary">
                 <motion.div
-                  className="scroll-bar"
+                  className="scroll-bar bg-gradient-to-b from-primary/80 to-primary"
                   style={{
                     height: height,
                   }}
                   transition={{ type: "spring", stiffness: 300 }}
                 ></motion.div>
               </div>
-              <span className="page">03</span>
+              <span className="page">0{cardArr.length}</span>
             </div>
           </div>
         </div>

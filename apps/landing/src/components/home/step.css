@@ -42,8 +42,8 @@
   }
   .right-card {
     margin-left: 4rem;
-    display: flex;
-    justify-content: space-between;
+
+    
     width: 50%;
   }
   .right-card .card {
@@ -92,7 +92,7 @@
   }
   .scroll .scroll-bg .scroll-bar {
     width: 4px;
-    background-color: #a594fd;
+    /* background-color: #a594fd; */
     border-radius: 10px;
   }
   .scroll .page {
