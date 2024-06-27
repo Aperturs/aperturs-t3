@@ -11,7 +11,7 @@ export default function Problem() {
       </h1>
       <div className="mt-4 flex w-full flex-col justify-center gap-1 md:flex-row">
         <GraidientMouseWrapper className="w-full">
-          <Card className="w-full">
+          <Card >
             <CardHeader>
               <h2 className="bg-gradient-to-tr from-red-300 to-red-500 bg-clip-text text-2xl font-medium tracking-tight text-transparent lg:text-3xl ">
                 Before using Aperturs
@@ -40,44 +40,46 @@ export default function Problem() {
             </CardContent>
           </Card>
         </GraidientMouseWrapper>
-        <Card className="w-full">
-          <CardHeader>
-            <h2 className="bg-gradient-to-tr from-green-300 to-green-500 bg-clip-text text-2xl font-medium tracking-tight text-transparent lg:text-3xl ">
-              After using Aperturs
-            </h2>
-          </CardHeader>
-          <CardContent className="font-medium">
-            <ul>
-              <ListItem
-                icon="✅"
-                text="Aperturs automatically adjusts content for different platform"
-              />
-              <ListItem
-                icon="✅"
-                text="AI generated images based on your content"
-              />
-              <ListItem
-                icon="✅"
-                text="Posting Automatically at desired timings"
-              />
-              <ListItem
-                icon="✅"
-                text="Manage multiple accounts at single place and post everywhere at once"
-              />
-              <ListItem
-                icon="✅"
-                text="Collaborating with team with different access level and approval system"
-              />
-            </ul>
-          </CardContent>
-        </Card>
+        <GraidientMouseWrapper className="w-full">
+          <Card className="w-full">
+            <CardHeader>
+              <h2 className="bg-gradient-to-tr from-green-300 to-green-500 bg-clip-text text-2xl font-medium tracking-tight text-transparent lg:text-3xl ">
+                After using Aperturs
+              </h2>
+            </CardHeader>
+            <CardContent className="font-medium">
+              <ul>
+                <ListItem
+                  icon="✅"
+                  text="Aperturs automatically adjusts content for different platform"
+                />
+                <ListItem
+                  icon="✅"
+                  text="AI generated images based on your content"
+                />
+                <ListItem
+                  icon="✅"
+                  text="Posting Automatically at desired timings"
+                />
+                <ListItem
+                  icon="✅"
+                  text="Manage multiple accounts at single place and post everywhere at once"
+                />
+                <ListItem
+                  icon="✅"
+                  text="Collaborating with team with different access level and approval system"
+                />
+              </ul>
+            </CardContent>
+          </Card>
+        </GraidientMouseWrapper>
       </div>
     </section>
   );
 }
 
 const ListItem = ({ icon, text }: { icon: React.ReactNode; text: string }) => (
-  <li className="flex items-center gap-2 py-1 md:py-2">
+  <li className="flex items-start gap-2 py-1 md:py-2">
     <span className="text-lg">{icon}</span>
     <p className="text-base md:text-lg">{text}</p>
   </li>

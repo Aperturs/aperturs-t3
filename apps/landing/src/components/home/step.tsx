@@ -8,6 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 
+import ShineBorder from "../ui/shining-border";
 import { AnimatedBeamConnect } from "./logo-connect";
 
 import "./step.css";
@@ -37,9 +38,9 @@ const CardSlider = () => {
 
   const cardArr = [
     {
-      CardTitle: "A keyboard first experience.",
+      CardTitle: "Connect all your Socials",
       CardDescription:
-        "Powerful shortcuts and a keyboard-first workflow means you will get to your finish line in no time!",
+        "Manage all your social media accounts in one place and post everywhere at once",
       children: <AnimatedBeamConnect />,
     },
     {
@@ -51,11 +52,6 @@ const CardSlider = () => {
       CardTitle: "Bullets to visuals in a click",
       CardDescription:
         "Transform any block to any other and try different options without any design hassle",
-    },
-    {
-      CardTitle: "A powerful assistant just a click away",
-      CardDescription:
-        "Insert blocks, perform powerful actions and leverage the limitless power of AI - all without leaving your keyboard",
     },
   ];
 
@@ -96,14 +92,18 @@ const CardSlider = () => {
           stiffness: 100,
           damping: 50,
         }}
-        className="card relative w-full"
       >
-        <div className="w-full">{children}</div>
-        <div className="card-pic"></div>
-        <div className="card-info">
-          <div className="card-title">{CardTitle}</div>
-          <div className="card-description">{CardDescription}</div>
-        </div>
+        <ShineBorder color={["#8b5cf6","#446CEC"]} borderWidth={3}>
+          <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-secondary p-12">
+            <div className="card-pic w-full p-10">{children}</div>
+            <div className=" my-3">
+              <div className="mb-1 text-3xl font-bold">{CardTitle}</div>
+              <div className="text-lg font-normal text-muted-foreground">
+                {CardDescription}
+              </div>
+            </div>
+          </div>
+        </ShineBorder>
       </motion.div>
     );
   };
