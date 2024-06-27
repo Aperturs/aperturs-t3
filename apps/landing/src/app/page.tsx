@@ -9,7 +9,6 @@ export default function page() {
       <Problem />
       <Step />
       <div className="h-96">
-
       </div>
     </section>
   );

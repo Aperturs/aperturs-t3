@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader } from "@aperturs/ui/card";
 
+import GraidientMouseWrapper from "../ui/gradient-mouse-track";
+
 export default function Problem() {
   return (
     <section className="flex w-full flex-col items-center justify-center py-24 md:pt-28">
@@ -7,38 +9,40 @@ export default function Problem() {
         Tired of managing your social media accounts? and writing same content
         again and again?
       </h1>
-      <div className="mt-4 flex md:flex-row flex-col w-full justify-center gap-1">
+      <div className="mt-4 flex w-full flex-col justify-center gap-1 md:flex-row">
+        <GraidientMouseWrapper className="w-full">
+          <Card className="w-full">
+            <CardHeader>
+              <h2 className="bg-gradient-to-tr from-red-300 to-red-500 bg-clip-text text-2xl font-medium tracking-tight text-transparent lg:text-3xl ">
+                Before using Aperturs
+              </h2>
+            </CardHeader>
+            <CardContent className="font-medium text-red-400">
+              <ul>
+                <ListItem
+                  icon="❌"
+                  text="Writing same content again and again adjusting for different platforms"
+                />
+                <ListItem
+                  icon="❌"
+                  text="Looking for images all over the internet"
+                />
+                <ListItem icon="❌" text="Posting manually" />
+                <ListItem
+                  icon="❌"
+                  text="Hurdle managing multiple accounts and post manually to all of them separately"
+                />
+                <ListItem
+                  icon="❌"
+                  text="Collaborating with team on chat, sending content back and forth"
+                />
+              </ul>
+            </CardContent>
+          </Card>
+        </GraidientMouseWrapper>
         <Card className="w-full">
           <CardHeader>
-            <h2 className="bg-gradient-to-tr from-red-300 to-red-500 bg-clip-text text-2xl lg:text-3xl font-medium tracking-tight text-transparent ">
-              Before using Aperturs
-            </h2>
-          </CardHeader>
-          <CardContent className="font-medium text-red-400">
-            <ul>
-              <ListItem
-                icon="❌"
-                text="Writing same content again and again adjusting for different platforms"
-              />
-              <ListItem
-                icon="❌"
-                text="Looking for images all over the internet"
-              />
-              <ListItem icon="❌" text="Posting manually" />
-              <ListItem
-                icon="❌"
-                text="Hurdle managing multiple accounts and post manually to all of them separately"
-              />
-              <ListItem
-                icon="❌"
-                text="Collaborating with team on chat, sending content back and forth"
-              />
-            </ul>
-          </CardContent>
-        </Card>
-        <Card className="w-full">
-          <CardHeader>
-            <h2 className="bg-gradient-to-tr from-green-300 to-green-500 bg-clip-text text-2xl lg:text-3xl font-medium tracking-tight text-transparent ">
+            <h2 className="bg-gradient-to-tr from-green-300 to-green-500 bg-clip-text text-2xl font-medium tracking-tight text-transparent lg:text-3xl ">
               After using Aperturs
             </h2>
           </CardHeader>
