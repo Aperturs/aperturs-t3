@@ -54,10 +54,7 @@ export default function HeroSection() {
           colorTo="#2563eb"
         />
       </FadeIn>
-      <FadeIn duration={4} initialY={0}>
-        <div className="gradient absolute left-[50%] top-[-100px] h-[400px] md:h-[500px] w-[100vw] " />
-      </FadeIn>
-      1
+        <div className="gradient absolute left-[50%] top-[-100px] h-[400px] md:h-[500px] w-[100vw] " />      1
     </div>
   </section>
   )

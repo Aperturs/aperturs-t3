@@ -8,7 +8,6 @@ import {
   useTransform,
 } from "framer-motion";
 
-import ShineBorder from "../ui/shining-border";
 import { AnimatedBeamConnect } from "./logo-connect";
 
 import "./step.css";
@@ -44,14 +43,14 @@ const CardSlider = () => {
       children: <AnimatedBeamConnect />,
     },
     {
-      CardTitle: "A powerful assistant just a click away",
+      CardTitle: "Create Content with ease and speed",
       CardDescription:
-        "Insert blocks, perform powerful actions and leverage the limitless power of AI - all without leaving your keyboard",
+        "Create content with ease and speed using our templates, and repurpose them with a click",
     },
     {
-      CardTitle: "Bullets to visuals in a click",
+      CardTitle: "Collaborate with your team",
       CardDescription:
-        "Transform any block to any other and try different options without any design hassle",
+        "Invite your team members to collaborate on your content and get feedback in real-time",
     },
   ];
 
@@ -93,17 +92,17 @@ const CardSlider = () => {
           damping: 50,
         }}
       >
-        <ShineBorder color={["#8b5cf6","#446CEC"]} borderWidth={3}>
-          <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-secondary p-12">
-            <div className="card-pic w-full p-10">{children}</div>
-            <div className=" my-3">
-              <div className="mb-1 text-3xl font-bold">{CardTitle}</div>
-              <div className="text-lg font-normal text-muted-foreground">
-                {CardDescription}
-              </div>
+        {/* <ShineBorder color={["#8b5cf6","#446CEC"]} borderWidth={3}> */}
+        <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-secondary p-12">
+          <div className="card-pic w-full p-10">{children}</div>
+          <div className=" my-3">
+            <div className="mb-1 text-3xl font-bold">{CardTitle}</div>
+            <div className="text-lg font-normal text-muted-foreground">
+              {CardDescription}
             </div>
           </div>
-        </ShineBorder>
+        </div>
+        {/* </ShineBorder> */}
       </motion.div>
     );
   };

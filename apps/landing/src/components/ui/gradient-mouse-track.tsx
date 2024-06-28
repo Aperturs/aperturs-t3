@@ -19,8 +19,8 @@ export default function GraidientMouseWrapper({
   const radius = 200; // change this to increase the rdaius of the hover effect
   const [visible, setVisible] = React.useState(true);
 
-  const mouseX = useMotionValue(2);
-  const mouseY = useMotionValue(2);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
   function handleMouseMove({ currentTarget, clientX, clientY }: any) {
     const { left, top } = currentTarget.getBoundingClientRect();
