@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   AnimatePresence,
   motion,
@@ -8,9 +9,12 @@ import {
   useTransform,
 } from "framer-motion";
 
+import { PinContainer } from "../ui/3d-pin";
 import { AnimatedBeamConnect } from "./logo-connect";
 
 import "./step.css";
+
+import { ConfettiFireworks } from "./trigger-schedule";
 
 const CardSlider = () => {
   const { scrollYProgress } = useScroll();
@@ -40,17 +44,39 @@ const CardSlider = () => {
       CardTitle: "Connect all your Socials",
       CardDescription:
         "Manage all your social media accounts in one place and post everywhere at once",
-      children: <AnimatedBeamConnect />,
+      children: (
+        <div className="p-10">
+          <AnimatedBeamConnect />
+        </div>
+      ),
     },
     {
       CardTitle: "Create Content with ease and speed",
       CardDescription:
         "Create content with ease and speed using our templates, and repurpose them with a click",
+      children: (
+        <div className="w-full">
+          <PinContainer
+            title="Create Content with ease and speed"
+            href="/"
+            className="w-full"
+          >
+            <Image
+              src="/features1.png"
+              alt="App"
+              width={1200}
+              height={1200}
+              className="relative z-20 mt-4 w-full rounded-lg border-2 border-white border-opacity-20 "
+            />
+          </PinContainer>
+        </div>
+      ),
     },
     {
-      CardTitle: "Collaborate with your team",
+      CardTitle: "Trigger Schedule with a click",
       CardDescription:
-        "Invite your team members to collaborate on your content and get feedback in real-time",
+        "Trigger schedule your content to be posted at the best time for your audience",
+      children: <ConfettiFireworks />,
     },
   ];
 
@@ -94,7 +120,7 @@ const CardSlider = () => {
       >
         {/* <ShineBorder color={["#8b5cf6","#446CEC"]} borderWidth={3}> */}
         <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-secondary p-12">
-          <div className="card-pic w-full p-10">{children}</div>
+          <div className="card-pic relative w-full h-full">{children}</div>
           <div className=" my-3">
             <div className="mb-1 text-3xl font-bold">{CardTitle}</div>
             <div className="text-lg font-normal text-muted-foreground">
@@ -127,7 +153,6 @@ const CardSlider = () => {
               Focus on your getting your thoughts out and crafting the best
               message while Aperturs does the heavy lifting for you
             </div>
-            {/* <AnimatedBeamConnect /> */}
           </div>
           <div className="right-card flex items-center justify-center">
             <AnimatePresence mode="wait">

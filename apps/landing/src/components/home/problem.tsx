@@ -11,7 +11,7 @@ export default function Problem() {
       </h1>
       <div className="mt-4 flex w-full flex-col justify-center gap-1 md:flex-row">
         <GraidientMouseWrapper className="w-full">
-          <Card >
+          <Card>
             <CardHeader>
               <h2 className="bg-gradient-to-tr from-red-300 to-red-500 bg-clip-text text-2xl font-medium tracking-tight text-transparent lg:text-3xl ">
                 Before using Aperturs
