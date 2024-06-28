@@ -119,7 +119,7 @@ const CardSlider = () => {
         }}
       >
         {/* <ShineBorder color={["#8b5cf6","#446CEC"]} borderWidth={3}> */}
-        <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-secondary p-12">
+        <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-[#101010] p-12">
           <div className="card-pic relative w-full h-full">{children}</div>
           <div className=" my-3">
             <div className="mb-1 text-3xl font-bold">{CardTitle}</div>
@@ -172,7 +172,7 @@ const CardSlider = () => {
               <span className="page">01</span>
               <div className="scroll-bg bg-primary">
                 <motion.div
-                  className="scroll-bar bg-gradient-to-b from-primary/80 to-primary"
+                  className="scroll-bar bg-gradient-to-b from-primary/10 to-primary"
                   style={{
                     height: height,
                   }}
