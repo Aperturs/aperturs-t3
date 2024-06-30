@@ -5,6 +5,7 @@ import { Button } from "@aperturs/ui/button";
 import FadeIn from "../fade-in";
 import { BorderBeam } from "../ui/border-beam";
 import { SparklesCore } from "../ui/sparkles";
+import { Waitlist } from "./waitlist";
 
 export default function HeroSection() {
   return (
@@ -18,7 +19,8 @@ export default function HeroSection() {
           turning your chaotic workflow into an efficient and streamlined
           process.
         </p>
-        <Button>Start Free Trial</Button>
+        {/* <Button>Start Free Trial</Button> */}
+        <Waitlist />
       </FadeIn>
       <FadeIn>
         <div className="relative h-40 md:w-[20rem] lg:w-[40rem]">
