@@ -7,18 +7,8 @@
   line-height: 1;
   position: relative;
 }
-.section-2 .scroll-card {
-  position: sticky;
-  top: 0px;
-  display: flex;
-  justify-content: space-between;
-}
 
-.left-card {
-  /* padding-top: 3.5rem; */
-  height: 100vh;
-  width: 50%;
-}
+
 .left-card .left-title {
   font-weight: 400;
   font-size: 1.5rem;

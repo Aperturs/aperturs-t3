@@ -139,9 +139,9 @@ const CardSlider = () => {
 
   return (
     <section className="cardslider_container">
-      <div className="section-2">
-        <div className="scroll-card">
-          <div className="left-card gird place-content-center">
+      <div className="lg:section-2">
+        <div className="scroll-card flex flex-col lg:flex-row justify-between lg:top-0 lg:sticky">
+          <div className="left-card lg:w-[50%] h-[100vh]  gird place-content-center">
             <div className="w-fit bg-gradient-to-tr from-primary to-blue-400 bg-clip-text text-xl font-black tracking-wide text-transparent">
               Workflow
             </div>
@@ -154,7 +154,7 @@ const CardSlider = () => {
               message while Aperturs does the heavy lifting for you
             </div>
           </div>
-          <div className="right-card flex items-center justify-center">
+          <div className="right-card lg:flex items-center justify-center hidden ">
             <AnimatePresence mode="wait">
               {currentCard ? (
                 <Card

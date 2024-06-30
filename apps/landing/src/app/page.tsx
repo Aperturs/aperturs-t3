@@ -8,8 +8,7 @@ export default function page() {
       <HeroSection />
       <Problem />
       <Step />
-      <div className="h-96">
-      </div>
+
     </section>
   );
 }

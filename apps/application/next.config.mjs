@@ -16,6 +16,7 @@ jiti("@aperturs/api/env");
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  staticPageGenerationTimeout: 120,
   experimental: {
     turbo: {
       rules: {
