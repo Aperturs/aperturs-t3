@@ -9,12 +9,62 @@ import {
   useTransform,
 } from "framer-motion";
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  useCarousel,
+} from "@aperturs/ui/carousel";
+
 import { PinContainer } from "../ui/3d-pin";
 import { AnimatedBeamConnect } from "./logo-connect";
 
 import "./step.css";
 
+import { Button } from "@aperturs/ui/button";
+
 import { ConfettiFireworks } from "./trigger-schedule";
+
+const cardArr = [
+  {
+    CardTitle: "Connect all your Socials",
+    CardDescription:
+      "Manage all your social media accounts in one place and post everywhere at once",
+    children: (
+      <div className="p-10">
+        <AnimatedBeamConnect />
+      </div>
+    ),
+  },
+  {
+    CardTitle: "Create Content with ease and speed",
+    CardDescription:
+      "Create content with ease and speed using our templates, and repurpose them with a click",
+    children: (
+      <div className="w-full">
+        <PinContainer
+          title="Create Content with ease and speed"
+          href="/"
+          className="w-full"
+        >
+          <Image
+            src="/features1.png"
+            alt="App"
+            width={1200}
+            height={1200}
+            className="relative z-20 mt-4 w-full rounded-lg border-2 border-white border-opacity-20 "
+          />
+        </PinContainer>
+      </div>
+    ),
+  },
+  {
+    CardTitle: "Trigger Schedule with a click",
+    CardDescription:
+      "Trigger schedule your content to be posted at the best time for your audience",
+    children: <ConfettiFireworks />,
+  },
+];
 
 const CardSlider = () => {
   const { scrollYProgress } = useScroll();
@@ -38,47 +88,6 @@ const CardSlider = () => {
     [0, 1, 2],
     ["0", "100%", "100%"],
   );
-
-  const cardArr = [
-    {
-      CardTitle: "Connect all your Socials",
-      CardDescription:
-        "Manage all your social media accounts in one place and post everywhere at once",
-      children: (
-        <div className="p-10">
-          <AnimatedBeamConnect />
-        </div>
-      ),
-    },
-    {
-      CardTitle: "Create Content with ease and speed",
-      CardDescription:
-        "Create content with ease and speed using our templates, and repurpose them with a click",
-      children: (
-        <div className="w-full">
-          <PinContainer
-            title="Create Content with ease and speed"
-            href="/"
-            className="w-full"
-          >
-            <Image
-              src="/features1.png"
-              alt="App"
-              width={1200}
-              height={1200}
-              className="relative z-20 mt-4 w-full rounded-lg border-2 border-white border-opacity-20 "
-            />
-          </PinContainer>
-        </div>
-      ),
-    },
-    {
-      CardTitle: "Trigger Schedule with a click",
-      CardDescription:
-        "Trigger schedule your content to be posted at the best time for your audience",
-      children: <ConfettiFireworks />,
-    },
-  ];
 
   const Card = ({
     children,
@@ -120,7 +129,7 @@ const CardSlider = () => {
       >
         {/* <ShineBorder color={["#8b5cf6","#446CEC"]} borderWidth={3}> */}
         <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-[#101010] p-12">
-          <div className="card-pic relative w-full h-full">{children}</div>
+          <div className="card-pic relative h-full w-full">{children}</div>
           <div className=" my-3">
             <div className="mb-1 text-3xl font-bold">{CardTitle}</div>
             <div className="text-lg font-normal text-muted-foreground">
@@ -138,23 +147,23 @@ const CardSlider = () => {
     cardArr.length > 0 ? cardArr[currentCardIndex % cardArr.length] : null;
 
   return (
-    <section className="cardslider_container">
-      <div className="lg:section-2">
-        <div className="scroll-card flex flex-col lg:flex-row justify-between lg:top-0 lg:sticky">
-          <div className="left-card lg:w-[50%] h-[100vh]  gird place-content-center">
-            <div className="w-fit bg-gradient-to-tr from-primary to-blue-400 bg-clip-text text-xl font-black tracking-wide text-transparent">
+    <section className="cardslider_container py-6">
+      <div className="section-2 mb-0 lg:mt-[111px] lg:h-[600vh] lg:pt-20 lg:pb-5 relative">
+        <div className="scroll-card flex flex-col justify-between lg:sticky lg:top-0 lg:flex-row">
+          <div className="left-card  w-full my-10 flex max-lg:items-center justify-center flex-col lg:h-[100vh] lg:w-[50%]">
+            <div className="w-fit bg-gradient-to-tr from-primary to-blue-400 bg-clip-text text-xl font-black tracking-wide text-transparent max-lg:text-center">
               Workflow
             </div>
             <hr className="mb-6 h-1  w-16 rounded-full bg-gradient-to-tr from-primary to-blue-200" />
-            <div className="mb-3 text-balance text-5xl font-bold">
+            <div className="mb-3 text-balance text-5xl font-bold w-full lg:text-left text-center">
               Create Content at the speed of thought.
             </div>
-            <div className="left-content">
+            <div className="left-content w-full text-center max-lg:text-balance lg:text-left lg:pr-[25%]">
               Focus on your getting your thoughts out and crafting the best
               message while Aperturs does the heavy lifting for you
             </div>
           </div>
-          <div className="right-card lg:flex items-center justify-center hidden ">
+          <div className="right-card hidden items-center justify-center lg:flex ">
             <AnimatePresence mode="wait">
               {currentCard ? (
                 <Card
@@ -182,10 +191,61 @@ const CardSlider = () => {
               <span className="page">0{cardArr.length}</span>
             </div>
           </div>
+          <div className="flex w-full justify-center lg:hidden">
+            <Carousel className="w-[90vw]">
+              <SlideCard />
+            </Carousel>
+          </div>
         </div>
       </div>
     </section>
   );
 };
+
+function SlideCard() {
+  const { scrollPrev, canScrollPrev, scrollNext, canScrollNext } =
+    useCarousel();
+  return (
+    <>
+      <CarouselContent>
+        {cardArr.map((card, index) => (
+          <CarouselItem key={index}>
+            <div>
+              <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-[#101010] p-12">
+                <div className="card-pic relative h-full w-full">
+                  {card.children}
+                </div>
+                <div className=" my-3">
+                  <div className="mb-1 text-2xl font-bold">
+                    {card.CardTitle}
+                  </div>
+                  <div className="text-base font-normal text-muted-foreground">
+                    {card.CardDescription}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <div className="flex justify-between my-3">
+        <Button
+          onClick={scrollPrev}
+          disabled={!canScrollPrev}
+          className="w-1/2 bg-white dark:text-black hover:bg-white "
+        >
+          Prev
+        </Button>
+        <Button
+          onClick={scrollNext}
+          disabled={!canScrollNext}
+          className="w-1/2 bg-white dark:text-black hover:bg-white"
+        >
+          Next
+        </Button>
+      </div>
+    </>
+  );
+}
 
 export default CardSlider;

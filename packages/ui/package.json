@@ -51,6 +51,7 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
     "date-fns": "^2.30.0",
+    "embla-carousel-react": "^8.1.5",
     "lucide-react": "^0.323.0",
     "luxon": "^3.4.4",
     "react-day-picker": "^8.10.0",

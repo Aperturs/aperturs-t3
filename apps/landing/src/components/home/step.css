@@ -1,4 +1,4 @@
-.section-2 {
+/* .section-2 {
   margin: 0 111px;
   font-size: 3.5rem;
   height: 600vh;
@@ -6,7 +6,7 @@
   letter-spacing: -0.01em;
   line-height: 1;
   position: relative;
-}
+} */
 
 
 .left-card .left-title {
@@ -24,7 +24,7 @@
   padding-right: 17%;
 }
 .left-card .left-content {
-  padding-right: 25%;
+  /* padding-right: 25%; */
   font-size: 1rem;
   letter-spacing: -0.01em;
   color: #adadad;
