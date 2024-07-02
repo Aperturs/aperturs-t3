@@ -41,19 +41,21 @@ const cardArr = [
     CardDescription:
       "Create content with ease and speed using our templates, and repurpose them with a click",
     children: (
-      <div className="w-full">
+      <div className="w-full  lg:h-[20vh] relative">
         <PinContainer
           title="Create Content with ease and speed"
           href="/"
-          className="w-full"
+          className="w-full "
         >
-          <Image
-            src="/features1.png"
-            alt="App"
-            width={1200}
-            height={1200}
-            className="relative z-20 mt-4 w-full rounded-lg border-2 border-white border-opacity-20 "
-          />
+          <div className="h-[40vh] md:h-[20vh] lg:h-[18vh] w-full">
+            <Image
+              src="/features1.png"
+              alt="App"
+              width={1200}
+              height={1200}
+              className="relative object-cover z-20 mt-4 w-full h-full object-left-top rounded-lg border-2 border-white border-opacity-20 "
+            />
+          </div>
         </PinContainer>
       </div>
     ),
@@ -148,17 +150,17 @@ const CardSlider = () => {
 
   return (
     <section className="cardslider_container py-6">
-      <div className="section-2 mb-0 lg:mt-[111px] lg:h-[600vh] lg:pt-20 lg:pb-5 relative">
+      <div className="section-2 relative mb-0 lg:mt-[111px] lg:h-[600vh] lg:pb-5 lg:pt-20">
         <div className="scroll-card flex flex-col justify-between lg:sticky lg:top-0 lg:flex-row">
-          <div className="left-card  w-full my-10 flex max-lg:items-center justify-center flex-col lg:h-[100vh] lg:w-[50%]">
+          <div className="left-card  my-10 flex w-full flex-col justify-center max-lg:items-center lg:h-[100vh] lg:w-[50%]">
             <div className="w-fit bg-gradient-to-tr from-primary to-blue-400 bg-clip-text text-xl font-black tracking-wide text-transparent max-lg:text-center">
               Workflow
             </div>
             <hr className="mb-6 h-1  w-16 rounded-full bg-gradient-to-tr from-primary to-blue-200" />
-            <div className="mb-3 text-balance text-5xl font-bold w-full lg:text-left text-center">
+            <div className="mb-3 w-full text-balance text-center text-5xl font-bold lg:text-left">
               Create Content at the speed of thought.
             </div>
-            <div className="left-content w-full text-center max-lg:text-balance lg:text-left lg:pr-[25%]">
+            <div className="left-content w-full text-center max-lg:text-balance lg:pr-[25%] lg:text-left">
               Focus on your getting your thoughts out and crafting the best
               message while Aperturs does the heavy lifting for you
             </div>
@@ -211,15 +213,15 @@ function SlideCard() {
         {cardArr.map((card, index) => (
           <CarouselItem key={index}>
             <div>
-              <div className="relative flex h-[45vh] w-full flex-col items-center justify-between rounded-3xl bg-[#101010] p-12">
+              <div className="relative flex h-[70vh] md:h-[50vh] min-h-fit w-full flex-col items-center justify-between rounded-3xl bg-[#101010] p-3">
                 <div className="card-pic relative h-full w-full">
                   {card.children}
                 </div>
-                <div className=" my-3">
-                  <div className="mb-1 text-2xl font-bold">
+                <div className="h-full p-4 my-3">
+                  <div className="mb-1 text-2xl md:text-3xl font-bold">
                     {card.CardTitle}
                   </div>
-                  <div className="text-base font-normal text-muted-foreground">
+                  <div className="text-base md:text-lg font-normal text-muted-foreground">
                     {card.CardDescription}
                   </div>
                 </div>
@@ -228,18 +230,18 @@ function SlideCard() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="flex justify-between my-3">
+      <div className="my-3 flex justify-between">
         <Button
           onClick={scrollPrev}
           disabled={!canScrollPrev}
-          className="w-1/2 bg-white dark:text-black hover:bg-white "
+          className="w-1/2 bg-white hover:bg-white dark:text-black "
         >
           Prev
         </Button>
         <Button
           onClick={scrollNext}
           disabled={!canScrollNext}
-          className="w-1/2 bg-white dark:text-black hover:bg-white"
+          className="w-1/2 bg-white hover:bg-white dark:text-black"
         >
           Next
         </Button>
