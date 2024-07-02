@@ -9,15 +9,17 @@
     "./*": "./emails/*.tsx"
   },
   "scripts": {
-    "dev": "email dev -p 3001",
-    "export": "email export"
+    "dev": "pnpm with-env email dev -p 3001",
+    "export": "email export",
+    "with-env": "dotenv -e .env --"
   },
   "dependencies": {
     "@aperturs/tsconfig": "workspace:*",
     "@react-email/components": "0.0.14",
     "@react-email/tailwind": "0.0.14",
     "react": "^18.2.0",
-    "react-email": "2.0.0"
+    "react-email": "2.0.0",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

@@ -1,0 +1,18 @@
+{
+  "name": "@aperturs/kv",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "check:types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.28.4",
+    "server-only": "^0.0.1",
+    "@aperturs/tsconfig": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17"
+  }
+}

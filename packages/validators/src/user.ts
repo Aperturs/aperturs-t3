@@ -8,6 +8,7 @@ export const OrganizationUserSchema = z.object({
   role: z.string(),
   email: z.string(),
   avatarUrl: z.string().optional().default("/profile.jpeg"),
+  userId: z.string(),
 });
 
 export type OrganizationUser = z.infer<typeof OrganizationUserSchema>;
@@ -31,6 +32,8 @@ export const SocialAccounts = z.array(
       name: z.string(),
       profile_image_url: z.string(),
       profileId: z.string(),
+      connectedAt: z.string().optional(),
+      username: z.string().optional(),
     }),
   }),
 );
@@ -47,6 +50,10 @@ export const UniqueIdsSchema = z.enum([
   "lnk",
   "fb",
   "ig",
+  "sub",
+  "wbhk",
+  "yt",
+  "ytc",
 ]);
 
 export type UniqueIdsType = z.infer<typeof UniqueIdsSchema>;

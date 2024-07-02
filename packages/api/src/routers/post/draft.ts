@@ -1,13 +1,20 @@
+import { deleteFileFromAws, getFileDetails } from "@api/handlers/posts/uploads";
+import {
+  saveYoutubeContent,
+  saveYoutubeContentSchema,
+  updateYoutubeContent,
+} from "@api/handlers/youtube/main";
 import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { PostContentType } from "@aperturs/validators/post";
-import { desc, eq, schema } from "@aperturs/db";
+import { and, desc, eq, schema } from "@aperturs/db";
 import {
   savePostInputSchema,
   updatePostInputSchema,
+  updateYoutubePostSchema,
 } from "@aperturs/validators/post";
 
 export const posting = createTRPCRouter({
@@ -20,7 +27,8 @@ export const posting = createTRPCRouter({
             ctx.db
               .insert(schema.post)
               .values({
-                clerkUserId: ctx.currentUser,
+                organizationId: input.orgId ? input.orgId : undefined,
+                clerkUserId: input.orgId ? undefined : ctx.currentUser,
                 status: input.scheduledTime ? "SCHEDULED" : "SAVED",
                 scheduledAt: input.scheduledTime
                   ? new Date(input.scheduledTime)
@@ -54,36 +62,34 @@ export const posting = createTRPCRouter({
       }
     }),
 
-  getRecentDrafts: protectedProcedure.query(async ({ ctx }) => {
-    // const posts = await ctx.prisma.post.findMany({
-    //   where: { clerkUserId: ctx.currentUser, status: "SAVED" },
-    //   orderBy: [{ updatedAt: "desc" }],
-    //   take: 5,
-    // });
-    const posts = await ctx.db.query.post.findMany({
-      where: eq(schema.post.clerkUserId, ctx.currentUser),
-      orderBy: desc(schema.post.updatedAt),
-      limit: 5,
-    });
-    return posts;
-  }),
+  getRecentDrafts: protectedProcedure
+    .input(
+      z.object({
+        orgid: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.orgid) {
+        const posts = await ctx.db.query.post.findMany({
+          where: eq(schema.post.organizationId, input.orgid),
+          orderBy: desc(schema.post.updatedAt),
+          limit: 5,
+        });
+        return posts;
+      }
+      const posts = await ctx.db.query.post.findMany({
+        where: eq(schema.post.clerkUserId, ctx.currentUser),
+        orderBy: desc(schema.post.updatedAt),
+        limit: 5,
+      });
+      return posts;
+    }),
 
   updatePost: protectedProcedure
     .input(updatePostInputSchema)
     .mutation(async ({ ctx, input }) => {
-      console.log(input.postContent);
+      console.log(input, "input");
       try {
-        // await ctx.prisma.post.update({
-        //   where: { id: input.postId },
-        //   data: {
-        //     status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-        //     scheduledAt: input.scheduledTime
-        //       ? new Date(input.scheduledTime)
-        //       : null,
-        //     content: input.postContent,
-        //   },
-        // });
-
         await ctx.db
           .update(schema.post)
           .set({
@@ -108,50 +114,88 @@ export const posting = createTRPCRouter({
       }
     }),
 
-  getSavedPosts: protectedProcedure.query(async ({ ctx }) => {
-    // const posts = await ctx.prisma.post.findMany({
-    //   where: { clerkUserId: ctx.currentUser, status: "SAVED" },
-    //   orderBy: [{ updatedAt: "desc" }],
-    // });
-    const posts = await ctx.db.query.post.findMany({
-      where: eq(schema.post.clerkUserId, ctx.currentUser),
-      orderBy: desc(schema.post.updatedAt),
-    });
-    return posts;
-  }),
+  getSavedPosts: protectedProcedure
+    .input(
+      z.object({
+        orgid: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (input.orgid) {
+        const posts = await ctx.db.query.post.findMany({
+          where: and(
+            eq(schema.post.organizationId, input.orgid),
+            eq(schema.post.status, "SAVED"),
+          ),
+          orderBy: desc(schema.post.updatedAt),
+          with: {
+            youtubeContent: true,
+          },
+        });
+        return posts;
+      } else {
+        const posts = await ctx.db.query.post.findMany({
+          where: and(
+            eq(schema.post.clerkUserId, ctx.currentUser),
+            eq(schema.post.status, "SAVED"),
+          ),
+          orderBy: desc(schema.post.updatedAt),
+          with: {
+            youtubeContent: true,
+          },
+        });
+        return posts;
+      }
+    }),
 
   getSavedPostById: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      // const post = await ctx.prisma.post.findUnique({
-      //   where: { id: input },
-      // });
-
       const post = await ctx.db.query.post.findFirst({
         where: eq(schema.post.id, input),
+        with: {
+          youtubeContent: true,
+        },
       });
-
       const localPost = post?.content as PostContentType[];
       const contentWithEmptyFiles = localPost.map((post) => ({
         ...post,
         files: post.files ?? [],
       }));
+      if (post?.postType === "NORMAL") {
+        return {
+          postType: post?.postType,
+          scheduledAt: post?.scheduledAt,
+          organizationId: post?.organizationId,
+          content: contentWithEmptyFiles,
+        };
+      }
+      if (post?.postType === "LONG_VIDEO") {
+        if (!post.youtubeContent) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Error youtube post",
+          });
+        }
+        const video = await getFileDetails(post.youtubeContent.video);
+        const thumbnail = await getFileDetails(post.youtubeContent.thumbnail);
 
-      return {
-        scheduledAt: post?.scheduledAt,
-        organizationId: post?.organizationId,
-        content: contentWithEmptyFiles,
-      };
+        return {
+          postType: post?.postType,
+          ...post.youtubeContent,
+          video,
+          thumbnail,
+          scheduledAt: post?.scheduledAt,
+          organizationId: post?.organizationId,
+          content: contentWithEmptyFiles,
+        };
+      }
     }),
 
   getSavedPostsByProjectId: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       try {
-        // const posts = await ctx.prisma.post.findMany({
-        //   where: { projectId: input, status: "SAVED" },
-        //   orderBy: [{ updatedAt: "desc" }],
-        // });
         const posts = await ctx.db.query.post.findMany({
           where: eq(schema.post.projectId, input),
           orderBy: desc(schema.post.updatedAt),
@@ -164,6 +208,7 @@ export const posting = createTRPCRouter({
         });
       }
     }),
+
   deleteSavedPostById: protectedProcedure
     .input(
       z.object({
@@ -171,10 +216,24 @@ export const posting = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const res = await ctx.db.query.post.findFirst({
+        where: eq(schema.post.id, input.id),
+        with: {
+          youtubeContent: true,
+        },
+      });
       try {
         await limitDown({
           func: () =>
-            ctx.db.delete(schema.post).where(eq(schema.post.id, input.id)),
+            ctx.db.transaction(async (db) => {
+              await db.delete(schema.post).where(eq(schema.post.id, input.id));
+              if (res?.postType === "LONG_VIDEO") {
+                await deleteFileFromAws([
+                  res.youtubeContent.video,
+                  res.youtubeContent.thumbnail,
+                ]);
+              }
+            }),
           clerkUserId: ctx.currentUser,
           limitType: "drafts",
         });
@@ -184,5 +243,36 @@ export const posting = createTRPCRouter({
           message: "Error deleting post",
         });
       }
+    }),
+  saveYoutubePost: protectedProcedure
+    .input(
+      saveYoutubeContentSchema.omit({
+        userId: true,
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      console.log(input, "input");
+      const post = await saveYoutubeContent({
+        ...input,
+        userId: ctx.currentUser,
+      });
+
+      return {
+        data: post,
+        success: true,
+        message: "Saved to draft successfully",
+        state: 200,
+      };
+    }),
+  updateYoutubePost: protectedProcedure
+    .input(updateYoutubePostSchema)
+    .mutation(async ({ input }) => {
+      const post = await updateYoutubeContent(input);
+      return {
+        data: post,
+        success: true,
+        message: "Saved to draft successfully",
+        state: 200,
+      };
     }),
 });

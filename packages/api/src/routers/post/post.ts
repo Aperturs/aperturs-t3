@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import {
+  GetPresignedUrl,
+  scheduleLambdaEvent,
+} from "@api/handlers/posts/uploads";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -5,9 +10,14 @@ import type { PostContentType } from "@aperturs/validators/post";
 import { eq, schema } from "@aperturs/db";
 import { SocialType } from "@aperturs/validators/post";
 
+import { env } from "../../../env";
 import { postToLinkedin } from "../../helpers/linkedln";
 import { postToTwitter } from "../../helpers/twitter";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
 
 export const post = createTRPCRouter({
   postByPostId: publicProcedure
@@ -17,21 +27,21 @@ export const post = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log(input, "postby post id");
       try {
-        // const post = await ctx.prisma.post.findUnique({
-        //   where: {
-        //     id: input.postId,
-        //   },
-        // });
         const post = await ctx.db.query.post.findFirst({
           where: eq(schema.post.id, input.postId),
         });
+        let uploadedFiles: string[] = [];
         if (post) {
           const content = post.content as PostContentType[];
-          for (const item of content) {
+          const promises = content.map(async (item) => {
             switch (item.socialType) {
+              case `${SocialType.Default}`:
+                uploadedFiles = item.uploadedFiles;
+                return;
               case `${SocialType.Twitter}`:
-                await postToTwitter({
+                return await postToTwitter({
                   tokenId: item.id,
                   tweets: [
                     {
@@ -39,57 +49,51 @@ export const post = createTRPCRouter({
                       text: item.content,
                     },
                   ],
-                });
-                break;
+                })
+                  .then(() => {
+                    console.log("Posted to Twitter");
+                  })
+                  .catch((error) => {
+                    console.error("Failed to post to Twitter", error);
+                    throw Error("Failed to post to Twitter");
+                  });
+
               case `${SocialType.Linkedin}`:
-                await postToLinkedin({
+                console.log(item);
+                return await postToLinkedin({
                   tokenId: item.id,
                   content: item.content,
+                  imageurl: uploadedFiles[0]!,
+                }).catch((error) => {
+                  console.error("Failed to post to LinkedIn", error);
+                  throw Error("Failed to post to linkedin");
                 });
-                //post to linkedin
-                break;
+
               default:
-                break;
+                return Promise.resolve(); // resolves immediately for unsupported types
             }
-          }
-          // content.forEach(async (item) => {
-          //   switch (item.socialType) {
-          //     case `${SocialType.Twitter}`:
-          //       await postToTwitter({
-          //         tokenId: item.id,
-          //         tweets: [
-          //           {
-          //             id: 0,
-          //             text: item.content,
-          //           },
-          //         ],
-          //       });
-          //       break;
-          //     case `${SocialType.Linkedin}`:
-          //       await postToLinkedin({
-          //         tokenId: item.id,
-          //         content: item.content,
-          //       });
-          //       //post to linkedin
-          //       break;
-          //     default:
-          //       break;
-          //   }
-          // });
+          });
+          // Wait for all promises to resolve
+          await Promise.all(promises).catch((e) => {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: `something went wrong ${e.message}`,
+            });
+          });
         }
-        // await ctx.prisma.post.update({
-        //   where: { id: input.postId },
-        //   data: {
+        // await ctx.db
+        //   .update(schema.post)
+        //   .set({
         //     status: "PUBLISHED",
-        //   },
-        // });
-        await ctx.db
-          .update(schema.post)
-          .set({
-            status: "PUBLISHED",
-            updatedAt: new Date(),
-          })
-          .where(eq(schema.post.id, input.postId));
+        //     updatedAt: new Date(),
+        //   })
+        //   .where(eq(schema.post.id, input.postId));
+
+        return {
+          success: true,
+          message: "succesully published",
+          state: 200,
+        };
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -98,54 +102,46 @@ export const post = createTRPCRouter({
       }
     }),
 
-  // schedule: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       id: z.string(),
-  //       date: z.date(),
-  //     }),
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const inputDate = new Date(input.date.toUTCString());
-  //     const currentDate = new Date(new Date().toUTCString());
-  //     console.log(inputDate, currentDate);
-  //     try {
-  //       const delay = Math.round(
-  //         (inputDate.getTime() - currentDate.getTime()) / 1000,
-  //       );
-  //       // console.log(de)
-  //       const headers = {
-  //         Accept: "/",
-  //         url: `${env.CRONJOB_SCHEDULE_URL}?id=${input.id}&userId=${ctx.currentUser}`,
-  //         delay: `${input.date.toDateString()}`,
-  //         Authorization: env.CRONJOB_AUTH,
-  //       };
-  //       const url = "https://52.66.162.116/v1/publish";
-  //       await axios
-  //         .post(
-  //           url,
-  //           {},
-  //           {
-  //             headers,
-  //             httpsAgent: new https.Agent({
-  //               rejectUnauthorized: false,
-  //             }),
-  //           },
-  //         )
-  //         .catch((error) => {
-  //           console.error("Error:", error);
-  //         });
-  //       return {
-  //         success: true,
-  //         message: "Post scheduled successfully",
-  //         state: 200,
-  //       };
-  //     } catch (err) {
-  //       return {
-  //         success: false,
-  //         message: "Error scheduling post",
-  //         state: 500,
-  //       };
-  //     }
-  //   }),
+  getPresignedUrl: protectedProcedure
+    .input(
+      z.object({
+        filekey: z.string(),
+        fileType: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await GetPresignedUrl({
+        fileKey: input.filekey,
+        fileType: input.fileType,
+      });
+    }),
+
+  schedule: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        date: z.date(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      try {
+        console.log("Scheduling post", input);
+        await scheduleLambdaEvent({
+          time: input.date,
+          url: `${env.DOMAIN}/api/post/scheduled?postid=${input.id}`,
+          postid: input.id,
+        });
+        return {
+          success: true,
+          message: "Post scheduled successfully",
+          state: 200,
+        };
+      } catch (err) {
+        return {
+          success: false,
+          message: "Error scheduling post",
+          state: 500,
+        };
+      }
+    }),
 });

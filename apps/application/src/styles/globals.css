@@ -1,0 +1,292 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply !bg-background text-foreground;
+  }
+}
+
+.transition-opacityy {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.glassMorphism {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.09);
+  backdrop-filter: blur(10.5px);
+  -webkit-backdrop-filter: blur(10.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.boxShadow {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.boxShadowCust {
+  box-shadow:
+    11px 11px 39px #e0e0e0,
+    -11px -11px 39px #ffffff;
+}
+
+.postShadow {
+  box-shadow:
+    2px 2px 10px #e0e0e0,
+    -2px -2px 10px #ffffff;
+}
+
+.cl-internal-1gi467n {
+  width: 100% !important;
+  will-change: height !important;
+  margin: 0px !important;
+}
+
+.cl-internal-2nd2j4 {
+  width: 100% !important;
+  will-change: height !important;
+  margin: 0px !important;
+}
+
+/* css for profile page */
+.cl-internal-phfxlr {
+  width: 100% !important;
+  will-change: height !important;
+}
+@media (max-width: 30em) {
+  .cl-internal-2nd2j4 {
+    max-width: calc(80vw);
+    margin: 0px 0px 1.75rem;
+  }
+}
+
+/* new signin css  removes logo */
+.cl-internal-13iim0d {
+  display: none;
+}
+
+/* new signin css */
+.cl-internal-uy11u8 {
+  width: 90% !important;
+}
+/* temp signin css */
+
+.cl-internal-19xp6v9 {
+  width: 100% !important;
+  will-change: height !important;
+  margin: 0px !important;
+}
+
+.cl-internal-17ydaof {
+  /* max-width: 500px; */
+  width: 100%;
+  will-change: height !important;
+  /* padding: 50px  !important; */
+  margin: 0px 0px !important;
+  margin-right: 0px !important;
+}
+
+.cl-internal-b3fm6y {
+  display: none;
+}
+
+.transition-opacityy {
+  transition: opacity 0.3s ease-in-out;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply !bg-background text-foreground;
+  }
+}
+
+.transition-opacityy {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.glassMorphism {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.09);
+  backdrop-filter: blur(10.5px);
+  -webkit-backdrop-filter: blur(10.5px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.boxShadow {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.boxShadowCust {
+  box-shadow:
+    11px 11px 39px #e0e0e0,
+    -11px -11px 39px #ffffff;
+}
+
+.postShadow {
+  box-shadow:
+    2px 2px 10px #e0e0e0,
+    -2px -2px 10px #ffffff;
+}
+
+.cl-internal-1gi467n {
+  width: 100% !important;
+  will-change: height !important;
+  margin: 0px !important;
+}
+
+.cl-internal-2nd2j4 {
+  width: 100% !important;
+  will-change: height !important;
+  margin: 0px !important;
+}
+
+/* css for profile page */
+.cl-internal-phfxlr {
+  width: 100% !important;
+  will-change: height !important;
+}
+@media (max-width: 30em) {
+  .cl-internal-2nd2j4 {
+    max-width: calc(80vw);
+    margin: 0px 0px 1.75rem;
+  }
+}
+
+/* new signin css  removes logo */
+.cl-internal-13iim0d {
+  display: none;
+}
+
+/* new signin css */
+.cl-internal-uy11u8 {
+  width: 90% !important;
+}
+/* temp signin css */
+
+.cl-internal-19xp6v9 {
+  width: 100% !important;
+  will-change: height !important;
+  margin: 0px !important;
+}
+
+.cl-internal-17ydaof {
+  /* max-width: 500px; */
+  width: 100%;
+  will-change: height !important;
+  /* padding: 50px  !important; */
+  margin: 0px 0px !important;
+  margin-right: 0px !important;
+}
+
+.cl-internal-b3fm6y {
+  display: none;
+}
+
+.transition-opacityy {
+  transition: opacity 0.3s ease-in-out;
+}

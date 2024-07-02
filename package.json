@@ -4,28 +4,28 @@
   "version": "0.1.0",
   "scripts": {
     "build": "turbo build",
-    "prepare": "husky install",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "dev": "turbo dev --parallel",
-    "start-website": "cd apps/web && pnpm run dev",
+    "dev:app": "turbo dev --filter  @aperturs/app",
+    "dev:landing": "turbo dev --filter  @aperturs/landing",
+    "studio": "pnpm run -r studio",
     "format": "turbo format --continue -- --cache --cache-location node_modules/.cache/.prettiercache",
     "format:fix": "turbo format --continue -- --write --cache --cache-location node_modules/.cache/.prettiercache",
     "lint": "turbo lint --continue -- --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
     "lint:ws:fix": "pnpm dlx sherif@latest --fix",
-    "postinstall": "pnpm lint:ws",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
     "@aperturs/prettier-config": "workspace:^0.1.0",
+    "dotenv-cli": "^7.3.0",
     "husky": "^9.0.0",
     "prettier": "^3.2.5",
-    "turbo": "latest",
-    "dotenv-cli": "^7.3.0"
+    "turbo": "^2.0.4"
   },
-  "packageManager": "pnpm@8.9.0",
+  "packageManager": "pnpm@8.10.5",
   "engines": {
     "node": ">=20"
   },

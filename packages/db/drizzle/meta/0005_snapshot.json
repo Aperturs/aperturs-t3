@@ -1,83 +1,54 @@
 {
-  "id": "88b7b6b2-d7d6-4389-a4b0-d3090a1abfae",
-  "prevId": "09e80be6-e5ae-4365-bdd7-421b35e4b4a4",
+  "id": "5ff38cc8-1981-4ec6-95f2-4d431f04ffcf",
+  "prevId": "d27ad940-49c4-48e6-9d2b-28e7b7d89cbc",
   "version": "5",
   "dialect": "pg",
   "tables": {
-    "Idea": {
-      "name": "Idea",
+    "webhookEvent": {
+      "name": "webhookEvent",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "varchar(191)",
-          "primaryKey": false,
+          "primaryKey": true,
           "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "varchar(191)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "clerkUserId": {
-          "name": "clerkUserId",
-          "type": "varchar(191)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "organizationId": {
-          "name": "organizationId",
-          "type": "varchar(191)",
-          "primaryKey": false,
-          "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "default": "now()"
         },
-        "updatedAt": {
-          "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+        "eventName": {
+          "name": "eventName",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
-        }
-      },
-      "indexes": {
-        "Idea_clerkUserId_idx": {
-          "name": "Idea_clerkUserId_idx",
-          "columns": ["clerkUserId"],
-          "isUnique": false
         },
-        "Idea_organizationId_idx": {
-          "name": "Idea_organizationId_idx",
-          "columns": ["organizationId"],
-          "isUnique": false
-        }
-      },
-      "foreignKeys": {
-        "Idea_clerkUserId_User_clerkUserId_fk": {
-          "name": "Idea_clerkUserId_User_clerkUserId_fk",
-          "tableFrom": "Idea",
-          "tableTo": "User",
-          "columnsFrom": ["clerkUserId"],
-          "columnsTo": ["clerkUserId"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+        "processed": {
+          "name": "processed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
-        "Idea_organizationId_Organization_id_fk": {
-          "name": "Idea_organizationId_Organization_id_fk",
-          "tableFrom": "Idea",
-          "tableTo": "Organization",
-          "columnsFrom": ["organizationId"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+        "body": {
+          "name": "body",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processingError": {
+          "name": "processingError",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -96,6 +67,12 @@
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
+        },
+        "clerkOrgId": {
+          "name": "clerkOrgId",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -118,14 +95,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -205,14 +182,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -277,14 +254,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -302,6 +279,15 @@
         }
       },
       "foreignKeys": {
+        "OrganizationUser_organizationId_Organization_id_fk": {
+          "name": "OrganizationUser_organizationId_Organization_id_fk",
+          "tableFrom": "OrganizationUser",
+          "tableTo": "Organization",
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "OrganizationUser_clerkUserId_User_clerkUserId_fk": {
           "name": "OrganizationUser_clerkUserId_User_clerkUserId_fk",
           "tableFrom": "OrganizationUser",
@@ -313,7 +299,13 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "OrganizationUser_organizationId_clerkUserId_unique": {
+          "name": "OrganizationUser_organizationId_clerkUserId_unique",
+          "nullsNotDistinct": false,
+          "columns": ["organizationId", "clerkUserId"]
+        }
+      }
     },
     "Post": {
       "name": "Post",
@@ -331,6 +323,13 @@
           "primaryKey": false,
           "notNull": false
         },
+        "postType": {
+          "name": "postType",
+          "type": "postType",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'NORMAL'"
+        },
         "postStatus": {
           "name": "postStatus",
           "type": "postStatus",
@@ -339,9 +338,16 @@
         },
         "scheduledAt": {
           "name": "scheduledAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "postReviewStatus": {
+          "name": "postReviewStatus",
+          "type": "postReviewStatus",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'PENDING'"
         },
         "organizationId": {
           "name": "organizationId",
@@ -363,22 +369,27 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
-          "default": "CURRENT_TIMESTAMP(3)"
+          "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {
-        "Post_id_idx": {
-          "name": "Post_id_idx",
-          "columns": ["id"],
+        "Post_clerkUserId_idx": {
+          "name": "Post_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "Post_organizationId_idx": {
+          "name": "Post_organizationId_idx",
+          "columns": ["organizationId"],
           "isUnique": false
         }
       },
@@ -406,6 +417,107 @@
           "tableFrom": "Post",
           "tableTo": "Project",
           "columnsFrom": ["projectId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "YoutubeContent": {
+      "name": "YoutubeContent",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "channelId": {
+          "name": "channelId",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postId": {
+          "name": "postId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "videoTags": {
+          "name": "videoTags",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thumbnail": {
+          "name": "thumbnail",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "video": {
+          "name": "video",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "YoutubeContent_tokenId_idx": {
+          "name": "YoutubeContent_tokenId_idx",
+          "columns": ["channelId"],
+          "isUnique": false
+        },
+        "YoutubeContent_postId_idx": {
+          "name": "YoutubeContent_postId_idx",
+          "columns": ["postId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "YoutubeContent_channelId_YoutubeToken_id_fk": {
+          "name": "YoutubeContent_channelId_YoutubeToken_id_fk",
+          "tableFrom": "YoutubeContent",
+          "tableTo": "YoutubeToken",
+          "columnsFrom": ["channelId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "YoutubeContent_postId_Post_id_fk": {
+          "name": "YoutubeContent_postId_Post_id_fk",
+          "tableFrom": "YoutubeContent",
+          "tableTo": "Post",
+          "columnsFrom": ["postId"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -469,14 +581,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
@@ -516,6 +628,130 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "subscription": {
+      "name": "subscription",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "lemonSqueezyId": {
+          "name": "lemonSqueezyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "orderId": {
+          "name": "orderId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "statusFormatted": {
+          "name": "statusFormatted",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "renewsAt": {
+          "name": "renewsAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "endsAt": {
+          "name": "endsAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "trialEndsAt": {
+          "name": "trialEndsAt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isUsageBased": {
+          "name": "isUsageBased",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "isPaused": {
+          "name": "isPaused",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "subscriptionItemId": {
+          "name": "subscriptionItemId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "planId": {
+          "name": "planId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subscription_userId_User_clerkUserId_fk": {
+          "name": "subscription_userId_User_clerkUserId_fk",
+          "tableFrom": "subscription",
+          "tableTo": "User",
+          "columnsFrom": ["userId"],
+          "columnsTo": ["clerkUserId"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "subscription_lemonSqueezyId_unique": {
+          "name": "subscription_lemonSqueezyId_unique",
+          "nullsNotDistinct": false,
+          "columns": ["lemonSqueezyId"]
+        }
+      }
     },
     "GithubToken": {
       "name": "GithubToken",
@@ -559,26 +795,26 @@
         },
         "expires_in": {
           "name": "expires_in",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "refresh_token_expires_in": {
           "name": "refresh_token_expires_in",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
@@ -593,11 +829,6 @@
         "GithubToken_clerkUserId_idx": {
           "name": "GithubToken_clerkUserId_idx",
           "columns": ["clerkUserId"],
-          "isUnique": false
-        },
-        "GithubToken_id_idx": {
-          "name": "GithubToken_id_idx",
-          "columns": ["id"],
           "isUnique": false
         },
         "GithubToken_organizationId_idx": {
@@ -637,6 +868,11 @@
           "name": "GithubToken_refresh_token_key",
           "nullsNotDistinct": false,
           "columns": ["refresh_token"]
+        },
+        "GithubToken_organizationId_clerkID": {
+          "name": "GithubToken_organizationId_clerkID",
+          "nullsNotDistinct": false,
+          "columns": ["organizationId", "clerkUserId", "profileId"]
         }
       }
     },
@@ -682,26 +918,40 @@
         },
         "expires_in": {
           "name": "expires_in",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "refresh_token_expires_in": {
           "name": "refresh_token_expires_in",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
+        "fullName": {
+          "name": "fullName",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "profilePicture": {
+          "name": "profilePicture",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP(3)"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -710,11 +960,6 @@
         "LinkedInToken_clerkUserId_idx": {
           "name": "LinkedInToken_clerkUserId_idx",
           "columns": ["clerkUserId"],
-          "isUnique": false
-        },
-        "LinkedInToken_id_idx": {
-          "name": "LinkedInToken_id_idx",
-          "columns": ["id"],
           "isUnique": false
         },
         "LinkedInToken_organizationId_idx": {
@@ -749,7 +994,13 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "LinkedInToken_organizationId_clerkID": {
+          "name": "LinkedInToken_organizationId_clerkID",
+          "nullsNotDistinct": false,
+          "columns": ["organizationId", "clerkUserId", "profileId"]
+        }
+      }
     },
     "TwitterToken": {
       "name": "TwitterToken",
@@ -789,25 +1040,25 @@
           "name": "access_token",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "refresh_token": {
           "name": "refresh_token",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "expires_in": {
           "name": "expires_in",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "profileId": {
           "name": "profileId",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "username": {
           "name": "username",
@@ -819,13 +1070,29 @@
           "name": "fullname",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "''"
         },
         "profile_image": {
           "name": "profile_image",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "''"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -867,15 +1134,130 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "TwitterToken_access_token_key": {
-          "name": "TwitterToken_access_token_key",
+        "TwitterToken_Unique_ProfilePerApp": {
+          "name": "TwitterToken_Unique_ProfilePerApp",
           "nullsNotDistinct": false,
-          "columns": ["access_token"]
+          "columns": ["client_id", "profileId"]
+        }
+      }
+    },
+    "YoutubeToken": {
+      "name": "YoutubeToken",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(191)",
+          "primaryKey": true,
+          "notNull": true
         },
-        "TwitterToken_refresh_token_key": {
-          "name": "TwitterToken_refresh_token_key",
+        "channelId": {
+          "name": "channelId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationId": {
+          "name": "organizationId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clerkUserId": {
+          "name": "clerkUserId",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_in": {
+          "name": "expires_in",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "channel_name": {
+          "name": "channel_name",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
+        },
+        "channelPicture": {
+          "name": "channelPicture",
+          "type": "varchar(191)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "YoutubeToken_clerkUserId_idx": {
+          "name": "YoutubeToken_clerkUserId_idx",
+          "columns": ["clerkUserId"],
+          "isUnique": false
+        },
+        "YoutubeToken_organizationId_idx": {
+          "name": "YoutubeToken_organizationId_idx",
+          "columns": ["organizationId"],
+          "isUnique": false
+        },
+        "YoutubeToken_profileId_idx": {
+          "name": "YoutubeToken_profileId_idx",
+          "columns": ["channelId"],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "YoutubeToken_organizationId_Organization_id_fk": {
+          "name": "YoutubeToken_organizationId_Organization_id_fk",
+          "tableFrom": "YoutubeToken",
+          "tableTo": "Organization",
+          "columnsFrom": ["organizationId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "YoutubeToken_clerkUserId_User_clerkUserId_fk": {
+          "name": "YoutubeToken_clerkUserId_User_clerkUserId_fk",
+          "tableFrom": "YoutubeToken",
+          "tableTo": "User",
+          "columnsFrom": ["clerkUserId"],
+          "columnsTo": ["clerkUserId"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "YoutubeToken_organizationId_clerkID": {
+          "name": "YoutubeToken_organizationId_clerkID",
           "nullsNotDistinct": false,
-          "columns": ["refresh_token"]
+          "columns": ["organizationId", "clerkUserId", "channelId"]
         }
       }
     },
@@ -904,38 +1286,20 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
-        },
-        "ls_subscription_id": {
-          "name": "ls_subscription_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
         },
         "ls_customer_id": {
           "name": "ls_customer_id",
           "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "lsVariantId": {
-          "name": "lsVariantId",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "ls_current_period_end": {
-          "name": "ls_current_period_end",
-          "type": "timestamp (6) with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -948,11 +1312,6 @@
           "name": "User_ls_customer_id_unique",
           "nullsNotDistinct": false,
           "columns": ["ls_customer_id"]
-        },
-        "User_ls_subscription_id_unique": {
-          "name": "User_ls_subscription_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["ls_subscription_id"]
         }
       }
     },
@@ -1024,14 +1383,14 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         }
@@ -1053,15 +1412,6 @@
     }
   },
   "enums": {
-    "role": {
-      "name": "role",
-      "values": {
-        "OWNER": "OWNER",
-        "ADMIN": "ADMIN",
-        "EDITOR": "EDITOR",
-        "MEMBER": "MEMBER"
-      }
-    },
     "status": {
       "name": "status",
       "values": {
@@ -1071,13 +1421,37 @@
         "CANCELLED": "CANCELLED"
       }
     },
+    "role": {
+      "name": "role",
+      "values": {
+        "OWNER": "OWNER",
+        "ADMIN": "ADMIN",
+        "EDITOR": "EDITOR",
+        "MEMBER": "MEMBER"
+      }
+    },
+    "postReviewStatus": {
+      "name": "postReviewStatus",
+      "values": {
+        "PENDING": "PENDING",
+        "APPROVED": "APPROVED",
+        "REJECTED": "REJECTED"
+      }
+    },
     "postStatus": {
       "name": "postStatus",
       "values": {
-        "PENDING": "PENDING",
-        "ACCEPTED": "ACCEPTED",
-        "REJECTED": "REJECTED",
-        "CANCELLED": "CANCELLED"
+        "SAVED": "SAVED",
+        "PUBLISHED": "PUBLISHED",
+        "SCHEDULED": "SCHEDULED"
+      }
+    },
+    "postType": {
+      "name": "postType",
+      "values": {
+        "NORMAL": "NORMAL",
+        "SHORT": "SHORT",
+        "LONG_VIDEO": "LONG_VIDEO"
       }
     },
     "currentPlan": {

@@ -125,9 +125,12 @@ export const linkedInToken = pgTable(
         table.organizationId,
       ),
       profileIdIdx: index("LinkedInToken_profileId_idx").on(table.profileId),
-      linkedinAccountPerOrg: unique("LinkedInToken_organizationId_clerkID").on(
-        table.organizationId,
+      linkedinAccount: unique("LinkedInToken_clerkID").on(
         table.clerkUserId,
+        table.profileId,
+      ),
+      uniqueLinkedinAccount: unique("LinkedinIn_orgId").on(
+        table.organizationId,
         table.profileId,
       ),
     };
@@ -214,5 +217,67 @@ export const twitterTokenRelations = relations(twitterToken, ({ one }) => ({
   clerkUser: one(user, {
     references: [user.clerkUserId],
     fields: [twitterToken.clerkUserId],
+  }),
+}));
+
+export const youtubeToken = pgTable(
+  "YoutubeToken",
+  {
+    id: varchar("id", { length: 191 })
+      .primaryKey()
+      .$defaultFn(() => createUniqueIds("yt")),
+    channelId: varchar("channelId", { length: 191 }).notNull(),
+    accessToken: text("access_token").notNull().notNull(),
+    refreshToken: text("refresh_token").notNull(),
+    organizationId: varchar("organizationId", { length: 191 }).references(
+      () => organization.id,
+      { onDelete: "cascade" },
+    ),
+    clerkUserId: varchar("clerkUserId", { length: 191 }).references(
+      () => user.clerkUserId,
+      { onDelete: "cascade" },
+    ),
+    expiresIn: timestamp("expires_in", { withTimezone: true }).notNull(),
+    channelName: varchar("channel_name", { length: 191 }).default("").notNull(),
+    channelPicture: varchar("channelPicture", { length: 191 }).default(""),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updatedAt", {
+      withTimezone: true,
+    }).notNull(),
+  },
+  (table) => {
+    return {
+      clerkUserIdIdx: index("YoutubeToken_clerkUserId_idx").on(
+        table.clerkUserId,
+      ),
+      organizationIdIdx: index("YoutubeToken_organizationId_idx").on(
+        table.organizationId,
+      ),
+      channelIdIdx: index("YoutubeToken_profileId_idx").on(table.channelId),
+      linkedinAccountPerOrg: unique("YoutubeToken_organizationId_clerkID").on(
+        table.organizationId,
+        table.clerkUserId,
+        table.channelId,
+      ),
+    };
+  },
+);
+
+export const youtubeTokenInsertSchema = createInsertSchema(youtubeToken);
+export const youtubeTokenSelectSchema = createSelectSchema(youtubeToken);
+
+export type youtubeTokenInsert = z.infer<typeof youtubeTokenInsertSchema>;
+export type youtubeTokenSelect = z.infer<typeof youtubeTokenSelectSchema>;
+
+export const youtubeTokenRelations = relations(youtubeToken, ({ one }) => ({
+  organization: one(organization, {
+    references: [organization.id],
+    fields: [youtubeToken.organizationId],
+  }),
+  clerkUser: one(user, {
+    references: [user.clerkUserId],
+    fields: [youtubeToken.clerkUserId],
   }),
 }));

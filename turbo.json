@@ -1,8 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "globalDotEnv": [".env"],
-  "pipeline": {
+  "globalDependencies": ["**/.env.*local", ".env"],
+  "globalEnv": [
+    "VERCEL_URL",
+    "GITHUB_CLIENT_SECRET",
+    "LINKEDIN_CLIENT_SECRET",
+    "GITHUB_CALLBACK_URL",
+    "GITHUB_CLIENT_ID",
+    "NEXT_PUBLIC_LINKEDIN_CALLBACK_URL",
+    "NEXT_PUBLIC_LINKEDIN_CLIENT_ID",
+    "OPENAI_API_KEY",
+    "TWITTER_CALLBACK_URL",
+    "TWITTER_CLIENT_ID",
+    "OPENAI_API_KEY",
+    "RESEND_EMAIL_API",
+    "REDISURL",
+    "REDISTOKEN"
+  ],
+  "tasks": {
     "topo": {
       "dependsOn": ["^topo"]
     },
@@ -23,7 +38,7 @@
     },
     "format": {
       "outputs": ["node_modules/.cache/.prettiercache"],
-      "outputMode": "new-only"
+      "outputLogs": "new-only"
     },
     "lint": {
       "dependsOn": ["^topo"],
@@ -39,21 +54,5 @@
     "//#clean": {
       "cache": false
     }
-  },
-  "globalEnv": [
-    "VERCEL_URL",
-    "GITHUB_CLIENT_SECRET",
-    "LINKEDIN_CLIENT_SECRET",
-    "GITHUB_CALLBACK_URL",
-    "GITHUB_CLIENT_ID",
-    "NEXT_PUBLIC_LINKEDIN_CALLBACK_URL",
-    "NEXT_PUBLIC_LINKEDIN_CLIENT_ID",
-    "OPENAI_API_KEY",
-    "TWITTER_CALLBACK_URL",
-    "TWITTER_CLIENT_ID",
-    "OPENAI_API_KEY",
-    "RESEND_EMAIL_API",
-    "REDISURL",
-    "REDISTOKEN"
-  ]
+  }
 }

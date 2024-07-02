@@ -1,19 +1,24 @@
+import type { z } from "zod";
 import { relations, sql } from "drizzle-orm";
 import {
   index,
   pgEnum,
   pgTable,
   timestamp,
+  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { z } from "zod";
 
 import { createUniqueIds } from "../utils";
-import { idea } from "./idea";
 import { post } from "./post";
 import { project } from "./project";
-import { githubToken, linkedInToken, twitterToken } from "./tokens";
+import {
+  githubToken,
+  linkedInToken,
+  twitterToken,
+  youtubeToken,
+} from "./tokens";
 import { user } from "./user";
 
 export const roleEnum = pgEnum("role", ["OWNER", "ADMIN", "EDITOR", "MEMBER"]);
@@ -74,11 +79,11 @@ export const organisationRelations = relations(
     invites: many(organizationInvites),
     members: many(organizationUser),
     orgCreatedProjects: many(project),
-    orgCreatedIdeas: many(idea),
     orgCreatedPosts: many(post),
     orgTwitterAccounts: many(twitterToken),
     orgLinkedinAccounts: many(linkedInToken),
     orgGithubAccounts: many(githubToken),
+    orgYoutubeAccounts: many(youtubeToken),
   }),
 );
 
@@ -139,8 +144,12 @@ export const organizationUser = pgTable(
   {
     id: varchar("id", { length: 256 })
       .primaryKey()
-      .$defaultFn(() => createUniqueIds("orginv")),
-    organizationId: varchar("organizationId", { length: 256 }).notNull(),
+      .$defaultFn(() => createUniqueIds("orgusr")),
+    organizationId: varchar("organizationId", { length: 256 })
+      .notNull()
+      .references(() => organization.id, {
+        onDelete: "cascade",
+      }),
     clerkUserId: varchar("clerkUserId", { length: 256 })
       .notNull()
       .references(() => user.clerkUserId, {
@@ -164,6 +173,7 @@ export const organizationUser = pgTable(
       organizationIdIdx: index("OrganizationUser_organizationId_idx").on(
         table.organizationId,
       ),
+      orgIdClerkId: unique().on(table.organizationId, table.clerkUserId),
     };
   },
 );

@@ -37,8 +37,8 @@ export const linkedin = createTRPCRouter({
 
   getLinkedinAuthUrl: protectedProcedure
     .input(SocialRedisKeySchema)
-    .query(({ input, ctx }) => {
-      const res = verifyLimitAndRun({
+    .query(async ({ input, ctx }) => {
+      const res = await verifyLimitAndRun({
         func: async () => {
           await redis.set(ctx.currentUser, input, {
             ex: 120,
@@ -57,11 +57,10 @@ export const linkedin = createTRPCRouter({
         linkedinData: tokens.linkedInTokenInsertSchema,
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       try {
         await refreshLinkedinDataInDatabase({
           linkedinData: input.linkedinData,
-          userId: ctx.currentUser,
           tokenId: input.tokenId,
         });
         return {

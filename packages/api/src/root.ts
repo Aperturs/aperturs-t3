@@ -5,8 +5,10 @@ import { metaDataRouter } from "./routers/metadata/main";
 import { organisationRouter } from "./routers/organisation/main";
 import { posting } from "./routers/post/draft";
 import { post } from "./routers/post/post";
+import { subscriptionRouter } from "./routers/subscription/main";
 import { twitterData } from "./routers/twitter/twitter";
 import { userRouter } from "./routers/user";
+import { youtubeRouter } from "./routers/youtube/main";
 import { createTRPCRouter } from "./trpc";
 
 /**
@@ -24,6 +26,8 @@ export const appRouter = createTRPCRouter({
   organisation: organisationRouter,
   metadata: metaDataRouter,
   instagram: instagramRouter,
+  subscription: subscriptionRouter,
+  youtube: youtubeRouter,
 });
 
 // export type definition of API

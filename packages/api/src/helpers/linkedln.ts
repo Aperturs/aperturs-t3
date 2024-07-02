@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { uploadMedia } from "@api/handlers/linkedin/upload-media";
 import axios from "axios";
 
 import type { tokens } from "@aperturs/db";
@@ -50,8 +51,32 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
   });
 
   const profileId = tokenData?.profileId;
+  let imageData = {};
   if (profileId) {
     try {
+      if (input.imageurl) {
+        const data = await uploadMedia({
+          authToken: tokenData.accessToken,
+          imageurl: input.imageurl,
+          media: {
+            owner: profileId,
+          },
+        });
+        imageData = [
+          {
+            status: "READY",
+            description: {
+              text: "",
+            },
+            media: data,
+            title: {
+              text: "",
+            },
+          },
+        ];
+        console.log(imageData);
+      }
+
       const data = {
         author: `urn:li:person:${profileId}`,
         lifecycleState: "PUBLISHED",
@@ -60,7 +85,8 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
             shareCommentary: {
               text: input.content,
             },
-            shareMediaCategory: "NONE",
+            shareMediaCategory: "IMAGE",
+            media: imageData,
           },
         },
         visibility: {
@@ -68,11 +94,11 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
         },
       };
 
-      axios
+      await axios
         .post("https://api.linkedin.com/v2/ugcPosts", data, {
           headers: {
-            "X-Restli-Protocol-Version": "2.0.0",
-            Authorization: `Bearer ${tokenData?.accessToken}`,
+            "X-Restli-Prot ocol-Version": "2.0.0",
+            Authorization: `Bearer ${tokenData.accessToken}`,
           },
         })
         .then((response) => {
@@ -83,6 +109,9 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
               state: 200,
             };
           }
+        })
+        .finally(() => {
+          console.log("Posted to LinkedIn");
         })
         .catch((error) => {
           console.error(error);
