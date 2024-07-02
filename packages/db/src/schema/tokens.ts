@@ -125,9 +125,12 @@ export const linkedInToken = pgTable(
         table.organizationId,
       ),
       profileIdIdx: index("LinkedInToken_profileId_idx").on(table.profileId),
-      linkedinAccountPerOrg: unique("LinkedInToken_organizationId_clerkID").on(
-        table.organizationId,
+      linkedinAccount: unique("LinkedInToken_clerkID").on(
         table.clerkUserId,
+        table.profileId,
+      ),
+      uniqueLinkedinAccount: unique("LinkedinIn_orgId").on(
+        table.organizationId,
         table.profileId,
       ),
     };

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Card } from "@aperturs/ui/card";
+import { SocialType } from "@aperturs/validators/post";
 
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";
@@ -11,16 +12,20 @@ import usePostUpdate from "./use-post-update";
 
 // function convertTweetsToPlaintext(tweets: Tweet[]): string {
 //   let plaintext = "";
-
 //   for (let i = 0; i < tweets.length; i++) {
 //     const tweet = tweets[i];
 //     if (tweet) plaintext += tweet.text + "\n\n"; // Now this will concatenate strings properly
 //   }
-
-//   return plaintext;
+//   return plaintext;x
 // }
 
-function ContentPostCard({ id }: { id: string }) {
+function ContentPostCard({
+  id,
+  postType,
+}: {
+  id: string;
+  postType: SocialType;
+}) {
   // const [sync, setSync] = useState(false);
 
   const { updateContent, contentValue, currentFiles } = usePostUpdate(id);
@@ -54,7 +59,7 @@ function ContentPostCard({ id }: { id: string }) {
         }}
         // sync={sync}
       />
-      <FileUpload id={id} uploadedFiles={currentFiles} />
+      <FileUpload id={id} uploadedFiles={currentFiles} postType={postType} />
       {/* {id != SocialType.Default && (
         <Switch
           label="Sync with Default"

@@ -126,8 +126,7 @@ export const reducer = (state: State, action: Action): State => {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/array-type
-const listeners: Array<(state: State) => void> = [];
+const listeners: ((state: State) => void)[] = [];
 
 let memoryState: State = { toasts: [] };
 

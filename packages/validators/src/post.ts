@@ -99,6 +99,7 @@ export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
 export const postToLinkedInInputSchema = z.object({
   tokenId: z.string(),
   content: z.string(),
+  imageurl: z.string().optional(),
 });
 
 export type PostToLinkedInInput = z.infer<typeof postToLinkedInInputSchema>;

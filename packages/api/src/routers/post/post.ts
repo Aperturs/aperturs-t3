@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   GetPresignedUrl,
   scheduleLambdaEvent,
@@ -26,14 +27,19 @@ export const post = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log(input, "postby post id");
       try {
         const post = await ctx.db.query.post.findFirst({
           where: eq(schema.post.id, input.postId),
         });
+        let uploadedFiles: string[] = [];
         if (post) {
           const content = post.content as PostContentType[];
           const promises = content.map(async (item) => {
             switch (item.socialType) {
+              case `${SocialType.Default}`:
+                uploadedFiles = item.uploadedFiles;
+                return;
               case `${SocialType.Twitter}`:
                 return await postToTwitter({
                   tokenId: item.id,
@@ -49,34 +55,39 @@ export const post = createTRPCRouter({
                   })
                   .catch((error) => {
                     console.error("Failed to post to Twitter", error);
+                    throw Error("Failed to post to Twitter");
                   });
 
               case `${SocialType.Linkedin}`:
+                console.log(item);
                 return await postToLinkedin({
                   tokenId: item.id,
                   content: item.content,
-                })
-                  .then(() => {
-                    console.log("Posted to LinkedIn");
-                  })
-                  .catch((error) => {
-                    console.error("Failed to post to LinkedIn", error);
-                  });
+                  imageurl: uploadedFiles[0]!,
+                }).catch((error) => {
+                  console.error("Failed to post to LinkedIn", error);
+                  throw Error("Failed to post to linkedin");
+                });
 
               default:
                 return Promise.resolve(); // resolves immediately for unsupported types
             }
           });
           // Wait for all promises to resolve
-          await Promise.all(promises);
+          await Promise.all(promises).catch((e) => {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: `something went wrong ${e.message}`,
+            });
+          });
         }
-        await ctx.db
-          .update(schema.post)
-          .set({
-            status: "PUBLISHED",
-            updatedAt: new Date(),
-          })
-          .where(eq(schema.post.id, input.postId));
+        // await ctx.db
+        //   .update(schema.post)
+        //   .set({
+        //     status: "PUBLISHED",
+        //     updatedAt: new Date(),
+        //   })
+        //   .where(eq(schema.post.id, input.postId));
 
         return {
           success: true,

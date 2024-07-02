@@ -1,107 +1,205 @@
 "use client";
 
+import * as React from "react";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
-import { FaGripLines } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
+import { Bars2Icon } from "@heroicons/react/24/outline";
 
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@aperturs/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@aperturs/ui/sheet";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const path = usePathname();
+const components: { title: string; href: string; description: string }[] = [
+  {
+    title: "Alert Dialog",
+    href: "/docs/primitives/alert-dialog",
+    description:
+      "A modal dialog that interrupts the user with important content and expects a response.",
+  },
+  {
+    title: "Hover Card",
+    href: "/docs/primitives/hover-card",
+    description:
+      "For sighted users to preview content available behind a link.",
+  },
+  {
+    title: "Progress",
+    href: "/docs/primitives/progress",
+    description:
+      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
+  },
+  {
+    title: "Scroll-area",
+    href: "/docs/primitives/scroll-area",
+    description: "Visually or semantically separates content.",
+  },
+  {
+    title: "Tabs",
+    href: "/docs/primitives/tabs",
+    description:
+      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
+  },
+  {
+    title: "Tooltip",
+    href: "/docs/primitives/tooltip",
+    description:
+      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
+  },
+];
+
+export function NavBar() {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
   useEffect(() => {
-    setIsOpen(false);
-  }, [path]);
+    window.addEventListener(
+      "resize",
+      () => window.innerWidth >= 768 && setIsNavOpen(false),
+    );
+  }, []);
+
+  const pathName = usePathname();
+
+  useEffect(() => {
+    if (isNavOpen) {
+      setIsNavOpen(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathName]);
 
   return (
-    <nav className="relative w-full">
-      <div className={cn("absolute z-40 flex w-full justify-center")}>
-        <div
-          className={cn(
-            "flex w-full  max-w-screen-xl items-center justify-between px-6 pt-12 lg:px-8",
-          )}
-        >
-          <p
-            className={cn(
-              "ease transition-colors duration-200",
-              isOpen && "text-white",
-            )}
+    <nav className="flex w-full max-w-screen-2xl !justify-between px-5">
+      <Image
+        src="/logo.svg"
+        alt="Aperturs Logo"
+        width={120}
+        height={40}
+        className="h-10 w-auto fill-white"
+      />
+      <NavigationMenu className="hidden md:flex">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                <li className="row-span-3">
+                  <NavigationMenuLink asChild>
+                    <a
+                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                      href="/"
+                    >
+                      {/* <Icons.logo className="h-6 w-6" /> */}
+                      <div className="mb-2 mt-4 text-lg font-medium">
+                        shadcn/ui
+                      </div>
+                      <p className="text-sm leading-tight text-muted-foreground">
+                        Beautifully designed components built with Radix UI and
+                        Tailwind CSS.
+                      </p>
+                    </a>
+                  </NavigationMenuLink>
+                </li>
+                <ListItem href="/docs" title="Introduction">
+                  Re-usable components built using Radix UI and Tailwind CSS.
+                </ListItem>
+                <ListItem href="/docs/installation" title="Installation">
+                  How to install dependencies and structure your app.
+                </ListItem>
+                <ListItem href="/docs/primitives/typography" title="Typography">
+                  Styles for headings, paragraphs, lists...etc
+                </ListItem>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>Components</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                {components.map((component) => (
+                  <ListItem
+                    key={component.title}
+                    title={component.title}
+                    href={component.href}
+                  >
+                    {component.description}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/docs" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Documentation
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <Sheet>
+        <SheetTrigger className="md:hidden" asChild>
+          <Button
+            size="icon"
+            onClick={toggleIsNavOpen}
+            className="p-0 lg:hidden"
           >
-            Image
-          </p>
-          <div className="flex items-center justify-center gap-2">
-            <Button>Login</Button>
-            <Button
-              variant="ghost"
-              onClick={() => setIsOpen((prev) => !prev)}
-              className={cn(
-                "h-auto w-auto p-2 text-xl transition-colors duration-300 ease-in-out",
-                isOpen && "text-white",
-              )}
-            >
-              {isOpen ? <IoClose /> : <FaGripLines />}
-            </Button>
-          </div>
-        </div>
-      </div>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            key="nav"
-            initial={{ height: 0 }}
-            animate={{ height: "auto" }}
-            exit={{ height: 0, transition: { duration: 0.3 } }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="min-h-fit overflow-scroll"
-          >
-            <nav className="flex min-h-fit  flex-col items-center justify-between bg-neutral-950  pb-7 pt-28 text-3xl text-white">
-              <NavLinks
-                link1={{ href: "/", text: "Home" }}
-                link2={{ href: "/about", text: "About" }}
-              />
-              <NavLinks
-                link1={{ href: "/login", text: "Login" }}
-                link2={{ href: "/register", text: "Register" }}
-              />
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <Bars2Icon className="h-6 w-6" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Are you absolutely sure?</SheetTitle>
+            <SheetDescription>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
     </nav>
   );
 }
 
-interface NavLinksProps {
-  link1: { href: string; text: string };
-  link2: { href: string; text: string };
-}
-
-function NavLinks({ link1, link2 }: NavLinksProps) {
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
   return (
-    <div className="flex w-full justify-center overflow-hidden border-b border-t border-neutral-800">
-      <div className="grid w-full max-w-screen-xl  grid-cols-1   md:grid-cols-2">
-        <Link
-          href={link1.href}
-          className="group relative isolate  border-neutral-800 px-8  py-10  max-md:border-b sm:py-16  sm:odd:pr-16 sm:even:border-l"
-          // className="group relative  w-full items-center border-neutral-800 px-8  py-16 text-4xl  max-md:border-b md:border-r"
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className,
+          )}
+          {...props}
         >
-          <span className="absolute inset-y-0 z-0 w-screen bg-neutral-900 opacity-0 transition group-odd:right-0 group-even:left-0 group-hover:opacity-100" />
-          <span className="relative z-10">{link1.text}</span>
-        </Link>
-        <Link
-          href={link2.href}
-          className="group relative isolate  px-8 py-10   sm:py-16 sm:odd:pr-16  sm:even:border-l sm:even:border-neutral-800"
-          // className="group relative  w-full items-center border-neutral-800 px-8  py-16 text-4xl  max-md:border-b md:border-r"
-        >
-          <span className="absolute inset-y-0 z-0 w-screen   bg-neutral-900 opacity-0 transition group-even:left-0 group-even:right-0 group-hover:opacity-100" />
-          <span className="relative z-10">{link2.text}</span>
-        </Link>
-      </div>
-    </div>
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
   );
-}
+});
+ListItem.displayName = "ListItem";

@@ -11,8 +11,8 @@
     "clean": "rm -rf .turbo node_modules",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint .",
-    "push": "pnpm with-env drizzle-kit push:pg",
-    "migration:generate": "drizzle-kit generate:pg",
+    "push": "pnpm with-env drizzle-kit push",
+    "migration:generate": "drizzle-kit generate",
     "migrate": "pnpm migration:generate && pnpm push",
     "studio": "pnpm with-env drizzle-kit studio",
     "typecheck": "tsc --noEmit",
@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.29.3",
     "drizzle-zod": "^0.5.1",
     "nanoid": "^5.0.4",
     "pg": "^8.11.3",
@@ -33,7 +32,8 @@
     "@aperturs/tsconfig": "workspace:*",
     "@aperturs/validators": "workspace:^*",
     "dotenv-cli": "^7.3.0",
-    "drizzle-kit": "^0.20.14",
+    "drizzle-kit": "^0.22.6",
+    "drizzle-orm": "^0.31.2",
     "eslint": "^8.56.0",
     "prettier": "^3.2.5",
     "typescript": "^5.3.3"

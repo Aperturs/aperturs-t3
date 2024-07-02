@@ -42,13 +42,19 @@ export default function SocialTabs() {
                 (item) =>
                   item.unique && (
                     <TabsContent key={item.id} value={item.id}>
-                      <ContentPostCard id={item.id} />
+                      <ContentPostCard
+                        id={item.id}
+                        postType={item.socialType as SocialType}
+                      />
                     </TabsContent>
                   ),
               )}
             </Tabs>
           ) : (
-            <ContentPostCard id={SocialType.Default} />
+            <ContentPostCard
+              id={SocialType.Default}
+              postType={SocialType.Default}
+            />
           )}
         </>
       )}

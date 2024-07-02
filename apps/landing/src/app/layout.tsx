@@ -2,7 +2,7 @@ import "@aperturs/ui/globals.css";
 import "./globals.css";
 
 import type { Metadata } from "next";
-import Navbar from "~/components/navbar";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
@@ -24,12 +24,13 @@ export default function RootLayout({
         type="font/woff2"
         crossOrigin="anonymous"
       ></link>
-      <body>
-        <div className="bg-black">
-          <Navbar />
-          <div className="pt-1">
-            <div className="rounded-t-[40px] bg-white">{children}</div>
-          </div>
+      <Toaster />
+      <body className="dark">
+        <div className="flex flex-col items-center bg-black">
+          {/* <div className="fixed flex w-full  justify-center border-b bg-opacity-20 p-3 backdrop-blur-lg backdrop-filter">
+            <NavBar />
+          </div> */}
+          <div className="max-w-screen-2xl px-5">{children}</div>
         </div>
       </body>
     </html>

@@ -16,7 +16,6 @@
     "lint:fix": "turbo lint --continue -- --fix --cache --cache-location node_modules/.cache/.eslintcache",
     "lint:ws": "pnpm dlx sherif@latest",
     "lint:ws:fix": "pnpm dlx sherif@latest --fix",
-    "postinstall": "pnpm lint:ws",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {
@@ -24,9 +23,9 @@
     "dotenv-cli": "^7.3.0",
     "husky": "^9.0.0",
     "prettier": "^3.2.5",
-    "turbo": "^1.13.2"
+    "turbo": "^2.0.4"
   },
-  "packageManager": "pnpm@8.9.0",
+  "packageManager": "pnpm@8.10.5",
   "engines": {
     "node": ">=20"
   },

@@ -8,7 +8,9 @@ import { MdDelete } from "react-icons/md";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
+import { SocialType } from "@aperturs/validators/post";
 
+import { useStore } from "~/store/post-store";
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
@@ -22,25 +24,66 @@ function isImage(url: string): boolean {
 export default function FileUpload({
   id,
   uploadedFiles,
+  postType,
 }: {
   id: string;
+  postType: SocialType;
   uploadedFiles: string[];
 }) {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const { content } = useStore();
+  console.log(content, "files");
+  const filesThatBelongHere = content.map((post) => {
+    if (post.id === id) return post.files;
+  });
+
+  const [selectedFiles, setSelectedFiles] = useState<File[]>(
+    filesThatBelongHere[0] ?? [],
+  );
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
 
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
+      if (selectedFiles.length + uploadedFiles.length >= 4) {
+        toast.error("Maximum 4 files allowed");
+        return;
+      }
+
       const files = event.target.files;
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
+
+        if (postType === SocialType.Linkedin) {
+          const isImageSelected = selectedFiles.some((file) =>
+            file.type.startsWith("image/"),
+          );
+          const isVideoSelected = selectedFiles.some((file) =>
+            file.type.startsWith("video/"),
+          );
+          const isNewFileImage = newFiles.some((file) =>
+            file.type.startsWith("image/"),
+          );
+          const isNewFileVideo = newFiles.some((file) =>
+            file.type.startsWith("video/"),
+          );
+
+          if (
+            (isImageSelected && isNewFileVideo) ||
+            (isVideoSelected && isNewFileImage)
+          ) {
+            toast.error(
+              "You can't have both image and video at the same time on LinkedIn",
+            );
+            return;
+          }
+        }
+
         const fileSizeExceeded = newFiles.some(
-          (file) => file.size > 50 * 1024 * 1024,
+          (file) => file.size > 30 * 1024 * 1024,
         ); // 30MB
         if (fileSizeExceeded) {
-          toast.error("Maximum file size is 50MB");
+          toast.error("Maximum file size is 30MB");
           return;
         }
         setSelectedFiles([...selectedFiles, ...newFiles]);
@@ -55,7 +98,7 @@ export default function FileUpload({
       }
     },
 
-    [previewUrls, selectedFiles, updateFiles],
+    [postType, previewUrls, selectedFiles, updateFiles, uploadedFiles.length],
   );
 
   const inputId = `fileInput${id}`;
