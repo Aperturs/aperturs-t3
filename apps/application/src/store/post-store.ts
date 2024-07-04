@@ -51,6 +51,7 @@ const initialState: StateValues = {
       unique: true,
       files: [],
       uploadedFiles: [],
+      previewUrls: [],
     },
   ],
 };

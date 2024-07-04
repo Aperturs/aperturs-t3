@@ -31,15 +31,26 @@ export default function FileUpload({
   uploadedFiles: string[];
 }) {
   const { content } = useStore();
-  console.log(content, "files");
-  const filesThatBelongHere = content.map((post) => {
-    if (post.id === id) return post.files;
-  });
+  const filesThatBelongHere = content
+    .map((post) => {
+      if (post.id === id) return post.files;
+    })
+    .filter(Boolean)[0];
+  const previewUrlsBelongHere = content
+    .map((post) => {
+      if (post.id === id) return post.previewUrls;
+    })
+    .filter(Boolean)[0];
+
+  console.log(filesThatBelongHere, "filesThatBelongHere");
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>(
-    filesThatBelongHere[0] ?? [],
+    filesThatBelongHere ?? [],
   );
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  console.log(selectedFiles, "selectedFiles");
+  const [previewUrls, setPreviewUrls] = useState<string[]>(
+    previewUrlsBelongHere ?? [],
+  );
 
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
 
@@ -49,7 +60,6 @@ export default function FileUpload({
         toast.error("Maximum 4 files allowed");
         return;
       }
-
       const files = event.target.files;
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
@@ -86,15 +96,14 @@ export default function FileUpload({
           toast.error("Maximum file size is 30MB");
           return;
         }
-        setSelectedFiles([...selectedFiles, ...newFiles]);
+        const newSelectedFiles = [...selectedFiles, ...newFiles];
+        setSelectedFiles(newSelectedFiles);
         const newPreviewUrls = newFiles.map((file) => {
           const url = URL.createObjectURL(file);
           return url;
         });
-        void Promise.all(newPreviewUrls).then((urls) => {
-          setPreviewUrls([...previewUrls, ...urls]);
-        });
-        updateFiles(newFiles);
+        setPreviewUrls([...previewUrls, ...newPreviewUrls]);
+        updateFiles(newSelectedFiles, newPreviewUrls);
       }
     },
 
@@ -176,6 +185,7 @@ export default function FileUpload({
           <BsFillImageFill className="text-xl" />
           <input
             type="file"
+            multiple
             id={inputId}
             className="hidden w-8"
             onChange={handleFileChange}

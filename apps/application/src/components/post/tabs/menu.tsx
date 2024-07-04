@@ -85,7 +85,7 @@ const MenuItems = ({
       });
     } else {
       setChecked(true);
-      console.log(content[0]?.content);
+      console.log(content[0]?.content, "content");
       updatedContent = content.map((item) => {
         if (item.id === id) {
           return {
@@ -96,6 +96,7 @@ const MenuItems = ({
         }
         return item;
       });
+      console.log(updatedContent, "updatedContent from  tabs/menu");
     }
     setContent(updatedContent);
   };

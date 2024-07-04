@@ -16,6 +16,7 @@ export const postSchema = z.object({
   content: z.string(),
   unique: z.boolean(),
   files: z.array(z.instanceof(File)).default([]),
+  previewUrls: z.array(z.string()).default([]).optional(),
   uploadedFiles: z.array(z.string()),
 });
 

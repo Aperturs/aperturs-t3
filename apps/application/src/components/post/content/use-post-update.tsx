@@ -38,21 +38,21 @@ function usePostUpdate(id: string) {
   );
 
   const updateFiles = useCallback(
-    (newFiles: File[]) => {
+    (newFiles: File[], previewUrls: string[]) => {
       console.log(newFiles, "from updateFiles");
       if ((id as SocialType) === SocialType.Default) {
         const updatedContent = content.map((item) =>
           !item.unique
-            ? { ...item, files: newFiles }
+            ? { ...item, files: newFiles, previewUrls }
             : (item.id as SocialType) === SocialType.Default
-              ? { ...item, files: newFiles }
+              ? { ...item, files: newFiles, previewUrls }
               : item,
         );
         console.log(updatedContent, "updated");
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, files: newFiles } : item,
+          item.id === id ? { ...item, files: newFiles, previewUrls } : item,
         );
         setContent(updatedContent);
       }
