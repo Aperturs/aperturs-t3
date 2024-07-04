@@ -41,9 +41,6 @@ export default function FileUpload({
       if (post.id === id) return post.previewUrls;
     })
     .filter(Boolean)[0];
-
-  console.log(filesThatBelongHere, "filesThatBelongHere");
-
   const [selectedFiles, setSelectedFiles] = useState<File[]>(
     filesThatBelongHere ?? [],
   );
@@ -51,9 +48,7 @@ export default function FileUpload({
   const [previewUrls, setPreviewUrls] = useState<string[]>(
     previewUrlsBelongHere ?? [],
   );
-
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
-
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (selectedFiles.length + uploadedFiles.length >= 4) {

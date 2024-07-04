@@ -65,9 +65,15 @@ function usePostUpdate(id: string) {
     (index: number) => {
       const updatedContent = content.map((item) =>
         item.id === id
-          ? { ...item, files: item.files.filter((_, i) => i !== index) || [] }
+          ? {
+              ...item,
+              files: item.files.filter((_, i) => i !== index) || [],
+              previewUrls:
+                item.previewUrls?.filter((_, i) => i !== index) ?? [],
+            }
           : item,
       );
+      console.log(updatedContent, "from removeFiles");
       setContent(updatedContent);
     },
     [content, id, setContent],
