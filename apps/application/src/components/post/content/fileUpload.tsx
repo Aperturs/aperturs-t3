@@ -48,6 +48,7 @@ export default function FileUpload({
   const [previewUrls, setPreviewUrls] = useState<string[]>(
     previewUrlsBelongHere ?? [],
   );
+  console.log(previewUrls, "previewUrls from fileUpload");
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +60,16 @@ export default function FileUpload({
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
 
-        if (postType === SocialType.Linkedin) {
+        const contentContainNonUniqueLinkedin = content.some(
+          (post) =>
+            (post.socialType as SocialType) === SocialType.Linkedin &&
+            !post.unique,
+        );
+
+        if (
+          postType === SocialType.Linkedin ||
+          contentContainNonUniqueLinkedin
+        ) {
           const isImageSelected = selectedFiles.some((file) =>
             file.type.startsWith("image/"),
           );
@@ -180,7 +190,6 @@ export default function FileUpload({
           <BsFillImageFill className="text-xl" />
           <input
             type="file"
-            multiple
             id={inputId}
             className="hidden w-8"
             onChange={handleFileChange}

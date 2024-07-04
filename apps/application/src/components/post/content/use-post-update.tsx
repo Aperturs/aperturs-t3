@@ -63,18 +63,33 @@ function usePostUpdate(id: string) {
 
   const removeFiles = useCallback(
     (index: number) => {
-      const updatedContent = content.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              files: item.files.filter((_, i) => i !== index) || [],
-              previewUrls:
-                item.previewUrls?.filter((_, i) => i !== index) ?? [],
-            }
-          : item,
-      );
-      console.log(updatedContent, "from removeFiles");
-      setContent(updatedContent);
+      if ((id as SocialType) === SocialType.Default) {
+        const updatedContent = content.map((item) =>
+          !item.unique || (item.socialType as SocialType) === SocialType.Default
+            ? {
+                ...item,
+                files: item.files.filter((_, i) => i !== index) || [],
+                previewUrls:
+                  item.previewUrls?.filter((_, i) => i !== index) ?? [],
+              }
+            : item,
+        );
+        console.log(updatedContent, "from removeFiles");
+        setContent(updatedContent);
+      } else {
+        const updatedContent = content.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                files: item.files.filter((_, i) => i !== index) || [],
+                previewUrls:
+                  item.previewUrls?.filter((_, i) => i !== index) ?? [],
+              }
+            : item,
+        );
+        console.log(updatedContent, "from removeFiles");
+        setContent(updatedContent);
+      }
     },
     [content, id, setContent],
   );
