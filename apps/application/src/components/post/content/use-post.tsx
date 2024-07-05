@@ -58,7 +58,15 @@ export default function usePost() {
       }
     }
     setLoading(false);
+    const defaultUploadFiles: string[] = updatedContent
+      .filter((post) => post.id === "DEFAULT")
+      .flatMap((post) => post.uploadedFiles);
 
+    updatedContent.map((post) => {
+      if (post.id !== "DEFAULT" && !post.unique) {
+        post.uploadedFiles = [...defaultUploadFiles, ...post.uploadedFiles];
+      }
+    });
     // Update the global state with the modified content
     return updatedContent;
   };

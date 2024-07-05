@@ -32,13 +32,11 @@ export const post = createTRPCRouter({
         const post = await ctx.db.query.post.findFirst({
           where: eq(schema.post.id, input.postId),
         });
-        let uploadedFiles: string[] = [];
         if (post) {
           const content = post.content as PostContentType[];
           const promises = content.map(async (item) => {
             switch (item.socialType) {
               case `${SocialType.Default}`:
-                uploadedFiles = item.uploadedFiles;
                 return;
               case `${SocialType.Twitter}`:
                 return await postToTwitter({
@@ -59,11 +57,10 @@ export const post = createTRPCRouter({
                   });
 
               case `${SocialType.Linkedin}`:
-                console.log(item);
+                console.log(item, "linkedin item");
                 return await postToLinkedin({
-                  tokenId: item.id,
+                  ...item,
                   content: item.content,
-                  imageurl: uploadedFiles[0]!,
                 }).catch((error) => {
                   console.error("Failed to post to LinkedIn", error);
                   throw Error("Failed to post to linkedin");

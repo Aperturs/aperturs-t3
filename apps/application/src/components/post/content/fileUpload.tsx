@@ -44,11 +44,16 @@ export default function FileUpload({
   const [selectedFiles, setSelectedFiles] = useState<File[]>(
     filesThatBelongHere ?? [],
   );
-  console.log(selectedFiles, "selectedFiles");
   const [previewUrls, setPreviewUrls] = useState<string[]>(
     previewUrlsBelongHere ?? [],
   );
-  console.log(previewUrls, "previewUrls from fileUpload");
+  console.log(
+    content,
+    previewUrls,
+    selectedFiles,
+    "previewUrls from fileUpload",
+    postType,
+  );
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -107,12 +112,20 @@ export default function FileUpload({
           const url = URL.createObjectURL(file);
           return url;
         });
-        setPreviewUrls([...previewUrls, ...newPreviewUrls]);
-        updateFiles(newSelectedFiles, newPreviewUrls);
+        const allURls = [...previewUrls, ...newPreviewUrls];
+        setPreviewUrls(allURls);
+        updateFiles(newSelectedFiles, allURls);
       }
     },
 
-    [postType, previewUrls, selectedFiles, updateFiles, uploadedFiles.length],
+    [
+      content,
+      postType,
+      previewUrls,
+      selectedFiles,
+      updateFiles,
+      uploadedFiles.length,
+    ],
   );
 
   const inputId = `fileInput${id}`;

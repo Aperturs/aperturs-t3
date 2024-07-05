@@ -81,7 +81,7 @@ export const uploadMedia = async ({
         },
       )
       .catch((error) => {
-        console.log(error, "error");
+        console.log(error, "error uploading image");
         throw new Error("Error uploading image");
       });
 

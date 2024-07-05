@@ -9,12 +9,42 @@ export const postType = {
 export type PostType = (typeof postType)[keyof typeof postType];
 export const PostTypeSchema = z.nativeEnum(postType);
 
+export const basePostSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  socialType: z.string(),
+  unique: z.boolean(),
+  content: z.string(),
+  files: z.array(z.instanceof(File)).default([]),
+  previewUrls: z.array(z.string()).default([]).optional(),
+  uploadedFiles: z.array(z.string()),
+});
+
+export type BasePostContentType = z.infer<typeof basePostSchema>;
+
+export const videoTypes = [
+  "MP4",
+  "MOV",
+  "AVI",
+  "WMV",
+  "VC1",
+  "DVVIDEO",
+  "QTRLE",
+  "TSCC2",
+  "MPEG",
+  "MPEG2",
+  "MKV",
+  "WEBM",
+];
+export const imageTypes = ["JPEG", "GIF", "PNG", "HEIC", "WEBP"];
+
+// Define the complete schema including the recursive content field
 export const postSchema = z.object({
   id: z.string(),
   name: z.string(),
   socialType: z.string(),
-  content: z.string(),
   unique: z.boolean(),
+  content: z.string(),
   files: z.array(z.instanceof(File)).default([]),
   previewUrls: z.array(z.string()).default([]).optional(),
   uploadedFiles: z.array(z.string()),
