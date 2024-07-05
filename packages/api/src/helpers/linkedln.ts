@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { uploadMedia } from "@api/handlers/linkedin/upload-media";
 import axios from "axios";
 
 import type { tokens } from "@aperturs/db";
 import type { BasePostContentType } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
+import { allowedImageTypes, videoTypes } from "@aperturs/validators/post";
+import { uploadMedia } from "@api/handlers/linkedin/upload-media";
 
 interface LinkedInTokenDetails
   extends Pick<
@@ -63,15 +64,20 @@ export const postToLinkedin = async (
   }
   const profileId = tokenData.profileId;
   const imageData = [] as LinkedInImage[];
+  let data = {};
   if (!profileId) throw new Error("No profileId found for linkedin account");
   try {
     console.log(input.uploadedFiles, "input.uploadedFiles");
-    if (input.uploadedFiles) {
+    const hasImages = input.uploadedFiles.some(
+      (url) => getFileType(url) === "image",
+    );
+    if (input.uploadedFiles && input.uploadedFiles.length > 0) {
       for (const url of input.uploadedFiles) {
         console.log("for url", url);
         const data = await uploadMedia({
           authToken: tokenData.accessToken,
-          imageurl: url,
+          fileUrl: url,
+          isImage: hasImages,
           media: {
             owner: profileId,
           },
@@ -89,24 +95,40 @@ export const postToLinkedin = async (
         });
         console.log(imageData, "imageData");
       }
-    }
-    console.log(imageData, "imageData outside loop");
-    const data = {
-      author: `urn:li:person:${profileId}`,
-      lifecycleState: "PUBLISHED",
-      specificContent: {
-        "com.linkedin.ugc.ShareContent": {
-          shareCommentary: {
-            text: input.content,
+      data = {
+        author: `urn:li:person:${profileId}`,
+        lifecycleState: "PUBLISHED",
+        specificContent: {
+          "com.linkedin.ugc.ShareContent": {
+            shareCommentary: {
+              text: input.content,
+            },
+            shareMediaCategory: hasImages ? "IMAGE" : "VIDEO",
+            media: imageData,
           },
-          shareMediaCategory: "IMAGE",
-          media: imageData,
         },
-      },
-      visibility: {
-        "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
-      },
-    };
+        visibility: {
+          "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
+        },
+      };
+    } else {
+      data = {
+        author: `urn:li:person:${profileId}`,
+        lifecycleState: "PUBLISHED",
+        specificContent: {
+          "com.linkedin.ugc.ShareContent": {
+            shareCommentary: {
+              text: input.content,
+            },
+            shareMediaCategory: "NONE",
+          },
+        },
+        visibility: {
+          "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
+        },
+      };
+    }
+
     await axios
       .post("https://api.linkedin.com/v2/ugcPosts", data, {
         headers: {
@@ -115,6 +137,7 @@ export const postToLinkedin = async (
         },
       })
       .then((response) => {
+        console.log(response.data)
         if (response.status === 200) {
           return {
             success: true,
@@ -134,6 +157,18 @@ export const postToLinkedin = async (
   }
 };
 
+function getFileType(url: string): "image" | "video" | "unknown" {
+  const extension = url.split(".").pop()?.toUpperCase();
+  if (extension) {
+    if (allowedImageTypes.includes(extension)) {
+      return "image";
+    }
+    if (videoTypes.includes(extension)) {
+      return "video";
+    }
+  }
+  return "unknown";
+}
 interface LinkedInImage {
   status: string;
   description: {

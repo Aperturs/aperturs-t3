@@ -8,18 +8,26 @@ import { MdDelete } from "react-icons/md";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
-import { SocialType } from "@aperturs/validators/post";
+import { allowedImageMimeTypes, allowedImageTypes, allowedVideoMimeTypes, SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
   const fileExtension = url.split(".");
-  const keywords = ["jpg", "jpeg", "png", "gif", "bmp", "image", "unsplash"];
 
   // Check if any part of the file extension includes the keywords
-  return fileExtension.some((part) => keywords.includes(part.toLowerCase()));
+  return fileExtension.some((part) =>
+    allowedImageTypes.includes(part.toUpperCase()),
+  );
 }
+
+
+
+// Generate accept string
+const imageAcceptString = Array.from(allowedImageMimeTypes).join(",");
+const videoAcceptString = Array.from(allowedVideoMimeTypes).join(",");
+const acceptString = `${imageAcceptString},${videoAcceptString}`;
 
 export default function FileUpload({
   id,
@@ -47,13 +55,6 @@ export default function FileUpload({
   const [previewUrls, setPreviewUrls] = useState<string[]>(
     previewUrlsBelongHere ?? [],
   );
-  console.log(
-    content,
-    previewUrls,
-    selectedFiles,
-    "previewUrls from fileUpload",
-    postType,
-  );
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +71,7 @@ export default function FileUpload({
             (post.socialType as SocialType) === SocialType.Linkedin &&
             !post.unique,
         );
-
+        ``;
         if (
           postType === SocialType.Linkedin ||
           contentContainNonUniqueLinkedin
@@ -206,7 +207,7 @@ export default function FileUpload({
             id={inputId}
             className="hidden w-8"
             onChange={handleFileChange}
-            accept="image/*,video/*"
+            accept={acceptString}
           />
         </label>
       </ToolTipSimple>

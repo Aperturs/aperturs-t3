@@ -25,18 +25,33 @@ export type BasePostContentType = z.infer<typeof basePostSchema>;
 export const videoTypes = [
   "MP4",
   "MOV",
-  "AVI",
-  "WMV",
-  "VC1",
-  "DVVIDEO",
-  "QTRLE",
-  "TSCC2",
-  "MPEG",
-  "MPEG2",
+  // "AVI",
+  // "WMV",
+  // "VC1",
+  // "DVVIDEO",
+  // "QTRLE",
+  // "TSCC2",
+  // "MPEG",
+  // "MPEG2",
   "MKV",
   "WEBM",
 ];
-export const imageTypes = ["JPEG", "GIF", "PNG", "HEIC", "WEBP"];
+export const allowedImageTypes = ["JPEG", "GIF", "PNG", "HEIC", "WEBP"];
+
+export const allowedImageMimeTypes = new Set([
+  "image/jpeg",
+  "image/gif",
+  "image/png",
+  "image/heic",
+  "image/webp",
+]);
+
+export const allowedVideoMimeTypes = new Set([
+  "video/mp4",
+  "video/quicktime", // For MOV
+  "video/x-matroska", // For MKV
+  "video/webm",
+]);
 
 // Define the complete schema including the recursive content field
 export const postSchema = z.object({
