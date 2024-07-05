@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { uploadMedia } from "@api/handlers/linkedin/upload-media";
 import axios from "axios";
 
 import type { tokens } from "@aperturs/db";
 import type { BasePostContentType } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
 import { allowedImageTypes, videoTypes } from "@aperturs/validators/post";
-import { uploadMedia } from "@api/handlers/linkedin/upload-media";
 
 interface LinkedInTokenDetails
   extends Pick<
@@ -137,7 +137,7 @@ export const postToLinkedin = async (
         },
       })
       .then((response) => {
-        console.log(response.data)
+        console.log(response.data);
         if (response.status === 200) {
           return {
             success: true,

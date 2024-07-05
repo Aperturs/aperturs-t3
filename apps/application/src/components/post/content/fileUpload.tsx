@@ -8,7 +8,12 @@ import { MdDelete } from "react-icons/md";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
-import { allowedImageMimeTypes, allowedImageTypes, allowedVideoMimeTypes, SocialType } from "@aperturs/validators/post";
+import {
+  allowedImageMimeTypes,
+  allowedImageTypes,
+  allowedVideoMimeTypes,
+  SocialType,
+} from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import usePostUpdate from "./use-post-update";
@@ -21,8 +26,6 @@ function isImage(url: string): boolean {
     allowedImageTypes.includes(part.toUpperCase()),
   );
 }
-
-
 
 // Generate accept string
 const imageAcceptString = Array.from(allowedImageMimeTypes).join(",");
