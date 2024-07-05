@@ -21,8 +21,9 @@ export default function usePost() {
     setLoading(true);
     console.log("uploading files");
     const updatedContent = [];
+    console.log("content inside upload files", content);
     for (const post of content) {
-      console.log("inside for loop", post.files?.length);
+      console.log("inside for loop", post);
       if (post.files && post.files.length > 0) {
         const postUploadedFiles: string[] = post.uploadedFiles
           ? [...post.uploadedFiles]
@@ -58,15 +59,15 @@ export default function usePost() {
       }
     }
     setLoading(false);
-    const defaultUploadFiles: string[] = updatedContent
-      .filter((post) => post.id === "DEFAULT")
-      .flatMap((post) => post.uploadedFiles);
+    // const defaultUploadFiles: string[] = updatedContent
+    //   .filter((post) => post.id === "DEFAULT")
+    //   .flatMap((post) => post.uploadedFiles);
 
-    updatedContent.map((post) => {
-      if (post.id !== "DEFAULT" && !post.unique) {
-        post.uploadedFiles = [...defaultUploadFiles, ...post.uploadedFiles];
-      }
-    });
+    // updatedContent.map((post) => {
+    //   if (post.id !== "DEFAULT" && !post.unique) {
+    //     post.uploadedFiles = [...defaultUploadFiles, ...post.uploadedFiles];
+    //   }
+    // });
     // Update the global state with the modified content
     return updatedContent;
   };

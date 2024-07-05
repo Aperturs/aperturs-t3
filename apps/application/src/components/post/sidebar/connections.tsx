@@ -83,18 +83,23 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
           ]);
         }
       } else {
-        setContent([
+        console.log("hello");
+        const defaultContent = content.find((item) => item.id === "DEFAULT");
+        const newContent = [
           ...content,
           {
             socialType: type,
             id,
             name,
             unique: false,
-            content: content[0]?.content ?? "",
-            files: [],
-            uploadedFiles: [],
+            content: defaultContent?.content ?? "",
+            files: defaultContent?.files ?? [],
+            uploadedFiles: defaultContent?.uploadedFiles ?? [],
+            previewUrls: defaultContent?.previewUrls ?? [],
           },
-        ]);
+        ];
+        console.log(newContent, "new content from connection");
+        setContent(newContent);
       }
     }
   };

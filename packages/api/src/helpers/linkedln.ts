@@ -58,80 +58,79 @@ export const postToLinkedin = async (
       throw new Error("Error getting linkedin token");
     });
   console.log(tokenData, "tokenData postToLinkedin");
-  const profileId = tokenData?.profileId;
+  if (!tokenData) {
+    throw new Error("No linkedin token found");
+  }
+  const profileId = tokenData.profileId;
   const imageData = [] as LinkedInImage[];
-  if (profileId) {
-    try {
-      console.log(input.uploadedFiles, "input.uploadedFiles");
-      if (input.uploadedFiles) {
-        await Promise.all(
-          input.uploadedFiles.map(async (url) => {
-            const data = await uploadMedia({
-              authToken: tokenData.accessToken,
-              imageurl: url,
-              media: {
-                owner: profileId,
-              },
-            });
-            console.log(data, "data from uploadMedia");
-            imageData.push({
-              status: "READY",
-              description: {
-                text: "",
-              },
-              media: data,
-              title: {
-                text: "",
-              },
-            });
-            console.log(imageData, "imageData");
-          }),
-        );
-      }
-      console.log(imageData, "imageData outside loop");
-      const data = {
-        author: `urn:li:person:${profileId}`,
-        lifecycleState: "PUBLISHED",
-        specificContent: {
-          "com.linkedin.ugc.ShareContent": {
-            shareCommentary: {
-              text: input.content,
-            },
-            shareMediaCategory: "IMAGE",
-            media: imageData,
+  if (!profileId) throw new Error("No profileId found for linkedin account");
+  try {
+    console.log(input.uploadedFiles, "input.uploadedFiles");
+    if (input.uploadedFiles) {
+      for (const url of input.uploadedFiles) {
+        console.log("for url", url);
+        const data = await uploadMedia({
+          authToken: tokenData.accessToken,
+          imageurl: url,
+          media: {
+            owner: profileId,
           },
-        },
-        visibility: {
-          "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
-        },
-      };
-      await axios
-        .post("https://api.linkedin.com/v2/ugcPosts", data, {
-          headers: {
-            "X-Restli-Protocol-Version": "2.0.0",
-            Authorization: `Bearer ${tokenData.accessToken}`,
-          },
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            return {
-              success: true,
-              message: "posted to linkedin",
-              state: 200,
-            };
-          }
-        })
-        .finally(() => {
-          console.log("Posted to LinkedIn");
-        })
-        .catch((error) => {
-          console.error(error);
         });
-    } catch (err) {
-      console.log("error", err);
+        console.log(data, "data from uploadMedia");
+        imageData.push({
+          status: "READY",
+          description: {
+            text: "",
+          },
+          media: data,
+          title: {
+            text: "",
+          },
+        });
+        console.log(imageData, "imageData");
+      }
     }
-  } else {
-    console.log("no profile id");
+    console.log(imageData, "imageData outside loop");
+    const data = {
+      author: `urn:li:person:${profileId}`,
+      lifecycleState: "PUBLISHED",
+      specificContent: {
+        "com.linkedin.ugc.ShareContent": {
+          shareCommentary: {
+            text: input.content,
+          },
+          shareMediaCategory: "IMAGE",
+          media: imageData,
+        },
+      },
+      visibility: {
+        "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
+      },
+    };
+    await axios
+      .post("https://api.linkedin.com/v2/ugcPosts", data, {
+        headers: {
+          "X-Restli-Protocol-Version": "2.0.0",
+          Authorization: `Bearer ${tokenData.accessToken}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          return {
+            success: true,
+            message: "posted to linkedin",
+            state: 200,
+          };
+        }
+      })
+      .finally(() => {
+        console.log("Posted to LinkedIn");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } catch (err) {
+    console.log("error", err);
   }
 };
 

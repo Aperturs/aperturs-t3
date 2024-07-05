@@ -81,7 +81,7 @@ export type FinalYoutubeContentType = z.infer<typeof finalYoutubeContentSchema>;
 export type youtubeContentType = z.infer<typeof youtubeContentSchema>;
 
 export const savePostInputSchema = z.object({
-  postContent: z.array(postSchema.omit({ files: true })),
+  postContent: z.array(postSchema.omit({ files: true, previewUrls: true })),
   scheduledTime: z.date().optional(),
   projectId: z.string().optional(),
   orgId: z.string().optional(),
