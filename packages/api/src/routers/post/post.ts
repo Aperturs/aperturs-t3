@@ -44,6 +44,7 @@ export const post = createTRPCRouter({
                   tweets: [
                     {
                       id: 0,
+                      mediaUrl: item.uploadedFiles,
                       text: item.content,
                     },
                   ],

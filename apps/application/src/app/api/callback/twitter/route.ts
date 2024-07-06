@@ -26,7 +26,7 @@ async function handler(req: NextRequest) {
   if (!userId) {
     // return res.status(400).send("You denied the app or your session expired!");
     return NextResponse.json(
-      { error: "You denied the app or your session expired!" },
+      { error: "You didn't signin, please signin" },
       { status: 400 },
     );
   }

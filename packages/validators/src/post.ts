@@ -136,6 +136,7 @@ export const postTweetInputSchema = z.object({
     z.object({
       id: z.number(),
       text: z.string(),
+      mediaUrl: z.array(z.string()).optional(),
     }),
   ),
 });
@@ -162,6 +163,19 @@ export enum SocialType {
 }
 
 export const SocialTypeSchema = z.nativeEnum(SocialType);
+
+export function getFileType(url: string): "image" | "video" | "unknown" {
+  const extension = url.split(".").pop()?.toUpperCase();
+  if (extension) {
+    if (allowedImageTypes.includes(extension)) {
+      return "image";
+    }
+    if (videoTypes.includes(extension)) {
+      return "video";
+    }
+  }
+  return "unknown";
+}
 
 // might use these types later
 

@@ -6,7 +6,7 @@ import axios from "axios";
 import type { tokens } from "@aperturs/db";
 import type { BasePostContentType } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
-import { allowedImageTypes, videoTypes } from "@aperturs/validators/post";
+import { getFileType } from "@aperturs/validators/post";
 
 interface LinkedInTokenDetails
   extends Pick<
@@ -157,18 +157,6 @@ export const postToLinkedin = async (
   }
 };
 
-function getFileType(url: string): "image" | "video" | "unknown" {
-  const extension = url.split(".").pop()?.toUpperCase();
-  if (extension) {
-    if (allowedImageTypes.includes(extension)) {
-      return "image";
-    }
-    if (videoTypes.includes(extension)) {
-      return "video";
-    }
-  }
-  return "unknown";
-}
 interface LinkedInImage {
   status: string;
   description: {
