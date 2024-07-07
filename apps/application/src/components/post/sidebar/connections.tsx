@@ -1,6 +1,6 @@
 import { shallow } from "zustand/shallow";
 
-import type { SocialType } from "@aperturs/validators/post";
+import type { PostContentType, SocialType } from "@aperturs/validators/post";
 import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
 
 import { useStore } from "~/store/post-store";
@@ -92,12 +92,26 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
             id,
             name,
             unique: false,
-            content: defaultContent?.content ?? "",
+            content:
+              type === ("TWITTER" as SocialType)
+                ? [
+                    {
+                      id: "0",
+                      content: defaultContent?.content ?? "",
+                      name: "",
+                      socialType: "TWITTER",
+                      unique: false,
+                      files: defaultContent?.files ?? [],
+                      uploadedFiles: defaultContent?.uploadedFiles ?? [],
+                      previewUrls: defaultContent?.previewUrls ?? [],
+                    },
+                  ]
+                : defaultContent?.content ?? "",
             files: defaultContent?.files ?? [],
             uploadedFiles: defaultContent?.uploadedFiles ?? [],
             previewUrls: defaultContent?.previewUrls ?? [],
           },
-        ];
+        ] as PostContentType[];
         console.log(newContent, "new content from connection");
         setContent(newContent);
       }

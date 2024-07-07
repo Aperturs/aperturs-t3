@@ -5,7 +5,7 @@ import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 
-import type { PostType } from "@aperturs/validators/post";
+import type { BasePostContentType, PostType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
 import {
@@ -26,6 +26,31 @@ interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   disabled?: boolean;
 }
+
+export const updateFirstTweet = (
+  content: BasePostContentType[],
+  id: string,
+) => {
+  const newContent = content.map((item) =>
+    item.id === id
+      ? {
+          ...item,
+          content: [
+            {
+              id: "0",
+              content: "",
+              files: [],
+              name: "",
+              socialType: "TWITTER",
+              unique: false,
+              uploadedFiles: [],
+              previewUrls: [],
+            },
+          ],
+        }
+      : item,
+  );
+};
 
 export const SimpleButton = ({
   text,

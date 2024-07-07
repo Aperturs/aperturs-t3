@@ -85,12 +85,11 @@ const MenuItems = ({
       });
     } else {
       setChecked(true);
-      console.log(content[0]?.content, "content");
+      console.log(content, "content old");
       updatedContent = content.map((item) => {
         if (item.id === id) {
           return {
             ...item,
-            content: content[0]?.content ?? "",
             unique: true,
           };
         }

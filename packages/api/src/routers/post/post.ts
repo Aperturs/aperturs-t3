@@ -6,7 +6,10 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { PostContentType } from "@aperturs/validators/post";
+import type {
+  BasePostContentType,
+  PostContentType,
+} from "@aperturs/validators/post";
 import { eq, schema } from "@aperturs/db";
 import { SocialType } from "@aperturs/validators/post";
 
@@ -41,13 +44,7 @@ export const post = createTRPCRouter({
               case `${SocialType.Twitter}`:
                 return await postToTwitter({
                   tokenId: item.id,
-                  tweets: [
-                    {
-                      id: 0,
-                      mediaUrl: item.uploadedFiles,
-                      text: item.content,
-                    },
-                  ],
+                  tweets: item.content as BasePostContentType[],
                 })
                   .then(() => {
                     console.log("Posted to Twitter");
@@ -61,7 +58,7 @@ export const post = createTRPCRouter({
                 console.log(item, "linkedin item");
                 return await postToLinkedin({
                   ...item,
-                  content: item.content,
+                  content: item.content as string,
                 }).catch((error) => {
                   console.error("Failed to post to LinkedIn", error);
                   throw Error("Failed to post to linkedin");

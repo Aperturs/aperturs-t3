@@ -5,6 +5,7 @@ import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import Youtube from "../content/youtube";
+import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
@@ -42,10 +43,14 @@ export default function SocialTabs() {
                 (item) =>
                   item.unique && (
                     <TabsContent key={item.id} value={item.id}>
-                      <ContentPostCard
-                        id={item.id}
-                        postType={item.socialType as SocialType}
-                      />
+                      {item.socialType === "TWITTER" ? (
+                        <TweetPost contentId={item.id} />
+                      ) : (
+                        <ContentPostCard
+                          id={item.id}
+                          postType={item.socialType as SocialType}
+                        />
+                      )}
                     </TabsContent>
                   ),
               )}

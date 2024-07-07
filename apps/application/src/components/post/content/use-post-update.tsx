@@ -21,14 +21,44 @@ function usePostUpdate(id: string) {
       if ((id as SocialType) === SocialType.Default) {
         const updatedContent = content.map((item) =>
           !item.unique || (item.socialType as SocialType) === SocialType.Default
-            ? { ...item, content: newContent }
+            ? {
+                ...item,
+                content:
+                  (item.socialType as SocialType) === SocialType.Twitter
+                    ? [
+                        {
+                          id: "0",
+                          content: newContent,
+                          files: [],
+                          name: "",
+                          socialType: "TWITTER",
+                          unique: false,
+                          uploadedFiles: [],
+                          previewUrls: [],
+                        },
+                      ]
+                    : newContent,
+              }
             : item,
         );
         console.log(updatedContent, id);
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, content: newContent } : item,
+          item.id === id
+            ? {
+                ...item,
+                content:
+                  item.socialType === "TWITTER"
+                    ? [
+                        {
+                          ...item,
+                          content: newContent,
+                        },
+                      ]
+                    : newContent,
+              }
+            : item,
         );
         setContent(updatedContent);
       }
@@ -111,7 +141,7 @@ function usePostUpdate(id: string) {
 
   const contentValue = useMemo(() => {
     return content.find((item) => item.id === id)?.content ?? "";
-  }, [id, content]);
+  }, [id, content]) as string;
 
   const currentFiles = useMemo(() => {
     return content.find((item) => item.id === id)?.uploadedFiles ?? [];

@@ -184,12 +184,12 @@ export const postToTwitter = async (input: PostTweetInput) => {
   try {
     if (input.tweets[0] && input.tweets.length > 0) {
       const mediaIds = await Promise.all(
-        input.tweets[0].mediaUrl?.map((url) =>
+        input.tweets[0].uploadedFiles?.map((url) =>
           uploadMedia(url, profile.profileId),
         ) ?? [],
       );
       const firstTweet = await client.tweets.createTweet({
-        text: input.tweets[0].text,
+        text: input.tweets[0].content,
         media: {
           media_ids: mediaIds,
         },
@@ -200,16 +200,16 @@ export const postToTwitter = async (input: PostTweetInput) => {
         // Loop through the rest of the tweets
         for (let i = 1; i < input.tweets.length; i++) {
           const tweet = input.tweets[i];
-          const mediaIds = tweet?.mediaUrl
+          const mediaIds = tweet?.uploadedFiles
             ? await Promise.all(
-                tweet.mediaUrl.map((url) =>
+                tweet.uploadedFiles.map((url) =>
                   uploadMedia(url, profile.profileId),
                 ),
               )
             : [];
           if (tweet) {
             const post = await client.tweets.createTweet({
-              text: tweet.text,
+              text: tweet.content,
               reply: {
                 in_reply_to_tweet_id: previousTweetId,
               },

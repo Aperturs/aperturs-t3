@@ -59,7 +59,7 @@ export const postSchema = z.object({
   name: z.string(),
   socialType: z.string(),
   unique: z.boolean(),
-  content: z.string(),
+  content: z.union([z.string(), z.array(basePostSchema)]),
   files: z.array(z.instanceof(File)).default([]),
   previewUrls: z.array(z.string()).default([]).optional(),
   uploadedFiles: z.array(z.string()),
@@ -132,13 +132,7 @@ export type SavePostInput = z.infer<typeof savePostInputSchema>;
 
 export const postTweetInputSchema = z.object({
   tokenId: z.string(),
-  tweets: z.array(
-    z.object({
-      id: z.number(),
-      text: z.string(),
-      mediaUrl: z.array(z.string()).optional(),
-    }),
-  ),
+  tweets: z.array(basePostSchema),
 });
 
 export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
