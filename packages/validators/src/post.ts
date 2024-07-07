@@ -9,13 +9,59 @@ export const postType = {
 export type PostType = (typeof postType)[keyof typeof postType];
 export const PostTypeSchema = z.nativeEnum(postType);
 
+export const basePostSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  socialType: z.string(),
+  unique: z.boolean(),
+  content: z.string(),
+  files: z.array(z.instanceof(File)).default([]),
+  previewUrls: z.array(z.string()).default([]).optional(),
+  uploadedFiles: z.array(z.string()),
+});
+
+export type BasePostContentType = z.infer<typeof basePostSchema>;
+
+export const videoTypes = [
+  "MP4",
+  "MOV",
+  // "AVI",
+  // "WMV",
+  // "VC1",
+  // "DVVIDEO",
+  // "QTRLE",
+  // "TSCC2",
+  // "MPEG",
+  // "MPEG2",
+  "MKV",
+  "WEBM",
+];
+export const allowedImageTypes = ["JPEG", "GIF", "PNG", "HEIC", "WEBP"];
+
+export const allowedImageMimeTypes = new Set([
+  "image/jpeg",
+  "image/gif",
+  "image/png",
+  "image/heic",
+  "image/webp",
+]);
+
+export const allowedVideoMimeTypes = new Set([
+  "video/mp4",
+  "video/quicktime", // For MOV
+  "video/x-matroska", // For MKV
+  "video/webm",
+]);
+
+// Define the complete schema including the recursive content field
 export const postSchema = z.object({
   id: z.string(),
   name: z.string(),
   socialType: z.string(),
-  content: z.string(),
   unique: z.boolean(),
+  content: z.string(),
   files: z.array(z.instanceof(File)).default([]),
+  previewUrls: z.array(z.string()).default([]).optional(),
   uploadedFiles: z.array(z.string()),
 });
 
@@ -50,7 +96,7 @@ export type FinalYoutubeContentType = z.infer<typeof finalYoutubeContentSchema>;
 export type youtubeContentType = z.infer<typeof youtubeContentSchema>;
 
 export const savePostInputSchema = z.object({
-  postContent: z.array(postSchema.omit({ files: true })),
+  postContent: z.array(postSchema.omit({ files: true, previewUrls: true })),
   scheduledTime: z.date().optional(),
   projectId: z.string().optional(),
   orgId: z.string().optional(),
@@ -90,6 +136,7 @@ export const postTweetInputSchema = z.object({
     z.object({
       id: z.number(),
       text: z.string(),
+      mediaUrl: z.array(z.string()).optional(),
     }),
   ),
 });
@@ -116,6 +163,19 @@ export enum SocialType {
 }
 
 export const SocialTypeSchema = z.nativeEnum(SocialType);
+
+export function getFileType(url: string): "image" | "video" | "unknown" {
+  const extension = url.split(".").pop()?.toUpperCase();
+  if (extension) {
+    if (allowedImageTypes.includes(extension)) {
+      return "image";
+    }
+    if (videoTypes.includes(extension)) {
+      return "video";
+    }
+  }
+  return "unknown";
+}
 
 // might use these types later
 

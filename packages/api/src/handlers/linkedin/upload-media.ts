@@ -5,10 +5,12 @@ import type {
   MediaAsset,
 } from "@aperturs/validators/linkedin";
 
-export const getUploadImageUrl = async ({
+export const getUploadFileUrl = async ({
+  isImage,
   token,
   ownerUrn,
 }: {
+  isImage: boolean;
   token: string;
   ownerUrn: string;
 }): Promise<LinkedinMediaUploadResponse> => {
@@ -17,7 +19,9 @@ export const getUploadImageUrl = async ({
       "https://api.linkedin.com/v2/assets?action=registerUpload",
       {
         registerUploadRequest: {
-          recipes: ["urn:li:digitalmediaRecipe:feedshare-image"],
+          recipes: [
+            `urn:li:digitalmediaRecipe:feedshare-${isImage ? "image" : "video"}`,
+          ],
           owner: `urn:li:person:${ownerUrn}`,
           serviceRelationships: [
             {
@@ -45,15 +49,18 @@ export const getUploadImageUrl = async ({
 export const uploadMedia = async ({
   authToken,
   media,
-  imageurl,
+  fileUrl,
+  isImage,
 }: {
   authToken: string;
   media: MediaAsset;
-  imageurl: string;
+  fileUrl: string;
+  isImage: boolean;
 }) => {
-  const imageUploadUrl = await getUploadImageUrl({
+  const imageUploadUrl = await getUploadFileUrl({
     ownerUrn: media.owner,
     token: authToken,
+    isImage: isImage,
   }).catch((error) => {
     console.log(error);
     throw new Error("Error getting image upload url");
@@ -63,7 +70,7 @@ export const uploadMedia = async ({
   try {
     const fileResponse = await axios({
       method: "get",
-      url: imageurl,
+      url: fileUrl,
       responseType: "stream",
     });
     const res = await axios
@@ -81,7 +88,7 @@ export const uploadMedia = async ({
         },
       )
       .catch((error) => {
-        console.log(error, "error");
+        console.log(error, "error uploading image");
         throw new Error("Error uploading image");
       });
 
@@ -91,6 +98,6 @@ export const uploadMedia = async ({
   } catch (error) {
     console.log("error from uploading");
     console.error(error);
-    throw new Error("Error uploading" + imageurl);
+    throw new Error("Error uploading" + fileUrl);
   }
 };

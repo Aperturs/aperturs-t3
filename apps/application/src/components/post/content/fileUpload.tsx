@@ -8,18 +8,29 @@ import { MdDelete } from "react-icons/md";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
-import { SocialType } from "@aperturs/validators/post";
+import {
+  allowedImageMimeTypes,
+  allowedImageTypes,
+  allowedVideoMimeTypes,
+  SocialType,
+} from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
   const fileExtension = url.split(".");
-  const keywords = ["jpg", "jpeg", "png", "gif", "bmp", "image", "unsplash"];
 
   // Check if any part of the file extension includes the keywords
-  return fileExtension.some((part) => keywords.includes(part.toLowerCase()));
+  return fileExtension.some((part) =>
+    allowedImageTypes.includes(part.toUpperCase()),
+  );
 }
+
+// Generate accept string
+const imageAcceptString = Array.from(allowedImageMimeTypes).join(",");
+const videoAcceptString = Array.from(allowedVideoMimeTypes).join(",");
+const acceptString = `${imageAcceptString},${videoAcceptString}`;
 
 export default function FileUpload({
   id,
@@ -31,30 +42,43 @@ export default function FileUpload({
   uploadedFiles: string[];
 }) {
   const { content } = useStore();
-  console.log(content, "files");
-  const filesThatBelongHere = content.map((post) => {
-    if (post.id === id) return post.files;
-  });
-
+  const filesThatBelongHere = content
+    .map((post) => {
+      if (post.id === id) return post.files;
+    })
+    .filter(Boolean)[0];
+  const previewUrlsBelongHere = content
+    .map((post) => {
+      if (post.id === id) return post.previewUrls;
+    })
+    .filter(Boolean)[0];
   const [selectedFiles, setSelectedFiles] = useState<File[]>(
-    filesThatBelongHere[0] ?? [],
+    filesThatBelongHere ?? [],
   );
-  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-
+  const [previewUrls, setPreviewUrls] = useState<string[]>(
+    previewUrlsBelongHere ?? [],
+  );
   const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
-
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (selectedFiles.length + uploadedFiles.length >= 4) {
         toast.error("Maximum 4 files allowed");
         return;
       }
-
       const files = event.target.files;
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
 
-        if (postType === SocialType.Linkedin) {
+        const contentContainNonUniqueLinkedin = content.some(
+          (post) =>
+            (post.socialType as SocialType) === SocialType.Linkedin &&
+            !post.unique,
+        );
+        ``;
+        if (
+          postType === SocialType.Linkedin ||
+          contentContainNonUniqueLinkedin
+        ) {
           const isImageSelected = selectedFiles.some((file) =>
             file.type.startsWith("image/"),
           );
@@ -86,19 +110,26 @@ export default function FileUpload({
           toast.error("Maximum file size is 30MB");
           return;
         }
-        setSelectedFiles([...selectedFiles, ...newFiles]);
+        const newSelectedFiles = [...selectedFiles, ...newFiles];
+        setSelectedFiles(newSelectedFiles);
         const newPreviewUrls = newFiles.map((file) => {
           const url = URL.createObjectURL(file);
           return url;
         });
-        void Promise.all(newPreviewUrls).then((urls) => {
-          setPreviewUrls([...previewUrls, ...urls]);
-        });
-        updateFiles(newFiles);
+        const allURls = [...previewUrls, ...newPreviewUrls];
+        setPreviewUrls(allURls);
+        updateFiles(newSelectedFiles, allURls);
       }
     },
 
-    [postType, previewUrls, selectedFiles, updateFiles, uploadedFiles.length],
+    [
+      content,
+      postType,
+      previewUrls,
+      selectedFiles,
+      updateFiles,
+      uploadedFiles.length,
+    ],
   );
 
   const inputId = `fileInput${id}`;
@@ -179,7 +210,7 @@ export default function FileUpload({
             id={inputId}
             className="hidden w-8"
             onChange={handleFileChange}
-            accept="image/*,video/*"
+            accept={acceptString}
           />
         </label>
       </ToolTipSimple>

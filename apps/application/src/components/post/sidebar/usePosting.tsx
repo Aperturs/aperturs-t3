@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
 import type { UpdateYoutubePostInput } from "@aperturs/validators/post";
-import { SocialType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
@@ -65,6 +64,11 @@ export default function usePublishing({ id }: { id: string }) {
 
   const { mutateAsync: saveYoutubePost, isPending: savingYoutube } =
     api.savepost.saveYoutubePost.useMutation();
+  const {
+    mutateAsync: postByPostId,
+    isPending: postByPostIdPending,
+    data: postByPostIdData,
+  } = api.post.postByPostId.useMutation();
 
   const { mutateAsync: postToYoutube, isPending: postingToYoutube } =
     api.youtube.postToYoutube.useMutation();
@@ -108,65 +112,89 @@ export default function usePublishing({ id }: { id: string }) {
 
   const handlePublish = async () => {
     // Array to store all promises
-    const promises = content.map(async (item) => {
-      switch (item.socialType) {
-        case `${SocialType.Twitter}`:
-          setLoading(true);
-          await toast.promise(
-            createTweet({
-              tokenId: item.id,
-              tweets: [
-                {
-                  id: 0,
-                  text: item.content,
-                },
-              ],
-            }),
-            {
-              loading: "Posting to Twitter...",
-              success: "Posted to Twitter",
-              error: "Failed to post to Twitter",
-            },
-          );
-          setLoading(false);
-          break;
-        case `${SocialType.Linkedin}`:
-          setLoading(true);
-          await toast.promise(
-            createLinkedinPost({
-              tokenId: item.id,
-              content: item.content,
-            }),
-            {
-              loading: "Posting to LinkedIn...",
-              success: "Posted to LinkedIn",
-              error: "Failed to post to LinkedIn",
-            },
-          );
-          setLoading(false);
-          break;
-        case `${SocialType.Youtube}`:
-          console.log("hey brooo");
-          setLoading(true);
-          await toast.promise(handlePostYoutube(), {
-            loading: "Posting to Youtube...",
-            success:
-              "Background processing started for Youtube post, it will be posted soon.",
-            error: (err) => `Failed to post to Youtube ${err}`,
-          });
-          setLoading(false);
-          break;
-        default:
-          console.log("hey brooo");
-      }
-    });
-    // Wait for all promises to resolve
-    await Promise.all(promises);
+    // const promises = content.map(async (item) => {
+    //   switch (item.socialType) {
+    //     case `${SocialType.Twitter}`:
+    //       setLoading(true);
+    //       await toast.promise(
+    //         createTweet({
+    //           tokenId: item.id,
+    //           tweets: [
+    //             {
+    //               id: 0,
+    //               text: item.content,
+    //             },
+    //           ],
+    //         }),
+    //         {
+    //           loading: "Posting to Twitter...",
+    //           success: "Posted to Twitter",
+    //           error: "Failed to post to Twitter",
+    //         },
+    //       );
+    //       setLoading(false);
+    //       break;
+    //     case `${SocialType.Linkedin}`:
+    //       setLoading(true);
+    //       await toast.promise(
+    //         createLinkedinPost(item),
+    //         {
+    //           loading: "Posting to LinkedIn...",
+    //           success: "Posted to LinkedIn",
+    //           error: "Failed to post to LinkedIn",
+    //         },
+    //       );
+    //       setLoading(false);
+    //       break;
+    //     case `${SocialType.Youtube}`:
+    //       console.log("hey brooo");
+    //       setLoading(true);
+    //       await toast.promise(handlePostYoutube(), {
+    //         loading: "Posting to Youtube...",
+    //         success:
+    //           "Background processing started for Youtube post, it will be posted soon.",
+    //         error: (err) => `Failed to post to Youtube ${err}`,
+    //       });
+    //       setLoading(false);
+    //       break;
+    //     default:
+    //       console.log("hey brooo");
+    //   }
+    // });
+    // // Wait for all promises to resolve
+    // await Promise.all(promises);
 
-    // After all promises are resolved
-    if (!twitterError || !linkedinError || loading) {
-      reset();
+    // // After all promises are resolved
+    // if (!twitterError || !linkedinError || loading) {
+    //   reset();
+    // }
+    setLoading(true);
+    if (postType === "LONG_VIDEO") {
+      await toast.promise(handlePostYoutube(), {
+        loading: "Posting to Youtube...",
+        success:
+          "Background processing started for Youtube post, it will be posted soon.",
+        error: (err) => `Failed to post to Youtube ${err}`,
+      });
+      setLoading(false);
+      return;
     }
+
+    const postId = await handleSavePost({ isScheduling: false });
+    if (!postId) {
+      toast.error("post id is not available");
+      return;
+    }
+    await toast
+      .promise(postByPostId({ postId }), {
+        loading: "Posting to your socials...",
+        success: "Posted to your socials",
+        error: "Failed to post to social media",
+      })
+      .then(() => {
+        reset();
+        redirect("post");
+      });
     redirect("post");
   };
 
@@ -281,7 +309,6 @@ export default function usePublishing({ id }: { id: string }) {
       return await handleSavePost({ isScheduling });
     }
     if (postType === "LONG_VIDEO") {
-      console.log("here");
       return await handleSaveYoutube();
     }
   };

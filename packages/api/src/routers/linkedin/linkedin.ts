@@ -5,7 +5,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { db, schema, tokens } from "@aperturs/db";
-import { postToLinkedInInputSchema } from "@aperturs/validators/post";
+import { basePostSchema } from "@aperturs/validators/post";
 import { SocialRedisKeySchema } from "@aperturs/validators/socials";
 
 import { env } from "../../../env";
@@ -14,7 +14,7 @@ import { createTRPCRouter, protectedProcedure } from "../../trpc";
 
 export const linkedin = createTRPCRouter({
   postToLinkedin: protectedProcedure
-    .input(postToLinkedInInputSchema)
+    .input(basePostSchema.omit({ files: true, previewUrls: true }))
     .mutation(async ({ input }) => {
       try {
         await postToLinkedin(input);

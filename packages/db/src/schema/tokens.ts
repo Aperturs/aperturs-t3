@@ -198,6 +198,11 @@ export const twitterToken = pgTable(
       twitterAccountPerOrg: unique("TwitterToken_Unique_ProfilePerApp").on(
         table.clientId,
         table.profileId,
+        table.organizationId,
+      ),
+      twitterAccountPerUser: unique("TwitterToken_Unique_ProfilePerUser").on(
+        table.clerkUserId,
+        table.profileId,
       ),
     };
   },
