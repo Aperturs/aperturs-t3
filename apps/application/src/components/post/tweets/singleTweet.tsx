@@ -17,7 +17,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
   onAdd,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [count, setCount] = React.useState(280);
+  const [count, setCount] = React.useState(280 - text.length);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
