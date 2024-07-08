@@ -107,7 +107,7 @@ function usePostUpdate(id: string) {
   );
 
   const removeFiles = useCallback(
-    (index: number) => {
+    (index: number, tweetId?: string) => {
       if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
           !item.unique ||
@@ -123,18 +123,36 @@ function usePostUpdate(id: string) {
         console.log(updatedContent, "from removeFiles");
         setContent(updatedContent);
       } else {
-        const updatedContent = content.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                files: item.files.filter((_, i) => i !== index) || [],
-                previewUrls:
-                  item.previewUrls?.filter((_, i) => i !== index) ?? [],
-              }
-            : item,
-        );
-        console.log(updatedContent, "from removeFiles");
-        setContent(updatedContent);
+        if (tweetId) {
+          const tweets = tweetsHere(content, id);
+          const updatedTweets = tweets?.map((tweet) =>
+            tweet.id === tweetId
+              ? {
+                  ...tweet,
+                  files: tweet.files.filter((_, i) => i !== index) || [],
+                  previewUrls:
+                    tweet.previewUrls?.filter((_, i) => i !== index) ?? [],
+                }
+              : tweet,
+          );
+          const updatedContent = content.map((item) =>
+            item.id === id ? { ...item, content: updatedTweets ?? "" } : item,
+          );
+          setContent(updatedContent);
+        } else {
+          const updatedContent = content.map((item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  files: item.files.filter((_, i) => i !== index) || [],
+                  previewUrls:
+                    item.previewUrls?.filter((_, i) => i !== index) ?? [],
+                }
+              : item,
+          );
+          console.log(updatedContent, "from removeFiles");
+          setContent(updatedContent);
+        }
       }
     },
     [content, id, setContent],

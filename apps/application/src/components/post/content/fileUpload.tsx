@@ -154,7 +154,7 @@ export default function FileUpload({
     const newPreviewUrls = [...previewUrls];
     newPreviewUrls.splice(index, 1);
     setPreviewUrls(newPreviewUrls);
-    removeFiles(index);
+    removeFiles(index, tweetId);
   };
 
   // const removeFromUploaded = (url: string) => {
