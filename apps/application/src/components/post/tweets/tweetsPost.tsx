@@ -6,6 +6,8 @@ import { Card } from "@aperturs/ui/card";
 
 import { useDebounce } from "~/hooks/useDebounce";
 import { useStore } from "~/store/post-store";
+import { tweetsHere } from "../common";
+import FileUpload from "../content/fileUpload";
 import SingleTweet from "./singleTweet";
 
 function TweetPost({ contentId }: { contentId: string }) {
@@ -20,9 +22,9 @@ function TweetPost({ contentId }: { contentId: string }) {
     shallow,
   );
 
-  const tweetsHere = content.find((item) => item.id === contentId)
-    ?.content as BasePostContentType[];
-  const [tweets, setTweets] = useState(tweetsHere);
+  const tweetsAll = tweetsHere(content, contentId);
+
+  const [tweets, setTweets] = useState(tweetsAll);
 
   const debouncedTweet = useDebounce(tweets, 1000);
 
@@ -94,6 +96,13 @@ function TweetPost({ contentId }: { contentId: string }) {
               onChange={handleTweetChange}
               onRemove={handleRemoveTweet}
               onAdd={handleAddTweet}
+            />
+            <FileUpload
+              id={contentId}
+              postType="TWITTER"
+              uploadedFiles={tweet.uploadedFiles}
+              key={tweet.id}
+              tweetId={tweet.id}
             />
           </>
         ))}

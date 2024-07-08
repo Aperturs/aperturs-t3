@@ -7,6 +7,7 @@ import { shallow } from "zustand/shallow";
 
 import type {
   BasePostContentType,
+  PostContentType,
   PostType,
   SocialType,
 } from "@aperturs/validators/post";
@@ -31,29 +32,9 @@ interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
 }
 
-export const updateFirstTweet = (
-  content: BasePostContentType[],
-  id: string,
-) => {
-  const newContent = content.map((item) =>
-    item.id === id
-      ? {
-          ...item,
-          content: [
-            {
-              id: "0",
-              content: "",
-              files: [],
-              name: "",
-              socialType: "TWITTER",
-              unique: false,
-              uploadedFiles: [],
-              previewUrls: [],
-            },
-          ],
-        }
-      : item,
-  );
+export const tweetsHere = (content: PostContentType[], id: string) => {
+  return content.find((item) => item.id === id)
+    ?.content as BasePostContentType[];
 };
 
 export const SimpleButton = ({

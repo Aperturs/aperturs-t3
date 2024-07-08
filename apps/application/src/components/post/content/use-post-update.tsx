@@ -5,6 +5,7 @@ import type { SocialType } from "@aperturs/validators/post";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
+import { tweetsHere } from "../common";
 
 function usePostUpdate(id: string) {
   const { setContent, content } = useStore(
@@ -69,7 +70,7 @@ function usePostUpdate(id: string) {
   );
 
   const updateFiles = useCallback(
-    (newFiles: File[], previewUrls: string[]) => {
+    (newFiles: File[], previewUrls: string[], tweetId?: string) => {
       console.log(newFiles, "from updateFiles");
       if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
@@ -82,10 +83,23 @@ function usePostUpdate(id: string) {
         console.log(updatedContent, "updated");
         setContent(updatedContent);
       } else {
-        const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, files: newFiles, previewUrls } : item,
-        );
-        setContent(updatedContent);
+        if (tweetId) {
+          const tweets = tweetsHere(content, id);
+          const updatedTweets = tweets?.map((tweet) =>
+            tweet.id === tweetId
+              ? { ...tweet, files: newFiles, previewUrls }
+              : tweet,
+          );
+          const updatedContent = content.map((item) =>
+            item.id === id ? { ...item, content: updatedTweets ?? "" } : item,
+          );
+          setContent(updatedContent);
+        } else {
+          const updatedContent = content.map((item) =>
+            item.id === id ? { ...item, files: newFiles, previewUrls } : item,
+          );
+          setContent(updatedContent);
+        }
       }
       console.log(content, "from updateFiles");
     },
