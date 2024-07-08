@@ -1,5 +1,6 @@
+import type { SocialType } from "@aperturs/validators/post";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
@@ -19,7 +20,7 @@ export default function SocialTabs() {
       {postType === "NORMAL" && (
         <>
           {content.length > 2 ? (
-            <Tabs defaultValue={SocialType.Default}>
+            <Tabs defaultValue={SocialTypes.DEFAULT}>
               <TabsList>
                 {content.map(
                   (item) =>
@@ -57,8 +58,8 @@ export default function SocialTabs() {
             </Tabs>
           ) : (
             <ContentPostCard
-              id={SocialType.Default}
-              postType={SocialType.Default}
+              id={"DEFAULT" as SocialType}
+              postType={"DEFAULT"}
             />
           )}
         </>

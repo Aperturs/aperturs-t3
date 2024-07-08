@@ -5,7 +5,11 @@ import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 
-import type { BasePostContentType, PostType } from "@aperturs/validators/post";
+import type {
+  BasePostContentType,
+  PostType,
+  SocialType,
+} from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
 import {
@@ -17,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@aperturs/ui/select";
-import { postType, SocialType } from "@aperturs/validators/post";
+import { postType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 
@@ -83,13 +87,13 @@ const sizeClasses = {
 export const SocialIcon = ({ type, className, size }: SocialIconProps) => {
   const sizeClass = size ? sizeClasses[size] : "";
 
-  if (type === SocialType.Twitter) {
+  if (type === "TWITTER") {
     return <AiOutlineTwitter className={cn("h-3 w-3", className, sizeClass)} />;
-  } else if (type === SocialType.Linkedin) {
+  } else if (type === "LINKEDIN") {
     return <FaLinkedinIn className={cn("h-3 w-3", className, sizeClass)} />;
-  } else if (type === SocialType.Youtube) {
+  } else if (type === "YOUTUBE") {
     return <AiFillYoutube className={cn("h-3 w-3", className, sizeClass)} />;
-  } else if (type === SocialType.Lens) {
+  } else if (type === "LENS") {
     return <Image src="/lens.svg" width={30} height={30} alt="lens" />;
   } else {
     return null; // Return null or a default icon for other types

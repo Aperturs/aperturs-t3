@@ -4,7 +4,6 @@ import { removeYoutubeDataFromDatabase } from "@api/handlers/youtube/main";
 import { getAccounts } from "@api/helpers/get-socials";
 import { z } from "zod";
 
-import type { SocialType } from "@aperturs/validators/post";
 import { createUniqueIds, eq, schema } from "@aperturs/db";
 import { SocialTypeSchema } from "@aperturs/validators/post";
 import { UniqueIdsSchema } from "@aperturs/validators/user";
@@ -72,17 +71,17 @@ export const userRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      if (input.socialType === ("TWITTER" as SocialType)) {
+      if (input.socialType === "TWITTER") {
         await removeTwitterDataFromDatabase({
           tokenId: input.tokenId,
           userId: ctx.currentUser,
         });
-      } else if (input.socialType === ("LINKEDIN" as SocialType)) {
+      } else if (input.socialType === "LINKEDIN") {
         await removeLinkedinDataFromDatabase({
           tokenId: input.tokenId,
           userId: ctx.currentUser,
         });
-      } else if (input.socialType === ("YOUTUBE" as SocialType)) {
+      } else if (input.socialType === "YOUTUBE") {
         await removeYoutubeDataFromDatabase({
           tokenId: input.tokenId,
           userId: ctx.currentUser,

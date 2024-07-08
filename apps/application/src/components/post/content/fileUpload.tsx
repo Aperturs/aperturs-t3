@@ -6,13 +6,14 @@ import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 import {
   allowedImageMimeTypes,
   allowedImageTypes,
   allowedVideoMimeTypes,
-  SocialType,
+  SocialTypes,
 } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
@@ -70,13 +71,11 @@ export default function FileUpload({
         const newFiles = Array.from(files);
 
         const contentContainNonUniqueLinkedin = content.some(
-          (post) =>
-            (post.socialType as SocialType) === SocialType.Linkedin &&
-            !post.unique,
+          (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
         );
         ``;
         if (
-          postType === SocialType.Linkedin ||
+          postType === SocialTypes.LINKEDIN ||
           contentContainNonUniqueLinkedin
         ) {
           const isImageSelected = selectedFiles.some((file) =>

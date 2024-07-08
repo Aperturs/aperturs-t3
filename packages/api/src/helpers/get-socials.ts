@@ -1,6 +1,6 @@
 import type { tokens } from "@aperturs/db";
 import type { SocialAccountsBackend } from "@aperturs/validators/user";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { getTwitterAccountDetails } from "./twitter";
 
@@ -30,7 +30,7 @@ export async function getAccounts(
           username: twitterDetail.username,
           connectedAt: twitterDetail.createdAt.toLocaleDateString(),
         },
-        type: SocialType.Twitter,
+        type: SocialTypes.TWITTER,
       });
     }
   }
@@ -44,7 +44,7 @@ export async function getAccounts(
       linkedinDetail.profileId
     ) {
       accounts.push({
-        type: SocialType.Linkedin,
+        type: SocialTypes.LINKEDIN,
         data: {
           tokenId: linkedinDetail.id,
           name: linkedinDetail.fullName,
@@ -63,7 +63,7 @@ export async function getAccounts(
       youtubeDetail.channelId
     ) {
       accounts.push({
-        type: SocialType.Youtube,
+        type: SocialTypes.YOUTUBE,
         data: {
           tokenId: youtubeDetail.id,
           name: youtubeDetail.channelName,

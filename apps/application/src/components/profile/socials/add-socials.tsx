@@ -5,10 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@aperturs/ui/dialog";
 import { SocialAdd } from "@aperturs/ui/icons";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import {
   handleInstagramRedirect,
@@ -17,11 +18,11 @@ import {
 } from "~/utils/actions/handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
-  if (type === SocialType.Twitter) {
+  if (type === SocialTypes.TWITTER) {
     return <AiOutlineTwitter className="text-2xl dark:text-white" />;
-  } else if (type === SocialType.Linkedin) {
+  } else if (type === SocialTypes.LINKEDIN) {
     return <FaLinkedinIn className="text-2xl dark:text-white" />;
-  } else if (type === SocialType.Github) {
+  } else if (type === SocialTypes.GITHUB) {
     return <FaGithub className="text-2xl dark:text-white" />;
   } else {
     return null; // Return null or a default icon for other types

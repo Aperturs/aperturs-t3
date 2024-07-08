@@ -9,9 +9,9 @@ import { z } from "zod";
 import type {
   BasePostContentType,
   PostContentType,
+  SocialType,
 } from "@aperturs/validators/post";
 import { eq, schema } from "@aperturs/db";
-import { SocialType } from "@aperturs/validators/post";
 
 import { env } from "../../../env";
 import { postToLinkedin } from "../../helpers/linkedln";
@@ -39,9 +39,9 @@ export const post = createTRPCRouter({
           const content = post.content as PostContentType[];
           const promises = content.map(async (item) => {
             switch (item.socialType) {
-              case `${SocialType.Default}`:
+              case `${"DEFAULT" as SocialType}`:
                 return;
-              case `${SocialType.Twitter}`:
+              case `${"TWITTER" as SocialType}`:
                 return await postToTwitter({
                   tokenId: item.id,
                   tweets: item.content as BasePostContentType[],
@@ -54,7 +54,7 @@ export const post = createTRPCRouter({
                     throw Error("Failed to post to Twitter");
                   });
 
-              case `${SocialType.Linkedin}`:
+              case `${"LINKEDIN" as SocialType}`:
                 console.log(item, "linkedin item");
                 return await postToLinkedin({
                   ...item,

@@ -1,5 +1,5 @@
 import type { SocialAccountsBackend } from "@aperturs/validators/user";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import ConnectedAccount from "./connections";
@@ -9,8 +9,8 @@ export default function ConnectedAccounts({
 }: {
   data: SocialAccountsBackend | undefined;
 }) {
-  const { posttype } = useStore((state) => ({
-    posttype: state.postType,
+  const { postType } = useStore((state) => ({
+    postType: state.postType,
   }));
 
   const filterConnectedAccounts = (
@@ -18,24 +18,24 @@ export default function ConnectedAccounts({
   ): SocialAccountsBackend => {
     if (!connectedAccounts) return [];
 
-    switch (posttype) {
+    switch (postType) {
       case "LONG_VIDEO":
         return connectedAccounts.filter(
-          (item) => item.type === SocialType.Youtube,
+          (item) => item.type === SocialTypes.YOUTUBE,
         );
       case "SHORT":
         return connectedAccounts.filter(
           (item) =>
-            item.type === SocialType.Youtube ||
-            item.type === SocialType.Instagram,
+            item.type === SocialTypes.YOUTUBE ||
+            item.type === SocialTypes.INSTAGRAM,
         );
       case "NORMAL":
         return connectedAccounts.filter(
           (item) =>
-            item.type === SocialType.Linkedin ||
-            item.type === SocialType.Instagram ||
-            item.type === SocialType.Twitter ||
-            item.type === SocialType.Facebook,
+            item.type === SocialTypes.LINKEDIN ||
+            item.type === SocialTypes.INSTAGRAM ||
+            item.type === SocialTypes.TWITTER ||
+            item.type === SocialTypes.FACEBOOK,
         );
       default:
         return [];

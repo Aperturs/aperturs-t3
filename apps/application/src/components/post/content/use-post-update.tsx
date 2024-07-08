@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
-import { SocialType } from "@aperturs/validators/post";
+import type { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 
@@ -18,13 +19,13 @@ function usePostUpdate(id: string) {
 
   const updateContent = useCallback(
     (newContent: string) => {
-      if ((id as SocialType) === SocialType.Default) {
+      if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
-          !item.unique || (item.socialType as SocialType) === SocialType.Default
+          !item.unique || item.socialType === SocialTypes.DEFAULT
             ? {
                 ...item,
                 content:
-                  (item.socialType as SocialType) === SocialType.Twitter
+                  item.socialType === SocialTypes.TWITTER
                     ? [
                         {
                           id: "0",
@@ -70,11 +71,11 @@ function usePostUpdate(id: string) {
   const updateFiles = useCallback(
     (newFiles: File[], previewUrls: string[]) => {
       console.log(newFiles, "from updateFiles");
-      if ((id as SocialType) === SocialType.Default) {
+      if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
           !item.unique
             ? { ...item, files: newFiles, previewUrls }
-            : (item.id as SocialType) === SocialType.Default
+            : (item.id as SocialType) === SocialTypes.DEFAULT
               ? { ...item, files: newFiles, previewUrls }
               : item,
         );
@@ -93,9 +94,10 @@ function usePostUpdate(id: string) {
 
   const removeFiles = useCallback(
     (index: number) => {
-      if ((id as SocialType) === SocialType.Default) {
+      if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
-          !item.unique || (item.socialType as SocialType) === SocialType.Default
+          !item.unique ||
+          (item.socialType as SocialType) === SocialTypes.DEFAULT
             ? {
                 ...item,
                 files: item.files.filter((_, i) => i !== index) || [],

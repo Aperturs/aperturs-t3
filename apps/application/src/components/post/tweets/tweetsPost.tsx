@@ -86,14 +86,16 @@ function TweetPost({ contentId }: { contentId: string }) {
     <Card className="p-4">
       <div>
         {tweets.map((tweet) => (
-          <SingleTweet
-            key={tweet.id}
-            id={parseInt(tweet.id)}
-            text={tweet.content}
-            onChange={handleTweetChange}
-            onRemove={handleRemoveTweet}
-            onAdd={handleAddTweet}
-          />
+          <>
+            <SingleTweet
+              key={tweet.id}
+              id={parseInt(tweet.id)}
+              text={tweet.content}
+              onChange={handleTweetChange}
+              onRemove={handleRemoveTweet}
+              onAdd={handleAddTweet}
+            />
+          </>
         ))}
         {/* <button
           className="rounded-full bg-accent px-4 py-2 text-white"

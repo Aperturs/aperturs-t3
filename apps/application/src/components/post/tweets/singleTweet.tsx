@@ -45,7 +45,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
       <div className="flex items-center  justify-end">
         <span
           className={`${
-            count > 0 ? "text-accent" : "text-red-600"
+            count > 0 ? "text-muted-foreground" : "text-red-600"
           } mr-2 text-sm`}
         >
           {count}
