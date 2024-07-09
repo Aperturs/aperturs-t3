@@ -1,8 +1,14 @@
-import type { SocialType } from "@aperturs/validators/post";
+import type {
+  BasePostContentType,
+  PostContentType,
+  SocialType,
+} from "@aperturs/validators/post";
+import { Button } from "@aperturs/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
+import { api } from "~/trpc/react";
 import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import Youtube from "../content/youtube";
@@ -10,10 +16,13 @@ import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
-  const { content, postType } = useStore((state) => ({
+  const { content, postType, setContent } = useStore((state) => ({
     content: state.content,
     postType: state.postType,
+    setContent: state.setContent,
   }));
+
+  const { mutateAsync } = api.post.generate.useMutation();
 
   return (
     <div className="w-full">
@@ -65,6 +74,38 @@ export default function SocialTabs() {
         </>
       )}
       {postType === "LONG_VIDEO" && <Youtube />}
+      <Button
+        onClick={async () => {
+          const result = await mutateAsync({
+            idea: content[0] ? (content[0].content as string) : "",
+          });
+          console.log(result, "ai generated");
+          console.log(content, "old content");
+          const newContent = content.map((item) => {
+            if (item.socialType === "LINKEDIN")
+              return { ...item, unique: true, content: result.object.linkedin };
+            if (item.socialType === "TWITTER")
+              return {
+                ...item,
+                unique: true,
+                content: result.object.twitter.map((tweet, index) => ({
+                  id: index.toString(),
+                  name: item.name,
+                  socialType: SocialTypes.TWITTER,
+                  unique: true,
+                  files: [],
+                  uploadedFiles: [],
+                  content: tweet,
+                })),
+              };
+            else return item;
+          });
+          console.log(newContent, "new content");
+          setContent(newContent);
+        }}
+      >
+        Repurpose
+      </Button>
     </div>
   );
 }

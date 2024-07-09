@@ -139,4 +139,34 @@ export const post = createTRPCRouter({
         };
       }
     }),
+
+  generate: protectedProcedure
+    .input(
+      z.object({
+        idea: z.string(),
+      }),
+    )
+    .mutation(() => {
+      return {
+        object: {
+          linkedin:
+            "Manifest and get to $100,000 (This guy is selling the dream😂) Hear out the crazy story of \"This world is a simulation\". Lately, I have been researching on building communities and was looking at some paid communities on SKOOL. While browsing, I found something interesting: there's a paid community for everything. So then I came across a community called \"This world is a simulation\". It was charging $55/month and had 644 members. That's nearly $350,000 in annual revenue. What is the community about? Manifesting! True, I'm not kidding. It's just about manifesting - How to Win the Lottery - How to Manifest $10,000 & $100,000 - How to Manifest $3 Million dollars - How to Manifest Your SP (Don't even know what that means). Crazy to see how people are spending their money. Maybe there's a lesson here for us all. If a community centered around manifesting can generate $350,000 a year, anyone can start a community, specialize in their niche, and provide real value.",
+          twitter: [
+            'Manifest and get to $100,000 (This guy is selling the dream😂) Hear out the crazy story of "This world is a simulation". Lately, I have been researching on building communities and was looking at some paid communities on SKOOL.',
+            'While browsing, I found something interesting: there\'s a paid community for everything. So then I came across a community called "This world is a simulation". It was charging $55/month and had 644 members.',
+            "That's nearly $350,000 in annual revenue. What is the community about? Manifesting! True, I'm not kidding. It's just about manifesting - How to Win the Lottery - How to Manifest $10,000 & $100,000 - How to Manifest $3 Million dollars - How to Manifest Your SP (Don't even know what that means).",
+            "Crazy to see how people are spending their money. Maybe there's a lesson here for us all. If a community centered around manifesting can generate $350,000 a year, anyone can start a community, specialize in their niche, and provide real value.",
+          ],
+        },
+        finishReason: "stop",
+        usage: {
+          promptTokens: 355,
+          completionTokens: 442,
+          totalTokens: 797,
+        },
+        warnings: [],
+      };
+
+      // await generateSocialMediaPost(input.idea);
+    }),
 });
