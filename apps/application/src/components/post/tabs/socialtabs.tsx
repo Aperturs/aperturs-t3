@@ -1,15 +1,10 @@
-import type {
-  BasePostContentType,
-  PostContentType,
-  SocialType,
-} from "@aperturs/validators/post";
-import { Button } from "@aperturs/ui/button";
+import type { SocialType } from "@aperturs/validators/post";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
-import { SocialIcon } from "../common";
+import { SimpleButton, SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import Youtube from "../content/youtube";
 import TweetPost from "../tweets/tweetsPost";
@@ -22,7 +17,7 @@ export default function SocialTabs() {
     setContent: state.setContent,
   }));
 
-  const { mutateAsync } = api.post.generate.useMutation();
+  const { mutateAsync, isPending } = api.post.generate.useMutation();
 
   return (
     <div className="w-full">
@@ -74,7 +69,7 @@ export default function SocialTabs() {
         </>
       )}
       {postType === "LONG_VIDEO" && <Youtube />}
-      <Button
+      <SimpleButton
         onClick={async () => {
           const result = await mutateAsync({
             idea: content[0] ? (content[0].content as string) : "",
@@ -103,9 +98,10 @@ export default function SocialTabs() {
           console.log(newContent, "new content");
           setContent(newContent);
         }}
-      >
-        Repurpose
-      </Button>
+        disabled={isPending}
+        isLoading={isPending}
+        text="Repurpose Content"
+      />
     </div>
   );
 }
