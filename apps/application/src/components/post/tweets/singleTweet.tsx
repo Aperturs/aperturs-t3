@@ -17,7 +17,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
   onAdd,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [count, setCount] = React.useState(280);
+  const [count, setCount] = React.useState(280 - text.length);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
@@ -45,7 +45,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
       <div className="flex items-center  justify-end">
         <span
           className={`${
-            count > 0 ? "text-accent" : "text-red-600"
+            count > 0 ? "text-muted-foreground" : "text-red-600"
           } mr-2 text-sm`}
         >
           {count}

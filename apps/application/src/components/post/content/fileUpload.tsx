@@ -6,16 +6,18 @@ import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 import {
   allowedImageMimeTypes,
   allowedImageTypes,
   allowedVideoMimeTypes,
-  SocialType,
+  SocialTypes,
 } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
+import { tweetsHere } from "../common";
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
@@ -36,22 +38,36 @@ export default function FileUpload({
   id,
   uploadedFiles,
   postType,
+  tweetId,
 }: {
   id: string;
   postType: SocialType;
   uploadedFiles: string[];
+  tweetId?: string;
 }) {
   const { content } = useStore();
-  const filesThatBelongHere = content
-    .map((post) => {
-      if (post.id === id) return post.files;
-    })
-    .filter(Boolean)[0];
-  const previewUrlsBelongHere = content
-    .map((post) => {
-      if (post.id === id) return post.previewUrls;
-    })
-    .filter(Boolean)[0];
+
+  const tweets = tweetsHere(content, id);
+  const filesThatBelongHere =
+    postType === "TWITTER"
+      ? tweets?.filter((tweet) => {
+          return tweet.id === tweetId;
+        })[0]?.files
+      : content
+          .map((post) => {
+            if (post.id === id) return post.files;
+          })
+          .filter(Boolean)[0];
+  const previewUrlsBelongHere =
+    postType === "TWITTER"
+      ? tweets?.filter((tweet) => {
+          return tweet.id === tweetId;
+        })[0]?.previewUrls
+      : content
+          .map((post) => {
+            if (post.id === id) return post.previewUrls;
+          })
+          .filter(Boolean)[0];
   const [selectedFiles, setSelectedFiles] = useState<File[]>(
     filesThatBelongHere ?? [],
   );
@@ -68,15 +84,11 @@ export default function FileUpload({
       const files = event.target.files;
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
-
         const contentContainNonUniqueLinkedin = content.some(
-          (post) =>
-            (post.socialType as SocialType) === SocialType.Linkedin &&
-            !post.unique,
+          (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
         );
-        ``;
         if (
-          postType === SocialType.Linkedin ||
+          postType === SocialTypes.LINKEDIN ||
           contentContainNonUniqueLinkedin
         ) {
           const isImageSelected = selectedFiles.some((file) =>
@@ -118,7 +130,7 @@ export default function FileUpload({
         });
         const allURls = [...previewUrls, ...newPreviewUrls];
         setPreviewUrls(allURls);
-        updateFiles(newSelectedFiles, allURls);
+        updateFiles(newSelectedFiles, allURls, tweetId);
       }
     },
 
@@ -129,10 +141,11 @@ export default function FileUpload({
       selectedFiles,
       updateFiles,
       uploadedFiles.length,
+      tweetId,
     ],
   );
 
-  const inputId = `fileInput${id}`;
+  const inputId = `fileInput${id}${tweetId}`;
 
   const handleRemove = (index: number) => {
     const newSelectedFiles = [...selectedFiles];
@@ -141,7 +154,7 @@ export default function FileUpload({
     const newPreviewUrls = [...previewUrls];
     newPreviewUrls.splice(index, 1);
     setPreviewUrls(newPreviewUrls);
-    removeFiles(index);
+    removeFiles(index, tweetId);
   };
 
   // const removeFromUploaded = (url: string) => {

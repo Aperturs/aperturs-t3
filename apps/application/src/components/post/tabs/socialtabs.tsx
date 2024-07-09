@@ -1,10 +1,12 @@
+import type { SocialType } from "@aperturs/validators/post";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import Youtube from "../content/youtube";
+import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
@@ -18,7 +20,7 @@ export default function SocialTabs() {
       {postType === "NORMAL" && (
         <>
           {content.length > 2 ? (
-            <Tabs defaultValue={SocialType.Default}>
+            <Tabs defaultValue={SocialTypes.DEFAULT}>
               <TabsList>
                 {content.map(
                   (item) =>
@@ -42,18 +44,22 @@ export default function SocialTabs() {
                 (item) =>
                   item.unique && (
                     <TabsContent key={item.id} value={item.id}>
-                      <ContentPostCard
-                        id={item.id}
-                        postType={item.socialType as SocialType}
-                      />
+                      {item.socialType === "TWITTER" ? (
+                        <TweetPost contentId={item.id} />
+                      ) : (
+                        <ContentPostCard
+                          id={item.id}
+                          postType={item.socialType as SocialType}
+                        />
+                      )}
                     </TabsContent>
                   ),
               )}
             </Tabs>
           ) : (
             <ContentPostCard
-              id={SocialType.Default}
-              postType={SocialType.Default}
+              id={"DEFAULT" as SocialType}
+              postType={"DEFAULT"}
             />
           )}
         </>
