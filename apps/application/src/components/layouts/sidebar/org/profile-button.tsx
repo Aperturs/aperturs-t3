@@ -61,7 +61,7 @@ export default function ProfileButton() {
             <CurrentOrganisation
               avatar={user?.imageUrl ?? "/user.png"}
               name={`${user?.firstName ?? ""}  ${user?.lastName ?? ""}`}
-              email={user?.primaryEmailAddress?.emailAddress ?? ""}
+              email={"personal"}
             />
           )}
         </PopoverTrigger>

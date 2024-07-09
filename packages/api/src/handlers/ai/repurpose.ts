@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const generateSocialMediaPost = async (idea: string) => {
   const result = await generateObject({
-    model: openai("gpt-4o"),
+    model: openai("gpt-3.5-turbo"),
     prompt: `create social media post based on this idea: ${idea}`,
     schema: z.object({
       linkedin: z
