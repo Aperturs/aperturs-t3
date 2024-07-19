@@ -1,12 +1,12 @@
 import type { PostContentType } from "@aperturs/validators/post";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 export function defaultContent(content: string): PostContentType[] {
   return [
     {
-      id: SocialType.Default,
-      name: SocialType.Default,
-      socialType: SocialType.Default,
+      id: SocialTypes.DEFAULT,
+      name: SocialTypes.DEFAULT,
+      socialType: SocialTypes.DEFAULT,
       content: content,
       unique: true,
       files: [],

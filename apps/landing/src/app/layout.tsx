@@ -8,6 +8,26 @@ export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
   description:
     "social media management for the modern age, with a focus on privacy and security",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://aperturs.com",
+    siteName: "Aperturs",
+    images: [
+      {
+        url: "https://aperturs.com/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Aperturs | Social media management for the modern age",
+      },
+    ],
+  },
+  twitter: {
+    creator: "@theAperturs",
+    description: "social media management for the modern age",
+    title: "Aperturs | Social media management for the modern age",
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

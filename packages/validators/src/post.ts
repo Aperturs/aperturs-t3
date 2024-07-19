@@ -6,6 +6,29 @@ export const postType = {
   longVideo: "LONG_VIDEO",
 } as const;
 
+export const SocialTypes = {
+  DEFAULT: "DEFAULT",
+  TWITTER: "TWITTER",
+  LINKEDIN: "LINKEDIN",
+  LENS: "LENS",
+  GITHUB: "GITHUB",
+  YOUTUBE: "YOUTUBE",
+  INSTAGRAM: "INSTAGRAM",
+  FACEBOOK: "FACEBOOK",
+} as const;
+
+export type SocialType = (typeof SocialTypes)[keyof typeof SocialTypes];
+export const SocialTypeSchema = z.enum([
+  "DEFAULT",
+  "TWITTER",
+  "LINKEDIN",
+  "LENS",
+  "GITHUB",
+  "YOUTUBE",
+  "INSTAGRAM",
+  "FACEBOOK",
+] as const);
+
 export type PostType = (typeof postType)[keyof typeof postType];
 export const PostTypeSchema = z.nativeEnum(postType);
 
@@ -57,9 +80,9 @@ export const allowedVideoMimeTypes = new Set([
 export const postSchema = z.object({
   id: z.string(),
   name: z.string(),
-  socialType: z.string(),
+  socialType: SocialTypeSchema,
   unique: z.boolean(),
-  content: z.string(),
+  content: z.union([z.string(), z.array(basePostSchema)]),
   files: z.array(z.instanceof(File)).default([]),
   previewUrls: z.array(z.string()).default([]).optional(),
   uploadedFiles: z.array(z.string()),
@@ -96,7 +119,19 @@ export type FinalYoutubeContentType = z.infer<typeof finalYoutubeContentSchema>;
 export type youtubeContentType = z.infer<typeof youtubeContentSchema>;
 
 export const savePostInputSchema = z.object({
-  postContent: z.array(postSchema.omit({ files: true, previewUrls: true })),
+  postContent: z.array(
+    postSchema
+      .omit({
+        files: true,
+        previewUrls: true,
+      })
+      .extend({
+        content: z.union([
+          z.string(),
+          z.array(basePostSchema.omit({ files: true, previewUrls: true })),
+        ]),
+      }),
+  ),
   scheduledTime: z.date().optional(),
   projectId: z.string().optional(),
   orgId: z.string().optional(),
@@ -132,13 +167,7 @@ export type SavePostInput = z.infer<typeof savePostInputSchema>;
 
 export const postTweetInputSchema = z.object({
   tokenId: z.string(),
-  tweets: z.array(
-    z.object({
-      id: z.number(),
-      text: z.string(),
-      mediaUrl: z.array(z.string()).optional(),
-    }),
-  ),
+  tweets: z.array(basePostSchema),
 });
 
 export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
@@ -150,19 +179,6 @@ export const postToLinkedInInputSchema = z.object({
 });
 
 export type PostToLinkedInInput = z.infer<typeof postToLinkedInInputSchema>;
-
-export enum SocialType {
-  Default = "DEFAULT",
-  Twitter = "TWITTER",
-  Linkedin = "LINKEDIN",
-  Lens = "LENS",
-  Github = "Github",
-  Youtube = "YOUTUBE",
-  Instagram = "INSTAGRAM",
-  Facebook = "FACEBOOK",
-}
-
-export const SocialTypeSchema = z.nativeEnum(SocialType);
 
 export function getFileType(url: string): "image" | "video" | "unknown" {
   const extension = url.split(".").pop()?.toUpperCase();

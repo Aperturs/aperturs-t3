@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Card } from "@aperturs/ui/card";
-import { SocialType } from "@aperturs/validators/post";
 
 import { useDebounce } from "~/hooks/useDebounce";
 import FileUpload from "./fileUpload";

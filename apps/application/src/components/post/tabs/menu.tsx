@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@aperturs/ui/dropdown-menu";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
@@ -32,12 +33,11 @@ function SocialsMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {content.map((item) => {
-          if ((item.socialType as SocialType) === SocialType.Default)
-            return null;
+          if (item.socialType === SocialTypes.DEFAULT) return null;
           return (
             <DropdownMenuItem key={item.id}>
               <MenuItems
-                type={item.socialType as SocialType}
+                type={item.socialType}
                 name={item.name}
                 id={item.id}
                 unique={item.unique}
@@ -85,12 +85,11 @@ const MenuItems = ({
       });
     } else {
       setChecked(true);
-      console.log(content[0]?.content, "content");
+      console.log(content, "content old");
       updatedContent = content.map((item) => {
         if (item.id === id) {
           return {
             ...item,
-            content: content[0]?.content ?? "",
             unique: true,
           };
         }

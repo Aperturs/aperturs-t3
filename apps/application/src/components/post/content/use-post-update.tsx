@@ -1,9 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
-import { SocialType } from "@aperturs/validators/post";
+import type { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
+import { tweetsHere } from "../common";
 
 function usePostUpdate(id: string) {
   const { setContent, content } = useStore(
@@ -18,17 +20,47 @@ function usePostUpdate(id: string) {
 
   const updateContent = useCallback(
     (newContent: string) => {
-      if ((id as SocialType) === SocialType.Default) {
+      if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
-          !item.unique || (item.socialType as SocialType) === SocialType.Default
-            ? { ...item, content: newContent }
+          !item.unique || item.socialType === SocialTypes.DEFAULT
+            ? {
+                ...item,
+                content:
+                  item.socialType === SocialTypes.TWITTER
+                    ? [
+                        {
+                          id: "0",
+                          content: newContent,
+                          files: [],
+                          name: "",
+                          socialType: "TWITTER",
+                          unique: false,
+                          uploadedFiles: [],
+                          previewUrls: [],
+                        },
+                      ]
+                    : newContent,
+              }
             : item,
         );
         console.log(updatedContent, id);
         setContent(updatedContent);
       } else {
         const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, content: newContent } : item,
+          item.id === id
+            ? {
+                ...item,
+                content:
+                  item.socialType === "TWITTER"
+                    ? [
+                        {
+                          ...item,
+                          content: newContent,
+                        },
+                      ]
+                    : newContent,
+              }
+            : item,
         );
         setContent(updatedContent);
       }
@@ -38,23 +70,36 @@ function usePostUpdate(id: string) {
   );
 
   const updateFiles = useCallback(
-    (newFiles: File[], previewUrls: string[]) => {
+    (newFiles: File[], previewUrls: string[], tweetId?: string) => {
       console.log(newFiles, "from updateFiles");
-      if ((id as SocialType) === SocialType.Default) {
+      if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
           !item.unique
             ? { ...item, files: newFiles, previewUrls }
-            : (item.id as SocialType) === SocialType.Default
+            : (item.id as SocialType) === SocialTypes.DEFAULT
               ? { ...item, files: newFiles, previewUrls }
               : item,
         );
         console.log(updatedContent, "updated");
         setContent(updatedContent);
       } else {
-        const updatedContent = content.map((item) =>
-          item.id === id ? { ...item, files: newFiles, previewUrls } : item,
-        );
-        setContent(updatedContent);
+        if (tweetId) {
+          const tweets = tweetsHere(content, id);
+          const updatedTweets = tweets?.map((tweet) =>
+            tweet.id === tweetId
+              ? { ...tweet, files: newFiles, previewUrls }
+              : tweet,
+          );
+          const updatedContent = content.map((item) =>
+            item.id === id ? { ...item, content: updatedTweets ?? "" } : item,
+          );
+          setContent(updatedContent);
+        } else {
+          const updatedContent = content.map((item) =>
+            item.id === id ? { ...item, files: newFiles, previewUrls } : item,
+          );
+          setContent(updatedContent);
+        }
       }
       console.log(content, "from updateFiles");
     },
@@ -62,10 +107,11 @@ function usePostUpdate(id: string) {
   );
 
   const removeFiles = useCallback(
-    (index: number) => {
-      if ((id as SocialType) === SocialType.Default) {
+    (index: number, tweetId?: string) => {
+      if ((id as SocialType) === SocialTypes.DEFAULT) {
         const updatedContent = content.map((item) =>
-          !item.unique || (item.socialType as SocialType) === SocialType.Default
+          !item.unique ||
+          (item.socialType as SocialType) === SocialTypes.DEFAULT
             ? {
                 ...item,
                 files: item.files.filter((_, i) => i !== index) || [],
@@ -77,18 +123,36 @@ function usePostUpdate(id: string) {
         console.log(updatedContent, "from removeFiles");
         setContent(updatedContent);
       } else {
-        const updatedContent = content.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                files: item.files.filter((_, i) => i !== index) || [],
-                previewUrls:
-                  item.previewUrls?.filter((_, i) => i !== index) ?? [],
-              }
-            : item,
-        );
-        console.log(updatedContent, "from removeFiles");
-        setContent(updatedContent);
+        if (tweetId) {
+          const tweets = tweetsHere(content, id);
+          const updatedTweets = tweets?.map((tweet) =>
+            tweet.id === tweetId
+              ? {
+                  ...tweet,
+                  files: tweet.files.filter((_, i) => i !== index) || [],
+                  previewUrls:
+                    tweet.previewUrls?.filter((_, i) => i !== index) ?? [],
+                }
+              : tweet,
+          );
+          const updatedContent = content.map((item) =>
+            item.id === id ? { ...item, content: updatedTweets ?? "" } : item,
+          );
+          setContent(updatedContent);
+        } else {
+          const updatedContent = content.map((item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  files: item.files.filter((_, i) => i !== index) || [],
+                  previewUrls:
+                    item.previewUrls?.filter((_, i) => i !== index) ?? [],
+                }
+              : item,
+          );
+          console.log(updatedContent, "from removeFiles");
+          setContent(updatedContent);
+        }
       }
     },
     [content, id, setContent],
@@ -111,7 +175,7 @@ function usePostUpdate(id: string) {
 
   const contentValue = useMemo(() => {
     return content.find((item) => item.id === id)?.content ?? "";
-  }, [id, content]);
+  }, [id, content]) as string;
 
   const currentFiles = useMemo(() => {
     return content.find((item) => item.id === id)?.uploadedFiles ?? [];

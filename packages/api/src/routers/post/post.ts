@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { generateSocialMediaPost } from "@api/handlers/ai/repurpose";
 import {
   GetPresignedUrl,
   scheduleLambdaEvent,
@@ -6,9 +7,12 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { PostContentType } from "@aperturs/validators/post";
+import type {
+  BasePostContentType,
+  PostContentType,
+  SocialType,
+} from "@aperturs/validators/post";
 import { eq, schema } from "@aperturs/db";
-import { SocialType } from "@aperturs/validators/post";
 
 import { env } from "../../../env";
 import { postToLinkedin } from "../../helpers/linkedln";
@@ -36,18 +40,12 @@ export const post = createTRPCRouter({
           const content = post.content as PostContentType[];
           const promises = content.map(async (item) => {
             switch (item.socialType) {
-              case `${SocialType.Default}`:
+              case `${"DEFAULT" as SocialType}`:
                 return;
-              case `${SocialType.Twitter}`:
+              case `${"TWITTER" as SocialType}`:
                 return await postToTwitter({
                   tokenId: item.id,
-                  tweets: [
-                    {
-                      id: 0,
-                      mediaUrl: item.uploadedFiles,
-                      text: item.content,
-                    },
-                  ],
+                  tweets: item.content as BasePostContentType[],
                 })
                   .then(() => {
                     console.log("Posted to Twitter");
@@ -57,11 +55,11 @@ export const post = createTRPCRouter({
                     throw Error("Failed to post to Twitter");
                   });
 
-              case `${SocialType.Linkedin}`:
+              case `${"LINKEDIN" as SocialType}`:
                 console.log(item, "linkedin item");
                 return await postToLinkedin({
                   ...item,
-                  content: item.content,
+                  content: item.content as string,
                 }).catch((error) => {
                   console.error("Failed to post to LinkedIn", error);
                   throw Error("Failed to post to linkedin");
@@ -141,5 +139,15 @@ export const post = createTRPCRouter({
           state: 500,
         };
       }
+    }),
+
+  generate: protectedProcedure
+    .input(
+      z.object({
+        idea: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await generateSocialMediaPost(input.idea);
     }),
 });

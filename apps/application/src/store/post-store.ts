@@ -6,7 +6,7 @@ import type {
   PostType,
   youtubeContentType,
 } from "@aperturs/validators/post";
-import { SocialType } from "@aperturs/validators/post";
+import { SocialTypes } from "@aperturs/validators/post";
 
 interface StateValues {
   date: Date | undefined;
@@ -44,9 +44,9 @@ const initialState: StateValues = {
   },
   content: [
     {
-      id: SocialType.Default,
+      id: SocialTypes.DEFAULT,
       name: "Default",
-      socialType: SocialType.Default,
+      socialType: SocialTypes.DEFAULT,
       content: "",
       unique: true,
       files: [],
