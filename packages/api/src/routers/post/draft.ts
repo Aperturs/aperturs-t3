@@ -23,21 +23,75 @@ export const posting = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const savedPost = await limitWrapper(
-          () =>
-            ctx.db
-              .insert(schema.post)
-              .values({
-                organizationId: input.orgId ? input.orgId : undefined,
-                clerkUserId: input.orgId ? undefined : ctx.currentUser,
-                status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-                scheduledAt: input.scheduledTime
-                  ? new Date(input.scheduledTime)
-                  : null,
-                content: input.postContent,
-                projectId: input.projectId,
-                updatedAt: new Date(),
-              })
-              .returning(),
+          () => {
+            return ctx.db.transaction(async (tx) => {
+              const post = await tx
+                .insert(schema.post)
+                .values({
+                  organizationId: input.orgId ? input.orgId : undefined,
+                  clerkUserId: input.orgId ? undefined : ctx.currentUser,
+                  status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+                  scheduledAt: input.scheduledTime
+                    ? new Date(input.scheduledTime)
+                    : null,
+                  content: input.postContent,
+                  projectId: input.projectId,
+                  updatedAt: new Date(),
+                })
+                .returning();
+
+              if (!post || post.length === 0) {
+                throw new Error("Failed to save post");
+              }
+              if (post[0]?.id === undefined) {
+                throw new Error("Failed to save post");
+              }
+              console.log(post, "post");
+              for (const content of input.postContent) {
+                if (typeof content.content === "string") {
+                  console.log(content, "content");
+                  await tx.insert(schema.singlePost).values({
+                    content: content.content as string,
+                    postId: post[0].id,
+                    fileUrls: content.uploadedFiles,
+                    name: content.name,
+                    unique: content.unique,
+                    socialType: content.socialType,
+                    linkedInTokenId:
+                      content.socialType === "LINKEDIN"
+                        ? content.id
+                        : undefined,
+                    twitterTokenId:
+                      content.socialType === "TWITTER" ? content.id : undefined,
+                    updatedAt: new Date(),
+                  });
+                } else {
+                  for (const subContent of content.content) {
+                    await tx.insert(schema.singlePost).values({
+                      content: subContent.content,
+                      postId: post[0].id,
+                      fileUrls: subContent.uploadedFiles,
+                      name: subContent.name,
+                      unique: subContent.unique,
+                      socialType: subContent.socialType,
+                      linkedInTokenId:
+                        subContent.socialType === "LINKEDIN"
+                          ? subContent.id
+                          : undefined,
+                      twitterTokenId:
+                        subContent.socialType === "TWITTER"
+                          ? subContent.id
+                          : undefined,
+                      parentSinglePostId: content.id,
+                      updatedAt: new Date(),
+                    });
+                  }
+                }
+              }
+
+              return post;
+            });
+          },
           ctx.currentUser,
           "drafts",
         );
@@ -155,14 +209,34 @@ export const posting = createTRPCRouter({
         where: eq(schema.post.id, input),
         with: {
           youtubeContent: true,
+          singlesPosts: {
+            with: {
+              thread: true,
+            },
+          },
         },
       });
-      const localPost = post?.content as PostContentType[];
+      if (!post) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Error fetching post",
+        });
+      }
+      const localPost = post.singlesPosts.map((post) => ({
+        content: post.thread.length > 0 ? post.thread : post.content,
+        id: post.twitterTokenId ?? post.linkedInTokenId ?? "",
+        name: post.name,
+        unique: post.unique,
+        socialType: post.socialType,
+        uploadedFiles: post.fileUrls,
+      })) as PostContentType[];
+      // const localPost = post.content as PostContentType[];
       const contentWithEmptyFiles = localPost.map((post) => ({
         ...post,
         files: post.files ?? [],
       }));
-      if (post?.postType === "NORMAL") {
+      console.log(contentWithEmptyFiles, "post");
+      if (post.postType === "NORMAL") {
         return {
           postType: post?.postType,
           scheduledAt: post?.scheduledAt,
@@ -170,7 +244,7 @@ export const posting = createTRPCRouter({
           content: contentWithEmptyFiles,
         };
       }
-      if (post?.postType === "LONG_VIDEO") {
+      if (post.postType === "LONG_VIDEO") {
         if (!post.youtubeContent) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",

@@ -42,10 +42,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <Toaster position="top-left" reverseOrder={false} />
-            <TRPCReactProvider>
-              <ModalProvider>{children}</ModalProvider>
-            </TRPCReactProvider>
+              <Toaster position="top-left" reverseOrder={false} />
+              <TRPCReactProvider>
+                <ModalProvider>{children}</ModalProvider>
+              </TRPCReactProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
