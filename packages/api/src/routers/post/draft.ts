@@ -13,6 +13,7 @@ import type { PostContentType } from "@aperturs/validators/post";
 import { and, desc, eq, schema } from "@aperturs/db";
 import {
   savePostInputSchema,
+  SocialTypes,
   updatePostInputSchema,
   updateYoutubePostSchema,
 } from "@aperturs/validators/post";
@@ -224,7 +225,7 @@ export const posting = createTRPCRouter({
       }
       const localPost = post.singlesPosts.map((post) => ({
         content: post.thread.length > 0 ? post.thread : post.content,
-        id: post.twitterTokenId ?? post.linkedInTokenId ?? "",
+        id: post.twitterTokenId ?? post.linkedInTokenId ?? SocialTypes.DEFAULT,
         name: post.name,
         unique: post.unique,
         socialType: post.socialType,
