@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export const generateSocialMediaPost = async (idea: string) => {
   const result = await generateObject({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `create social media post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part dont ever add hashtags: ${idea}`,
     schema: z.object({
       linkedin: z
