@@ -1,6 +1,6 @@
 // import { CreateButton } from "~/components";
 import { Suspense } from "react";
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
 
 import FetchDrafts from "./fetch-drafts";
 import RecentDraftLoading from "./recent-draft-load";

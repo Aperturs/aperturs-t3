@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 
 import type { ChangeUserRoleWithOrgIdType } from "@aperturs/validators/organisation";
 
@@ -9,7 +9,9 @@ import type { PrivateMetaData } from "./user-private-metadata";
 export async function updateUserPrivateMetadata(
   data: Partial<PrivateMetaData>,
 ) {
-  const { userId, user } = auth();
+  const { userId } = auth();
+  const user = await currentUser();
+
   if (!userId) {
     throw new Error("No user ID found");
   }
@@ -43,7 +45,9 @@ export async function updateUserPrivateMetadata(
 
 export async function getUserPrivateMetadata() {
   console.log("here");
-  const { userId, user } = auth();
+  const { userId } = auth();
+  const user = await currentUser();
+
   if (!userId) {
     throw new Error("No user ID found");
   }
@@ -55,7 +59,8 @@ export async function getUserPrivateMetadata() {
 export async function changeUserRoleMetaData(
   data: ChangeUserRoleWithOrgIdType,
 ) {
-  const { userId, user } = auth();
+  const { userId } = auth();
+  const user = await currentUser();
   if (!userId) {
     throw new Error("No user ID found");
   }
@@ -84,7 +89,9 @@ export async function removeUserPrivateMetadata(data: {
   orgId: string;
   role: string;
 }) {
-  const { userId, user } = auth();
+  const { userId } = auth();
+  const user = await currentUser();
+
   if (!userId) {
     throw new Error("No user ID found");
   }
@@ -104,7 +111,9 @@ export async function removeUserPrivateMetadata(data: {
 }
 
 export async function getUserRole({ orgId }: { orgId: string }) {
-  const { userId, user } = auth();
+  const { userId } = auth();
+  const user = await currentUser();
+
   if (!userId) {
     throw new Error("No user ID found");
   }

@@ -23,7 +23,7 @@
     "@aws-sdk/client-s3": "^3.525.0",
     "@aws-sdk/client-scheduler": "^3.554.0",
     "@aws-sdk/s3-request-presigner": "^3.525.0",
-    "@clerk/nextjs": "^4.29.5",
+    "@clerk/nextjs": "^5.2.12",
     "@lemonsqueezy/lemonsqueezy.js": "^2.2.0",
     "@t3-oss/env-nextjs": "^0.9.2",
     "@trpc/server": "11.0.0-next-beta.294",

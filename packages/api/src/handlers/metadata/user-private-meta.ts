@@ -1,4 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import type { ChangeUserRoleWithOrgIdType } from "@aperturs/validators/organisation";
 import type { PrivateMetaData } from "@aperturs/validators/private_metadata";

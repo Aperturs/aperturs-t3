@@ -13,7 +13,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@api/trpc";
-import { clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 

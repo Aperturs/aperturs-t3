@@ -15,7 +15,7 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 /**
  * 2. INITIALIZATION
  *

@@ -15,7 +15,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.525.0",
     "@aws-sdk/s3-request-presigner": "^3.525.0",
-    "@clerk/nextjs": "^4.29.5",
+    "@clerk/nextjs": "^5.2.12",
     "@clerk/themes": "^1.7.9",
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.4",

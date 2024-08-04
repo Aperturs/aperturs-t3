@@ -1,27 +1,26 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default authMiddleware({
-  // "/" will be accessible to all users
-  publicRoutes: [
-    "/api/webhooks/user",
-    "/api/callback/twitter",
-    "/api/post/scheduled",
-    "/api/test",
-    "/api/callback/github",
-    "/api/webhooks/subscription",
-    "/api/webhooks/invite",
-    "/api/success/youtube-post",
-  ],
-  apiRoutes: ["/api/callback/linkedin"],
-  ignoredRoutes: ["/api/trigger"],
-  // debug: process.env.NODE_ENV === "development",
+const isProtectedRoute = createRouteMatcher([
+  "/api/callback/twitter",
+  "/api/post/scheduled",
+  "/api/test",
+  "/api/callback/github",
+  "/api/webhooks/(.*)",
+  // "/api/webhooks/user",
+  // "/api/webhooks/subscription",
+  // "/api/webhooks/invite",
+  // "/api/success/youtube-post",
+]);
+
+export default clerkMiddleware((auth, request) => {
+  if (isProtectedRoute(request)) {
+    auth().protect();
+  }
+
+  return NextResponse.next();
 });
 
 export const config = {
-  matcher: [
-    "/((?!.+\\.[\\w]+$|_next).*)",
-    "/",
-    "/(api|trpc)(.*)",
-    "/(api|callback)(.*)",
-  ],
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
