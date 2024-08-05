@@ -3,7 +3,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@api/trpc";
-import { clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 
 import type { PrivateMetaData } from "@aperturs/validators/private_metadata";

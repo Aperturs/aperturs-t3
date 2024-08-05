@@ -26,12 +26,8 @@ const Login = () => {
       </div>
       <div className="flex items-center justify-center  px-8 py-10 md:w-1/2">
         <SignIn
-          path="/sign-in"
-          signUpUrl="/sign-up"
-          fallbackRedirectUrl="/dashboard"
-          routing="path"
-          signUpForceRedirectUrl="/onboard"
-        />
+        signUpUrl="/sign-up"
+        fallbackRedirectUrl="/dashboard" />
       </div>
     </div>
   );

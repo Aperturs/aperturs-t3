@@ -15,7 +15,7 @@ export default async function FetchDrafts({ orgid }: { orgid?: string }) {
       infoBlocks={
         recentDrafts?.map((draft) => ({
           title: `${
-            (draft.content as any as PostContentType[])[0]?.content?.slice(
+            ((draft.content as any as PostContentType[])[0]?.content as string)?.slice(
               0,
               60,
             ) ?? ""

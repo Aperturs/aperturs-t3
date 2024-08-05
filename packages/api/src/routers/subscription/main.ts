@@ -367,6 +367,7 @@ export const subscriptionRouter = createTRPCRouter({
       });
 
       const userDetails = fetchUser?.userDetails as UserDetails;
+      console.log(userDetails, "userDetails from backend");
 
       const checkout = await createCheckout(
         env.LEMONSQUEEZY_STORE_ID,

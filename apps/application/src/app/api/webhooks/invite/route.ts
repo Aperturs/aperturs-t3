@@ -70,7 +70,7 @@ async function handler(request: Request) {
   }
   if (evt.type === "organizationMembership.created") {
     await api.organisation.team.organisationMembershipCreated({
-      orgId: evt.data.organization.slug!,
+      orgId: evt.data.organization.slug,
       role: evt.data.role
         .toUpperCase()
         .replace(/^ORG:/, "") as OrganisationRole,

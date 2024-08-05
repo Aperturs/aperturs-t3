@@ -2,6 +2,7 @@ import "@aperturs/ui/globals.css";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -45,6 +46,10 @@ export default function RootLayout({
         crossOrigin="anonymous"
       ></link>
       <Toaster />
+      <head>
+        <Script id="lemonSqueezyAffiliateConfig">{`window.lemonSqueezyAffiliateConfig = { store: "aperturs" };`}</Script>
+        <Script src="https://lmsqueezy.com/affiliate.js" defer></Script>
+      </head>
       <body className="dark">
         <div className="flex flex-col items-center bg-black">
           {/* <div className="fixed flex w-full  justify-center border-b bg-opacity-20 p-3 backdrop-blur-lg backdrop-filter">
