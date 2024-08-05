@@ -9,17 +9,36 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhooks/(.*)",
   '/sign-in(.*)',
   '/sign-up(.*)',
+
   // "/api/webhooks/user",
   // "/api/webhooks/subscription",
   // "/api/webhooks/invite",
   // "/api/success/youtube-post",
 ]);
 
-export default clerkMiddleware((auth, request) => {
-  if(!isPublicRoute(request)) {
-    auth().protect();
+export default clerkMiddleware((auth, req) => {
+  const { userId, sessionClaims, redirectToSignIn } = auth()
+
+  // If the user isn't signed in and the route is private, redirect to sign-in
+  if (!userId && !isPublicRoute(req)) {
+    return redirectToSignIn({ returnBackUrl: req.url })
   }
-  return NextResponse.next();
+
+  // Catch users who do not have `onboardingComplete: true` in their publicMetadata
+  // Redirect them to the /onboading route to complete onboarding
+  if (
+    userId &&
+    !sessionClaims?.metadata?.onboardingComplete &&
+    req.nextUrl.pathname !== '/onboarding'
+  ) {
+    const onboardingUrl = new URL('/onboard', req.url)
+    return NextResponse.redirect(onboardingUrl)
+  }
+
+  // If the user is logged in and the route is protected, let them view.
+  if (userId && !isPublicRoute(req)) {
+    return NextResponse.next()
+  }
 });
 
 export const config = {

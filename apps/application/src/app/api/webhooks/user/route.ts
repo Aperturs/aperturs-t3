@@ -1,7 +1,6 @@
 import type { User } from "@clerk/nextjs/server";
 import type { IncomingHttpHeaders } from "http";
 import type { WebhookRequiredHeaders } from "svix";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
@@ -41,7 +40,7 @@ async function handler(request: Request) {
   console.log("request", request);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await request.json();
-  const headersAll = headers();
+  const headersAll = request.headers;
   console.log("headersList", headersAll);
   const heads = {
     "svix-id": headersAll.get("svix-id"),

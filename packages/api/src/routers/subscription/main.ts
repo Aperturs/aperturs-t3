@@ -362,9 +362,13 @@ export const subscriptionRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       configureLemonSqueezy();
 
+      console.log(ctx.currentUser, "ctx.currentUser from backend");
+
       const fetchUser = await ctx.db.query.user.findFirst({
         where: eq(schema.user.clerkUserId, ctx.currentUser),
       });
+
+      console.log(fetchUser, "fetchUser from backend");
 
       const userDetails = fetchUser?.userDetails as UserDetails;
       console.log(userDetails, "userDetails from backend");
