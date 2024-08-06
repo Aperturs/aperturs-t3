@@ -75,6 +75,7 @@ export async function GET(req: NextRequest) {
       const domain = env.DOMAIN;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const redisData = (await redis.get(userId))! as SocialRedisKeyType;
+      console.log(redisData, "redisData");
       const isPersonal = redisData.orgId === "personal";
       const isNew = redisData.tokenId === "new";
       if (isNew) {
@@ -111,7 +112,7 @@ export async function GET(req: NextRequest) {
       const url = `${domain}/organisation/${redisData.orgId}/socials`;
       return NextResponse.redirect(url);
     }
-    const url = `${env.DOMAIN}/socials`;
+    const url = `${env.DOMAIN}/onboard/socials`;
     return NextResponse.redirect(url);
   } catch (e) {
     console.log(e, "error");

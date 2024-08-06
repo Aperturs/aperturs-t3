@@ -17,6 +17,7 @@ export async function handleLinkedinRedirect({
   tokenId,
 }: SocialRedisKeyType) {
   const url = await api.linkedin.getLinkedinAuthUrl({ orgId, tokenId });
+  console.log(url, "url");
   redirect(url);
 }
 

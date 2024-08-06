@@ -34,12 +34,16 @@ export default function AccordanceMenu({
                 <CommandItem
                   key={subItem.url}
                   className={`${
-                    currentPath(subItem.url) ? "bg-primary text-white" : ""
-                  } group my-1 cursor-pointer py-3`}
+                    currentPath(subItem.url)
+                      ? "bg-secondary"
+                      : ""
+                  } group my-1 cursor-pointer py-3 `}
                 >
                   <Link
                     href={subItem.url}
-                    className="flex w-[320px] items-center gap-2 rounded-md transition-all hover:bg-transparent group-hover:font-semibold md:w-full"
+                    className="flex 
+                    w-[320px]
+                    items-center gap-2 rounded-md transition-all  group-hover:font-semibold  md:w-full"
                   >
                     {subItem.subIcon}
                     <span>{subItem.subText}</span>

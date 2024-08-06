@@ -1,26 +1,25 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { Button } from "@aperturs/ui/button";
 
+import { completeOnboarding } from "../../_action";
+
 export default function Controls() {
-  const router = useRouter();
   return (
-    <div className="flex justify-between">
-      <Button
-        onClick={() => {
-          router.push("/onboard");
-        }}
-      >
-        Back
+    <div className="my-3 flex justify-between gap-2">
+      <Button className="w-full">
+        <Link href="/onboard">Back</Link>
       </Button>
       <Button
-        onClick={() => {
-          router.push("/dashboard");
+        className="w-full"
+        onClick={async () => {
+          await completeOnboarding();
+          console.log("Onboarding completed");
         }}
       >
-        Next
+        <Link href="/dashboard">Let&apos;s Gooooo..</Link>
       </Button>
     </div>
   );

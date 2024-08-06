@@ -1,6 +1,6 @@
-import FetchPersonalSocials from "~/app/user-profile/[[...user-profile]]/page.tsx/socials/fetch-socials";
 import ConnectSocials from "~/components/profile/socials/socials";
 import Controls from "./controls";
+import FetchPersonalSocials from "~/app/(personal)/socials/fetch-socials";
 
 function AddSocial() {
   return (
