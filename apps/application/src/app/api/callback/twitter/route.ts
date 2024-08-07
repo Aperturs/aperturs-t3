@@ -148,7 +148,7 @@ async function handler(req: NextRequest) {
   if (isPersonal) {
     console.log("I am personal");
     if (isOnboarding) {
-      const url = `${env.DOMAIN}/onboard/add-social`;
+      const url = `${env.DOMAIN}/onboarding/add-social`;
       return NextResponse.redirect(url);
     }
     const url = `${env.DOMAIN}/socials`;

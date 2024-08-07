@@ -10,7 +10,7 @@ export default function Controls() {
   return (
     <div className="my-3 flex justify-between gap-2">
       <Button className="w-full">
-        <Link href="/onboard">Back</Link>
+        <Link href="/onboarding">Back</Link>
       </Button>
       <Button
         className="w-full"

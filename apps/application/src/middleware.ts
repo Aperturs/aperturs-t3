@@ -14,7 +14,10 @@ const isPublicRoute = createRouteMatcher([
   // "/api/success/youtube-post",
 ]);
 
-const isOnboardingRoute = createRouteMatcher(["/onboard(.*)", "/socials(.*)"]);
+const isOnboardingRoute = createRouteMatcher([
+  "/onboarding(.*)",
+  "/socials(.*)",
+]);
 
 export default clerkMiddleware((auth, req) => {
   const { userId, sessionClaims, redirectToSignIn } = auth();
@@ -33,7 +36,7 @@ export default clerkMiddleware((auth, req) => {
     !isPublicRoute(req)
   ) {
     console.log(req.url, "req.url");
-    const onboardingUrl = new URL("/onboard", req.url);
+    const onboardingUrl = new URL("/onboarding", req.url);
     return NextResponse.redirect(onboardingUrl);
   }
 

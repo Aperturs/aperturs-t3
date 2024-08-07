@@ -23,7 +23,7 @@ export default function Example() {
         Aperturs gives you marketing superpowers with powerful features
       </h2>
       <Button variant="secondary" className="h-16 w-80">
-        <Link href="/onboard/add-social">Get Started</Link>
+        <Link href="/onboarding/add-social">Get Started</Link>
       </Button>
     </div>
   );

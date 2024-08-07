@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
       const url = `${domain}/organisation/${redisData.orgId}/socials`;
       return NextResponse.redirect(url);
     }
-    const url = `${env.DOMAIN}/onboard/socials`;
+    const url = `${env.DOMAIN}/onboarding/socials`;
     return NextResponse.redirect(url);
   } catch (e) {
     console.log(e, "error");
