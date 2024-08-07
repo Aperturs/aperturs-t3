@@ -22,7 +22,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
 
   return (
     <Card
-      className={` ${isCurrentPlan ? "border-2 border-green-600 dark:border-2 " : ""} ${plan.important ? "bg-primary" : ""}`}
+      className={` ${isCurrentPlan ? "border-2 border-green-600 dark:border-2 " : ""} ${plan.important ? "bg-zinc-800" : ""}`}
     >
       <CardHeader>
         <h5 className={`mb-4 text-xl font-medium ${colorImportant}`}>
@@ -95,7 +95,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
           Choose plan
         </Button> */}
         <SignupButton
-          className={`w-full ${plan.important ? "bg-white text-primary hover:bg-slate-50 dark:text-primary" : ""}`}
+          className={`w-full ${plan.important ? "bg-black text-primary hover:bg-slate-50 dark:text-primary" : ""}`}
           plan={plan}
           isChangingPlans={isChangingPlans}
           currentPlan={currentPlan}

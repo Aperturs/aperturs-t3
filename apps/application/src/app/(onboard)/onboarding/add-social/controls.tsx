@@ -1,10 +1,8 @@
-"use client";
-
 import Link from "next/link";
 
 import { Button } from "@aperturs/ui/button";
 
-import { completeOnboarding } from "../../_action";
+// import { completeOnboarding } from "../../_action";
 
 export default function Controls() {
   return (
@@ -12,14 +10,8 @@ export default function Controls() {
       <Button className="w-full">
         <Link href="/onboarding">Back</Link>
       </Button>
-      <Button
-        className="w-full"
-        onClick={async () => {
-          await completeOnboarding();
-          console.log("Onboarding completed");
-        }}
-      >
-        <Link href="/dashboard">Let&apos;s Gooooo..</Link>
+      <Button className="w-full">
+        <Link href="/onboarding/pricing">Next</Link>
       </Button>
     </div>
   );
