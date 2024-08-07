@@ -21,7 +21,7 @@ const AddTwitter = () => {
         <CardHeader>
           <Button
             variant="secondary"
-            className="my-2 flex items-center space-x-2 text-sm w-44" 
+            className="my-2 flex w-44 items-center space-x-2 text-sm"
             onClick={() => router.back()}
           >
             <IoIosArrowBack size={20} />
@@ -49,6 +49,7 @@ function ApiBox() {
 
   const orgId = searchParams?.get("orgid");
   const tokenId = searchParams?.get("tokenid");
+  const isOnboarding = searchParams?.get("onboarding");
 
   const [clientID, setClientID] = React.useState("");
   const [clientSecret, setClientSecret] = React.useState("");
@@ -67,6 +68,7 @@ function ApiBox() {
       redis: {
         orgId,
         tokenId: tokenId ? tokenId : "new",
+        onboarding: isOnboarding === "true",
       },
     });
     setLocalLoading(false);

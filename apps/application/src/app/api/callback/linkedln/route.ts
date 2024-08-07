@@ -78,6 +78,7 @@ export async function GET(req: NextRequest) {
       console.log(redisData, "redisData");
       const isPersonal = redisData.orgId === "personal";
       const isNew = redisData.tokenId === "new";
+      const isOnboarding = redisData.onboarding;
       if (isNew) {
         await api.linkedin.addLinkedlnToDatabase({
           profileId: user.id,
@@ -106,6 +107,10 @@ export async function GET(req: NextRequest) {
         });
       }
       if (isPersonal) {
+        if (isOnboarding) {
+          const url = `${domain}/socials`;
+          return NextResponse.redirect(url);
+        }
         const url = `${domain}/socials`;
         return NextResponse.redirect(url);
       }

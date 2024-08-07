@@ -50,16 +50,16 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
     const { data: getCheckoutURL } =
       api.subscription.getSubscriptionUrl.useQuery({
         variantId: plan.variantId,
-        embed: false,
+        embed,
       });
     const { mutateAsync: changePlan } =
       api.subscription.changePlan.useMutation(); // Make sure Lemon.js is loaded
 
-    // useEffect(() => {
-    //   if (typeof window.createLemonSqueezy === "function") {
-    //     window.createLemonSqueezy();
-    //   }
-    // }, []);
+    useEffect(() => {
+      if (typeof window.createLemonSqueezy === "function") {
+        window.createLemonSqueezy();
+      }
+    }, []);
 
     return (
       <Button

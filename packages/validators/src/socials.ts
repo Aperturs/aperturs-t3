@@ -3,6 +3,7 @@ import { z } from "zod";
 export const SocialRedisKeySchema = z.object({
   orgId: z.string().default("personal"),
   tokenId: z.string().optional().default("new"),
+  onboarding: z.boolean().optional().default(false),
 });
 
 export type SocialRedisKeyType = z.infer<typeof SocialRedisKeySchema>;
