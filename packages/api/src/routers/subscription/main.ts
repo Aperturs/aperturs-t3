@@ -12,6 +12,7 @@ import {
   publicProcedure,
 } from "@api/trpc";
 import { configureLemonSqueezy } from "@api/utils/lemon-squeezy";
+import { clerkClient } from "@clerk/nextjs/server";
 import {
   cancelSubscription,
   createCheckout,
@@ -157,6 +158,11 @@ export const subscriptionRouter = createTRPCRouter({
                     (attributes.ends_at as string) ??
                     (attributes.trial_ends_at as string),
                 });
+              });
+              await clerkClient().users.updateUser(updateData.userId, {
+                publicMetadata: {
+                  onboardingComplete: true,
+                },
               });
             } catch (error) {
               processingError = `Failed to upsert Subscription #${updateData.subscriptionId} to the database. Error: ${error as string}`;
@@ -396,6 +402,8 @@ export const subscriptionRouter = createTRPCRouter({
           },
         },
       );
+
+      console.log(checkout.data?.data.attributes.url, "checkout from backend");
 
       return checkout.data?.data.attributes.url;
     }),

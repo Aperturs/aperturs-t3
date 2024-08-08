@@ -17,6 +17,7 @@ const isPublicRoute = createRouteMatcher([
 const isOnboardingRoute = createRouteMatcher([
   "/onboarding(.*)",
   "/socials(.*)",
+  "/api/(.*)",
 ]);
 
 export default clerkMiddleware((auth, req) => {
