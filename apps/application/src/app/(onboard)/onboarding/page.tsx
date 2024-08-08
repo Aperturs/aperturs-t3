@@ -1,14 +1,9 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Button } from "@aperturs/ui/button";
 
 export default function Example() {
-  const router = useRouter();
-
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center py-24">
       <Image

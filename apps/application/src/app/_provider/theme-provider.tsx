@@ -1,6 +1,7 @@
 "use client";
 
 import type { ThemeProviderProps } from "next-themes/dist/types";
+import { HydrationOverlay } from "@builder.io/react-hydration-overlay";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
@@ -13,7 +14,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
         // options={{ showSpinner: false }}
         shallowRouting
       />
-      {children}
+      <HydrationOverlay>{children}</HydrationOverlay>
     </NextThemesProvider>
   );
 }
