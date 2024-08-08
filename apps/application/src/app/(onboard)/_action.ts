@@ -1,12 +1,12 @@
-'use server'
+"use server";
 
-import { auth, clerkClient } from '@clerk/nextjs/server'
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 export const completeOnboarding = async () => {
-  const { userId } = auth()
+  const { userId } = auth();
 
   if (!userId) {
-    return { message: 'No Logged In User' }
+    return { message: "No Logged In User" };
   }
 
   try {
@@ -14,10 +14,10 @@ export const completeOnboarding = async () => {
       publicMetadata: {
         onboardingComplete: true,
       },
-    })
-    return { message: 'User metadata Updated' }
+    });
+    return { message: "User metadata Updated" };
   } catch (e) {
-    console.log('error', e)
-    return { message: 'Error Updating User Metadata' }
+    console.log("error", e);
+    return { message: "Error Updating User Metadata" };
   }
-}
+};

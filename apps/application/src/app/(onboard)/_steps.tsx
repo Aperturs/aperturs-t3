@@ -2,7 +2,13 @@
 
 import { motion } from "framer-motion";
 
-export default function Step({ step, currentStep }: { step: number; currentStep: number }) {
+export default function Step({
+  step,
+  currentStep,
+}: {
+  step: number;
+  currentStep: number;
+}) {
   const status =
     currentStep === step
       ? "active"

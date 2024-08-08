@@ -7,7 +7,7 @@ import PlansSkeleton from "~/components/profile/account/billing/_plans/skeleton"
 
 export default function Pricing() {
   return (
-    <div className="flex items-center justify-center flex-grow p-8 h-full w-full ">
+    <div className="flex h-full w-full flex-grow items-center justify-center p-8 ">
       <Tabs defaultValue="monthly" className="w-full">
         <div className="flex w-full items-center justify-center">
           <TabsList>

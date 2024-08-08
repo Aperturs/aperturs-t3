@@ -38,7 +38,7 @@ interface UserInterface extends Omit<User, UnwantedKeys> {
 
 async function handler(request: Request) {
   console.log("request", request);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await request.json();
   const headersAll = request.headers;
   console.log("headersList", headersAll);

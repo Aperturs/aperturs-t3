@@ -2,7 +2,6 @@ import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { z } from "zod";
 
-
 export const generateSocialMediaPost = async (idea: string) => {
   const result = await generateObject({
     model: openai("gpt-4o-mini"),

@@ -34,9 +34,7 @@ export default function AccordanceMenu({
                 <CommandItem
                   key={subItem.url}
                   className={`${
-                    currentPath(subItem.url)
-                      ? "bg-secondary"
-                      : ""
+                    currentPath(subItem.url) ? "bg-secondary" : ""
                   } group my-1 cursor-pointer py-3 `}
                 >
                   <Link

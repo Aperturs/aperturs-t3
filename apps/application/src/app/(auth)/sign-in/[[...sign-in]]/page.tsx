@@ -25,9 +25,7 @@ const Login = () => {
         <div className="absolute -right-20 -top-20 h-80 w-80 rounded-full border-4 border-t-8 border-opacity-30"></div>
       </div>
       <div className="flex items-center justify-center  px-8 py-10 md:w-1/2">
-        <SignIn
-        signUpUrl="/sign-up"
-        fallbackRedirectUrl="/dashboard" />
+        <SignIn signUpUrl="/sign-up" fallbackRedirectUrl="/dashboard" />
       </div>
     </div>
   );
