@@ -1,5 +1,14 @@
 import type { PlansType } from "@aperturs/validators/subscription";
 
+
+
+export const BaseFeatures = [
+  {
+    plan: "PRO",
+    featurs: ['4 socials']
+  }
+]
+
 export const Plans = [
   {
     variantName: "montly",

@@ -7,7 +7,13 @@ import PlansSkeleton from "~/components/profile/account/billing/_plans/skeleton"
 
 export default function Pricing() {
   return (
-    <div className="flex h-full w-full flex-grow items-center justify-center p-8 ">
+    <div className="flex h-full w-full flex-col items-center  px-8 py-36">
+      <h1 className="my-3 text-center text-6xl font-bold">
+        Start your free trial
+      </h1>
+      <p className="text-center text-lg mb-8">
+        You&apos;ll get 7 days for free - you can cancel anytime!
+      </p>
       <Tabs defaultValue="monthly" className="w-full">
         <div className="flex w-full items-center justify-center">
           <TabsList>
@@ -18,11 +24,7 @@ export default function Pricing() {
             <p>Free 2 months</p>
             <p>billed yearly</p>
           </div>
-          <div>
-            {/* <span className="text-sm text-gray-500">Billed</span>
-            <span className="text-sm text-gray-500">Annually</span>
-            <span className="text-sm text-gray-500">Save 20%</span> */}
-          </div>
+          <div></div>
         </div>
         <TabsContent value="monthly">
           <Suspense fallback={<PlansSkeleton />}>
