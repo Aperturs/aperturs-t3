@@ -1,6 +1,25 @@
 import type { Subscription } from "@lemonsqueezy/lemonsqueezy.js";
 import { z } from "zod";
 
+export const featureName = z.enum([
+  "Social accounts",
+  "Schedule into the future",
+  "Scheduled posts",
+  "Save as drafts",
+  "AI Tokens",
+  "History",
+]);
+
+export type FeatureNameType = z.infer<typeof featureName>;
+
+export const feature = z.object({
+  name: featureName,
+  baseValue: z.string().or(z.number()).or(z.boolean()),
+  description: z.string(),
+});
+
+export type FeatureType = z.infer<typeof feature>;
+
 export const plansSchema = z.object({
   productId: z.number(),
   productName: z.string(),
@@ -16,6 +35,7 @@ export const plansSchema = z.object({
   isUsageBased: z.boolean(),
   sort: z.number(),
   power: z.number(),
+  features: z.array(feature),
 });
 
 export type PlansType = z.infer<typeof plansSchema>;
