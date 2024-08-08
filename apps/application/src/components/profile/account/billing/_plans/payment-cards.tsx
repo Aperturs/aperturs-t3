@@ -76,7 +76,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
       </CardContent>
       <CardFooter>
         <SignupButton
-          className={`w-full ${plan.important ? "bg-black text-primary hover:bg-slate-50 dark:text-primary" : ""}`}
+          className={`w-full ${plan.important ? "bg-black text-primary hover:bg-zinc-900/90 dark:text-primary" : ""}`}
           plan={plan}
           isChangingPlans={isChangingPlans}
           currentPlan={currentPlan}
