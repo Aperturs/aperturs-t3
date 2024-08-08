@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 import type {
   addTwitterType,
@@ -17,6 +17,7 @@ export async function handleLinkedinRedirect({
   tokenId,
 }: SocialRedisKeyType) {
   const url = await api.linkedin.getLinkedinAuthUrl({ orgId, tokenId });
+  console.log(url, "url");
   redirect(url);
 }
 

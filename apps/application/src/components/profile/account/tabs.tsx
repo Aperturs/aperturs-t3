@@ -7,8 +7,7 @@ import {
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 
-import BillingTab from "./billingTab";
-import UserProfilePage from "./user-profile";
+// import UserProfilePage from "./user-profile";
 
 const Test = () => {
   return <div className="w-full py-5">comming soon..</div>;
@@ -20,19 +19,19 @@ export default function AccountTabs() {
       label: "Account",
       value: "account",
       icon: UserCircleIcon,
-      element: UserProfilePage,
+      element: <Test />,
     },
     {
       label: "Billing",
       value: "billing",
       icon: Square3Stack3DIcon,
-      element: BillingTab,
+      element: <Test />,
     },
     {
       label: "Settings",
       value: "settings",
       icon: Cog6ToothIcon,
-      element: Test,
+      element: <Test />,
     },
   ];
   return (
@@ -49,7 +48,7 @@ export default function AccountTabs() {
       </TabsList>
       {data.map(({ value, element }) => (
         <TabsContent key={value} value={value}>
-          <div className="w-full">{React.createElement(element)}</div>
+          <div className="w-full">{element}</div>
         </TabsContent>
       ))}
     </Tabs>

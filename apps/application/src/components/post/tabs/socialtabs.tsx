@@ -16,6 +16,7 @@ export default function SocialTabs() {
     postType: state.postType,
     setContent: state.setContent,
   }));
+  console.log(content, "content");
 
   const { mutateAsync, isPending } = api.post.generate.useMutation();
 

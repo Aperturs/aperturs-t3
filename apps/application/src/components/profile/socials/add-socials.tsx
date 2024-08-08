@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { AiFillYoutube, AiOutlineTwitter } from "react-icons/ai";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 
@@ -52,8 +52,13 @@ export const AddSocial = () => {
 const Socials = () => {
   const [localLoading, setLocalLoading] = useState(false);
   const router = useRouter();
+  const path = usePathname();
 
   const params = useParams<{ orgid: string }>();
+
+  const hasOnboarding = path.includes("onboarding");
+
+  console.log(path, hasOnboarding, "hasOnboarding");
 
   // const handleGithub = async () => {
   //   setLocalLoading(true);
@@ -75,12 +80,14 @@ const Socials = () => {
       await handleLinkedinRedirect({
         orgId: "personal",
         tokenId: "new",
+        onboarding: hasOnboarding,
       });
       return;
     }
     await handleLinkedinRedirect({
       orgId: params.orgid,
       tokenId: "new",
+      onboarding: hasOnboarding,
     });
     setLocalLoading(false);
   };
@@ -90,6 +97,7 @@ const Socials = () => {
     await handleInstagramRedirect({
       orgId: params?.orgid ?? "personal",
       tokenId: "new",
+      onboarding: hasOnboarding,
     });
     setLocalLoading(false);
   };
@@ -99,6 +107,7 @@ const Socials = () => {
     await handleYoutubeRedirect({
       orgId: params?.orgid ?? "personal",
       tokenId: "new",
+      onboarding: hasOnboarding,
     });
     setLocalLoading(false);
   };
@@ -114,7 +123,7 @@ const Socials = () => {
         className="h-12"
         onClick={() =>
           router.push(
-            `/socials/twitter?orgid=${params?.orgid ?? "personal&tokenid=new"}`,
+            `/socials/twitter?orgid=${params?.orgid ?? "personal&tokenid=new"}${hasOnboarding ? "&onboarding=true" : ""}`,
           )
         }
         disabled={localLoading}

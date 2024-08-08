@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
-import FetchAllSubscriptions from "../_subscription/fetch-all-subscriptions";
-import SubscriptionSkeleton from "../_subscription/sub-skeleton";
+import FetchAllSubscriptions from "../../../../components/profile/account/billing/_subscription/fetch-all-subscriptions";
+import SubscriptionSkeleton from "../../../../components/profile/account/billing/_subscription/sub-skeleton";
 
 export const metadata = {
   title: "Aperturs | Billing",

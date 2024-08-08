@@ -1,4 +1,4 @@
-import BillingCard from "~/app/(personal)/billing/_plans/payment-cards";
+import BillingCard from "~/components/profile/account/billing/_plans/payment-cards";
 import { api } from "~/trpc/server";
 
 type PlanIntervel = "month" | "year";

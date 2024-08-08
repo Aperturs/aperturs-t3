@@ -1,4 +1,122 @@
-import type { PlansType } from "@aperturs/validators/subscription";
+import type { FeatureType, PlansType } from "@aperturs/validators/subscription";
+
+export const BaseFeatures: FeatureType[] = [
+  {
+    name: "Social accounts",
+    baseValue: "Varies",
+    description:
+      "The number of social media accounts you can connect and manage.",
+  },
+  {
+    name: "Schedule into the future",
+    baseValue: "Unlimited",
+    description:
+      "The maximum duration for which you can schedule posts in advance.",
+  },
+  {
+    name: "Scheduled posts",
+    baseValue: "Unlimited",
+    description:
+      "The total number of posts you can schedule at any given time.",
+  },
+  {
+    name: "Save as drafts",
+    baseValue: "Unlimited",
+    description:
+      "The number of posts you can save as drafts for later editing or posting.",
+  },
+  {
+    name: "AI Tokens",
+    baseValue: "Unlimited",
+    description:
+      "The number of AI-generated tokens you can use to create posts.",
+  },
+  {
+    name: "History",
+    baseValue: "Unlimited",
+    description:
+      "The length of time your post history will be retained and accessible.",
+  },
+];
+
+type BaseFeatureNames = (typeof BaseFeatures)[number]["name"];
+
+type PlanFeatureOverrides = Partial<
+  Record<
+    BaseFeatureNames,
+    { value?: string | number | boolean; description?: string }
+  >
+>;
+
+const mergeFeatures = (
+  baseFeatures: FeatureType[],
+  planName: string,
+): FeatureType[] => {
+  // Initialize the merged object with default values from baseFeatures
+  const merged: Record<
+    FeatureType["name"],
+    { value: string | number | boolean; description: string }
+  > = baseFeatures.reduce(
+    (acc, feature) => {
+      acc[feature.name] = {
+        value: feature.baseValue,
+        description: feature.description,
+      };
+      return acc;
+    },
+    {} as Record<
+      FeatureType["name"],
+      { value: string | number | boolean; description: string }
+    >,
+  );
+
+  // Apply overrides from PlanFeatureOverrides
+  const overrides = PlanFeatureOverrides[planName] ?? {};
+
+  for (const [key, value] of Object.entries(overrides)) {
+    if (key in merged) {
+      if (value.value !== undefined) {
+        merged[key as FeatureType["name"]].value = value.value;
+      }
+      if (value.description !== undefined) {
+        merged[key as FeatureType["name"]].description = value.description;
+      }
+    }
+  }
+
+  // Convert merged object back to array format
+  return baseFeatures.map((feature) => ({
+    name: feature.name,
+    baseValue: merged[feature.name]?.value || feature.baseValue,
+    description: merged[feature.name]?.description || feature.description,
+  }));
+};
+
+const PlanFeatureOverrides: Record<string, PlanFeatureOverrides> = {
+  "Solo Creator": {
+    "Social accounts": { value: 4 },
+    "Schedule into the future": { value: "14 days" },
+    History: { value: "30 days" },
+    "Scheduled posts": { value: 30 },
+    "Save as drafts": { value: 25 },
+    "AI Tokens": { value: 1000, description: "Approximately 200 posts" },
+  },
+  "Small Business": {
+    "Social accounts": { value: 15 },
+    "Schedule into the future": { value: "60 days" },
+    History: { value: "60 days" },
+    "Scheduled posts": { value: 500 },
+    "Save as drafts": { value: 500 },
+    "AI Tokens": { value: 5000, description: "Approximately 1000 posts" },
+  },
+  Business: {
+    "Social accounts": { value: 100 },
+  },
+};
+
+const soloCreatorFeatures = mergeFeatures(BaseFeatures, "Solo Creator");
+const smallBusinessFeatures = mergeFeatures(BaseFeatures, "Small Business");
+const businessFeatures = mergeFeatures(BaseFeatures, "Business");
 
 export const Plans = [
   {
@@ -12,6 +130,7 @@ export const Plans = [
     productName: "business",
     variantId: 224378,
     trialIntervalCount: 0,
+    features: businessFeatures,
     sort: 3,
     power: 3,
   },
@@ -29,6 +148,7 @@ export const Plans = [
     trialIntervalCount: 14,
     sort: 3,
     power: 6,
+    features: businessFeatures,
   },
   {
     variantName: "Monthly",
@@ -44,6 +164,7 @@ export const Plans = [
     trialIntervalCount: 0,
     sort: 2,
     power: 2,
+    features: smallBusinessFeatures,
   },
   {
     variantName: "Yearly",
@@ -60,6 +181,7 @@ export const Plans = [
     trialIntervalCount: 14,
     sort: 2,
     power: 5,
+    features: smallBusinessFeatures,
   },
   {
     variantName: "Yearly pricing",
@@ -72,6 +194,7 @@ export const Plans = [
     productName: "Solo Creator",
     variantId: 129346,
     trialInterval: "day",
+    features: soloCreatorFeatures,
     trialIntervalCount: 14,
     sort: 1,
     power: 4,
@@ -90,5 +213,6 @@ export const Plans = [
     trialIntervalCount: 14,
     sort: 1,
     power: 1,
+    features: soloCreatorFeatures,
   },
 ] as PlansType[];

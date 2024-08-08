@@ -1,7 +1,7 @@
 import "@aperturs/ui/globals.css";
 import "~/styles/calendar.css";
 
-import { Inter } from "next/font/google";
+import { Inter, Lato } from "next/font/google";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
@@ -11,9 +11,15 @@ import { TRPCReactProvider } from "~/trpc/react";
 import AuthProvider from "./_provider/auth-provider";
 import { ThemeProvider } from "./_provider/theme-provider";
 
-const inter = Inter({
+// const inter = Inter({
+//   subsets: ["latin"],
+//   variable: "--font-sans",
+// });
+
+const lato = Lato({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-lato",
 });
 
 export const metadata = {
@@ -29,7 +35,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans ${inter.variable}`}>
+      <head>
+        <Script id="lemonSqueezyAffiliateConfig">{`window.lemonSqueezyAffiliateConfig = { store: "aperturs" };`}</Script>
+        <Script src="https://lmsqueezy.com/affiliate.js" defer></Script>
+      </head>
+      <body className={`font-sans ${lato.variable}`}>
         <SpeedInsights />
         <Script
           src="https://app.lemonsqueezy.com/js/lemon.js"

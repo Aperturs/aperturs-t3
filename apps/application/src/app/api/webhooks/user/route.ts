@@ -1,7 +1,6 @@
 import type { User } from "@clerk/nextjs/server";
 import type { IncomingHttpHeaders } from "http";
 import type { WebhookRequiredHeaders } from "svix";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
@@ -38,18 +37,20 @@ interface UserInterface extends Omit<User, UnwantedKeys> {
 }
 
 async function handler(request: Request) {
+  console.log("request", request);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const payload = await request.json();
-  const headersList = headers();
+  const headersAll = request.headers;
+  console.log("headersList", headersAll);
   const heads = {
-    "svix-id": headersList.get("svix-id"),
-    "svix-timestamp": headersList.get("svix-timestamp"),
-    "svix-signature": headersList.get("svix-signature"),
+    "svix-id": headersAll.get("svix-id"),
+    "svix-timestamp": headersAll.get("svix-timestamp"),
+    "svix-signature": headersAll.get("svix-signature"),
   };
   const wh = new Webhook(webhookSecret);
   let evt: Event | null = null;
 
-  console.log(payload, headersList);
+  console.log(payload, headersAll);
 
   try {
     evt = wh.verify(
@@ -91,11 +92,11 @@ async function handler(request: Request) {
       userId: id,
     });
     const details = {
-      primaryEmail: emailObject.email_address,
+      primaryEmail:
+        emailObject.email_address ?? evt.data.primaryEmailAddress?.emailAddress,
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
-      birthday: evt.data.birthday,
       profileImageUrl: evt.data.profile_image_url,
     };
 
@@ -117,11 +118,12 @@ async function handler(request: Request) {
       return email.id === primary_email_address_id;
     });
     const userDetails = {
-      primaryEmail: emailObject?.email_address ?? "",
+      primaryEmail:
+        emailObject?.email_address ??
+        evt.data.primaryEmailAddress?.emailAddress,
       firstName: evt.data.first_name,
       lastName: evt.data.last_name,
       phoneNumber: evt.data.phone_numbers,
-      birthday: evt.data.birthday,
       profileImageUrl: evt.data.profile_image_url,
     };
 
@@ -149,6 +151,5 @@ interface Event {
   type: EventType;
 }
 
-export const GET = handler;
 export const POST = handler;
 export const PUT = handler;

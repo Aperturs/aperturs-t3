@@ -12,6 +12,7 @@ import {
   publicProcedure,
 } from "@api/trpc";
 import { configureLemonSqueezy } from "@api/utils/lemon-squeezy";
+import { clerkClient } from "@clerk/nextjs/server";
 import {
   cancelSubscription,
   createCheckout,
@@ -157,6 +158,11 @@ export const subscriptionRouter = createTRPCRouter({
                     (attributes.ends_at as string) ??
                     (attributes.trial_ends_at as string),
                 });
+              });
+              await clerkClient().users.updateUser(updateData.userId, {
+                publicMetadata: {
+                  onboardingComplete: true,
+                },
               });
             } catch (error) {
               processingError = `Failed to upsert Subscription #${updateData.subscriptionId} to the database. Error: ${error as string}`;
@@ -362,11 +368,16 @@ export const subscriptionRouter = createTRPCRouter({
     .query(async ({ input, ctx }) => {
       configureLemonSqueezy();
 
+      console.log(ctx.currentUser, "ctx.currentUser from backend");
+
       const fetchUser = await ctx.db.query.user.findFirst({
         where: eq(schema.user.clerkUserId, ctx.currentUser),
       });
 
+      console.log(fetchUser, "fetchUser from backend");
+
       const userDetails = fetchUser?.userDetails as UserDetails;
+      console.log(userDetails, "userDetails from backend");
 
       const checkout = await createCheckout(
         env.LEMONSQUEEZY_STORE_ID,
@@ -391,6 +402,8 @@ export const subscriptionRouter = createTRPCRouter({
           },
         },
       );
+
+      console.log(checkout.data?.data.attributes.url, "checkout from backend");
 
       return checkout.data?.data.attributes.url;
     }),
@@ -485,6 +498,9 @@ export const subscriptionRouter = createTRPCRouter({
             eq(schema.subscriptions.status, "on_trial"),
             gte(schema.subscriptions.trialEndsAt, new Date().toISOString()),
           ),
+          eq(schema.subscriptions.status, "active"),
+          eq(schema.subscriptions.status, "paused"),
+          eq(schema.subscriptions.status, "past_due"),
         ),
       ),
       // orderBy: { createdAt: "desc" },

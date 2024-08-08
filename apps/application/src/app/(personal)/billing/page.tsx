@@ -2,11 +2,11 @@ import { Suspense } from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 
-import FetchPlans from "./_plans/plans";
-import PlansSkeleton from "./_plans/skeleton";
-import FetchCurrentSubscription from "./_subscription/fetch-current-subscription";
-import HistoryIcon from "./_subscription/hisotry-icon";
-import SubscriptionSkeleton from "./_subscription/sub-skeleton";
+import FetchPlans from "~/components/profile/account/billing/_plans/plans";
+import PlansSkeleton from "~/components/profile/account/billing/_plans/skeleton";
+import FetchCurrentSubscription from "~/components/profile/account/billing/_subscription/fetch-current-subscription";
+import HistoryIcon from "~/components/profile/account/billing/_subscription/hisotry-icon";
+import SubscriptionSkeleton from "~/components/profile/account/billing/_subscription/sub-skeleton";
 
 export const metadata = {
   title: "Aperturs | Billing",

@@ -177,9 +177,9 @@ export default function SideBar() {
             <BottomMenu bottomMenu={bottomMenu} />
           </>
 
-          <div className="flex w-full justify-center">
+          {/* <div className="flex w-full justify-center">
             <ProfileButton />
-          </div>
+          </div> */}
         </div>
         <SheetContent
           className={cn(

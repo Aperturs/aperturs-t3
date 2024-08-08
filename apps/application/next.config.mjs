@@ -1,4 +1,5 @@
 import { fileURLToPath } from "url";
+import { withHydrationOverlay } from "@builder.io/react-hydration-overlay/next";
 import _jiti from "jiti";
 
 // const __dirname = dirname(__filename);
@@ -111,4 +112,6 @@ const config = {
 //   rsc: true
 // })(config);
 
-export default config;
+export default withHydrationOverlay({
+  appRootSelector: "main",
+})(config);

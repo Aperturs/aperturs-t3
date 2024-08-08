@@ -35,7 +35,7 @@ export const PostTypeSchema = z.nativeEnum(postType);
 export const basePostSchema = z.object({
   id: z.string(),
   name: z.string(),
-  socialType: z.string(),
+  socialType: SocialTypeSchema,
   unique: z.boolean(),
   content: z.string(),
   files: z.array(z.instanceof(File)).default([]),

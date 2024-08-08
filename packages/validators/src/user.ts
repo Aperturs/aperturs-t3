@@ -54,6 +54,7 @@ export const UniqueIdsSchema = z.enum([
   "wbhk",
   "yt",
   "ytc",
+  "sp",
 ]);
 
 export type UniqueIdsType = z.infer<typeof UniqueIdsSchema>;

@@ -44,7 +44,12 @@ export const SimpleButton = ({
   ...buttonProps
 }: SimpleButtonProps) => {
   return (
-    <Button {...buttonProps} disabled={disabled} className="py-6 font-normal">
+    <Button
+      variant="secondary"
+      {...buttonProps}
+      disabled={disabled}
+      className="py-6 font-normal"
+    >
       {isLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
       {text}
     </Button>

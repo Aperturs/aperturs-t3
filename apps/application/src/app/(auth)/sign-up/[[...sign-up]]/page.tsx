@@ -29,8 +29,7 @@ const Signup = () => {
           path="/sign-up"
           routing="path"
           signInUrl="/sing-in"
-          afterSignUpUrl="/onboarding"
-          redirectUrl="/onboarding"
+          forceRedirectUrl="/onboarding"
         />
       </div>
     </div>

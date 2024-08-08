@@ -52,6 +52,7 @@ async function handler(req: NextRequest) {
   const redisData = (await redis.get(userId))! as SocialRedisKeyType;
   const isPersonal = redisData.orgId === "personal";
   const isNew = redisData.tokenId === "new";
+  const isOnboarding = redisData.onboarding;
 
   if (!redisData.orgId || !redisData.tokenId) {
     return NextResponse.json(
@@ -146,6 +147,10 @@ async function handler(req: NextRequest) {
     });
   if (isPersonal) {
     console.log("I am personal");
+    if (isOnboarding) {
+      const url = `${env.DOMAIN}/onboarding/add-social`;
+      return NextResponse.redirect(url);
+    }
     const url = `${env.DOMAIN}/socials`;
     return NextResponse.redirect(url);
   }

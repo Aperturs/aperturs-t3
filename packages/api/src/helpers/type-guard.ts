@@ -55,3 +55,10 @@ export function leamonWebhookHasData(obj: unknown): obj is {
     "attributes" in obj.data
   );
 }
+
+export class ServerActionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ServerActionError";
+  }
+}

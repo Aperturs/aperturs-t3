@@ -75,8 +75,10 @@ export async function GET(req: NextRequest) {
       const domain = env.DOMAIN;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const redisData = (await redis.get(userId))! as SocialRedisKeyType;
+      console.log(redisData, "redisData");
       const isPersonal = redisData.orgId === "personal";
       const isNew = redisData.tokenId === "new";
+      const isOnboarding = redisData.onboarding;
       if (isNew) {
         await api.linkedin.addLinkedlnToDatabase({
           profileId: user.id,
@@ -105,13 +107,17 @@ export async function GET(req: NextRequest) {
         });
       }
       if (isPersonal) {
+        if (isOnboarding) {
+          const url = `${domain}/socials`;
+          return NextResponse.redirect(url);
+        }
         const url = `${domain}/socials`;
         return NextResponse.redirect(url);
       }
       const url = `${domain}/organisation/${redisData.orgId}/socials`;
       return NextResponse.redirect(url);
     }
-    const url = `${env.DOMAIN}/socials`;
+    const url = `${env.DOMAIN}/onboarding/socials`;
     return NextResponse.redirect(url);
   } catch (e) {
     console.log(e, "error");

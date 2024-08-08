@@ -1,10 +1,13 @@
 import type { z } from "zod";
 import { relations } from "drizzle-orm";
 import {
+  boolean,
+  foreignKey,
   index,
   json,
   pgEnum,
   pgTable,
+  text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -13,7 +16,7 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { createUniqueIds } from "../utils";
 import { organization } from "./organisation";
 import { project } from "./project";
-import { youtubeToken } from "./tokens";
+import { linkedInToken, twitterToken, youtubeToken } from "./tokens";
 import { user } from "./user";
 
 export const postStatusEnum = pgEnum("postStatus", [
@@ -29,6 +32,17 @@ export const postReviewStatusEnum = pgEnum("postReviewStatus", [
 ]);
 
 export const postType = pgEnum("postType", ["NORMAL", "SHORT", "LONG_VIDEO"]);
+
+export const socialType = pgEnum("socialType", [
+  "DEFAULT",
+  "TWITTER",
+  "LINKEDIN",
+  "LENS",
+  "GITHUB",
+  "YOUTUBE",
+  "INSTAGRAM",
+  "FACEBOOK",
+]);
 
 export const post = pgTable(
   "Post",
@@ -81,7 +95,7 @@ export const post = pgTable(
 export type PostInsert = typeof post.$inferInsert;
 export type PostSelect = typeof post.$inferSelect;
 
-export const postRelations = relations(post, ({ one }) => ({
+export const postRelations = relations(post, ({ one, many }) => ({
   organization: one(organization, {
     fields: [post.organizationId],
     references: [organization.id],
@@ -97,6 +111,76 @@ export const postRelations = relations(post, ({ one }) => ({
   user: one(user, {
     fields: [post.clerkUserId],
     references: [user.clerkUserId],
+  }),
+  singlesPosts: many(singlePost),
+}));
+
+export const singlePost = pgTable(
+  "SinglePost",
+  {
+    id: varchar("id", { length: 191 })
+      .primaryKey()
+      .$defaultFn(() => createUniqueIds("sp")),
+    postId: varchar("postId", { length: 191 }).references(() => post.id, {
+      onDelete: "cascade",
+    }),
+    unique: boolean("unique").default(false).notNull(),
+    fileUrls: json("fileUrls").$type<string[]>().notNull(),
+    name: varchar("name", { length: 256 }).notNull(),
+    content: text("content").notNull(),
+    socialType: socialType("postType").default("DEFAULT").notNull(),
+    twitterTokenId: varchar("twitterTokenId", { length: 256 }).references(
+      () => twitterToken.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
+    linkedInTokenId: varchar("linkedInTokenId", { length: 256 }).references(
+      () => linkedInToken.id,
+      {
+        onDelete: "cascade",
+      },
+    ),
+    parentSinglePostId: varchar("parentSinglePostId", { length: 191 }),
+    createdAt: timestamp("createdAt", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updatedAt", {
+      withTimezone: true,
+    }).notNull(),
+  },
+  (table) => {
+    return {
+      selfRef: foreignKey({
+        columns: [table.parentSinglePostId],
+        foreignColumns: [table.id],
+        name: "SinglePost_parentSinglePostId_fkey",
+      }).onDelete("cascade"),
+      postIdIdx: index("SinglePost_postId_idx").on(table.postId),
+    };
+  },
+);
+
+export const singlePostRelations = relations(singlePost, ({ one, many }) => ({
+  post: one(post, {
+    fields: [singlePost.postId],
+    references: [post.id],
+  }),
+  linkedInToken: one(linkedInToken, {
+    fields: [singlePost.linkedInTokenId],
+    references: [linkedInToken.id],
+  }),
+  twitterToken: one(twitterToken, {
+    fields: [singlePost.twitterTokenId],
+    references: [twitterToken.id],
+  }),
+  parent: one(singlePost, {
+    fields: [singlePost.parentSinglePostId],
+    references: [singlePost.id],
+    relationName: "parent",
+  }),
+  thread: many(singlePost, {
+    relationName: "parent",
   }),
 }));
 
