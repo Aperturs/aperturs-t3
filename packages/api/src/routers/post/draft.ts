@@ -49,9 +49,9 @@ export const posting = createTRPCRouter({
               }
               console.log(post, "post");
               for (const content of input.postContent) {
-                if (typeof content.content === "string") {
-                  console.log(content, "content");
-                  await tx.insert(schema.singlePost).values({
+                const parentSinglePost = await tx
+                  .insert(schema.singlePost)
+                  .values({
                     content: content.content as string,
                     postId: post[0].id,
                     fileUrls: content.uploadedFiles,
@@ -65,29 +65,32 @@ export const posting = createTRPCRouter({
                     twitterTokenId:
                       content.socialType === "TWITTER" ? content.id : undefined,
                     updatedAt: new Date(),
-                  });
-                } else {
-                  for (const subContent of content.content) {
-                    await tx.insert(schema.singlePost).values({
-                      content: subContent.content,
-                      postId: post[0].id,
-                      fileUrls: subContent.uploadedFiles,
-                      name: subContent.name,
-                      unique: subContent.unique,
-                      socialType: subContent.socialType,
-                      linkedInTokenId:
-                        subContent.socialType === "LINKEDIN"
-                          ? subContent.id
-                          : undefined,
-                      twitterTokenId:
-                        subContent.socialType === "TWITTER"
-                          ? subContent.id
-                          : undefined,
-                      parentSinglePostId: content.id,
-                      updatedAt: new Date(),
-                    });
-                  }
+                  })
+                  .returning();
+
+                if (!parentSinglePost[0]) {
+                  throw new Error("Failed to save post");
                 }
+
+                const parentPostId = parentSinglePost[0].id;
+                if (typeof content.content !== "string")
+                  for (const subContent of content.content) {
+                    await tx
+                      .insert(schema.singlePost)
+                      .values({
+                        content: subContent.content,
+                        postId: post[0].id,
+                        fileUrls: subContent.uploadedFiles,
+                        name: subContent.name,
+                        unique: subContent.unique,
+                        socialType: subContent.socialType,
+                        parentSinglePostId: parentPostId,
+                        updatedAt: new Date(),
+                      })
+                      .catch((e) => {
+                        console.error(e, "error");
+                      });
+                  }
               }
 
               return post;

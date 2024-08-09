@@ -2,6 +2,7 @@
   "name": "@aperturs/app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "pnpm with-env next build",
     "build:prod": "next build",
