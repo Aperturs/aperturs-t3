@@ -138,7 +138,7 @@ export const savePostInputSchema = z.object({
 });
 
 export const updatePostInputSchema = z.object({
-  postContent: z.array(postSchema.omit({ files: true })),
+  postContent: savePostInputSchema.shape.postContent,
   scheduledTime: z.date().optional(),
   postId: z.string(),
 });

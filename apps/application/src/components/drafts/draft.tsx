@@ -14,7 +14,7 @@ async function DraftPage({ children }: { children: React.ReactNode }) {
         <div className="flex gap-2">
           {/* <CreateButton text="New Draft" /> */}
           <ToolTipSimple content="Comming Soon...">
-            <Button className="dark:text-white">
+            <Button>
               Add to Queue
               <BsFillCalendarFill className="ml-2" />
             </Button>

@@ -532,6 +532,7 @@ export default function usePublishing({ id }: { id: string }) {
         (async () => {
           // Update post
           const newContent = await uploadFilesAndModifyContent();
+          console.log(newContent, "newContent");
           const response = await updatePost({
             postId: id,
             postContent: newContent,
@@ -561,7 +562,7 @@ export default function usePublishing({ id }: { id: string }) {
         },
       );
     } catch (err) {
-      toast.error(`Failed to update post ${err as string}`);
+      toast.error(`Failed to update post ${err.message as string}`);
     }
   };
 

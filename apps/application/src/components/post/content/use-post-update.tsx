@@ -1,7 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
-import type { SocialType } from "@aperturs/validators/post";
+import type {
+  BasePostContentType,
+  SocialType,
+} from "@aperturs/validators/post";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
@@ -27,7 +30,7 @@ function usePostUpdate(id: string) {
                 ...item,
                 content:
                   item.socialType === SocialTypes.TWITTER
-                    ? [
+                    ? ([
                         {
                           id: "0",
                           content: newContent,
@@ -38,7 +41,7 @@ function usePostUpdate(id: string) {
                           uploadedFiles: [],
                           previewUrls: [],
                         },
-                      ]
+                      ] as BasePostContentType[])
                     : newContent,
               }
             : item,
