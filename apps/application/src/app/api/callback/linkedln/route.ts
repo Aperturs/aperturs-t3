@@ -88,9 +88,10 @@ export async function GET(req: NextRequest) {
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
           clerkUserId: isPersonal ? userId : undefined,
           organizationId: isPersonal ? undefined : redisData.orgId,
-          profilePicture: profile_picture_url,
+          profileImage: profile_picture_url,
           fullName: fullName,
           updatedAt: new Date(),
+          socialType: "LINKEDIN",
         });
       } else {
         await api.linkedin.refreshLinkedinToken({
@@ -99,8 +100,10 @@ export async function GET(req: NextRequest) {
             refreshToken: data.refresh_token,
             expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
             refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
-            profilePicture: profile_picture_url,
+            profileImage: profile_picture_url,
             fullName: fullName,
+            profileId: user.id,
+            socialType: "LINKEDIN",
             updatedAt: new Date(),
           },
           tokenId: redisData.tokenId,

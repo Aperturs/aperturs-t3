@@ -1,6 +1,6 @@
 import { shallow } from "zustand/shallow";
 
-import type { PostContentType, SocialType } from "@aperturs/validators/post";
+import type { SocialType } from "@aperturs/validators/post";
 import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
 
 import { useStore } from "~/store/post-store";
@@ -13,108 +13,54 @@ interface IConnection {
   id: string;
 }
 
-const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
-  const { setContent, content, setYoutubeContent, postType, youtubeContent } =
-    useStore(
-      (state) => ({
-        setContent: state.setContent,
-        content: state.content,
-        setYoutubeContent: state.setYoutubeContent,
-        postType: state.postType,
-        youtubeContent: state.youtubeContent,
-      }),
-      shallow,
-    );
+const getRingColor = (type: SocialType) => {
+  switch (type) {
+    case "FACEBOOK":
+      return "ring-blue-600 dark:ring-blue-400";
+    case "TWITTER":
+      return "ring-blue-400 dark:ring-blue-600";
+    case "INSTAGRAM":
+      return "ring-ping-500 dark:ring-ping-400";
+    case "LINKEDIN":
+      return "ring-blue-500 dark:ring-blue-500";
+    case "YOUTUBE":
+      return "ring-red-500 dark:ring-red-400";
+    default:
+      return "ring-primary";
+  }
+};
 
-  const isSelected =
-    content.some((item) => item.id === id) || youtubeContent.youtubeId === id;
+const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
+  const { setPost, post } = useStore(
+    (state) => ({
+      setPost: state.setPost,
+      post: state.post,
+    }),
+    shallow,
+  );
+
+  const isSelected = post.socialProviders.some((item) => item.socialId === id);
 
   const handleClick = () => {
     if (isSelected) {
-      setContent(content.filter((item) => item.id !== id));
-      if (postType === "LONG_VIDEO") {
-        setYoutubeContent({
-          ...youtubeContent,
-          name: "",
-          youtubeId: "",
-        });
-      }
+      setPost({
+        ...post,
+        socialProviders: post.socialProviders.filter(
+          (item) => item.socialId !== id,
+        ),
+      });
     } else {
-      console.log(content, "content select social");
-      if (postType === "LONG_VIDEO") {
-        setYoutubeContent({
-          ...youtubeContent,
-          name: name,
-          youtubeId: id,
-        });
-        const existingYoutubeContentIndex = content.findIndex(
-          (item) => item.socialType === "YOUTUBE",
-        );
-        console.log(existingYoutubeContentIndex, "existing index");
-
-        if (existingYoutubeContentIndex !== -1) {
-          // If there's existing youtube content, update it
-          const updatedContent = content.map((item, index) => {
-            if (index === existingYoutubeContentIndex) {
-              return {
-                ...item,
-                name: name,
-                id: id,
-              };
-            }
-            return item;
-          });
-          console.log(updatedContent, "update");
-          setContent(updatedContent);
-        } else {
-          // If there's no existing youtube content, add new content
-
-          setContent([
-            ...content,
-            {
-              socialType: type,
-              id,
-              name,
-              unique: false,
-              content: content[0]?.content ?? "",
-              files: [],
-              uploadedFiles: [],
-            },
-          ]);
-        }
-      } else {
-        console.log("hello");
-        const defaultContent = content.find((item) => item.id === "DEFAULT");
-        const newContent = [
-          ...content,
+      setPost({
+        ...post,
+        socialProviders: [
+          ...post.socialProviders,
           {
+            socialId: id,
+            name: name,
             socialType: type,
-            id,
-            name,
-            unique: false,
-            content:
-              type === ("TWITTER" as SocialType)
-                ? [
-                    {
-                      id: "0",
-                      content: defaultContent?.content ?? "",
-                      name: "",
-                      socialType: "TWITTER",
-                      unique: false,
-                      files: defaultContent?.files ?? [],
-                      uploadedFiles: defaultContent?.uploadedFiles ?? [],
-                      previewUrls: defaultContent?.previewUrls ?? [],
-                    },
-                  ]
-                : defaultContent?.content ?? "",
-            files: defaultContent?.files ?? [],
-            uploadedFiles: defaultContent?.uploadedFiles ?? [],
-            previewUrls: defaultContent?.previewUrls ?? [],
           },
-        ] as PostContentType[];
-        console.log(newContent, "new content from connection");
-        setContent(newContent);
-      }
+        ],
+      });
     }
   };
 
@@ -128,7 +74,7 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
       onClick={handleClick}
     >
       <div className="relative">
-        <Avatar className="p-0.5 ring-4 ring-primary ring-offset-1">
+        <Avatar className={`p-0.5 ring-4 ${getRingColor(type)}  ring-offset-1`}>
           <AvatarImage src={profilePic} alt="avatar" />
           <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
         </Avatar>

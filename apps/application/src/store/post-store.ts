@@ -2,16 +2,15 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
 
 import type {
-  PostContentType,
+  FullPostType,
   PostType,
   youtubeContentType,
 } from "@aperturs/validators/post";
-import { SocialTypes } from "@aperturs/validators/post";
 
 interface StateValues {
   date: Date | undefined;
   time: string | null;
-  content: PostContentType[];
+  post: FullPostType;
   youtubeContent: youtubeContentType;
   postType: PostType;
 }
@@ -22,7 +21,7 @@ interface StateSetters {
   setDate: (date: Date | undefined) => void;
   setTime: (time: string | null) => void;
   reset: () => void;
-  setContent: (content: PostContentType[]) => void;
+  setPost: (post: FullPostType) => void;
   setPostType: (postType: PostType) => void;
   setYoutubeContent: (youtubeContent: youtubeContentType) => void;
 }
@@ -42,18 +41,28 @@ const initialState: StateValues = {
     videoTitle: "",
     videoUrl: "",
   },
-  content: [
-    {
-      id: SocialTypes.DEFAULT,
-      name: "Default",
-      socialType: SocialTypes.DEFAULT,
-      content: "",
-      unique: true,
-      files: [],
-      uploadedFiles: [],
-      previewUrls: [],
-    },
-  ],
+  post: {
+    id: "",
+    content: [
+      {
+        text: "",
+        files: [],
+        media: [],
+        name: "DEFAULT",
+        order: 0,
+        socialType: "DEFAULT",
+        uploadedFiles: [],
+        previewUrls: [],
+        tags: [],
+      },
+    ],
+    alternativeContent: [],
+    socialProviders: [],
+    scheduledTime: undefined,
+    orgId: "",
+    projectId: "",
+    postType: "NORMAL",
+  },
 };
 
 export const useStore = createWithEqualityFn<State>(
@@ -64,7 +73,7 @@ export const useStore = createWithEqualityFn<State>(
       set((state) => ({ ...state, shouldReset })),
     setDate: (date) => set((state) => ({ ...state, date })),
     setTime: (time) => set((state) => ({ ...state, time })),
-    setContent: (content) => set((state) => ({ ...state, content })),
+    setPost: (content) => set((state) => ({ ...state, content })),
     setPostType: (postType) => set((state) => ({ ...state, postType })),
     reset: () => set(() => initialState),
     setYoutubeContent: (youtubeContent) =>

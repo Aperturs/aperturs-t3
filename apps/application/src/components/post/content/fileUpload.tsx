@@ -45,29 +45,17 @@ export default function FileUpload({
   uploadedFiles: string[];
   tweetId?: string;
 }) {
-  const { content } = useStore();
+  const { post } = useStore();
 
-  const tweets = tweetsHere(content, id);
-  const filesThatBelongHere =
-    postType === "TWITTER"
-      ? tweets?.filter((tweet) => {
-          return tweet.id === tweetId;
-        })[0]?.files
-      : content
-          .map((post) => {
-            if (post.id === id) return post.files;
-          })
-          .filter(Boolean)[0];
-  const previewUrlsBelongHere =
-    postType === "TWITTER"
-      ? tweets?.filter((tweet) => {
-          return tweet.id === tweetId;
-        })[0]?.previewUrls
-      : content
-          .map((post) => {
-            if (post.id === id) return post.previewUrls;
-          })
-          .filter(Boolean)[0];
+  const filesThatBelongHere = post.content
+    .filter((post) => post.id === id)[0]
+    ?.media.map((media) => media.file)
+    .filter((file) => file !== undefined);
+  const previewUrlsBelongHere = post.content
+    .filter((post) => post.id === id)[0]
+    ?.media.map((media) => media.previewUrl)
+    .filter((url) => url !== undefined);
+
   const [selectedFiles, setSelectedFiles] = useState<File[]>(
     filesThatBelongHere ?? [],
   );
@@ -84,12 +72,13 @@ export default function FileUpload({
       const files = event.target.files;
       if (files && files.length > 0) {
         const newFiles = Array.from(files);
-        const contentContainNonUniqueLinkedin = content.some(
-          (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
-        );
+        // const contentContainNonUniqueLinkedin = content.some(
+        //   (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
+        // );
         if (
-          postType === SocialTypes.LINKEDIN ||
-          contentContainNonUniqueLinkedin
+          postType === SocialTypes.LINKEDIN
+          //  ||
+          // contentContainNonUniqueLinkedin
         ) {
           const isImageSelected = selectedFiles.some((file) =>
             file.type.startsWith("image/"),
@@ -135,7 +124,7 @@ export default function FileUpload({
     },
 
     [
-      content,
+      // content,
       postType,
       previewUrls,
       selectedFiles,

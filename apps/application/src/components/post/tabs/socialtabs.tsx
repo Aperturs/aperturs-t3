@@ -1,51 +1,46 @@
 import type { SocialType } from "@aperturs/validators/post";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { api } from "~/trpc/react";
-import { SimpleButton, SocialIcon } from "../common";
+import { SocialIcon } from "../common";
 import ContentPostCard from "../content/ContentPostCard";
 import Youtube from "../content/youtube";
-import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
-  const { content, postType, setContent } = useStore((state) => ({
-    content: state.content,
+  const { post, postType } = useStore((state) => ({
+    post: state.post,
     postType: state.postType,
-    setContent: state.setContent,
+    setPost: state.setPost,
   }));
-  console.log(content, "content");
 
-  const { mutateAsync, isPending } = api.post.generate.useMutation();
+  // const { mutateAsync, isPending } = api.post.generate.useMutation();
 
   return (
     <div className="w-full">
       {postType === "NORMAL" && (
         <>
-          {content.length > 2 ? (
+          {post.socialProviders.length > 2 ? (
             <Tabs defaultValue={SocialTypes.DEFAULT}>
               <TabsList>
-                {content.map(
-                  (item) =>
-                    item.unique && (
-                      <TabsTrigger value={item.id} key={item.id}>
-                        <div className="flex items-center gap-2 capitalize">
-                          <SocialIcon
-                            type={item.socialType as SocialType}
-                            size="md"
-                          />
-                          {typeof item.socialType === "string"
-                            ? item.socialType.toLowerCase()
-                            : ""}
-                        </div>
-                      </TabsTrigger>
-                    ),
-                )}
-                <SocialsMenu />
+                {post.alternativeContent.map((item) => (
+                  <TabsTrigger
+                    value={item.socialProvider.socialId}
+                    key={item.socialProvider.socialId}
+                  >
+                    <div className="flex items-center gap-2 capitalize">
+                      <SocialIcon
+                        type={item.socialProvider.socialType as SocialType}
+                        size="md"
+                      />
+                      <span>{item.socialProvider.name}</span>
+                    </div>
+                  </TabsTrigger>
+                ))}
+                {/* <SocialsMenu /> */}
               </TabsList>
-              {content.map(
+              {/* {content.map(
                 (item) =>
                   item.unique && (
                     <TabsContent key={item.id} value={item.id}>
@@ -59,7 +54,7 @@ export default function SocialTabs() {
                       )}
                     </TabsContent>
                   ),
-              )}
+              )} */}
             </Tabs>
           ) : (
             <ContentPostCard
@@ -70,7 +65,7 @@ export default function SocialTabs() {
         </>
       )}
       {postType === "LONG_VIDEO" && <Youtube />}
-      <SimpleButton
+      {/* <SimpleButton
         onClick={async () => {
           const result = await mutateAsync({
             idea: content[0] ? (content[0].content as string) : "",
@@ -102,7 +97,7 @@ export default function SocialTabs() {
         disabled={isPending}
         isLoading={isPending}
         text="Repurpose Content"
-      />
+      /> */}
     </div>
   );
 }

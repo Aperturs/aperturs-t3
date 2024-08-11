@@ -20,15 +20,17 @@ import usePostUpdate from "./use-post-update";
 // }
 
 function ContentPostCard({
-  id,
+  orderNumber,
+  socialId,
   postType,
 }: {
-  id: string;
+  orderNumber: number;
+  socialId: string;
   postType: SocialType;
 }) {
   // const [sync, setSync] = useState(false);
 
-  const { updateContent, contentValue, currentFiles } = usePostUpdate(id);
+  const { updateContent, contentValue, currentFiles } = usePostUpdate(orderNumber,socialId);
   const [content, setContent] = useState<string>(contentValue);
   const debounceContent = useDebounce(content, 1000);
   const isExternalUpdate = useRef(false); // Ref to track the source of the update

@@ -1,50 +1,5 @@
 import { z } from "zod";
 
-export const postType = {
-  normal: "NORMAL",
-  short: "SHORT",
-  longVideo: "LONG_VIDEO",
-} as const;
-
-export const SocialTypes = {
-  DEFAULT: "DEFAULT",
-  TWITTER: "TWITTER",
-  LINKEDIN: "LINKEDIN",
-  LENS: "LENS",
-  GITHUB: "GITHUB",
-  YOUTUBE: "YOUTUBE",
-  INSTAGRAM: "INSTAGRAM",
-  FACEBOOK: "FACEBOOK",
-} as const;
-
-export type SocialType = (typeof SocialTypes)[keyof typeof SocialTypes];
-export const SocialTypeSchema = z.enum([
-  "DEFAULT",
-  "TWITTER",
-  "LINKEDIN",
-  "LENS",
-  "GITHUB",
-  "YOUTUBE",
-  "INSTAGRAM",
-  "FACEBOOK",
-] as const);
-
-export type PostType = (typeof postType)[keyof typeof postType];
-export const PostTypeSchema = z.nativeEnum(postType);
-
-export const basePostSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  socialType: SocialTypeSchema,
-  unique: z.boolean(),
-  content: z.string(),
-  files: z.array(z.instanceof(File)).default([]),
-  previewUrls: z.array(z.string()).default([]).optional(),
-  uploadedFiles: z.array(z.string()),
-});
-
-export type BasePostContentType = z.infer<typeof basePostSchema>;
-
 export const videoTypes = [
   "MP4",
   "MOV",
@@ -76,19 +31,118 @@ export const allowedVideoMimeTypes = new Set([
   "video/webm",
 ]);
 
-// Define the complete schema including the recursive content field
-export const postSchema = z.object({
-  id: z.string(),
-  name: z.string(),
+export const postType = {
+  normal: "NORMAL",
+  short: "SHORT",
+  longVideo: "LONG_VIDEO",
+} as const;
+
+export type PostType = (typeof postType)[keyof typeof postType];
+export const PostTypeSchema = z.nativeEnum(postType);
+
+export const SocialTypes = {
+  DEFAULT: "DEFAULT",
+  TWITTER: "TWITTER",
+  LINKEDIN: "LINKEDIN",
+  LENS: "LENS",
+  GITHUB: "GITHUB",
+  YOUTUBE: "YOUTUBE",
+  INSTAGRAM: "INSTAGRAM",
+  FACEBOOK: "FACEBOOK",
+} as const;
+
+export type SocialType = (typeof SocialTypes)[keyof typeof SocialTypes];
+export const SocialTypeSchema = z.enum([
+  "DEFAULT",
+  "TWITTER",
+  "LINKEDIN",
+  "LENS",
+  "GITHUB",
+  "YOUTUBE",
+  "INSTAGRAM",
+  "FACEBOOK",
+]);
+
+// Implement it later, once basic features are one
+export const platformPostSchema = z.object({
+  platformPostId: z.string(),
+  socialId: z.string(),
   socialType: SocialTypeSchema,
-  unique: z.boolean(),
-  content: z.union([z.string(), z.array(basePostSchema)]),
-  files: z.array(z.instanceof(File)).default([]),
-  previewUrls: z.array(z.string()).default([]).optional(),
-  uploadedFiles: z.array(z.string()),
+  platformPostUrl: z.string(),
 });
 
-export type PostContentType = z.infer<typeof postSchema>;
+export const privacyStatusSchema = z.enum(["PUBLIC", "PRIVATE", "UNLISTED"]);
+
+export const SocialProviderSchema = z.object({
+  socialId: z.string(),
+  name: z.string(),
+  socialType: SocialTypeSchema,
+});
+
+export type SocialProviderType = z.infer<typeof SocialProviderSchema>;
+
+export const mediaSchema = z.object({
+  url: z.string().optional(),
+  mediaType: z.enum(["IMAGE", "VIDEO"]),
+  bucketUrl: z.string().optional(),
+  bucketKey: z.string().optional(),
+  altText: z.string().optional(),
+  thumbnailBucketUrl: z.string().optional(),
+  thumbnailBucketKey: z.string().optional(),
+  file: z.instanceof(File).optional(),
+  previewUrl: z.string().optional(),
+});
+
+export type MediaType = z.infer<typeof mediaSchema>;
+
+export const contentSchema = z.object({
+  id: z.string().optional(),
+  order: z.number(),
+  name: z.string(),
+  socialType: SocialTypeSchema,
+  media: z.array(mediaSchema),
+  text: z.string(),
+  tags: z.array(z.string()).optional().default([]),
+  socialId: z.string().optional(),
+  // files: z.array(z.instanceof(File)).default([]),
+  // previewUrls: z.array(z.string()).default([]).optional(),
+  // uploadedFiles: z.array(z.string()),
+});
+
+export type ContentType = z.infer<typeof contentSchema>;
+
+export const alternativeContentSchema = z.array(
+  z.object({
+    socialProvider: SocialProviderSchema,
+    content: z.array(contentSchema),
+  }),
+);
+
+// export const basePostSchema = z.object({
+//   id: z.string(),
+//   name: z.string(),
+//   socialType: SocialTypeSchema,
+//   unique: z.boolean(),
+//   content: z.string(),
+//   files: z.array(z.instanceof(File)).default([]),
+//   previewUrls: z.array(z.string()).default([]).optional(),
+//   uploadedFiles: z.array(z.string()),
+// });
+
+// export type BasePostContentType = z.infer<typeof basePostSchema>;
+
+export const postSchema = z.object({
+  id: z.string().optional(),
+  postType: PostTypeSchema,
+  content: z.array(contentSchema),
+  alternativeContent: alternativeContentSchema.default([]),
+  scheduledTime: z.date().optional(),
+  orgId: z.string().optional(),
+  projectId: z.string().optional(),
+  socialProviders: z.array(SocialProviderSchema),
+});
+
+export type FullPostType = z.infer<typeof postSchema>;
 
 const youtubeContentSchema = z.object({
   youtubeId: z.string(),
@@ -119,29 +173,29 @@ export type FinalYoutubeContentType = z.infer<typeof finalYoutubeContentSchema>;
 export type youtubeContentType = z.infer<typeof youtubeContentSchema>;
 
 export const savePostInputSchema = z.object({
-  postContent: z.array(
-    postSchema
-      .omit({
-        files: true,
-        previewUrls: true,
-      })
-      .extend({
-        content: z.union([
-          z.string(),
-          z.array(basePostSchema.omit({ files: true, previewUrls: true })),
-        ]),
-      }),
+  ...postSchema.shape,
+  content: z.array(
+    contentSchema.extend({
+      media: z.array(
+        mediaSchema.omit({
+          file: true,
+          previewUrl: true,
+        })
+      ),
+    })
   ),
-  scheduledTime: z.date().optional(),
-  projectId: z.string().optional(),
-  orgId: z.string().optional(),
+  socialProvider: z.array(SocialProviderSchema),
 });
 
+export type SavePostInputType = z.infer<typeof savePostInputSchema>;
+
 export const updatePostInputSchema = z.object({
-  postContent: savePostInputSchema.shape.postContent,
-  scheduledTime: z.date().optional(),
+  ...savePostInputSchema.shape,
+
   postId: z.string(),
 });
+
+export type UpdatePostInput = z.infer<typeof updatePostInputSchema>;
 
 export const YoutubeContentType = z.object({
   id: z.string(),
@@ -158,19 +212,17 @@ export const YoutubeContentType = z.object({
 });
 
 export const updateYoutubePostSchema = YoutubeContentType.partial().extend({
-  content: z.array(postSchema.omit({ files: true })),
+  content: z.array(postSchema),
 });
 
 export type UpdateYoutubePostInput = z.infer<typeof updateYoutubePostSchema>;
 
-export type SavePostInput = z.infer<typeof savePostInputSchema>;
+// export const postTweetInputSchema = z.object({
+//   tokenId: z.string(),
+//   tweets: z.array(basePostSchema),
+// });
 
-export const postTweetInputSchema = z.object({
-  tokenId: z.string(),
-  tweets: z.array(basePostSchema),
-});
-
-export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
+// export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
 
 export const postToLinkedInInputSchema = z.object({
   tokenId: z.string(),
