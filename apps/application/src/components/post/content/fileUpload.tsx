@@ -162,9 +162,12 @@ export default function FileUpload({
                 <track kind="captions" />
               </video>
             )}
-            <DeleteImage handleRemove={() => {
-              console.log('')
-            }} index={index} />
+            <DeleteImage
+              handleRemove={() => {
+                console.log("");
+              }}
+              index={index}
+            />
           </div>
         ))}
         {/* {previewUrls.map((url, index) => (
