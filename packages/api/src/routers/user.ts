@@ -8,7 +8,6 @@ import { createUniqueIds, eq, schema } from "@aperturs/db";
 import { SocialTypeSchema } from "@aperturs/validators/post";
 import { UniqueIdsSchema } from "@aperturs/validators/user";
 
-import { getGithubAccountDetails } from "../helpers/github";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const userRouter = createTRPCRouter({
@@ -41,25 +40,19 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-  getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
-    const github = await ctx.db.query.githubToken.findMany({
-      where: eq(schema.githubToken.clerkUserId, ctx.currentUser),
-    });
-    const githubDetails = await getGithubAccountDetails(github);
-    return githubDetails;
-  }),
+  // getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
+  //   const github = await ctx.db.query.githubToken.findMany({
+  //     where: eq(schema.githubToken.clerkUserId, ctx.currentUser),
+  //   });
+  //   const githubDetails = await getGithubAccountDetails(github);
+  //   return githubDetails;
+  // }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
-    const twitter = await ctx.db.query.twitterToken.findMany({
-      where: eq(schema.twitterToken.clerkUserId, ctx.currentUser),
+    const socials = await ctx.db.query.socialProvider.findMany({
+      where: eq(schema.socialProvider.clerkUserId, ctx.currentUser),
     });
-    const linkedin = await ctx.db.query.linkedInToken.findMany({
-      where: eq(schema.linkedInToken.clerkUserId, ctx.currentUser),
-    });
-    const youtube = await ctx.db.query.youtubeToken.findMany({
-      where: eq(schema.youtubeToken.clerkUserId, ctx.currentUser),
-    });
-    const accounts = getAccounts(linkedin, twitter, youtube);
+    const accounts = getAccounts(socials);
     return accounts;
   }),
 

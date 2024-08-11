@@ -26,15 +26,13 @@ export type UserDetails = z.infer<typeof UserDetailsSchema>;
 
 export const SocialAccounts = z.array(
   z.object({
-    type: SocialTypeSchema,
-    data: z.object({
-      tokenId: z.string(),
-      name: z.string(),
-      profile_image_url: z.string(),
-      profileId: z.string(),
-      connectedAt: z.string().optional(),
-      username: z.string().optional(),
-    }),
+    socialId: z.string(),
+    name: z.string(),
+    profile_image_url: z.string(),
+    profileId: z.string(),
+    connectedAt: z.date().optional(),
+    username: z.string().optional(),
+    socialType: SocialTypeSchema,
   }),
 );
 

@@ -9,13 +9,13 @@ export default async function FetchPersonalSocials() {
       {data?.map((item, key) => (
         <ConnectedSocial
           key={key}
-          name={item.data.name ?? ""}
-          icon={<SocialIcon type={item.type} size="md" />}
-          profilePic={item.data.profile_image_url ?? "/user.png"}
-          id={item.data.tokenId}
-          type={item.type}
-          connectedAt={item.data.connectedAt}
-          username={item.data.username}
+          name={item.name ?? ""}
+          icon={<SocialIcon type={item.socialType} size="md" />}
+          profilePic={item.profile_image_url ?? "/user.png"}
+          id={item.socialId}
+          type={item.socialType}
+          connectedAt={item.connectedAt}
+          username={item.username}
         />
       ))}
     </>

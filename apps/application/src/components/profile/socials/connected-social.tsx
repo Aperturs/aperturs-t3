@@ -12,7 +12,7 @@ export interface IConnection {
   id: string;
   type: SocialType;
   username?: string;
-  connectedAt?: string;
+  connectedAt?: Date;
 }
 
 export const ConnectedSocial = ({
@@ -39,7 +39,7 @@ export const ConnectedSocial = ({
       <div className="absolute right-10 top-4">{icon}</div>
       <ConnectSocialsAction id={id} type={type} />
       <p className="text-center text-xs font-bold text-gray-500">
-        Connected on <span>{connectedAt}</span>
+        Connected on <span>{connectedAt?.toDateString()}</span>
       </p>
     </Card>
   );
