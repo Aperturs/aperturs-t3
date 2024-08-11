@@ -31,8 +31,6 @@ interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
 }
 
-
-
 export const SimpleButton = ({
   text,
   isLoading,

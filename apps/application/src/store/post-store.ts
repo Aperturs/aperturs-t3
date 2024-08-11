@@ -78,7 +78,8 @@ export const useStore = createWithEqualityFn<State>(
     reset: () => set(() => initialState),
     setYoutubeContent: (youtubeContent) =>
       set((state) => ({ ...state, youtubeContent })),
-    setSocialProviders: (socialProviders) => set((state) => ({ ...state, socialProviders })),
+    setSocialProviders: (socialProviders) =>
+      set((state) => ({ ...state, socialProviders })),
   }),
   shallow,
 );

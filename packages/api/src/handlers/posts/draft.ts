@@ -17,6 +17,7 @@ export async function saveDraftToDatabase({ ...input }: SavePostInputBackend) {
         status: input.scheduledTime ? "SCHEDULED" : "SAVED",
         postType: input.postType,
         clerkUserId: input.userId,
+        content: input.content,
         updatedAt: new Date(),
         scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
       })
@@ -31,38 +32,16 @@ export async function saveDraftToDatabase({ ...input }: SavePostInputBackend) {
         socialProviderId: socialProvider.socialId,
       });
     }
-    for (const content of input.content) {
-      await trx.insert(schema.postContent).values({
-        postId: mainPostId,
-        name: content.name,
-        order: content.order,
-        text: content.text,
-        media: content.media,
-        tags: content.tags,
-        updatedAt: new Date(),
-      });
-    }
     for (const alterContent of input.alternativeContent) {
       const alterContentId = await trx
         .insert(schema.alternatePostContent)
         .values({
           postId: mainPostId,
           socialProviderId: alterContent.socialProvider.socialId,
+          content: alterContent.content,
         });
       if (!alterContentId[0]) {
         throw new Error("Failed to create alternative content");
-      }
-      for (const content of alterContent.content) {
-        await trx.insert(schema.postContent).values({
-          postId: mainPostId,
-          name: content.name,
-          order: content.order,
-          text: content.text,
-          media: content.media,
-          tags: content.tags,
-          socialProviderId: alterContent.socialProvider.socialId,
-          updatedAt: new Date(),
-        });
       }
     }
     return mainPost[0];
@@ -89,6 +68,7 @@ export async function updateDraftToDatabase({
             ? "SCHEDULED"
             : "SAVED",
         postType: input.postType,
+        content: input.content,
         clerkUserId: input.userId,
         updatedAt: new Date(),
         scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
@@ -119,38 +99,13 @@ export async function updateDraftToDatabase({
           },
         });
     }
-
-    for (const content of input.content) {
-      await trx
-        .insert(schema.postContent)
-        .values({
-          postId: mainPostId,
-          name: content.name,
-          order: content.order,
-          text: content.text,
-          media: content.media,
-          tags: content.tags,
-          updatedAt: new Date(),
-          id: content.id,
-        })
-        .onConflictDoUpdate({
-          target: schema.postContent.id,
-          set: {
-            name: content.name,
-            order: content.order,
-            text: content.text,
-            media: content.media,
-            tags: content.tags,
-            updatedAt: new Date(),
-          },
-        });
-    }
     for (const alterContent of input.alternativeContent) {
       const alterContentId = await trx
         .insert(schema.alternatePostContent)
         .values({
           postId: mainPostId,
           socialProviderId: alterContent.socialProvider.socialId,
+          content: alterContent.content,
         })
         .onConflictDoUpdate({
           target: [
@@ -158,39 +113,11 @@ export async function updateDraftToDatabase({
             schema.alternatePostContent.socialProviderId,
           ],
           set: {
-            postId: mainPostId,
-            socialProviderId: alterContent.socialProvider.socialId,
+            content: alterContent.content,
           },
         });
       if (!alterContentId[0]) {
         throw new Error("Failed to create alternative content");
-      }
-      for (const content of alterContent.content) {
-        await trx
-          .insert(schema.postContent)
-          .values({
-            id: content.id,
-            postId: mainPostId,
-            name: content.name,
-            order: content.order,
-            text: content.text,
-            media: content.media,
-            tags: content.tags,
-            socialProviderId: alterContent.socialProvider.socialId,
-            updatedAt: new Date(),
-          })
-          .onConflictDoUpdate({
-            target: schema.postContent.id,
-            set: {
-              name: content.name,
-              order: content.order,
-              text: content.text,
-              media: content.media,
-              tags: content.tags,
-              socialProviderId: alterContent.socialProvider.socialId,
-              updatedAt: new Date(),
-            },
-          });
       }
     }
     return mainPost[0];
@@ -202,10 +129,8 @@ export async function getDraftsFromDatabase({ postId }: { postId: string }) {
   const post = await db.query.post.findFirst({
     where: eq(schema.post.id, postId),
     with: {
-      postContents: true,
       alternatePostContent: {
         with: {
-          postContents: true,
           socialProvider: true,
         },
       },
@@ -232,7 +157,7 @@ export async function makingPostsFrontendCompatible({
     id: post.id,
     postType: post.postType,
     scheduledTime: post.scheduledAt,
-    content: post.postContents.map((content) => ({
+    content: post.content.map((content) => ({
       id: content.id,
       name: content.name,
       order: content.order,
@@ -246,7 +171,7 @@ export async function makingPostsFrontendCompatible({
         name: alterContent.socialProvider.fullName,
         socialType: alterContent.socialProvider.socialType,
       },
-      content: alterContent.postContents.map((content) => ({
+      content: alterContent.content.map((content) => ({
         id: content.id,
         name: content.name,
         order: content.order,
@@ -255,12 +180,9 @@ export async function makingPostsFrontendCompatible({
         tags: content.tags,
       })) as ContentType[],
     })),
-    socialProviders: post.socialProviders.map((provider) => ({
-      socialId: provider.socialProviderId,
-      name: provider.socialProvider.fullName,
-      socialType: provider.socialProvider.socialType,
-    })),
   } as FullPostType;
+
+  console.log(post.socialProviders);
 
   return fullPost;
 }

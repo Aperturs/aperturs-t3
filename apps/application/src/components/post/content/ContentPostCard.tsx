@@ -30,7 +30,7 @@ function ContentPostCard({
 }) {
   // const [sync, setSync] = useState(false);
 
-  const { updateContent, contentValue } = usePostUpdate(orderNumber,socialId);
+  const { updateContent, contentValue } = usePostUpdate(orderNumber, socialId);
   const [content, setContent] = useState<string>(contentValue);
   const debounceContent = useDebounce(content, 1000);
   const isExternalUpdate = useRef(false); // Ref to track the source of the update
@@ -61,7 +61,7 @@ function ContentPostCard({
         }}
         // sync={sync}
       />
-      <FileUpload socialId={socialId} socialType={postType} orderId={0}/>
+      <FileUpload socialId={socialId} socialType={postType} orderId={0} />
       {/* {id != SocialType.Default && (
         <Switch
           label="Sync with Default"

@@ -562,7 +562,7 @@ export default function usePublishing({ id }: { id: string }) {
           error: `Failed to update post`,
         },
       );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast.error(`Failed to update post ${err}`);
     }

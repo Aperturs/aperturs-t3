@@ -173,7 +173,7 @@ export default function SideBar() {
         <div className="hidden flex-1 flex-col justify-between lg:flex">
           <>
             <AccordianMenu accordanceMenuList={AccordanceMenuList} />
-            <hr className="border-zinc-400 my-2" />
+            <hr className="my-2 border-zinc-400" />
             <BottomMenu bottomMenu={bottomMenu} />
           </>
 

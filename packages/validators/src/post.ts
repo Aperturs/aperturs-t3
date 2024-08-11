@@ -179,9 +179,9 @@ export const savePostInputSchema = z.object({
         mediaSchema.omit({
           file: true,
           previewUrl: true,
-        })
+        }),
       ),
-    })
+    }),
   ),
   socialProviders: z.array(SocialProviderSchema),
 });

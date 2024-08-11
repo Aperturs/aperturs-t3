@@ -1,7 +1,6 @@
 import type { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
 import Image from "next/image";
-import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -13,7 +12,6 @@ import {
   allowedImageMimeTypes,
   allowedImageTypes,
   allowedVideoMimeTypes,
-  SocialTypes,
 } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
@@ -146,7 +144,7 @@ export default function FileUpload({
             className="group relative inline flex-shrink-0 cursor-pointer transition ease-in-out"
           >
             {singleMedia.mediaType === "IMAGE" &&
-            (singleMedia.previewUrl || singleMedia.url) ? (
+            (singleMedia.previewUrl ?? singleMedia.url) ? (
               <Image
                 src={singleMedia.previewUrl ?? singleMedia.url ?? ""}
                 alt={`File Preview ${singleMedia.url}`}
@@ -164,7 +162,9 @@ export default function FileUpload({
                 <track kind="captions" />
               </video>
             )}
-            <DeleteImage handleRemove={() => {}} index={index} />
+            <DeleteImage handleRemove={() => {
+              console.log('')
+            }} index={index} />
           </div>
         ))}
         {/* {previewUrls.map((url, index) => (

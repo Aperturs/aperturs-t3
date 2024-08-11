@@ -109,7 +109,7 @@ export const posting = createTRPCRouter({
           ),
           orderBy: desc(schema.post.updatedAt),
           with: {
-            postContents: true,
+            socialProviders: true,
           },
         });
         return posts;
@@ -121,7 +121,7 @@ export const posting = createTRPCRouter({
           ),
           orderBy: desc(schema.post.updatedAt),
           with: {
-            postContents: true,
+            socialProviders: true,
           },
         });
         return posts;
