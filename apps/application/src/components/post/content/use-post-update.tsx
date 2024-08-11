@@ -1,11 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
-import type { FullPostType, MediaType, SocialType } from "@aperturs/validators/post";
-import { SocialTypes } from "@aperturs/validators/post";
+import type { FullPostType, MediaType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { tweetsHere } from "../common";
 
 function usePostUpdate(orderId: number, socialId?: string) {
   const { setPost, post } = useStore(
@@ -48,21 +47,85 @@ function usePostUpdate(orderId: number, socialId?: string) {
               ? {
                   ...item,
                   text: newContent,
-                  media: item.media.map((mediaItem) => ({
-                    ...mediaItem,
-                  })),
                 }
               : item,
           ),
         } as FullPostType;
+        console.log(updatedPost, "updated post");
         setPost(updatedPost);
       }
     },
     [socialId, post, setPost, orderId],
   );
 
+  const onRemoveTweet = useCallback(() => {
+    if (socialId) {
+      const updatedPost = {
+        ...post,
+        alternativeContent: post.alternativeContent.map((item) =>
+          item.socialProvider.socialId === socialId
+            ? {
+                ...item,
+                content: item.content.filter((_, i) => i !== orderId),
+              }
+            : item,
+        ),
+      } as FullPostType;
+      setPost(updatedPost);
+    } else {
+      const updatedPost = {
+        ...post,
+        content: post.content.filter((_, i) => i !== orderId),
+      } as FullPostType;
+      setPost(updatedPost);
+    }
+  }, [socialId, post, orderId]);
+
+  const addTweet = useCallback(() => {
+    if (socialId) {
+      const updatedPost = {
+        ...post,
+        alternativeContent: post.alternativeContent.map((item) =>
+          item.socialProvider.socialId === socialId
+            ? {
+                ...item,
+                content: [
+                  ...item.content,
+                  {
+                    text: "",
+                    media: [],
+                    name: "DEFAULT",
+                    order: item.content.length,
+                    socialType: "DEFAULT",
+                    tags: [],
+                  },
+                ],
+              }
+            : item,
+        ),
+      } as FullPostType;
+      setPost(updatedPost);
+    } else {
+      const updatedPost = {
+        ...post,
+        content: [
+          ...post.content,
+          {
+            text: "",
+            media: [],
+            name: "DEFAULT",
+            order: post.content.length,
+            socialType: "DEFAULT",
+            tags: [],
+          },
+        ],
+      } as FullPostType;
+      setPost(updatedPost);
+    }
+  }, [socialId, post]);
+
   const updateMedia = useCallback(
-    (media: Optional<MediaType,"bucketKey" | "bucketUrl">[]) => {
+    (media: Optional<MediaType, "bucketKey" | "bucketUrl">[]) => {
       if (socialId) {
         const updatedPost = {
           ...post,
@@ -84,7 +147,6 @@ function usePostUpdate(orderId: number, socialId?: string) {
         } as FullPostType;
         setPost(updatedPost);
       } else {
-
         const updatedPost = {
           ...post,
           content: post.content.map((item) =>
@@ -157,7 +219,6 @@ function usePostUpdate(orderId: number, socialId?: string) {
     return post.content.find((item) => item.order === orderId)?.text ?? "";
   }, [socialId, orderId, post]);
 
-
   return {
     contentValue,
     updateContent,
@@ -165,6 +226,8 @@ function usePostUpdate(orderId: number, socialId?: string) {
     removeFiles,
     sync,
     setSync,
+    onRemoveTweet,
+    addTweet,
     // currentFiles,
     // removeUpdatedFiles,
   };

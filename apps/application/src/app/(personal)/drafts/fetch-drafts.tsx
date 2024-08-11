@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 
-import type { PostContentType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 
 import DraftCard from "~/components/drafts/darfCard";
@@ -17,12 +15,13 @@ export default async function FetchDrafts() {
           <DraftCard
             key={item.id}
             id={item.id}
-            content={
-              (item.content as any as PostContentType[])[0]?.content ??
-              item.youtubeContent.description ??
-              ""
-            }
-            contentT={item.content as any as PostContentType[]}
+            content=""
+            // {
+            //   (item.content as any as PostContentType[])[0]?.content ??
+            //   item.youtubeContent.description ??
+            //   ""
+            // }
+            // {item.content as any as PostContentType[]}
           />
         ))
       ) : (

@@ -4,6 +4,7 @@ import { createWithEqualityFn } from "zustand/traditional";
 import type {
   FullPostType,
   PostType,
+  SocialProviderType,
   youtubeContentType,
 } from "@aperturs/validators/post";
 
@@ -13,6 +14,7 @@ interface StateValues {
   post: FullPostType;
   youtubeContent: youtubeContentType;
   postType: PostType;
+  socialProviders: SocialProviderType[];
 }
 
 interface StateSetters {
@@ -24,6 +26,7 @@ interface StateSetters {
   setPost: (post: FullPostType) => void;
   setPostType: (postType: PostType) => void;
   setYoutubeContent: (youtubeContent: youtubeContentType) => void;
+  setSocialProviders: (socialProviders: SocialProviderType[]) => void;
 }
 
 type State = StateValues & StateSetters;
@@ -46,23 +49,20 @@ const initialState: StateValues = {
     content: [
       {
         text: "",
-        files: [],
         media: [],
         name: "DEFAULT",
         order: 0,
         socialType: "DEFAULT",
-        uploadedFiles: [],
-        previewUrls: [],
         tags: [],
       },
     ],
     alternativeContent: [],
-    socialProviders: [],
     scheduledTime: undefined,
     orgId: "",
     projectId: "",
     postType: "NORMAL",
   },
+  socialProviders: [],
 };
 
 export const useStore = createWithEqualityFn<State>(
@@ -73,11 +73,12 @@ export const useStore = createWithEqualityFn<State>(
       set((state) => ({ ...state, shouldReset })),
     setDate: (date) => set((state) => ({ ...state, date })),
     setTime: (time) => set((state) => ({ ...state, time })),
-    setPost: (content) => set((state) => ({ ...state, content })),
+    setPost: (post) => set((state) => ({ ...state, post })),
     setPostType: (postType) => set((state) => ({ ...state, postType })),
     reset: () => set(() => initialState),
     setYoutubeContent: (youtubeContent) =>
       set((state) => ({ ...state, youtubeContent })),
+    setSocialProviders: (socialProviders) => set((state) => ({ ...state, socialProviders })),
   }),
   shallow,
 );

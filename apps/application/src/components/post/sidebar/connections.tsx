@@ -31,36 +31,30 @@ const getRingColor = (type: SocialType) => {
 };
 
 const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
-  const { setPost, post } = useStore(
+  const { socialProviders, setSocialProviders } = useStore(
     (state) => ({
-      setPost: state.setPost,
-      post: state.post,
+      socialProviders: state.socialProviders,
+      setSocialProviders: state.setSocialProviders,
     }),
     shallow,
   );
 
-  const isSelected = post.socialProviders.some((item) => item.socialId === id);
+  const isSelected = socialProviders.some((item) => item.socialId === id);
 
   const handleClick = () => {
     if (isSelected) {
-      setPost({
-        ...post,
-        socialProviders: post.socialProviders.filter(
-          (item) => item.socialId !== id,
-        ),
-      });
+      setSocialProviders(
+        socialProviders.filter((item) => item.socialId !== id),
+      );
     } else {
-      setPost({
-        ...post,
-        socialProviders: [
-          ...post.socialProviders,
-          {
-            socialId: id,
-            name: name,
-            socialType: type,
-          },
-        ],
-      });
+      setSocialProviders([
+        ...socialProviders,
+        {
+          name,
+          socialType: type,
+          socialId: id,
+        },
+      ]);
     }
   };
 

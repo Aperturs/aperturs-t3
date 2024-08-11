@@ -139,7 +139,6 @@ export const postSchema = z.object({
   scheduledTime: z.date().optional(),
   orgId: z.string().optional(),
   projectId: z.string().optional(),
-  socialProviders: z.array(SocialProviderSchema),
 });
 
 export type FullPostType = z.infer<typeof postSchema>;
@@ -184,7 +183,7 @@ export const savePostInputSchema = z.object({
       ),
     })
   ),
-  socialProvider: z.array(SocialProviderSchema),
+  socialProviders: z.array(SocialProviderSchema),
 });
 
 export type SavePostInputType = z.infer<typeof savePostInputSchema>;

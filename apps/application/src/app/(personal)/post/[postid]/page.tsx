@@ -26,11 +26,11 @@ export default function Post({ params }: { params: { postid: string } }) {
     content,
   } = useStore(
     (state) => ({
-      setContent: state.setContent,
+      setContent: state.setPost,
       setShouldReset: state.setShouldReset,
       setYoutubeContent: state.setYoutubeContent,
       setPostType: state.setPostType,
-      content: state.content,
+      content: state.post,
     }),
     shallow,
   );
@@ -39,28 +39,28 @@ export default function Post({ params }: { params: { postid: string } }) {
 
   const fetchData = useMemo(() => {
     return () => {
-      try {
-        const data = getData.data;
-        if (!data) return;
-        setPostType(data.postType as PostType);
-        const localContent = data.content;
-        setContent(localContent);
-        console.log("localContent", localContent);
-        if (data.postType === "LONG_VIDEO") {
-          setContent(data.content);
-          setYoutubeContent({
-            thumbnail: data.thumbnail.url,
-            name: data.id,
-            youtubeId: data.YoutubeTokenId ?? "",
-            videoUrl: data.video.url,
-            videoTags: data.videoTags,
-            videoTitle: data.title,
-            videoDescription: data.description,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      // try {
+      //   const data = getData.data;
+      //   if (!data) return;
+      //   setPostType(data.postType as PostType);
+      //   const localContent = data.content;
+      //   setContent(localContent);
+      //   console.log("localContent", localContent);
+      //   if (data.postType === "LONG_VIDEO") {
+      //     setContent(data.content);
+      //     setYoutubeContent({
+      //       thumbnail: data.thumbnail.url,
+      //       name: data.id,
+      //       youtubeId: data.YoutubeTokenId ?? "",
+      //       videoUrl: data.video.url,
+      //       videoTags: data.videoTags,
+      //       videoTitle: data.title,
+      //       videoDescription: data.description,
+      //     });
+      //   }
+      // } catch (error) {
+      //   console.error("Error fetching data:", error);
+      // }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getData.data]);

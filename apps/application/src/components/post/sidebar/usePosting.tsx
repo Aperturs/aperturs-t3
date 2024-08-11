@@ -13,41 +13,43 @@ import usePost from "../content/use-post";
 
 export default function usePublishing({ id }: { id: string }) {
   const {
-    content,
+    post,
     date,
     reset,
     youtubeContent,
     postType,
+    socialProviders,
     shouldReset: isUploaded,
   } = useStore(
     (state) => ({
-      content: state.content,
+      post: state.post,
       date: state.date,
       reset: state.reset,
       shouldReset: state.shouldReset,
       youtubeContent: state.youtubeContent,
       postType: state.postType,
+      socialProviders: state.socialProviders,
     }),
     shallow,
   );
   const { uploadFilesAndModifyContent, loading: uploadingFiles } = usePost();
 
-  const {
-    mutateAsync: createTweet,
-    error: twitterError,
-    isPending: tweeting,
-  } = api.twitter.postTweet.useMutation();
-  const {
-    mutateAsync: createLinkedinPost,
-    isPending: linkedinPosting,
-    error: linkedinError,
-  } = api.linkedin.postToLinkedin.useMutation();
+  // const {
+  //   mutateAsync: createTweet,
+  //   error: twitterError,
+  //   isPending: tweeting,
+  // } = api.twitter.postTweet.useMutation();
+  // const {
+  //   mutateAsync: createLinkedinPost,
+  //   isPending: linkedinPosting,
+  //   error: linkedinError,
+  // } = api.linkedin.postToLinkedin.useMutation();
 
-  const {
-    mutateAsync: updateYoutubePost,
-    isPending: updatingYoutube,
-    error: updateYoutubeError,
-  } = api.savepost.updateYoutubePost.useMutation();
+  // const {
+  //   mutateAsync: updateYoutubePost,
+  //   isPending: updatingYoutube,
+  //   error: updateYoutubeError,
+  // } = api.savepost.updateYoutubePost.useMutation();
 
   const { mutateAsync: getPresignedUrl, isPending: gettingPresignedUrl } =
     api.post.getPresignedUrl.useMutation();
@@ -253,15 +255,15 @@ export default function usePublishing({ id }: { id: string }) {
       if (videoChanged) {
         data = { ...data, video: video };
       }
-      await postToYoutube({
-        ...data,
-        postId: id,
-        shouldUpdate: true,
-        content: content.filter(
-          (item) =>
-            item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
-        ),
-      });
+      // await postToYoutube({
+      //   ...data,
+      //   postId: id,
+      //   shouldUpdate: true,
+      //   content: content.filter(
+      //     (item) =>
+      //       item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
+      //   ),
+      // });
     } else {
       if (!youtubeContent.thumbnailFile) {
         throw new Error("Please add a thumbnail");
@@ -287,20 +289,17 @@ export default function usePublishing({ id }: { id: string }) {
         title: youtubeContent.videoTitle,
         updatedAt: new Date(),
         videoTags: youtubeContent.videoTags,
-        content: content.filter(
-          (item) =>
-            item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
-        ),
+        content: "",
         YoutubeTokenId:
           youtubeContent.youtubeId.length > 0
             ? youtubeContent.youtubeId
             : undefined,
         video: video,
       };
-      await postToYoutube({
-        shouldUpdate: false,
-        ...data,
-      });
+      // await postToYoutube({
+      //   shouldUpdate: false,
+      //   ...data,
+      // });
     }
   };
 
@@ -308,9 +307,9 @@ export default function usePublishing({ id }: { id: string }) {
     if (postType === "NORMAL") {
       return await handleSavePost({ isScheduling });
     }
-    if (postType === "LONG_VIDEO") {
-      return await handleSaveYoutube();
-    }
+    // if (postType === "LONG_VIDEO") {
+    //   return await handleSaveYoutube();
+    // }
   };
 
   const handleSavePost = async ({
@@ -324,7 +323,7 @@ export default function usePublishing({ id }: { id: string }) {
       toast.error("Please select a date and time");
       return;
     }
-    if (!content) {
+    if (!post.content) {
       toast.error("Please add a post content");
       return;
     }
@@ -335,7 +334,8 @@ export default function usePublishing({ id }: { id: string }) {
         const newContent = await uploadFilesAndModifyContent();
         // Save to drafts
         const response = await saveToDrafts({
-          postContent: newContent,
+          ...post,
+          socialProviders: socialProviders,
           scheduledTime:
             isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
           orgId: orgid,
@@ -367,159 +367,159 @@ export default function usePublishing({ id }: { id: string }) {
     if (postType === "NORMAL") {
       return await handleUpdatePost({ isScheduling });
     }
-    if (postType === "LONG_VIDEO") {
-      return await handleUpdateYoutube();
-    }
+    // if (postType === "LONG_VIDEO") {
+    //   return await handleUpdateYoutube();
+    // }
   };
 
-  const handleSaveYoutube = async () => {
-    if (!youtubeContent.thumbnailFile) {
-      toast.error("Please add a thumbnail");
-      return;
-    }
-    if (!youtubeContent.videoFile) {
-      toast.error("Please add a video");
-      return;
-    }
-    const thumbnailFile = youtubeContent.thumbnailFile;
-    const videoFile = youtubeContent.videoFile;
-    let postId = "";
-    await toast.promise(
-      (async () => {
-        setUploadingFileName("Uploading thumbnail");
-        const thumbnail = await uploadFiles(thumbnailFile);
-        if (!thumbnail) {
-          toast.error("Failed to upload thumbnail");
-          return;
-        }
-        setUploadingFileName("Uploading video");
-        const video = await uploadFiles(videoFile);
-        if (!video) {
-          toast.error("Failed to upload video");
-          return;
-        }
-        const response = await saveYoutubePost({
-          description: youtubeContent.videoDescription,
-          thumbnail: thumbnail,
-          orgId: orgid,
-          title: youtubeContent.videoTitle,
-          updatedAt: new Date(),
-          videoTags: youtubeContent.videoTags,
-          content: content.filter(
-            (item) =>
-              item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
-          ),
-          YoutubeTokenId:
-            youtubeContent.youtubeId.length > 0
-              ? youtubeContent.youtubeId
-              : undefined,
-          video: video,
-        });
+  // const handleSaveYoutube = async () => {
+  //   if (!youtubeContent.thumbnailFile) {
+  //     toast.error("Please add a thumbnail");
+  //     return;
+  //   }
+  //   if (!youtubeContent.videoFile) {
+  //     toast.error("Please add a video");
+  //     return;
+  //   }
+  //   const thumbnailFile = youtubeContent.thumbnailFile;
+  //   const videoFile = youtubeContent.videoFile;
+  //   let postId = "";
+  //   await toast.promise(
+  //     (async () => {
+  //       setUploadingFileName("Uploading thumbnail");
+  //       const thumbnail = await uploadFiles(thumbnailFile);
+  //       if (!thumbnail) {
+  //         toast.error("Failed to upload thumbnail");
+  //         return;
+  //       }
+  //       setUploadingFileName("Uploading video");
+  //       const video = await uploadFiles(videoFile);
+  //       if (!video) {
+  //         toast.error("Failed to upload video");
+  //         return;
+  //       }
+  //       // const response = await saveYoutubePost({
+  //       //   description: youtubeContent.videoDescription,
+  //       //   thumbnail: thumbnail,
+  //       //   orgId: orgid,
+  //       //   title: youtubeContent.videoTitle,
+  //       //   updatedAt: new Date(),
+  //       //   videoTags: youtubeContent.videoTags,
+  //       //   content: content.filter(
+  //       //     (item) =>
+  //       //       item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
+  //       //   ),
+  //       //   YoutubeTokenId:
+  //       //     youtubeContent.youtubeId.length > 0
+  //       //       ? youtubeContent.youtubeId
+  //       //       : undefined,
+  //       //   video: video,
+  //       // });
 
-        postId = response.data.id;
+  //       // postId = response.data.id;
 
-        if (response.success) {
-          reset();
-          if (orgid) {
-            router.push(`/organisation/${orgid}/drafts`);
-          } else {
-            router.push("/drafts");
-          }
-        }
-      })(),
-      {
-        loading: "Saving to drafts...",
-        success: "Saved to drafts",
-        error: (err) => `Failed to save to drafts ${err}`,
-      },
-    );
-    return postId;
-  };
+  //       if (response.success) {
+  //         reset();
+  //         if (orgid) {
+  //           router.push(`/organisation/${orgid}/drafts`);
+  //         } else {
+  //           router.push("/drafts");
+  //         }
+  //       }
+  //     })(),
+  //     {
+  //       loading: "Saving to drafts...",
+  //       success: "Saved to drafts",
+  //       error: (err) => `Failed to save to drafts ${err}`,
+  //     },
+  //   );
+  //   return postId;
+  // };
 
-  const handleUpdateYoutube = async () => {
-    let postId = "";
-    await toast.promise(
-      (async () => {
-        // Upload files and modify content
-        // Save to drafts
-        let thumbnail = "";
-        let thumbnailChanged = false;
+  // const handleUpdateYoutube = async () => {
+  //   let postId = "";
+  //   await toast.promise(
+  //     (async () => {
+  //       // Upload files and modify content
+  //       // Save to drafts
+  //       let thumbnail = "";
+  //       let thumbnailChanged = false;
 
-        let videoChanged = false;
-        if (!youtubeContent.thumbnail.includes("amazonaws.com")) {
-          if (!youtubeContent.thumbnailFile) {
-            toast.error("Please add a thumbnail");
-            return;
-          }
-          const thumbnailFile = youtubeContent.thumbnailFile;
-          setUploadingFileName("Uploading thumbnail");
-          const k = await uploadFiles(thumbnailFile);
-          thumbnailChanged = true;
-          if (!k) {
-            toast.error("Failed to upload thumbnail");
-            return;
-          }
-          thumbnail = k;
-        }
-        let video = "";
-        if (!youtubeContent.videoUrl.includes("amazonaws.com")) {
-          if (!youtubeContent.videoFile) {
-            toast.error("Please add a video");
-            return;
-          }
-          const videoFile = youtubeContent.videoFile;
-          videoChanged = true;
-          setUploadingFileName("Uploading video");
-          const k = await uploadFiles(videoFile);
-          if (!k) {
-            toast.error("Failed to upload video");
-            return;
-          }
-          video = k;
-        }
-        let data = {
-          postId: id,
-          description: youtubeContent.videoDescription,
-          title: youtubeContent.videoTitle,
-          updatedAt: new Date(),
-          videoTags: youtubeContent.videoTags,
-          content: content.filter(
-            (item) =>
-              item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
-          ),
-          YoutubeTokenId:
-            youtubeContent.youtubeId.length > 0
-              ? youtubeContent.youtubeId
-              : undefined,
-        } as UpdateYoutubePostInput;
+  //       let videoChanged = false;
+  //       if (!youtubeContent.thumbnail.includes("amazonaws.com")) {
+  //         if (!youtubeContent.thumbnailFile) {
+  //           toast.error("Please add a thumbnail");
+  //           return;
+  //         }
+  //         const thumbnailFile = youtubeContent.thumbnailFile;
+  //         setUploadingFileName("Uploading thumbnail");
+  //         const k = await uploadFiles(thumbnailFile);
+  //         thumbnailChanged = true;
+  //         if (!k) {
+  //           toast.error("Failed to upload thumbnail");
+  //           return;
+  //         }
+  //         thumbnail = k;
+  //       }
+  //       let video = "";
+  //       if (!youtubeContent.videoUrl.includes("amazonaws.com")) {
+  //         if (!youtubeContent.videoFile) {
+  //           toast.error("Please add a video");
+  //           return;
+  //         }
+  //         const videoFile = youtubeContent.videoFile;
+  //         videoChanged = true;
+  //         setUploadingFileName("Uploading video");
+  //         const k = await uploadFiles(videoFile);
+  //         if (!k) {
+  //           toast.error("Failed to upload video");
+  //           return;
+  //         }
+  //         video = k;
+  //       }
+  //       let data = {
+  //         postId: id,
+  //         description: youtubeContent.videoDescription,
+  //         title: youtubeContent.videoTitle,
+  //         updatedAt: new Date(),
+  //         videoTags: youtubeContent.videoTags,
+  //         content: content.filter(
+  //           (item) =>
+  //             item.socialType === "YOUTUBE" || item.socialType === "DEFAULT",
+  //         ),
+  //         YoutubeTokenId:
+  //           youtubeContent.youtubeId.length > 0
+  //             ? youtubeContent.youtubeId
+  //             : undefined,
+  //       } as UpdateYoutubePostInput;
 
-        if (thumbnailChanged) {
-          data = { ...data, thumbnail: thumbnail };
-        }
-        if (videoChanged) {
-          data = { ...data, video: video };
-        }
-        console.log(data, "data");
-        const response = await updateYoutubePost(data);
+  //       if (thumbnailChanged) {
+  //         data = { ...data, thumbnail: thumbnail };
+  //       }
+  //       if (videoChanged) {
+  //         data = { ...data, video: video };
+  //       }
+  //       console.log(data, "data");
+  //       const response = await updateYoutubePost(data);
 
-        postId = response.data.id;
-        if (response.success) {
-          reset();
-          if (orgid) {
-            router.push(`/organisation/${orgid}/drafts`);
-          } else {
-            router.push("/drafts");
-          }
-        }
-      })(),
-      {
-        loading: "Updating draft...",
-        success: "Updated draft",
-        error: (err) => `Failed to update drafts ${err}`,
-      },
-    );
-    return postId;
-  };
+  //       postId = response.data.id;
+  //       if (response.success) {
+  //         reset();
+  //         if (orgid) {
+  //           router.push(`/organisation/${orgid}/drafts`);
+  //         } else {
+  //           router.push("/drafts");
+  //         }
+  //       }
+  //     })(),
+  //     {
+  //       loading: "Updating draft...",
+  //       success: "Updated draft",
+  //       error: (err) => `Failed to update drafts ${err}`,
+  //     },
+  //   );
+  //   return postId;
+  // };
 
   const handleUpdatePost = async ({
     isScheduling,
@@ -534,8 +534,9 @@ export default function usePublishing({ id }: { id: string }) {
           const newContent = await uploadFilesAndModifyContent();
           console.log(newContent, "newContent");
           const response = await updatePost({
+            ...post,
+            socialProviders: socialProviders,
             postId: id,
-            postContent: newContent,
             scheduledTime:
               isScheduling && scheduledTime
                 ? new Date(scheduledTime)
@@ -561,8 +562,9 @@ export default function usePublishing({ id }: { id: string }) {
           error: `Failed to update post`,
         },
       );
-    } catch (err) {
-      toast.error(`Failed to update post ${err.message as string}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast.error(`Failed to update post ${err}`);
     }
   };
 
@@ -626,26 +628,23 @@ export default function usePublishing({ id }: { id: string }) {
     handleUpdate,
     handleSchedule,
     isDisabled:
-      !content ||
+      !post ||
       uploadingFiles ||
       saving ||
-      linkedinPosting ||
-      tweeting ||
+      // linkedinPosting ||
+      // tweeting ||
       savingYoutube ||
       gettingPresignedUrl ||
-      updatingYoutube ||
       postingToYoutube ||
       uploadProgress > 0,
     isUploaded,
-    disablePosting: content.length < 2,
+    disablePosting: socialProviders.length === 0,
     // scheduling,
-    linkedinPosting,
-    tweeting,
     uploadingFiles,
     saving,
     updating,
     scheduling,
-    handleSaveYoutube,
+    // handleSaveYoutube,
     uploadProgress,
     uploadFiles,
     uploadingFileName,

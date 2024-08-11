@@ -8,7 +8,7 @@ import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
 
 import type {
-  PostContentType,
+  FullPostType,
   SocialType,
   youtubeContentType,
 } from "@aperturs/validators/post";
@@ -24,7 +24,7 @@ import { SocialIcon } from "../post/common";
 interface IDarfCard {
   id: string;
   content: string;
-  contentT?: PostContentType[];
+  contentT?: FullPostType;
   youtubeContent?: youtubeContentType;
   refetch?: () => void;
   orgid?: string;
@@ -73,7 +73,7 @@ export default function DraftCard({
         <CardHeader className="relative flex flex-row items-center justify-between">
           <p>Draft</p>
           <div className="flex items-center gap-2">
-            {contentT &&
+            {/* {contentT &&
               contentT.length > 0 &&
               contentT?.map((item, index) => (
                 <AllSocials
@@ -81,7 +81,7 @@ export default function DraftCard({
                   name={item.name}
                   socialType={item.socialType as SocialType}
                 />
-              ))}
+              ))} */}
           </div>
         </CardHeader>
         <ConfirmationModal

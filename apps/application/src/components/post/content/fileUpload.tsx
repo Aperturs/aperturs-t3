@@ -6,7 +6,7 @@ import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
-import type { SocialType } from "@aperturs/validators/post";
+import type { MediaType, SocialType } from "@aperturs/validators/post";
 import { Popover, PopoverContent, PopoverTrigger } from "@aperturs/ui/popover";
 import ToolTipSimple from "@aperturs/ui/tooltip-final";
 import {
@@ -17,7 +17,6 @@ import {
 } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { tweetsHere } from "../common";
 import usePostUpdate from "./use-post-update";
 
 function isImage(url: string): boolean {
@@ -35,115 +34,103 @@ const videoAcceptString = Array.from(allowedVideoMimeTypes).join(",");
 const acceptString = `${imageAcceptString},${videoAcceptString}`;
 
 export default function FileUpload({
-  id,
-  uploadedFiles,
-  postType,
-  tweetId,
+  socialId,
+  socialType,
+  orderId,
 }: {
-  id: string;
-  postType: SocialType;
-  uploadedFiles: string[];
-  tweetId?: string;
+  socialId?: string;
+  socialType: SocialType;
+  orderId: number;
 }) {
   const { post } = useStore();
 
-  const filesThatBelongHere = post.content
-    .filter((post) => post.id === id)[0]
-    ?.media.map((media) => media.file)
-    .filter((file) => file !== undefined);
-  const previewUrlsBelongHere = post.content
-    .filter((post) => post.id === id)[0]
-    ?.media.map((media) => media.previewUrl)
-    .filter((url) => url !== undefined);
+  const mediaHere = post?.content.find(
+    (content) => content.order === orderId,
+  )?.media;
 
-  const [selectedFiles, setSelectedFiles] = useState<File[]>(
-    filesThatBelongHere ?? [],
-  );
-  const [previewUrls, setPreviewUrls] = useState<string[]>(
-    previewUrlsBelongHere ?? [],
-  );
-  const { updateFiles, removeFiles, removeUpdatedFiles } = usePostUpdate(id);
+  const [media, SetMedia] = useState<MediaType[]>(mediaHere ?? []);
+
+  const { updateMedia, removeFiles } = usePostUpdate(orderId, socialId);
+
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      if (selectedFiles.length + uploadedFiles.length >= 4) {
-        toast.error("Maximum 4 files allowed");
-        return;
-      }
-      const files = event.target.files;
-      if (files && files.length > 0) {
-        const newFiles = Array.from(files);
-        // const contentContainNonUniqueLinkedin = content.some(
-        //   (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
-        // );
-        if (
-          postType === SocialTypes.LINKEDIN
-          //  ||
-          // contentContainNonUniqueLinkedin
-        ) {
-          const isImageSelected = selectedFiles.some((file) =>
-            file.type.startsWith("image/"),
-          );
-          const isVideoSelected = selectedFiles.some((file) =>
-            file.type.startsWith("video/"),
-          );
-          const isNewFileImage = newFiles.some((file) =>
-            file.type.startsWith("image/"),
-          );
-          const isNewFileVideo = newFiles.some((file) =>
-            file.type.startsWith("video/"),
-          );
-
-          if (
-            (isImageSelected && isNewFileVideo) ||
-            (isVideoSelected && isNewFileImage)
-          ) {
-            toast.error(
-              "You can't have both image and video at the same time on LinkedIn",
-            );
-            return;
-          }
-        }
-
-        const fileSizeExceeded = newFiles.some(
-          (file) => file.size > 30 * 1024 * 1024,
-        ); // 30MB
-        if (fileSizeExceeded) {
-          toast.error("Maximum file size is 30MB");
-          return;
-        }
-        const newSelectedFiles = [...selectedFiles, ...newFiles];
-        setSelectedFiles(newSelectedFiles);
-        const newPreviewUrls = newFiles.map((file) => {
-          const url = URL.createObjectURL(file);
-          return url;
-        });
-        const allURls = [...previewUrls, ...newPreviewUrls];
-        setPreviewUrls(allURls);
-        updateFiles(newSelectedFiles, allURls, tweetId);
-      }
+      // if (selectedFiles.length + uploadedFiles.length >= 4) {
+      //   toast.error("Maximum 4 files allowed");
+      //   return;
+      // }
+      // const files = event.target.files;
+      // if (files && files.length > 0) {
+      //   const newFiles = Array.from(files);
+      //   // const contentContainNonUniqueLinkedin = content.some(
+      //   //   (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
+      //   // );
+      //   if (
+      //     postType === SocialTypes.LINKEDIN
+      //     //  ||
+      //     // contentContainNonUniqueLinkedin
+      //   ) {
+      //     const isImageSelected = selectedFiles.some((file) =>
+      //       file.type.startsWith("image/"),
+      //     );
+      //     const isVideoSelected = selectedFiles.some((file) =>
+      //       file.type.startsWith("video/"),
+      //     );
+      //     const isNewFileImage = newFiles.some((file) =>
+      //       file.type.startsWith("image/"),
+      //     );
+      //     const isNewFileVideo = newFiles.some((file) =>
+      //       file.type.startsWith("video/"),
+      //     );
+      //     if (
+      //       (isImageSelected && isNewFileVideo) ||
+      //       (isVideoSelected && isNewFileImage)
+      //     ) {
+      //       toast.error(
+      //         "You can't have both image and video at the same time on LinkedIn",
+      //       );
+      //       return;
+      //     }
+      //   }
+      //   const fileSizeExceeded = newFiles.some(
+      //     (file) => file.size > 30 * 1024 * 1024,
+      //   ); // 30MB
+      //   if (fileSizeExceeded) {
+      //     toast.error("Maximum file size is 30MB");
+      //     return;
+      //   }
+      //   const newSelectedFiles = [...selectedFiles, ...newFiles];
+      //   setSelectedFiles(newSelectedFiles);
+      //   const newPreviewUrls = newFiles.map((file) => {
+      //     const url = URL.createObjectURL(file);
+      //     return url;
+      //   });
+      //   const allURls = [...previewUrls, ...newPreviewUrls];
+      //   setPreviewUrls(allURls);
+      //   updateFiles(newSelectedFiles, allURls, tweetId);
+      // }
     },
 
     [
       // content,
-      postType,
-      previewUrls,
-      selectedFiles,
-      updateFiles,
-      uploadedFiles.length,
-      tweetId,
+      // postType,
+      // previewUrls,
+      // selectedFiles,
+      // updateFiles,
+      // uploadedFiles.length,
+      // tweetId,
     ],
   );
 
-  const inputId = `fileInput${id}${tweetId}`;
+  const inputId = `fileInput${socialId}${orderId}`;
 
   const handleRemove = (index: number) => {
-    const newSelectedFiles = [...selectedFiles];
-    newSelectedFiles.splice(index, 1);
-    setSelectedFiles(newSelectedFiles);
-    const newPreviewUrls = [...previewUrls];
-    newPreviewUrls.splice(index, 1);
-    setPreviewUrls(newPreviewUrls);
-    removeFiles(index, tweetId);
+    // const newSelectedFiles = [...selectedFiles];
+    // newSelectedFiles.splice(index, 1);
+    // setSelectedFiles(newSelectedFiles);
+    // const newPreviewUrls = [...previewUrls];
+    // newPreviewUrls.splice(index, 1);
+    // setPreviewUrls(newPreviewUrls);
+    // removeFiles(index, tweetId);
   };
 
   // const removeFromUploaded = (url: string) => {
@@ -153,30 +140,34 @@ export default function FileUpload({
   return (
     <div>
       <div className="flex flex-shrink-0  gap-2 overflow-x-auto">
-        {uploadedFiles.map((url, index) => (
+        {media.map((singleMedia, index) => (
           <div
-            key={url}
+            key={singleMedia.url ?? singleMedia.previewUrl}
             className="group relative inline flex-shrink-0 cursor-pointer transition ease-in-out"
           >
-            {isImage(url) ? (
+            {singleMedia.mediaType === "IMAGE" &&
+            (singleMedia.previewUrl || singleMedia.url) ? (
               <Image
-                src={url}
-                alt={`File Preview ${url}`}
+                src={singleMedia.previewUrl ?? singleMedia.url ?? ""}
+                alt={`File Preview ${singleMedia.url}`}
                 style={{ maxWidth: "100%", maxHeight: "150px" }}
                 width={150}
                 height={250}
               />
             ) : (
               <video controls style={{ maxWidth: "100%", maxHeight: "100px" }}>
-                <source src={url} type="video/mp4" />
+                <source
+                  src={singleMedia.previewUrl ?? singleMedia.url ?? ""}
+                  type="video/mp4"
+                />
                 Your browser does not support the video tag.
                 <track kind="captions" />
               </video>
             )}
-            <DeleteImage handleRemove={removeUpdatedFiles} index={index} />
+            <DeleteImage handleRemove={() => {}} index={index} />
           </div>
         ))}
-        {previewUrls.map((url, index) => (
+        {/* {previewUrls.map((url, index) => (
           <div
             key={url}
             className="group relative inline flex-shrink-0 cursor-pointer transition ease-in-out"
@@ -201,7 +192,7 @@ export default function FileUpload({
             )}
             <DeleteImage handleRemove={handleRemove} index={index} />
           </div>
-        ))}
+        ))} */}
       </div>
       <ToolTipSimple content="Add Image/Video">
         <label htmlFor={inputId} className="my-2  block w-8 cursor-pointer">

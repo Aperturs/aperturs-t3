@@ -6,8 +6,7 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { shallow } from "zustand/shallow";
 
 import type {
-  BasePostContentType,
-  PostContentType,
+  FullPostType,
   PostType,
   SocialType,
 } from "@aperturs/validators/post";
@@ -32,10 +31,7 @@ interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
 }
 
-export const tweetsHere = (content: PostContentType[], id: string) => {
-  return content.find((item) => item.id === id)
-    ?.content as BasePostContentType[];
-};
+
 
 export const SimpleButton = ({
   text,

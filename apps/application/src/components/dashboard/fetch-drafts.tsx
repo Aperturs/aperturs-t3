@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { PostContentType } from "@aperturs/validators/post";
+// import type { PostContentType } from "@aperturs/validators/post";
 
 import { api } from "~/trpc/server";
 import InfoContainer from "./container";

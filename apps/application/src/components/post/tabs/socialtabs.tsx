@@ -1,12 +1,11 @@
 import type { SocialType } from "@aperturs/validators/post";
-import { Tabs, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
-import ContentPostCard from "../content/ContentPostCard";
 import Youtube from "../content/youtube";
-import SocialsMenu from "./menu";
+import TweetPost from "../tweets/tweetsPost";
 
 export default function SocialTabs() {
   const { post, postType } = useStore((state) => ({
@@ -21,7 +20,7 @@ export default function SocialTabs() {
     <div className="w-full">
       {postType === "NORMAL" && (
         <>
-          {post.socialProviders.length > 2 ? (
+          {post.alternativeContent.length > 2 ? (
             <Tabs defaultValue={SocialTypes.DEFAULT}>
               <TabsList>
                 {post.alternativeContent.map((item) => (
@@ -40,27 +39,20 @@ export default function SocialTabs() {
                 ))}
                 {/* <SocialsMenu /> */}
               </TabsList>
-              {/* {content.map(
-                (item) =>
-                  item.unique && (
-                    <TabsContent key={item.id} value={item.id}>
-                      {item.socialType === "TWITTER" ? (
-                        <TweetPost contentId={item.id} />
-                      ) : (
-                        <ContentPostCard
-                          id={item.id}
-                          postType={item.socialType as SocialType}
-                        />
-                      )}
-                    </TabsContent>
-                  ),
-              )} */}
+              {post.alternativeContent.map((item) => (
+                <TabsContent
+                  key={item.socialProvider.socialId}
+                  value={item.socialProvider.socialId}
+                >
+                  <TweetPost
+                    socialType={item.socialProvider.socialType}
+                    socialId={item.socialProvider.socialId}
+                  />
+                </TabsContent>
+              ))}
             </Tabs>
           ) : (
-            <ContentPostCard
-              id={"DEFAULT" as SocialType}
-              postType={"DEFAULT"}
-            />
+            <TweetPost socialType={"DEFAULT"} />
           )}
         </>
       )}
