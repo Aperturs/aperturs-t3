@@ -75,7 +75,12 @@ export async function GET(req: NextRequest) {
       const domain = env.DOMAIN;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const redisData = (await redis.get(userId))! as SocialRedisKeyType;
-      console.log(redisData, "redisData");
+      if (!redisData) {
+        return NextResponse.json(
+          { error: "Too much time taken please try again from aperturs" },
+          { status: 400 },
+        );
+      }
       const isPersonal = redisData.orgId === "personal";
       const isNew = redisData.tokenId === "new";
       const isOnboarding = redisData.onboarding;

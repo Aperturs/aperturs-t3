@@ -310,8 +310,8 @@ export const socialProvider = pgTable(
     ),
     clientId: varchar("client_id", { length: 191 }),
     clientSecret: varchar("client_secret", { length: 191 }),
-    accessToken: varchar("access_token", { length: 191 }).notNull(),
-    refreshToken: varchar("refresh_token", { length: 191 }),
+    accessToken: text("access_token").notNull(),
+    refreshToken: text("refresh_token"),
     expiresIn: timestamp("expires_in", { withTimezone: true }).notNull(),
     refreshTokenExpiresIn: timestamp("refresh_token_expires_in", {
       withTimezone: true,
@@ -319,7 +319,7 @@ export const socialProvider = pgTable(
     profileId: varchar("profileId", { length: 191 }).notNull(),
     username: varchar("username", { length: 191 }),
     fullName: varchar("fullName", { length: 191 }).default(""),
-    profileImage: varchar("profile_image", { length: 191 }).default(""),
+    profileImage: text("profile_image").default(""),
     socialType: socialType("socialType").notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .defaultNow()

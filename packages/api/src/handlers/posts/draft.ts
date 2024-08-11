@@ -2,6 +2,7 @@ import type {
   ContentType,
   FullPostType,
   SavePostInputType,
+  SocialProviderType,
 } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
 
@@ -134,7 +135,7 @@ export async function getDraftsFromDatabase({ postId }: { postId: string }) {
           socialProvider: true,
         },
       },
-      socialProviders: {
+      postToSocialProviders: {
         with: {
           socialProvider: true,
         },
@@ -182,7 +183,16 @@ export async function makingPostsFrontendCompatible({
     })),
   } as FullPostType;
 
-  console.log(post.socialProviders);
+  const socialProviders = post.postToSocialProviders.map((provider) => {
+    return {
+      socialId: provider.socialProvider.id,
+      name: provider.socialProvider.fullName,
+      socialType: provider.socialProvider.socialType,
+    };
+  }) as SocialProviderType[];
 
-  return fullPost;
+  return {
+    post: fullPost,
+    socialProviders,
+  };
 }

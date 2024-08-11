@@ -21,21 +21,21 @@ export default function ConnectedAccounts({
     switch (postType) {
       case "LONG_VIDEO":
         return connectedAccounts.filter(
-          (item) => item.type === SocialTypes.YOUTUBE,
+          (item) => item.socialType === SocialTypes.YOUTUBE,
         );
       case "SHORT":
         return connectedAccounts.filter(
           (item) =>
-            item.type === SocialTypes.YOUTUBE ||
-            item.type === SocialTypes.INSTAGRAM,
+            item.socialType === SocialTypes.YOUTUBE ||
+            item.socialType === SocialTypes.INSTAGRAM,
         );
       case "NORMAL":
         return connectedAccounts.filter(
           (item) =>
-            item.type === SocialTypes.LINKEDIN ||
-            item.type === SocialTypes.INSTAGRAM ||
-            item.type === SocialTypes.TWITTER ||
-            item.type === SocialTypes.FACEBOOK,
+            item.socialType === SocialTypes.LINKEDIN ||
+            item.socialType === SocialTypes.INSTAGRAM ||
+            item.socialType === SocialTypes.TWITTER ||
+            item.socialType === SocialTypes.FACEBOOK,
         );
       default:
         return [];
@@ -51,11 +51,11 @@ export default function ConnectedAccounts({
     <div className="grid grid-cols-3 place-items-start gap-3">
       {filteredAccounts.map((item) => (
         <ConnectedAccount
-          key={item.data.tokenId}
-          name={item.data.name ?? ""}
-          type={item.type}
-          profilePic={item.data.profile_image_url ?? "/user.png"}
-          id={item.data.tokenId}
+          key={item.socialId}
+          name={item.name ?? ""}
+          type={item.socialType}
+          profilePic={item.profile_image_url ?? "/user.png"}
+          id={item.socialId}
         />
       ))}
     </div>
