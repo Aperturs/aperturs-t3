@@ -109,7 +109,11 @@ export const posting = createTRPCRouter({
           ),
           orderBy: desc(schema.post.updatedAt),
           with: {
-            socialProviders: true,
+            postToSocialProviders: {
+              with: {
+                socialProvider: true,
+              },
+            },
           },
         });
         return posts;
@@ -121,9 +125,25 @@ export const posting = createTRPCRouter({
           ),
           orderBy: desc(schema.post.updatedAt),
           with: {
-            socialProviders: true,
+            postToSocialProviders: {
+              with: {
+                socialProvider: true,
+              },
+            },
           },
         });
+        // const returnedPosts = posts.map((post) => {
+        //   return {
+        //     ...post,
+        //     socials: post.postToSocialProviders.map((provider) => {
+        //       return {
+        //         name: provider.socialProvider.fullName,
+        //         socialType: provider.socialProvider.socialType,
+        //         socialId: provider.socialProvider.id,
+        //       };
+        //     }),
+        //   };
+        // });
         return posts;
       }
     }),

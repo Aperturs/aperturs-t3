@@ -124,7 +124,7 @@ export const postRelations = relations(post, ({ one, many }) => ({
     references: [user.clerkUserId],
   }),
   alternatePostContent: many(alternatePostContent),
-  socialProviders: many(postToSocialProvider),
+  postToSocialProviders: many(postToSocialProvider),
 }));
 
 export const postToSocialProvider = pgTable(

@@ -8,9 +8,9 @@ import { IoPencilSharp } from "react-icons/io5";
 import { TbTrashFilled } from "react-icons/tb";
 
 import type {
-  FullPostType,
+  ContentType,
+  SocialProviderType,
   SocialType,
-  youtubeContentType,
 } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@aperturs/ui/card";
@@ -23,20 +23,18 @@ import { SocialIcon } from "../post/common";
 
 interface IDarfCard {
   id: string;
-  content: string;
-  contentT?: FullPostType;
-  youtubeContent?: youtubeContentType;
+  contentT: ContentType[];
+  socialProviders: SocialProviderType[];
   refetch?: () => void;
   orgid?: string;
 }
 
 export default function DraftCard({
   id,
-  content,
   refetch,
   contentT,
+  socialProviders,
   orgid,
-  youtubeContent,
 }: IDarfCard) {
   const router = useRouter();
   const { mutateAsync: DeleteDraft, isPending: deleting } =
@@ -73,15 +71,13 @@ export default function DraftCard({
         <CardHeader className="relative flex flex-row items-center justify-between">
           <p>Draft</p>
           <div className="flex items-center gap-2">
-            {/* {contentT &&
-              contentT.length > 0 &&
-              contentT?.map((item, index) => (
-                <AllSocials
-                  key={index}
-                  name={item.name}
-                  socialType={item.socialType as SocialType}
-                />
-              ))} */}
+            {socialProviders.map((social) => (
+              <AllSocials
+                key={social.socialId}
+                name={social.name}
+                socialType={social.socialType}
+              />
+            ))}
           </div>
         </CardHeader>
         <ConfirmationModal
@@ -98,16 +94,10 @@ export default function DraftCard({
         />
         <CardContent>
           <div className="h-20 overflow-auto">
-            <p className="whitespace-pre-line">{content}</p>
+            <p className="whitespace-pre-line">{contentT[0]?.text ?? ""}</p>
           </div>
         </CardContent>
         <CardFooter className="grid w-full grid-cols-4 gap-2 pt-0 ">
-          {/* <button className="btn btn-primary text-white"
-        
-        onClick={() => {
-            router.push("/post/1");
-        }}
-        >Edit</button> */}
           <ToolTipSimple content="Edit" duration={30}>
             <Button
               variant="secondary"
