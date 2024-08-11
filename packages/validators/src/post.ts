@@ -99,7 +99,6 @@ export const contentSchema = z.object({
   id: z.string().optional(),
   order: z.number(),
   name: z.string(),
-  socialType: SocialTypeSchema,
   media: z.array(mediaSchema),
   text: z.string(),
   tags: z.array(z.string()).optional().default([]),
@@ -190,7 +189,6 @@ export type SavePostInputType = z.infer<typeof savePostInputSchema>;
 
 export const updatePostInputSchema = z.object({
   ...savePostInputSchema.shape,
-
   postId: z.string(),
 });
 

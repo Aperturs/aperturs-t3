@@ -52,7 +52,6 @@ const initialState: StateValues = {
         media: [],
         name: "DEFAULT",
         order: 0,
-        socialType: "DEFAULT",
         tags: [],
       },
     ],

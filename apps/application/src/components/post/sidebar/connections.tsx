@@ -68,8 +68,14 @@ const ConnectedAccount = ({ name, type, profilePic, id }: IConnection) => {
       onClick={handleClick}
     >
       <div className="relative">
-        <Avatar className={`p-0.5 ring-4 ${getRingColor(type)}  ring-offset-1`}>
-          <AvatarImage src={profilePic} alt="avatar" />
+        <Avatar
+          className={`ring-4 ${getRingColor(type)}  border-none ring-offset-2 ring-offset-card`}
+        >
+          <AvatarImage
+            src={profilePic}
+            alt="avatar"
+            className="h-full w-full object-cover"
+          />
           <AvatarFallback>{name.slice(0, 1).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="absolute bottom-0 left-[-15px] flex h-6 w-6 items-center justify-center rounded-full bg-card  shadow-md ">

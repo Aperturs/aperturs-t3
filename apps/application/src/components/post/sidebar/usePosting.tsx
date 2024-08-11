@@ -5,7 +5,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { shallow } from "zustand/shallow";
 
-import type { UpdateYoutubePostInput } from "@aperturs/validators/post";
+import type {
+  UpdatePostInput,
+  UpdateYoutubePostInput,
+} from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { api } from "~/trpc/react";
@@ -33,23 +36,6 @@ export default function usePublishing({ id }: { id: string }) {
     shallow,
   );
   const { uploadFilesAndModifyContent, loading: uploadingFiles } = usePost();
-
-  // const {
-  //   mutateAsync: createTweet,
-  //   error: twitterError,
-  //   isPending: tweeting,
-  // } = api.twitter.postTweet.useMutation();
-  // const {
-  //   mutateAsync: createLinkedinPost,
-  //   isPending: linkedinPosting,
-  //   error: linkedinError,
-  // } = api.linkedin.postToLinkedin.useMutation();
-
-  // const {
-  //   mutateAsync: updateYoutubePost,
-  //   isPending: updatingYoutube,
-  //   error: updateYoutubeError,
-  // } = api.savepost.updateYoutubePost.useMutation();
 
   const { mutateAsync: getPresignedUrl, isPending: gettingPresignedUrl } =
     api.post.getPresignedUrl.useMutation();
@@ -531,9 +517,9 @@ export default function usePublishing({ id }: { id: string }) {
       await toast.promise(
         (async () => {
           // Update post
-          const newContent = await uploadFilesAndModifyContent();
-          console.log(newContent, "newContent");
-          const response = await updatePost({
+          // const newContent = await uploadFilesAndModifyContent();
+          // console.log(newContent, "newContent");
+          const input = {
             ...post,
             socialProviders: socialProviders,
             postId: id,
@@ -541,7 +527,9 @@ export default function usePublishing({ id }: { id: string }) {
               isScheduling && scheduledTime
                 ? new Date(scheduledTime)
                 : undefined,
-          });
+          } as UpdatePostInput;
+          console.log(input, "input");
+          const response = await updatePost(input);
           if (response.success) {
             if (!isScheduling) {
               reset();

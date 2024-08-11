@@ -77,6 +77,7 @@ export const posting = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log(input, "input");
       try {
+        console.log("updating post", input);
         await updateDraftToDatabase({
           ...input,
           userId: ctx.currentUser,

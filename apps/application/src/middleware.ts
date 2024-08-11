@@ -36,7 +36,7 @@ export default clerkMiddleware((auth, req) => {
     !isOnboardingRoute(req) &&
     !isPublicRoute(req)
   ) {
-    console.log(req.url, "req.url");
+    // console.log(req.url, "req.url");
     const onboardingUrl = new URL("/onboarding", req.url);
     return NextResponse.redirect(onboardingUrl);
   }
