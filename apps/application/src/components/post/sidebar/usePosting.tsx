@@ -319,8 +319,9 @@ export default function usePublishing({ id }: { id: string }) {
         setUploadingFileName("Uploading files");
         const newContent = await uploadFilesAndModifyContent();
         // Save to drafts
+        setUploadingFileName("Saving to drafts");
         const response = await saveToDrafts({
-          ...post,
+          ...newContent,
           socialProviders: socialProviders,
           scheduledTime:
             isScheduling && scheduledTime ? new Date(scheduledTime) : undefined,
@@ -340,7 +341,7 @@ export default function usePublishing({ id }: { id: string }) {
         }
       })(),
       {
-        loading: "Saving to drafts...",
+        loading: uploadingFileName,
         success: "Saved to drafts",
         error: "Failed to save to drafts",
       },
@@ -517,10 +518,10 @@ export default function usePublishing({ id }: { id: string }) {
       await toast.promise(
         (async () => {
           // Update post
-          // const newContent = await uploadFilesAndModifyContent();
-          // console.log(newContent, "newContent");
+          setUploadingFileName("Uploading files");
+          const newContent = await uploadFilesAndModifyContent();
           const input = {
-            ...post,
+            ...newContent,
             socialProviders: socialProviders,
             postId: id,
             scheduledTime:
@@ -528,6 +529,13 @@ export default function usePublishing({ id }: { id: string }) {
                 ? new Date(scheduledTime)
                 : undefined,
           } as UpdatePostInput;
+          setUploadingFileName(
+            `${
+              isScheduling
+                ? "saving and is getting ready to schedule"
+                : "Updating post..."
+            }`,
+          );
           console.log(input, "input");
           const response = await updatePost(input);
           if (response.success) {
@@ -539,11 +547,7 @@ export default function usePublishing({ id }: { id: string }) {
           }
         })(),
         {
-          loading: `${
-            isScheduling
-              ? "saving and is getting ready to schedule"
-              : "Updating post..."
-          }`,
+          loading: uploadingFileName,
           success: `${
             isScheduling ? "saved and is ready to schedule" : "Updated post"
           }`,
@@ -619,19 +623,17 @@ export default function usePublishing({ id }: { id: string }) {
       !post ||
       uploadingFiles ||
       saving ||
-      // linkedinPosting ||
-      // tweeting ||
       savingYoutube ||
       gettingPresignedUrl ||
       postingToYoutube ||
       uploadProgress > 0,
     isUploaded,
+    posting: postByPostIdPending || loading,
     disablePosting: socialProviders.length === 0,
-    // scheduling,
     uploadingFiles,
     saving,
     updating,
-    scheduling,
+    scheduling: scheduling || loading,
     // handleSaveYoutube,
     uploadProgress,
     uploadFiles,

@@ -18,6 +18,7 @@ function Publish({ params }: { params: { postid: string } }) {
     isDisabled,
     isUploaded,
     saving,
+    posting,
     disablePosting,
     uploadProgress,
     scheduling,
@@ -53,7 +54,7 @@ function Publish({ params }: { params: { postid: string } }) {
         />
       ) : (
         <SimpleButton
-          // isLoading={posting}
+          isLoading={posting}
           text="Publish Now"
           disabled={isDisabled || disablePosting}
           onClick={async () => {

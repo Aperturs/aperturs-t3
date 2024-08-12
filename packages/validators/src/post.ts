@@ -124,6 +124,8 @@ export const alternativeContentSchema = z.array(
   }),
 );
 
+export type AlternativeContentType = z.infer<typeof alternativeContentSchema>;
+
 // export const basePostSchema = z.object({
 //   id: z.string(),
 //   name: z.string(),
