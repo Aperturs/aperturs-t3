@@ -9,6 +9,8 @@ import { postToTwitter } from "@api/helpers/twitter";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { eq, schema } from "@aperturs/db";
+
 import { env } from "../../../env";
 import {
   createTRPCRouter,
@@ -23,8 +25,10 @@ export const post = createTRPCRouter({
         postId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       console.log(input, "postby post id");
+      let isError = false;
+      let ErrorMessage = "";
       try {
         const post = await makingPostsFrontendCompatible({
           postId: input.postId,
@@ -54,6 +58,12 @@ export const post = createTRPCRouter({
               })
               .catch((error) => {
                 console.error("Failed to post to Twitter", error);
+                isError = true;
+                if (error instanceof Error) {
+                  ErrorMessage = error.message;
+                } else {
+                  ErrorMessage = "An unknown error occurred";
+                }
                 throw Error("Failed to post to Twitter");
               });
           }
@@ -63,6 +73,12 @@ export const post = createTRPCRouter({
               content: alterContent.content,
             }).catch((error) => {
               console.error("Failed to post to LinkedIn", error);
+              isError = true;
+              if (error instanceof Error) {
+                ErrorMessage = error.message;
+              } else {
+                ErrorMessage = "An unknown error occurred";
+              }
               throw Error("Failed to post to linkedin");
             });
           }
@@ -79,6 +95,12 @@ export const post = createTRPCRouter({
               })
               .catch((error) => {
                 console.error("Failed to post to Twitter", error);
+                isError = true;
+                if (error instanceof Error) {
+                  ErrorMessage = error.message;
+                } else {
+                  ErrorMessage = "An unknown error occurred";
+                }
                 throw Error("Failed to post to Twitter");
               });
           }
@@ -88,6 +110,12 @@ export const post = createTRPCRouter({
               content: post.post.content,
             }).catch((error) => {
               console.error("Failed to post to LinkedIn", error);
+              isError = true;
+              if (error instanceof Error) {
+                ErrorMessage = error.message;
+              } else {
+                ErrorMessage = "An unknown error occurred";
+              }
               throw Error("Failed to post to linkedin");
             });
           }
@@ -133,12 +161,28 @@ export const post = createTRPCRouter({
         //     });
         //   });
         // }
-
+        if (isError) {
+          await ctx.db
+            .update(schema.post)
+            .set({
+              postFailureReason: ErrorMessage,
+            })
+            .where(eq(schema.post.id, input.postId));
+        }
         if (!post) {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "Post not found",
           });
+        }
+
+        if (!isError) {
+          await ctx.db
+            .update(schema.post)
+            .set({
+              status: "PUBLISHED",
+            })
+            .where(eq(schema.post.id, input.postId));
         }
 
         return {
