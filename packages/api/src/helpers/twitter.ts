@@ -10,7 +10,7 @@ import { TwitterApi } from "twitter-api-v2";
 import type { tokens } from "@aperturs/db";
 import type { PostTweetInput } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
-import { getFileType, getValidMediaUrls } from "@aperturs/validators/post";
+import { getFileType } from "@aperturs/validators/post";
 
 import { env } from "../../env";
 
@@ -183,11 +183,11 @@ export const postToTwitter = async (input: PostTweetInput) => {
   const client = new Client(profile.accessToken);
   try {
     if (input.tweets[0] && input.tweets.length > 0) {
-      const mediaIds = await Promise.all(
-        getValidMediaUrls(input.tweets[0].media).map((url) =>
-          uploadMedia(url, profile.profileId),
-        ) ?? [],
-      );
+      const mediaIds: string[] = [];
+      for (const media of input.tweets[0].media) {
+        if (!media.url) continue;
+        mediaIds.push(await uploadMedia(media.url, profile.profileId));
+      }
       const firstTweet = await client.tweets.createTweet({
         text: input.tweets[0].text,
         media: {
@@ -200,13 +200,12 @@ export const postToTwitter = async (input: PostTweetInput) => {
         // Loop through the rest of the tweets
         for (let i = 1; i < input.tweets.length; i++) {
           const tweet = input.tweets[i];
-          const mediaIds = tweet?.media
-            ? await Promise.all(
-                getValidMediaUrls(tweet.media).map((url) =>
-                  uploadMedia(url, profile.profileId),
-                ),
-              )
-            : [];
+          if (!tweet) continue;
+          const mediaIds: string[] = [];
+          for (const media of tweet.media) {
+            if (!media.url) continue;
+            mediaIds.push(await uploadMedia(media.url, profile.profileId));
+          }
           if (tweet) {
             const post = await client.tweets.createTweet({
               text: tweet.text,

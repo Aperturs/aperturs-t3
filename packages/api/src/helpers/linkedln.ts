@@ -7,7 +7,7 @@ import axios from "axios";
 import type { tokens } from "@aperturs/db";
 import type { PostToLinkedInInput } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
-import { getFileType, getValidMediaUrls } from "@aperturs/validators/post";
+import { getValidMediaUrls } from "@aperturs/validators/post";
 
 interface LinkedInTokenDetails
   extends Pick<
@@ -77,14 +77,16 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
   try {
     const uploadedFiles = getValidMediaUrls(content.media);
     console.log(uploadedFiles, "input.uploadedFiles");
-    const hasImages = uploadedFiles.some((url) => getFileType(url) === "image");
+    const hasImage = uploadedFiles.some((file) => file.mediaType === "IMAGE");
     if (uploadedFiles && uploadedFiles.length > 0) {
-      for (const url of uploadedFiles) {
-        console.log("for url", url);
+      for (const file of uploadedFiles) {
+        if (!file.url) {
+          continue;
+        }
         const data = await uploadMedia({
           authToken: tokenData.accessToken,
-          fileUrl: url,
-          isImage: hasImages,
+          fileUrl: file.url,
+          isImage: file.mediaType === "IMAGE",
           media: {
             owner: profileId,
           },
@@ -108,9 +110,9 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
         specificContent: {
           "com.linkedin.ugc.ShareContent": {
             shareCommentary: {
-              text: input.content,
+              text: input.content[0]?.text ?? "",
             },
-            shareMediaCategory: hasImages ? "IMAGE" : "VIDEO",
+            shareMediaCategory: hasImage ? "IMAGE" : "VIDEO",
             media: imageData,
           },
         },

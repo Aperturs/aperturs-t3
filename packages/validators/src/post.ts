@@ -97,9 +97,17 @@ export type MediaType = z.infer<typeof mediaSchema>;
 
 export const getValidMediaUrls = (media: MediaType[]) => {
   return media
-    .filter((m) => typeof m.url === "string")
-    .map((m) => m.url)
-    .filter(Boolean) as string[];
+    .filter((m) => typeof m.url === "string" && typeof m.url !== "undefined")
+    .map((m) => {
+      return {
+        url: m.url,
+        mediaType: m.mediaType,
+        altText: m.altText,
+        thumbnailBucketUrl: m.thumbnailBucketUrl,
+        thumbnailBucketKey: m.thumbnailBucketKey,
+      };
+    })
+    .filter(Boolean);
 };
 
 export const contentSchema = z.object({
