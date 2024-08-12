@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
@@ -38,6 +37,7 @@ function usePostUpdate(orderId: number, socialId?: string) {
               : item,
           ),
         } as FullPostType;
+        console.log(updatedPost, "updated post");
         setPost(updatedPost);
       } else {
         const updatedPost = {
@@ -126,7 +126,9 @@ function usePostUpdate(orderId: number, socialId?: string) {
 
   const updateMedia = useCallback(
     (media: Optional<MediaType, "bucketKey" | "bucketUrl">[]) => {
+      console.log(media, "media is being called by updateMedia");
       if (socialId) {
+        console.log(media, "media");
         const updatedPost = {
           ...post,
           alternativeContent: post.alternativeContent.map((item) =>
@@ -145,8 +147,10 @@ function usePostUpdate(orderId: number, socialId?: string) {
               : item,
           ),
         } as FullPostType;
+        console.log(updatedPost, "updated post media thing");
         setPost(updatedPost);
       } else {
+        console.log(media, "media");
         const updatedPost = {
           ...post,
           content: post.content.map((item) =>
@@ -161,7 +165,6 @@ function usePostUpdate(orderId: number, socialId?: string) {
         setPost(updatedPost);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [socialId, post, orderId],
   );
 
@@ -219,6 +222,17 @@ function usePostUpdate(orderId: number, socialId?: string) {
     return post.content.find((item) => item.order === orderId)?.text ?? "";
   }, [socialId, orderId, post]);
 
+  const mediaValue = useMemo(() => {
+    if (socialId) {
+      return (
+        post.alternativeContent
+          .find((item) => item.socialProvider.socialId === socialId)
+          ?.content.find((item) => item.order === orderId)?.media ?? []
+      );
+    }
+    return post.content.find((item) => item.order === orderId)?.media ?? [];
+  }, [socialId, orderId]);
+
   return {
     contentValue,
     updateContent,
@@ -228,6 +242,7 @@ function usePostUpdate(orderId: number, socialId?: string) {
     setSync,
     onRemoveTweet,
     addTweet,
+    mediaValue,
     // currentFiles,
     // removeUpdatedFiles,
   };

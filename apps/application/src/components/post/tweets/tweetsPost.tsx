@@ -4,6 +4,7 @@ import type { SocialType } from "@aperturs/validators/post";
 import { Card, CardContent, CardHeader, CardTitle } from "@aperturs/ui/card";
 
 import { useStore } from "~/store/post-store";
+import FileUpload from "../content/fileUpload";
 import SingleTweet from "./singleTweet";
 
 function TweetPost({
@@ -20,28 +21,34 @@ function TweetPost({
     shallow,
   );
 
+  const postContentHere = socialId
+    ? post.alternativeContent.find(
+        (item) => item.socialProvider.socialId === socialId,
+      ) ?? post
+    : post;
+
   return (
     <Card className="p-4">
       <CardHeader>
         <CardTitle>Create a post</CardTitle>
       </CardHeader>
       <CardContent>
-        {post.content.map((tweet) => {
+        {postContentHere.content.map((tweet) => {
           return (
             <>
               <SingleTweet
-                key={tweet.id}
+                key={tweet.order + "text" + socialId}
                 orderId={tweet.order}
                 text={tweet.text}
                 socialId={socialId}
                 socialType={socialType}
               />
-              {/* <FileUpload
+              <FileUpload
                 socialId={socialId}
-                socialType={tweet.socialType}
-                key={tweet.id}
+                socialType={socialType}
+                key={tweet.order + "file" + socialId}
                 orderId={tweet.order}
-              /> */}
+              />
             </>
           );
         })}

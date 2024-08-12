@@ -41,22 +41,26 @@ function Publish({ params }: { params: { postid: string } }) {
         setDate={setDate}
         // key={new Date().getTime()}
       />
-      <SimpleButton
-        text="Schedule"
-        isLoading={scheduling}
-        disabled={isDisabled || disablePosting}
-        onClick={async () => {
-          await handleSchedule();
-        }}
-      />
-      <SimpleButton
-        // isLoading={posting}
-        text="Publish Now"
-        disabled={isDisabled || disablePosting}
-        onClick={async () => {
-          await handlePublish();
-        }}
-      />
+
+      {date ? (
+        <SimpleButton
+          text="Schedule"
+          isLoading={scheduling}
+          disabled={isDisabled || disablePosting}
+          onClick={async () => {
+            await handleSchedule();
+          }}
+        />
+      ) : (
+        <SimpleButton
+          // isLoading={posting}
+          text="Publish Now"
+          disabled={isDisabled || disablePosting}
+          onClick={async () => {
+            await handlePublish();
+          }}
+        />
+      )}
       {/* <PostWeb content={defaultContent} /> */}
       {isUploaded ? (
         <SimpleButton

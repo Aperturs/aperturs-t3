@@ -1,7 +1,7 @@
 import type { ChangeEvent } from "react";
 import React, { useRef } from "react";
 
-import { SocialType } from "@aperturs/validators/post";
+import type { SocialType } from "@aperturs/validators/post";
 
 import usePostUpdate from "../content/use-post-update";
 
@@ -24,6 +24,8 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [count, setCount] = React.useState(280 - text.length);
+
+  console.log(socialId);
 
   const { updateContent, onRemoveTweet, addTweet } = usePostUpdate(
     orderId,

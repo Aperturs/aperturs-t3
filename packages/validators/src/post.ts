@@ -20,8 +20,8 @@ export const allowedImageMimeTypes = new Set([
   "image/jpeg",
   "image/gif",
   "image/png",
-  "image/heic",
-  "image/webp",
+  // "image/heic",
+  // "image/webp",
 ]);
 
 export const allowedVideoMimeTypes = new Set([

@@ -1,6 +1,7 @@
 import type { ChangeEvent } from "react";
 import { useCallback, useState } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -29,7 +30,8 @@ function isImage(url: string): boolean {
 // Generate accept string
 const imageAcceptString = Array.from(allowedImageMimeTypes).join(",");
 const videoAcceptString = Array.from(allowedVideoMimeTypes).join(",");
-const acceptString = `${imageAcceptString},${videoAcceptString}`;
+// const acceptString = `${imageAcceptString},${videoAcceptString}`;
+const acceptString = `${imageAcceptString}`;
 
 export default function FileUpload({
   socialId,
@@ -42,98 +44,73 @@ export default function FileUpload({
 }) {
   const { post } = useStore();
 
-  const mediaHere = post?.content.find(
-    (content) => content.order === orderId,
-  )?.media;
+  const { updateMedia, removeFiles, mediaValue } = usePostUpdate(
+    orderId,
+    socialId,
+  );
+  const [media, SetMedia] = useState<MediaType[]>(mediaValue ?? []);
 
-  const [media, SetMedia] = useState<MediaType[]>(mediaHere ?? []);
-
-  const { updateMedia, removeFiles } = usePostUpdate(orderId, socialId);
+  console.log(socialId, orderId, mediaValue);
 
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      // if (selectedFiles.length + uploadedFiles.length >= 4) {
-      //   toast.error("Maximum 4 files allowed");
-      //   return;
-      // }
-      // const files = event.target.files;
-      // if (files && files.length > 0) {
-      //   const newFiles = Array.from(files);
-      //   // const contentContainNonUniqueLinkedin = content.some(
-      //   //   (post) => post.socialType === SocialTypes.LINKEDIN && !post.unique,
-      //   // );
-      //   if (
-      //     postType === SocialTypes.LINKEDIN
-      //     //  ||
-      //     // contentContainNonUniqueLinkedin
-      //   ) {
-      //     const isImageSelected = selectedFiles.some((file) =>
-      //       file.type.startsWith("image/"),
-      //     );
-      //     const isVideoSelected = selectedFiles.some((file) =>
-      //       file.type.startsWith("video/"),
-      //     );
-      //     const isNewFileImage = newFiles.some((file) =>
-      //       file.type.startsWith("image/"),
-      //     );
-      //     const isNewFileVideo = newFiles.some((file) =>
-      //       file.type.startsWith("video/"),
-      //     );
-      //     if (
-      //       (isImageSelected && isNewFileVideo) ||
-      //       (isVideoSelected && isNewFileImage)
-      //     ) {
-      //       toast.error(
-      //         "You can't have both image and video at the same time on LinkedIn",
-      //       );
-      //       return;
-      //     }
-      //   }
-      //   const fileSizeExceeded = newFiles.some(
-      //     (file) => file.size > 30 * 1024 * 1024,
-      //   ); // 30MB
-      //   if (fileSizeExceeded) {
-      //     toast.error("Maximum file size is 30MB");
-      //     return;
-      //   }
-      //   const newSelectedFiles = [...selectedFiles, ...newFiles];
-      //   setSelectedFiles(newSelectedFiles);
-      //   const newPreviewUrls = newFiles.map((file) => {
-      //     const url = URL.createObjectURL(file);
-      //     return url;
-      //   });
-      //   const allURls = [...previewUrls, ...newPreviewUrls];
-      //   setPreviewUrls(allURls);
-      //   updateFiles(newSelectedFiles, allURls, tweetId);
-      // }
-    },
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
+      const newFiles = Array.from(files);
+      // Perform file validations
+      const isValidFileSize = newFiles.every(
+        (file) => file.size <= 30 * 1024 * 1024,
+      ); // 30MB limit
+      if (!isValidFileSize) {
+        // Show error toast
+        toast.error("Maximum file size is 30MB");
+        return;
+      }
 
-    [
-      // content,
-      // postType,
-      // previewUrls,
-      // selectedFiles,
-      // updateFiles,
-      // uploadedFiles.length,
-      // tweetId,
-    ],
+      const isValidType = newFiles.every((file) =>
+        [...allowedImageMimeTypes, ...allowedVideoMimeTypes].includes(
+          file.type,
+        ),
+      );
+      if (!isValidType) {
+        // Show error toast
+        toast.error("Invalid file type");
+        return;
+      }
+
+      if (newFiles.length + media.length > 4) {
+        // Show error toast
+        toast.error("Maximum of 4 files allowed");
+        return;
+      }
+
+      // Update state with new files
+      const newMedia = newFiles.map((file) => ({
+        mediaType: file.type.startsWith("image/") ? "IMAGE" : "VIDEO",
+        previewUrl: URL.createObjectURL(file),
+        file,
+      })) as MediaType[];
+
+      const updatedMedia = [...media, ...newMedia];
+      SetMedia(updatedMedia);
+
+      // Update the post with new media
+      updateMedia(updatedMedia);
+    },
+    [media, updateMedia],
   );
 
   const inputId = `fileInput${socialId}${orderId}`;
 
   const handleRemove = (index: number) => {
-    // const newSelectedFiles = [...selectedFiles];
-    // newSelectedFiles.splice(index, 1);
-    // setSelectedFiles(newSelectedFiles);
-    // const newPreviewUrls = [...previewUrls];
-    // newPreviewUrls.splice(index, 1);
-    // setPreviewUrls(newPreviewUrls);
-    // removeFiles(index, tweetId);
-  };
+    // Create a new array without the removed media
+    const updatedMedia = [...media];
+    updatedMedia.splice(index, 1);
 
-  // const removeFromUploaded = (url: string) => {
-  //   return "";
-  // };
+    // Update the state and post
+    SetMedia(updatedMedia);
+    removeFiles(index); // This function should update the post-store to reflect the removal
+  };
 
   return (
     <div>
@@ -162,42 +139,11 @@ export default function FileUpload({
                 <track kind="captions" />
               </video>
             )}
-            <DeleteImage
-              handleRemove={() => {
-                console.log("");
-              }}
-              index={index}
-            />
-          </div>
-        ))}
-        {/* {previewUrls.map((url, index) => (
-          <div
-            key={url}
-            className="group relative inline flex-shrink-0 cursor-pointer transition ease-in-out"
-          >
-            {selectedFiles[index]?.type?.startsWith("image/") ? (
-              <Image
-                src={url}
-                alt={`File Preview ${url}`}
-                style={{ maxWidth: "100%", maxHeight: "150px" }}
-                width={150}
-                height={250}
-              />
-            ) : (
-              <video controls style={{ maxWidth: "100%", maxHeight: "100px" }}>
-                <source
-                  src={url}
-                  type={selectedFiles[index - uploadedFiles.length]?.type}
-                />
-                <track kind="captions" />
-                Your browser does not support the video tag.
-              </video>
-            )}
             <DeleteImage handleRemove={handleRemove} index={index} />
           </div>
-        ))} */}
+        ))}
       </div>
-      <ToolTipSimple content="Add Image/Video">
+      <ToolTipSimple content="Add Image (videos not supported at the moment)">
         <label htmlFor={inputId} className="my-2  block w-8 cursor-pointer">
           {""}
           <BsFillImageFill className="text-xl" />
