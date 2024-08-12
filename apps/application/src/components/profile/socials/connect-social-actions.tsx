@@ -27,10 +27,7 @@ import {
 } from "@aperturs/ui/dropdown-menu";
 
 import { api } from "~/trpc/react";
-import {
-  handleLinkedinRedirect,
-  handleYoutubeRedirect,
-} from "~/utils/actions/handle-socials";
+import { handleLinkedinRedirect } from "~/utils/actions/handle-socials";
 
 export default function ConnectSocialsAction({
   id,
@@ -56,13 +53,14 @@ export default function ConnectSocialsAction({
       await handleLinkedinRedirect({
         orgId: params?.orgid ?? "personal",
         tokenId: id,
+        onboarding: false,
       });
     }
     if (type === ("YOUTUBE" as SocialType)) {
-      await handleYoutubeRedirect({
-        orgId: params?.orgid ?? "personal",
-        tokenId: id,
-      });
+      // await handleYoutubeRedirect({
+      //   orgId: params?.orgid ?? "personal",
+      //   tokenId: id,
+      // });
     }
   };
 

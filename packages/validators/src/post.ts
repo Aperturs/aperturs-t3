@@ -1,10 +1,44 @@
 import { z } from "zod";
 
+export const videoTypes = [
+  "MP4",
+  "MOV",
+  // "AVI",
+  // "WMV",
+  // "VC1",
+  // "DVVIDEO",
+  // "QTRLE",
+  // "TSCC2",
+  // "MPEG",
+  // "MPEG2",
+  "MKV",
+  "WEBM",
+];
+export const allowedImageTypes = ["JPEG", "GIF", "PNG", "HEIC", "WEBP"];
+
+export const allowedImageMimeTypes = new Set([
+  "image/jpeg",
+  "image/gif",
+  "image/png",
+  // "image/heic",
+  // "image/webp",
+]);
+
+export const allowedVideoMimeTypes = new Set([
+  "video/mp4",
+  "video/quicktime", // For MOV
+  "video/x-matroska", // For MKV
+  "video/webm",
+]);
+
 export const postType = {
   normal: "NORMAL",
   short: "SHORT",
   longVideo: "LONG_VIDEO",
 } as const;
+
+export type PostType = (typeof postType)[keyof typeof postType];
+export const PostTypeSchema = z.nativeEnum(postType);
 
 export const SocialTypes = {
   DEFAULT: "DEFAULT",
@@ -27,68 +61,103 @@ export const SocialTypeSchema = z.enum([
   "YOUTUBE",
   "INSTAGRAM",
   "FACEBOOK",
-] as const);
+]);
 
-export type PostType = (typeof postType)[keyof typeof postType];
-export const PostTypeSchema = z.nativeEnum(postType);
-
-export const basePostSchema = z.object({
-  id: z.string(),
-  name: z.string(),
+// Implement it later, once basic features are one
+export const platformPostSchema = z.object({
+  platformPostId: z.string(),
+  socialId: z.string(),
   socialType: SocialTypeSchema,
-  unique: z.boolean(),
-  content: z.string(),
-  files: z.array(z.instanceof(File)).default([]),
-  previewUrls: z.array(z.string()).default([]).optional(),
-  uploadedFiles: z.array(z.string()),
+  platformPostUrl: z.string(),
 });
 
-export type BasePostContentType = z.infer<typeof basePostSchema>;
+export const privacyStatusSchema = z.enum(["PUBLIC", "PRIVATE", "UNLISTED"]);
 
-export const videoTypes = [
-  "MP4",
-  "MOV",
-  // "AVI",
-  // "WMV",
-  // "VC1",
-  // "DVVIDEO",
-  // "QTRLE",
-  // "TSCC2",
-  // "MPEG",
-  // "MPEG2",
-  "MKV",
-  "WEBM",
-];
-export const allowedImageTypes = ["JPEG", "GIF", "PNG", "HEIC", "WEBP"];
+export const SocialProviderSchema = z.object({
+  socialId: z.string(),
+  name: z.string(),
+  socialType: SocialTypeSchema,
+});
 
-export const allowedImageMimeTypes = new Set([
-  "image/jpeg",
-  "image/gif",
-  "image/png",
-  "image/heic",
-  "image/webp",
-]);
+export type SocialProviderType = z.infer<typeof SocialProviderSchema>;
 
-export const allowedVideoMimeTypes = new Set([
-  "video/mp4",
-  "video/quicktime", // For MOV
-  "video/x-matroska", // For MKV
-  "video/webm",
-]);
+export const mediaSchema = z.object({
+  url: z.string().optional(),
+  mediaType: z.enum(["IMAGE", "VIDEO"]),
+  bucketUrl: z.string().optional(),
+  bucketKey: z.string().optional(),
+  altText: z.string().optional(),
+  thumbnailBucketUrl: z.string().optional(),
+  thumbnailBucketKey: z.string().optional(),
+  file: z.instanceof(File).optional(),
+  previewUrl: z.string().optional(),
+});
 
-// Define the complete schema including the recursive content field
+export type MediaType = z.infer<typeof mediaSchema>;
+
+export const getValidMediaUrls = (media: MediaType[]) => {
+  return media
+    .filter((m) => typeof m.url === "string" && typeof m.url !== "undefined")
+    .map((m) => {
+      return {
+        url: m.url,
+        mediaType: m.mediaType,
+        altText: m.altText,
+        thumbnailBucketUrl: m.thumbnailBucketUrl,
+        thumbnailBucketKey: m.thumbnailBucketKey,
+      };
+    })
+    .filter(Boolean);
+};
+
+export const contentSchema = z.object({
+  id: z.string().optional(),
+  order: z.number(),
+  name: z.string(),
+  media: z.array(mediaSchema),
+  text: z.string(),
+  tags: z.array(z.string()).optional().default([]),
+  socialId: z.string().optional(),
+  // files: z.array(z.instanceof(File)).default([]),
+  // previewUrls: z.array(z.string()).default([]).optional(),
+  // uploadedFiles: z.array(z.string()),
+});
+
+export type ContentType = z.infer<typeof contentSchema>;
+
+export const alternativeContentSchema = z.array(
+  z.object({
+    socialProvider: SocialProviderSchema,
+    content: z.array(contentSchema),
+  }),
+);
+
+export type AlternativeContentType = z.infer<typeof alternativeContentSchema>;
+
+// export const basePostSchema = z.object({
+//   id: z.string(),
+//   name: z.string(),
+//   socialType: SocialTypeSchema,
+//   unique: z.boolean(),
+//   content: z.string(),
+//   files: z.array(z.instanceof(File)).default([]),
+//   previewUrls: z.array(z.string()).default([]).optional(),
+//   uploadedFiles: z.array(z.string()),
+// });
+
+// export type BasePostContentType = z.infer<typeof basePostSchema>;
+
 export const postSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  socialType: SocialTypeSchema,
-  unique: z.boolean(),
-  content: z.union([z.string(), z.array(basePostSchema)]),
-  files: z.array(z.instanceof(File)).default([]),
-  previewUrls: z.array(z.string()).default([]).optional(),
-  uploadedFiles: z.array(z.string()),
+  id: z.string().optional(),
+  postType: PostTypeSchema,
+  content: z.array(contentSchema),
+  alternativeContent: alternativeContentSchema.default([]),
+  scheduledTime: z.date().optional(),
+  orgId: z.string().optional(),
+  projectId: z.string().optional(),
 });
 
-export type PostContentType = z.infer<typeof postSchema>;
+export type FullPostType = z.infer<typeof postSchema>;
 
 const youtubeContentSchema = z.object({
   youtubeId: z.string(),
@@ -119,29 +188,28 @@ export type FinalYoutubeContentType = z.infer<typeof finalYoutubeContentSchema>;
 export type youtubeContentType = z.infer<typeof youtubeContentSchema>;
 
 export const savePostInputSchema = z.object({
-  postContent: z.array(
-    postSchema
-      .omit({
-        files: true,
-        previewUrls: true,
-      })
-      .extend({
-        content: z.union([
-          z.string(),
-          z.array(basePostSchema.omit({ files: true, previewUrls: true })),
-        ]),
-      }),
+  ...postSchema.shape,
+  content: z.array(
+    contentSchema.extend({
+      media: z.array(
+        mediaSchema.omit({
+          file: true,
+          previewUrl: true,
+        }),
+      ),
+    }),
   ),
-  scheduledTime: z.date().optional(),
-  projectId: z.string().optional(),
-  orgId: z.string().optional(),
+  socialProviders: z.array(SocialProviderSchema),
 });
 
+export type SavePostInputType = z.infer<typeof savePostInputSchema>;
+
 export const updatePostInputSchema = z.object({
-  postContent: z.array(postSchema.omit({ files: true })),
-  scheduledTime: z.date().optional(),
+  ...savePostInputSchema.shape,
   postId: z.string(),
 });
+
+export type UpdatePostInput = z.infer<typeof updatePostInputSchema>;
 
 export const YoutubeContentType = z.object({
   id: z.string(),
@@ -158,24 +226,21 @@ export const YoutubeContentType = z.object({
 });
 
 export const updateYoutubePostSchema = YoutubeContentType.partial().extend({
-  content: z.array(postSchema.omit({ files: true })),
+  content: z.array(postSchema),
 });
 
 export type UpdateYoutubePostInput = z.infer<typeof updateYoutubePostSchema>;
 
-export type SavePostInput = z.infer<typeof savePostInputSchema>;
-
 export const postTweetInputSchema = z.object({
   tokenId: z.string(),
-  tweets: z.array(basePostSchema),
+  tweets: z.array(contentSchema),
 });
 
 export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
 
 export const postToLinkedInInputSchema = z.object({
-  tokenId: z.string(),
-  content: z.string(),
-  imageurl: z.string().optional(),
+  socialId: z.string(),
+  content: z.array(contentSchema.extend({ media: z.array(mediaSchema) })),
 });
 
 export type PostToLinkedInInput = z.infer<typeof postToLinkedInInputSchema>;

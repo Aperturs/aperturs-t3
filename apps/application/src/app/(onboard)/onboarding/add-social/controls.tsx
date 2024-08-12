@@ -11,7 +11,9 @@ export default function Controls() {
         <Link href="/onboarding">Back</Link>
       </Button>
       <Button className="w-full">
-        <Link href="/onboarding/pick-plan" className="w-full h-full">Next</Link>
+        <Link href="/onboarding/pick-plan" className="h-full w-full">
+          Next
+        </Link>
       </Button>
     </div>
   );

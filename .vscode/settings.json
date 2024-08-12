@@ -1,9 +1,13 @@
 {
   "WillLuke.nextjs.hasPrompted": true,
   "cSpell.words": [
+    "ACCESSTOKEN",
     "Aperturs",
+    "APIKEY",
+    "APPSECRET",
     "Bachu",
     "datepicker",
+    "orgid",
     "trpc",
     "unknow",
     "zustand"

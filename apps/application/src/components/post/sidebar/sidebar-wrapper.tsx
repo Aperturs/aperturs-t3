@@ -21,7 +21,7 @@ export default function SidebarWrapper({
   return (
     <>
       {!isMobile ? (
-        <div className="shadow-blue-gray-900/5 z-20 w-full rounded-lg bg-card  p-4 px-8 shadow-xl  dark:border lg:fixed lg:right-4   lg:h-[100vh] lg:max-w-[20rem]">
+        <div className="z-20 w-full rounded-lg bg-card  p-4 px-8 shadow-xl  dark:border lg:fixed lg:right-0   lg:h-[100vh] lg:max-w-[20rem]">
           {children}
         </div>
       ) : (

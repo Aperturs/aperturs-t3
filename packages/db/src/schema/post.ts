@@ -2,33 +2,43 @@ import type { z } from "zod";
 import { relations } from "drizzle-orm";
 import {
   boolean,
-  foreignKey,
   index,
   json,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
+import type { ContentType } from "@aperturs/validators/post";
+
 import { createUniqueIds } from "../utils";
 import { organization } from "./organisation";
 import { project } from "./project";
-import { linkedInToken, twitterToken, youtubeToken } from "./tokens";
+import { socialProvider, youtubeToken } from "./tokens";
 import { user } from "./user";
 
 export const postStatusEnum = pgEnum("postStatus", [
   "SAVED",
   "PUBLISHED",
   "SCHEDULED",
+  "DELETED",
+  "FAILED",
 ]);
 
 export const postReviewStatusEnum = pgEnum("postReviewStatus", [
   "PENDING",
   "APPROVED",
   "REJECTED",
+]);
+
+export const privacyStatusEnum = pgEnum("privacyStatus", [
+  "PUBLIC",
+  "PRIVATE",
+  "UNLISTED",
 ]);
 
 export const postType = pgEnum("postType", ["NORMAL", "SHORT", "LONG_VIDEO"]);
@@ -68,13 +78,18 @@ export const post = pgTable(
         onDelete: "cascade",
       },
     ),
-    content: json("content").notNull(),
     projectId: varchar("projectId", { length: 191 }).references(
       () => project.id,
       {
         onDelete: "cascade",
       },
     ),
+    isDeleted: boolean("isDeleted").default(false).notNull(),
+    postFailureReason: text("postFailureReason"),
+    privacyStatus: privacyStatusEnum("privacyStatus")
+      .default("UNLISTED")
+      .notNull(),
+    content: json("content").$type<ContentType[]>().default([]).notNull(),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .defaultNow()
       .notNull(),
@@ -100,10 +115,6 @@ export const postRelations = relations(post, ({ one, many }) => ({
     fields: [post.organizationId],
     references: [organization.id],
   }),
-  youtubeContent: one(youtubeContent, {
-    fields: [post.id],
-    references: [youtubeContent.postId],
-  }),
   project: one(project, {
     fields: [post.projectId],
     references: [project.id],
@@ -112,77 +123,160 @@ export const postRelations = relations(post, ({ one, many }) => ({
     fields: [post.clerkUserId],
     references: [user.clerkUserId],
   }),
-  singlesPosts: many(singlePost),
+  alternatePostContent: many(alternatePostContent),
+  postToSocialProviders: many(postToSocialProvider),
 }));
 
-export const singlePost = pgTable(
-  "SinglePost",
+export const postToSocialProvider = pgTable(
+  "PostToSocialProvider",
   {
-    id: varchar("id", { length: 191 })
-      .primaryKey()
-      .$defaultFn(() => createUniqueIds("sp")),
-    postId: varchar("postId", { length: 191 }).references(() => post.id, {
-      onDelete: "cascade",
-    }),
-    unique: boolean("unique").default(false).notNull(),
-    fileUrls: json("fileUrls").$type<string[]>().notNull(),
-    name: varchar("name", { length: 256 }).notNull(),
-    content: text("content").notNull(),
-    socialType: socialType("postType").default("DEFAULT").notNull(),
-    twitterTokenId: varchar("twitterTokenId", { length: 256 }).references(
-      () => twitterToken.id,
-      {
+    postId: varchar("postId", { length: 191 })
+      .references(() => post.id, {
         onDelete: "cascade",
-      },
-    ),
-    linkedInTokenId: varchar("linkedInTokenId", { length: 256 }).references(
-      () => linkedInToken.id,
-      {
-        onDelete: "cascade",
-      },
-    ),
-    parentSinglePostId: varchar("parentSinglePostId", { length: 191 }),
-    createdAt: timestamp("createdAt", { withTimezone: true })
-      .defaultNow()
+      })
       .notNull(),
-    updatedAt: timestamp("updatedAt", {
-      withTimezone: true,
-    }).notNull(),
+    socialProviderId: varchar("socialProviderId", { length: 191 })
+      .references(() => socialProvider.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
   },
-  (table) => {
-    return {
-      selfRef: foreignKey({
-        columns: [table.parentSinglePostId],
-        foreignColumns: [table.id],
-        name: "SinglePost_parentSinglePostId_fkey",
-      }).onDelete("cascade"),
-      postIdIdx: index("SinglePost_postId_idx").on(table.postId),
-    };
-  },
+  (table) => ({
+    cpk: primaryKey({
+      name: "PostToSocialProvider_pkey",
+      columns: [table.postId, table.socialProviderId],
+    }),
+  }),
 );
 
-export const singlePostRelations = relations(singlePost, ({ one, many }) => ({
-  post: one(post, {
-    fields: [singlePost.postId],
-    references: [post.id],
+export const postToSocialProviderRelations = relations(
+  postToSocialProvider,
+  ({ one }) => ({
+    post: one(post, {
+      fields: [postToSocialProvider.postId],
+      references: [post.id],
+    }),
+    socialProvider: one(socialProvider, {
+      fields: [postToSocialProvider.socialProviderId],
+      references: [socialProvider.id],
+    }),
   }),
-  linkedInToken: one(linkedInToken, {
-    fields: [singlePost.linkedInTokenId],
-    references: [linkedInToken.id],
+);
+
+export const alternatePostContent = pgTable(
+  "AlternatePostContent",
+  {
+    postId: varchar("postId", { length: 191 })
+      .references(() => post.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    socialProviderId: varchar("socialProviderId", { length: 191 })
+      .references(() => socialProvider.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    content: json("content").$type<ContentType[]>().default([]).notNull(),
+  },
+  (table) => ({
+    cpk: primaryKey({
+      name: "alternatePostContent_pkey",
+      columns: [table.postId, table.socialProviderId],
+    }),
   }),
-  twitterToken: one(twitterToken, {
-    fields: [singlePost.twitterTokenId],
-    references: [twitterToken.id],
+);
+
+export const alternatePostContentInsertSchema =
+  createInsertSchema(alternatePostContent);
+export type AlternatePostContentInsert = z.infer<
+  typeof alternatePostContentInsertSchema
+>;
+
+export const alternatePostContentSelectSchema =
+  createSelectSchema(alternatePostContent);
+export type AlternatePostContentSelect = z.infer<
+  typeof alternatePostContentSelectSchema
+>;
+
+export const alternatePostContentRelations = relations(
+  alternatePostContent,
+  ({ one }) => ({
+    post: one(post, {
+      fields: [alternatePostContent.postId],
+      references: [post.id],
+    }),
+    socialProvider: one(socialProvider, {
+      fields: [alternatePostContent.socialProviderId],
+      references: [socialProvider.id],
+    }),
   }),
-  parent: one(singlePost, {
-    fields: [singlePost.parentSinglePostId],
-    references: [singlePost.id],
-    relationName: "parent",
-  }),
-  thread: many(singlePost, {
-    relationName: "parent",
-  }),
-}));
+);
+
+// export const postContent = pgTable(
+//   "PostContent",
+//   {
+//     id: varchar("id", { length: 191 })
+//       .primaryKey()
+//       .$defaultFn(() => createUniqueIds("sp")),
+//     order: integer("order").notNull(),
+//     postId: varchar("postId", { length: 191 }).references(() => post.id, {
+//       onDelete: "cascade",
+//     }),
+//     name: varchar("name", { length: 256 }).notNull(),
+//     text: text("textContent").notNull(),
+//     media: json("media").$type<MediaType[]>().default([]),
+//     tags: json("tags").$type<string[]>().default([]),
+//     socialType: socialType("postType").default("DEFAULT").notNull(),
+//     socialProviderId: varchar("socialProviderId", { length: 191 }).references(
+//       () => socialProvider.id,
+//       {
+//         onDelete: "cascade",
+//       },
+//     ),
+//     createdAt: timestamp("createdAt", { withTimezone: true })
+//       .defaultNow()
+//       .notNull(),
+//     updatedAt: timestamp("updatedAt", {
+//       withTimezone: true,
+//     }).notNull(),
+//   },
+//   (table) => {
+//     return {
+//       alternatePostContentIdx: foreignKey({
+//         columns: [table.postId, table.socialProviderId],
+//         foreignColumns: [
+//           alternatePostContent.postId,
+//           alternatePostContent.socialProviderId,
+//         ],
+//       }).onDelete("cascade"),
+//       postIdIdx: index("PostContent_postId_idx").on(table.postId),
+//     };
+//   },
+// );
+
+// export const postContentRelations = relations(postContent, ({ one }) => ({
+//   post: one(post, {
+//     fields: [postContent.postId],
+//     references: [post.id],
+//   }),
+//   socialProvider: one(socialProvider, {
+//     fields: [postContent.socialProviderId],
+//     references: [socialProvider.id],
+//   }),
+//   alternatePostContent: one(alternatePostContent, {
+//     fields: [postContent.postId, postContent.socialProviderId],
+//     references: [
+//       alternatePostContent.postId,
+//       alternatePostContent.socialProviderId,
+//     ],
+//   }),
+// }));
+
+// export const PostContentInsertSchema = createInsertSchema(postContent);
+// export type PostContentInsert = z.infer<typeof PostContentInsertSchema>;
+
+// export const PostContentSelectSchema = createSelectSchema(postContent);
+// export type PostContentSelect = z.infer<typeof PostContentSelectSchema>;
 
 export const youtubeContent = pgTable(
   "YoutubeContent",

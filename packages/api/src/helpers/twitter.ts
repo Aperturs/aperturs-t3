@@ -16,7 +16,7 @@ import { env } from "../../env";
 
 interface TwitterAccountDetails
   extends Pick<
-    tokens.twitterTokenSelect,
+    tokens.SocialProviderSelectType,
     "accessToken" | "refreshToken" | "profileId" | "createdAt"
   > {
   full_name: string;
@@ -26,8 +26,8 @@ interface TwitterAccountDetails
 }
 
 export const getAccessToken = async (tokenId: string) => {
-  const token = await db.query.twitterToken.findFirst({
-    where: eq(schema.twitterToken.id, tokenId),
+  const token = await db.query.socialProvider.findFirst({
+    where: eq(schema.socialProvider.id, tokenId),
   });
   if (token) {
     if (token.expiresIn && token.refreshToken && token.accessToken) {
@@ -54,7 +54,7 @@ export const getAccessToken = async (tokenId: string) => {
           console.log("new Token", data);
           if (data) {
             await db
-              .update(schema.twitterToken)
+              .update(schema.socialProvider)
               .set({
                 accessToken: data.access_token,
                 refreshToken: data.refresh_token,
@@ -63,7 +63,7 @@ export const getAccessToken = async (tokenId: string) => {
                 ),
                 updatedAt: new Date(),
               })
-              .where(eq(schema.twitterToken.id, tokenId));
+              .where(eq(schema.socialProvider.id, tokenId));
           }
           return data.access_token;
         } catch (err) {
@@ -77,8 +77,8 @@ export const getAccessToken = async (tokenId: string) => {
 };
 
 export const getAccessTokenAndProfile = async (tokenId: string) => {
-  const token = await db.query.twitterToken.findFirst({
-    where: eq(schema.twitterToken.id, tokenId),
+  const token = await db.query.socialProvider.findFirst({
+    where: eq(schema.socialProvider.id, tokenId),
   });
   if (token) {
     if (token.expiresIn && token.refreshToken && token.accessToken) {
@@ -105,7 +105,7 @@ export const getAccessTokenAndProfile = async (tokenId: string) => {
           console.log("new Token", data);
           if (data) {
             await db
-              .update(schema.twitterToken)
+              .update(schema.socialProvider)
               .set({
                 accessToken: data.access_token,
                 refreshToken: data.refresh_token,
@@ -114,7 +114,7 @@ export const getAccessTokenAndProfile = async (tokenId: string) => {
                 ),
                 updatedAt: new Date(),
               })
-              .where(eq(schema.twitterToken.id, tokenId));
+              .where(eq(schema.socialProvider.id, tokenId));
           }
           return { ...token, accessToken: data.access_token };
         } catch (err) {
@@ -128,12 +128,12 @@ export const getAccessTokenAndProfile = async (tokenId: string) => {
 };
 
 export const getTwitterAccountDetails = async (
-  twitterTokens: tokens.twitterTokenSelect[],
+  twitterTokens: tokens.SocialProviderSelectType[],
 ) => {
   const twitterDetails: TwitterAccountDetails[] = [];
   for (const twitterToken of twitterTokens) {
     if (
-      !twitterToken.fullname ||
+      !twitterToken.fullName ||
       !twitterToken.profileImage ||
       !twitterToken.username ||
       (twitterToken.expiresIn && twitterToken.expiresIn < new Date())
@@ -153,20 +153,20 @@ export const getTwitterAccountDetails = async (
           createdAt: twitterToken.createdAt,
         } as TwitterAccountDetails);
         await db
-          .update(schema.twitterToken)
+          .update(schema.socialProvider)
           .set({
             username: userObject.username,
             profileImage: userObject.profile_image_url,
-            fullname: userObject.name,
+            fullName: userObject.name,
             updatedAt: new Date(),
           })
-          .where(eq(schema.twitterToken.id, twitterToken.id));
+          .where(eq(schema.socialProvider.id, twitterToken.id));
       }
     } else {
       twitterDetails.push({
         tokenId: twitterToken.id,
         profileId: twitterToken.profileId,
-        full_name: twitterToken.fullname,
+        full_name: twitterToken.fullName,
         profile_image_url: twitterToken.profileImage,
         username: twitterToken.username,
         createdAt: twitterToken.createdAt,
@@ -179,17 +179,17 @@ export const getTwitterAccountDetails = async (
 export const postToTwitter = async (input: PostTweetInput) => {
   const profile = (await getAccessTokenAndProfile(
     input.tokenId,
-  )) as tokens.twitterTokenSelect;
+  )) as tokens.SocialProviderSelectType;
   const client = new Client(profile.accessToken);
   try {
     if (input.tweets[0] && input.tweets.length > 0) {
-      const mediaIds = await Promise.all(
-        input.tweets[0].uploadedFiles?.map((url) =>
-          uploadMedia(url, profile.profileId),
-        ) ?? [],
-      );
+      const mediaIds: string[] = [];
+      for (const media of input.tweets[0].media) {
+        if (!media.url) continue;
+        mediaIds.push(await uploadMedia(media.url, profile.profileId));
+      }
       const firstTweet = await client.tweets.createTweet({
-        text: input.tweets[0].content,
+        text: input.tweets[0].text,
         media: {
           media_ids: mediaIds,
         },
@@ -200,16 +200,15 @@ export const postToTwitter = async (input: PostTweetInput) => {
         // Loop through the rest of the tweets
         for (let i = 1; i < input.tweets.length; i++) {
           const tweet = input.tweets[i];
-          const mediaIds = tweet?.uploadedFiles
-            ? await Promise.all(
-                tweet.uploadedFiles.map((url) =>
-                  uploadMedia(url, profile.profileId),
-                ),
-              )
-            : [];
+          if (!tweet) continue;
+          const mediaIds: string[] = [];
+          for (const media of tweet.media) {
+            if (!media.url) continue;
+            mediaIds.push(await uploadMedia(media.url, profile.profileId));
+          }
           if (tweet) {
             const post = await client.tweets.createTweet({
-              text: tweet.content,
+              text: tweet.text,
               reply: {
                 in_reply_to_tweet_id: previousTweetId,
               },

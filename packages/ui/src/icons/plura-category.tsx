@@ -1,5 +1,3 @@
-import React from "react";
-
 const PluraCategory = () => {
   return (
     <svg
@@ -15,7 +13,7 @@ const PluraCategory = () => {
         width="8"
         height="8"
         rx="3"
-        className={`  fill-[#70799A] text-xl transition-all`}
+        className={`  fill-[#1C274C] text-xl transition-all`}
       />
       <rect
         x="3"
@@ -23,7 +21,7 @@ const PluraCategory = () => {
         width="8"
         height="8"
         rx="3"
-        className={`  fill-[#70799A] text-xl transition-all`}
+        className={`  fill-[#1C274C] text-xl transition-all`}
       />
       <rect
         x="13"
@@ -31,7 +29,7 @@ const PluraCategory = () => {
         width="8"
         height="8"
         rx="3"
-        className={`  fill-[#C8CDD8] text-xl transition-all`}
+        className={`  fill-[#8E93A5] text-xl transition-all`}
       />
       <rect
         x="13"
@@ -39,7 +37,7 @@ const PluraCategory = () => {
         width="8"
         height="8"
         rx="3"
-        className={`  fill-[#C8CDD8] text-xl transition-all`}
+        className={`  fill-[#8E93A5] text-xl transition-all`}
       />
     </svg>
   );

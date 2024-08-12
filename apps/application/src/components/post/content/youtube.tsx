@@ -19,8 +19,8 @@ export default function Youtube() {
     (state) => ({
       youtubeContent: state.youtubeContent,
       setYoutubeContent: state.setYoutubeContent,
-      setContent: state.setContent,
-      content: state.content,
+      setContent: state.setPost,
+      content: state.post,
     }),
     shallow,
   );
@@ -41,18 +41,18 @@ export default function Youtube() {
   const [thumbnailFile, setThumbnailFile] = useState<File[]>([]);
 
   useEffect(() => {
-    const updatedContent = content.map((item) => {
-      if (item.socialType === "YOUTUBE" || item.socialType === "DEFAULT") {
-        return { ...item, content: debounceDescription };
-      } else {
-        return item;
-      }
-    });
+    // const updatedContent = content.map((item) => {
+    //   if (item.socialType === "YOUTUBE" || item.socialType === "DEFAULT") {
+    //     return { ...item, content: debounceDescription };
+    //   } else {
+    //     return item;
+    //   }
+    // });
     setYoutubeContent({
       ...youtubeContent,
       videoDescription: debounceDescription,
     });
-    setContent(updatedContent);
+    // setContent(updatedContent);
     console.log(youtubeContent, "content");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceDescription]);

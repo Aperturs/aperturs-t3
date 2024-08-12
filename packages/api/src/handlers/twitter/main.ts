@@ -35,11 +35,11 @@ export async function saveTwitterDataToDatabase({
   twitterData,
   userId,
 }: {
-  twitterData: tokens.twitterTokenInsert;
+  twitterData: tokens.SocialProviderInsertType;
   userId: string;
 }) {
   await limitWrapper(
-    () => db.insert(schema.twitterToken).values(twitterData),
+    () => db.insert(schema.socialProvider).values(twitterData),
     userId,
     "socialaccounts",
   );
@@ -55,8 +55,8 @@ export async function removeTwitterDataFromDatabase({
   await limitDown({
     func: async () =>
       await db
-        .delete(schema.twitterToken)
-        .where(eq(schema.twitterToken.id, tokenId)),
+        .delete(schema.socialProvider)
+        .where(eq(schema.socialProvider.id, tokenId)),
     clerkUserId: userId,
     limitType: "socialaccounts",
   });
@@ -68,15 +68,15 @@ export async function refreshTwitterDataInDatabase({
   userId,
 }: {
   tokenId: string;
-  twitterData: tokens.twitterTokenInsert;
+  twitterData: tokens.SocialProviderInsertType;
   userId: string;
 }) {
   await limitDown({
     func: async () =>
       await db
-        .update(schema.twitterToken)
+        .update(schema.socialProvider)
         .set(twitterData)
-        .where(eq(schema.twitterToken.id, tokenId)),
+        .where(eq(schema.socialProvider.id, tokenId)),
     clerkUserId: userId,
     limitType: "socialaccounts",
   });

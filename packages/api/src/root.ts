@@ -8,7 +8,6 @@ import { post } from "./routers/post/post";
 import { subscriptionRouter } from "./routers/subscription/main";
 import { twitterData } from "./routers/twitter/twitter";
 import { userRouter } from "./routers/user";
-import { youtubeRouter } from "./routers/youtube/main";
 import { createTRPCRouter } from "./trpc";
 
 /**
@@ -27,7 +26,7 @@ export const appRouter = createTRPCRouter({
   metadata: metaDataRouter,
   instagram: instagramRouter,
   subscription: subscriptionRouter,
-  youtube: youtubeRouter,
+  // youtube: youtubeRouter,
 });
 
 // export type definition of API

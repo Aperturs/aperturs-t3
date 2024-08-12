@@ -1,5 +1,6 @@
 import type { FC } from "react";
-import Calendar from "react-calendar";
+
+// import Calendar from "react-calendar";
 
 import "react-calendar/dist/Calendar.css";
 
@@ -19,7 +20,7 @@ const CalendarComponent: FC<CalendarProps> = ({ handleDate }) => {
       <p className="my-2 text-sm font-bold text-orange-700">
         we are only allowing 10 days in advance for free plan users
       </p>
-      <Calendar
+      {/* <Calendar
         minDate={minDate}
         maxDate={maxDate}
         className="REACT-CALENDAR p-2"
@@ -28,7 +29,7 @@ const CalendarComponent: FC<CalendarProps> = ({ handleDate }) => {
           // setDate(value);
           handleDate(value);
         }}
-      />
+      /> */}
     </div>
   );
 };

@@ -1,17 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
 import { shallow } from "zustand/shallow";
 
-import type { SocialType } from "@aperturs/validators/post";
-import { SocialTypes } from "@aperturs/validators/post";
+import type { FullPostType, MediaType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { tweetsHere } from "../common";
 
-function usePostUpdate(id: string) {
-  const { setContent, content } = useStore(
+function usePostUpdate(orderId: number, socialId?: string) {
+  const { setPost, post } = useStore(
     (state) => ({
-      content: state.content,
-      setContent: state.setContent,
+      post: state.post,
+      setPost: state.setPost,
     }),
     shallow,
   );
@@ -20,176 +18,233 @@ function usePostUpdate(id: string) {
 
   const updateContent = useCallback(
     (newContent: string) => {
-      if ((id as SocialType) === SocialTypes.DEFAULT) {
-        const updatedContent = content.map((item) =>
-          !item.unique || item.socialType === SocialTypes.DEFAULT
-            ? {
-                ...item,
-                content:
-                  item.socialType === SocialTypes.TWITTER
-                    ? [
-                        {
-                          id: "0",
-                          content: newContent,
-                          files: [],
-                          name: "",
-                          socialType: "TWITTER",
-                          unique: false,
-                          uploadedFiles: [],
-                          previewUrls: [],
-                        },
-                      ]
-                    : newContent,
-              }
-            : item,
-        );
-        console.log(updatedContent, id);
-        setContent(updatedContent);
+      if (socialId) {
+        const updatedPost = {
+          ...post,
+          alternativeContent: post.alternativeContent.map((item) =>
+            item.socialProvider.socialId === socialId
+              ? {
+                  ...item,
+                  content: item.content.map((contentItem) =>
+                    contentItem.order === orderId
+                      ? {
+                          ...contentItem,
+                          text: newContent ?? contentItem.text,
+                        }
+                      : contentItem,
+                  ),
+                }
+              : item,
+          ),
+        } as FullPostType;
+        console.log(updatedPost, "updated post");
+        setPost(updatedPost);
       } else {
-        const updatedContent = content.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                content:
-                  item.socialType === "TWITTER"
-                    ? [
-                        {
-                          ...item,
-                          content: newContent,
-                        },
-                      ]
-                    : newContent,
-              }
-            : item,
-        );
-        setContent(updatedContent);
+        const updatedPost = {
+          ...post,
+          content: post.content.map((item) =>
+            item.order === orderId
+              ? {
+                  ...item,
+                  text: newContent,
+                }
+              : item,
+          ),
+        } as FullPostType;
+        console.log(updatedPost, "updated post");
+        setPost(updatedPost);
       }
-      console.log(content);
     },
-    [content, id, setContent],
+    [socialId, post, setPost, orderId],
   );
 
-  const updateFiles = useCallback(
-    (newFiles: File[], previewUrls: string[], tweetId?: string) => {
-      console.log(newFiles, "from updateFiles");
-      if ((id as SocialType) === SocialTypes.DEFAULT) {
-        const updatedContent = content.map((item) =>
-          !item.unique
-            ? { ...item, files: newFiles, previewUrls }
-            : (item.id as SocialType) === SocialTypes.DEFAULT
-              ? { ...item, files: newFiles, previewUrls }
+  const onRemoveTweet = useCallback(() => {
+    if (socialId) {
+      const updatedPost = {
+        ...post,
+        alternativeContent: post.alternativeContent.map((item) =>
+          item.socialProvider.socialId === socialId
+            ? {
+                ...item,
+                content: item.content.filter((_, i) => i !== orderId),
+              }
+            : item,
+        ),
+      } as FullPostType;
+      setPost(updatedPost);
+    } else {
+      const updatedPost = {
+        ...post,
+        content: post.content.filter((_, i) => i !== orderId),
+      } as FullPostType;
+      setPost(updatedPost);
+    }
+  }, [socialId, post, orderId]);
+
+  const addTweet = useCallback(() => {
+    if (socialId) {
+      const updatedPost = {
+        ...post,
+        alternativeContent: post.alternativeContent.map((item) =>
+          item.socialProvider.socialId === socialId
+            ? {
+                ...item,
+                content: [
+                  ...item.content,
+                  {
+                    text: "",
+                    media: [],
+                    name: "DEFAULT",
+                    order: item.content.length,
+                    socialType: "DEFAULT",
+                    tags: [],
+                  },
+                ],
+              }
+            : item,
+        ),
+      } as FullPostType;
+      setPost(updatedPost);
+    } else {
+      const updatedPost = {
+        ...post,
+        content: [
+          ...post.content,
+          {
+            text: "",
+            media: [],
+            name: "DEFAULT",
+            order: post.content.length,
+            socialType: "DEFAULT",
+            tags: [],
+          },
+        ],
+      } as FullPostType;
+      setPost(updatedPost);
+    }
+  }, [socialId, post]);
+
+  const updateMedia = useCallback(
+    (media: Optional<MediaType, "bucketKey" | "bucketUrl">[]) => {
+      console.log(media, "media is being called by updateMedia");
+      if (socialId) {
+        console.log(media, "media");
+        const updatedPost = {
+          ...post,
+          alternativeContent: post.alternativeContent.map((item) =>
+            item.socialProvider.socialId === socialId
+              ? {
+                  ...item,
+                  content: item.content.map((contentItem) =>
+                    contentItem.order === orderId
+                      ? {
+                          ...contentItem,
+                          media: media,
+                        }
+                      : contentItem,
+                  ),
+                }
               : item,
-        );
-        console.log(updatedContent, "updated");
-        setContent(updatedContent);
+          ),
+        } as FullPostType;
+        console.log(updatedPost, "updated post media thing");
+        setPost(updatedPost);
       } else {
-        if (tweetId) {
-          const tweets = tweetsHere(content, id);
-          const updatedTweets = tweets?.map((tweet) =>
-            tweet.id === tweetId
-              ? { ...tweet, files: newFiles, previewUrls }
-              : tweet,
-          );
-          const updatedContent = content.map((item) =>
-            item.id === id ? { ...item, content: updatedTweets ?? "" } : item,
-          );
-          setContent(updatedContent);
-        } else {
-          const updatedContent = content.map((item) =>
-            item.id === id ? { ...item, files: newFiles, previewUrls } : item,
-          );
-          setContent(updatedContent);
-        }
+        console.log(media, "media");
+        const updatedPost = {
+          ...post,
+          content: post.content.map((item) =>
+            item.order === orderId
+              ? {
+                  ...item,
+                  media: media,
+                }
+              : item,
+          ),
+        } as FullPostType;
+        setPost(updatedPost);
       }
-      console.log(content, "from updateFiles");
     },
-    [content, id, setContent],
+    [socialId, post, orderId],
   );
 
   const removeFiles = useCallback(
-    (index: number, tweetId?: string) => {
-      if ((id as SocialType) === SocialTypes.DEFAULT) {
-        const updatedContent = content.map((item) =>
-          !item.unique ||
-          (item.socialType as SocialType) === SocialTypes.DEFAULT
-            ? {
-                ...item,
-                files: item.files.filter((_, i) => i !== index) || [],
-                previewUrls:
-                  item.previewUrls?.filter((_, i) => i !== index) ?? [],
-              }
-            : item,
-        );
-        console.log(updatedContent, "from removeFiles");
-        setContent(updatedContent);
-      } else {
-        if (tweetId) {
-          const tweets = tweetsHere(content, id);
-          const updatedTweets = tweets?.map((tweet) =>
-            tweet.id === tweetId
-              ? {
-                  ...tweet,
-                  files: tweet.files.filter((_, i) => i !== index) || [],
-                  previewUrls:
-                    tweet.previewUrls?.filter((_, i) => i !== index) ?? [],
-                }
-              : tweet,
-          );
-          const updatedContent = content.map((item) =>
-            item.id === id ? { ...item, content: updatedTweets ?? "" } : item,
-          );
-          setContent(updatedContent);
-        } else {
-          const updatedContent = content.map((item) =>
-            item.id === id
+    (index: number) => {
+      if (socialId) {
+        const updatedPost = {
+          ...post,
+          alternativeContent: post.alternativeContent.map((item) =>
+            item.socialProvider.socialId === socialId
               ? {
                   ...item,
-                  files: item.files.filter((_, i) => i !== index) || [],
-                  previewUrls:
-                    item.previewUrls?.filter((_, i) => i !== index) ?? [],
+                  content: item.content.map((contentItem) =>
+                    contentItem.order === orderId
+                      ? {
+                          ...contentItem,
+                          files: contentItem.media.filter(
+                            (_, i) => i !== index,
+                          ),
+                        }
+                      : contentItem,
+                  ),
                 }
               : item,
-          );
-          console.log(updatedContent, "from removeFiles");
-          setContent(updatedContent);
-        }
+          ),
+        } as FullPostType;
+        setPost(updatedPost);
+      } else {
+        const updatedPost = {
+          ...post,
+          content: post.content.map((item) =>
+            item.order === orderId
+              ? {
+                  ...item,
+                  files: item.media.filter((_, i) => i !== index),
+                }
+              : item,
+          ),
+        } as FullPostType;
+        setPost(updatedPost);
       }
     },
-    [content, id, setContent],
-  );
-
-  const removeUpdatedFiles = useCallback(
-    (index: number) => {
-      const updatedContent = content.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              uploadedFiles: item.uploadedFiles.filter((_, i) => i !== index),
-            }
-          : item,
-      );
-      setContent(updatedContent);
-    },
-    [content, id, setContent],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [socialId, post, orderId],
   );
 
   const contentValue = useMemo(() => {
-    return content.find((item) => item.id === id)?.content ?? "";
-  }, [id, content]) as string;
+    if (socialId) {
+      return (
+        post.alternativeContent
+          .find((item) => item.socialProvider.socialId === socialId)
+          ?.content.find((item) => item.order === orderId)?.text ?? ""
+      );
+    }
+    return post.content.find((item) => item.order === orderId)?.text ?? "";
+  }, [socialId, orderId, post]);
 
-  const currentFiles = useMemo(() => {
-    return content.find((item) => item.id === id)?.uploadedFiles ?? [];
-  }, [id, content]);
+  const mediaValue = useMemo(() => {
+    if (socialId) {
+      return (
+        post.alternativeContent
+          .find((item) => item.socialProvider.socialId === socialId)
+          ?.content.find((item) => item.order === orderId)?.media ?? []
+      );
+    }
+    return post.content.find((item) => item.order === orderId)?.media ?? [];
+  }, [socialId, orderId]);
 
   return {
     contentValue,
     updateContent,
-    updateFiles,
+    updateMedia,
     removeFiles,
     sync,
     setSync,
-    currentFiles,
-    removeUpdatedFiles,
+    onRemoveTweet,
+    addTweet,
+    mediaValue,
+    // currentFiles,
+    // removeUpdatedFiles,
   };
 }
 

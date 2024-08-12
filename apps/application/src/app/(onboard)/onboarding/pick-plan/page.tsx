@@ -11,7 +11,7 @@ export default function Pricing() {
       <h1 className="my-3 text-center text-6xl font-bold">
         Start your free trial
       </h1>
-      <p className="text-center text-lg mb-8">
+      <p className="mb-8 text-center text-lg">
         You&apos;ll get 7 days for free - you can cancel anytime!
       </p>
       <Tabs defaultValue="monthly" className="w-full">

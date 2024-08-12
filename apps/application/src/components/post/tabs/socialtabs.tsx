@@ -3,74 +3,75 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
-import { api } from "~/trpc/react";
-import { SimpleButton, SocialIcon } from "../common";
-import ContentPostCard from "../content/ContentPostCard";
+import { SocialIcon } from "../common";
+import usePost from "../content/use-post";
 import Youtube from "../content/youtube";
 import TweetPost from "../tweets/tweetsPost";
 import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
-  const { content, postType, setContent } = useStore((state) => ({
-    content: state.content,
+  const { post, postType, socialProviders } = useStore((state) => ({
+    post: state.post,
     postType: state.postType,
-    setContent: state.setContent,
+    socialProviders: state.socialProviders,
   }));
-  console.log(content, "content");
 
-  const { mutateAsync, isPending } = api.post.generate.useMutation();
+  const { getValidAlternativeContent, getSocialTypeOfContent } = usePost();
 
   return (
     <div className="w-full">
       {postType === "NORMAL" && (
         <>
-          {content.length > 2 ? (
+          {socialProviders.length > 1 ? (
             <Tabs defaultValue={SocialTypes.DEFAULT}>
               <TabsList>
-                {content.map(
-                  (item) =>
-                    item.unique && (
-                      <TabsTrigger value={item.id} key={item.id}>
-                        <div className="flex items-center gap-2 capitalize">
-                          <SocialIcon
-                            type={item.socialType as SocialType}
-                            size="md"
-                          />
-                          {typeof item.socialType === "string"
-                            ? item.socialType.toLowerCase()
-                            : ""}
-                        </div>
-                      </TabsTrigger>
-                    ),
-                )}
+                <TabsTrigger value={SocialTypes.DEFAULT}>
+                  <div className="flex items-center gap-2 capitalize">
+                    <SocialIcon
+                      type={getSocialTypeOfContent.socialType}
+                      size="md"
+                    />
+                    <span>{getSocialTypeOfContent.name}</span>
+                  </div>
+                </TabsTrigger>
+                {getValidAlternativeContent.map((item) => (
+                  <TabsTrigger
+                    value={item.socialProvider.socialId}
+                    key={item.socialProvider.socialId}
+                  >
+                    <div className="flex items-center gap-2 capitalize">
+                      <SocialIcon
+                        type={item.socialProvider.socialType as SocialType}
+                        size="md"
+                      />
+                      <span>{item.socialProvider.name}</span>
+                    </div>
+                  </TabsTrigger>
+                ))}
                 <SocialsMenu />
               </TabsList>
-              {content.map(
-                (item) =>
-                  item.unique && (
-                    <TabsContent key={item.id} value={item.id}>
-                      {item.socialType === "TWITTER" ? (
-                        <TweetPost contentId={item.id} />
-                      ) : (
-                        <ContentPostCard
-                          id={item.id}
-                          postType={item.socialType as SocialType}
-                        />
-                      )}
-                    </TabsContent>
-                  ),
-              )}
+              <TabsContent value={SocialTypes.DEFAULT}>
+                <TweetPost socialType={getSocialTypeOfContent.socialType} />
+              </TabsContent>
+              {post.alternativeContent.map((item) => (
+                <TabsContent
+                  key={item.socialProvider.socialId}
+                  value={item.socialProvider.socialId}
+                >
+                  <TweetPost
+                    socialType={item.socialProvider.socialType}
+                    socialId={item.socialProvider.socialId}
+                  />
+                </TabsContent>
+              ))}
             </Tabs>
           ) : (
-            <ContentPostCard
-              id={"DEFAULT" as SocialType}
-              postType={"DEFAULT"}
-            />
+            <TweetPost socialType={getSocialTypeOfContent.socialType} />
           )}
         </>
       )}
       {postType === "LONG_VIDEO" && <Youtube />}
-      <SimpleButton
+      {/* <SimpleButton
         onClick={async () => {
           const result = await mutateAsync({
             idea: content[0] ? (content[0].content as string) : "",
@@ -102,7 +103,7 @@ export default function SocialTabs() {
         disabled={isPending}
         isLoading={isPending}
         text="Repurpose Content"
-      />
+      /> */}
     </div>
   );
 }

@@ -1,22 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { generateSocialMediaPost } from "@api/handlers/ai/repurpose";
+import { makingPostsFrontendCompatible } from "@api/handlers/posts/draft";
 import {
   GetPresignedUrl,
   scheduleLambdaEvent,
 } from "@api/handlers/posts/uploads";
+import { postToLinkedin } from "@api/helpers/linkedln";
+import { postToTwitter } from "@api/helpers/twitter";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type {
-  BasePostContentType,
-  PostContentType,
-  SocialType,
-} from "@aperturs/validators/post";
 import { eq, schema } from "@aperturs/db";
 
 import { env } from "../../../env";
-import { postToLinkedin } from "../../helpers/linkedln";
-import { postToTwitter } from "../../helpers/twitter";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -30,60 +25,165 @@ export const post = createTRPCRouter({
         postId: z.string(),
       }),
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input, ctx }) => {
       console.log(input, "postby post id");
+      let isError = false;
+      let ErrorMessage = "";
       try {
-        const post = await ctx.db.query.post.findFirst({
-          where: eq(schema.post.id, input.postId),
+        const post = await makingPostsFrontendCompatible({
+          postId: input.postId,
         });
-        if (post) {
-          const content = post.content as PostContentType[];
-          const promises = content.map(async (item) => {
-            switch (item.socialType) {
-              case `${"DEFAULT" as SocialType}`:
-                return;
-              case `${"TWITTER" as SocialType}`:
-                return await postToTwitter({
-                  tokenId: item.id,
-                  tweets: item.content as BasePostContentType[],
-                })
-                  .then(() => {
-                    console.log("Posted to Twitter");
-                  })
-                  .catch((error) => {
-                    console.error("Failed to post to Twitter", error);
-                    throw Error("Failed to post to Twitter");
-                  });
 
-              case `${"LINKEDIN" as SocialType}`:
-                console.log(item, "linkedin item");
-                return await postToLinkedin({
-                  ...item,
-                  content: item.content as string,
-                }).catch((error) => {
-                  console.error("Failed to post to LinkedIn", error);
-                  throw Error("Failed to post to linkedin");
-                });
+        const alternativeContent = post.post.alternativeContent.filter((item) =>
+          post.socialProviders.some(
+            (provider) => provider.socialId === item.socialProvider.socialId,
+          ),
+        );
 
-              default:
-                return Promise.resolve(); // resolves immediately for unsupported types
-            }
-          });
-          // Wait for all promises to resolve
-          await Promise.all(promises).catch((e) => {
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: `something went wrong ${e.message}`,
+        const unavailableSocialProviders = post.socialProviders.filter(
+          (provider) =>
+            !post.post.alternativeContent.some(
+              (item) => item.socialProvider.socialId === provider.socialId,
+            ),
+        );
+
+        for (const alterContent of alternativeContent) {
+          if (alterContent.socialProvider.socialType === "TWITTER") {
+            return await postToTwitter({
+              tokenId: alterContent.socialProvider.socialId,
+              tweets: alterContent.content,
+            })
+              .then(() => {
+                console.log("Posted to Twitter");
+              })
+              .catch((error) => {
+                console.error("Failed to post to Twitter", error);
+                isError = true;
+                if (error instanceof Error) {
+                  ErrorMessage = error.message;
+                } else {
+                  ErrorMessage = "An unknown error occurred";
+                }
+                throw Error("Failed to post to Twitter");
+              });
+          }
+          if (alterContent.socialProvider.socialType === "LINKEDIN") {
+            return await postToLinkedin({
+              socialId: alterContent.socialProvider.socialId,
+              content: alterContent.content,
+            }).catch((error) => {
+              console.error("Failed to post to LinkedIn", error);
+              isError = true;
+              if (error instanceof Error) {
+                ErrorMessage = error.message;
+              } else {
+                ErrorMessage = "An unknown error occurred";
+              }
+              throw Error("Failed to post to linkedin");
             });
+          }
+        }
+
+        for (const provider of unavailableSocialProviders) {
+          if (provider.socialType === "TWITTER") {
+            return await postToTwitter({
+              tokenId: provider.socialId,
+              tweets: post.post.content,
+            })
+              .then(() => {
+                console.log("Posted to Twitter");
+              })
+              .catch((error) => {
+                console.error("Failed to post to Twitter", error);
+                isError = true;
+                if (error instanceof Error) {
+                  ErrorMessage = error.message;
+                } else {
+                  ErrorMessage = "An unknown error occurred";
+                }
+                throw Error("Failed to post to Twitter");
+              });
+          }
+          if (provider.socialType === "LINKEDIN") {
+            return await postToLinkedin({
+              socialId: provider.socialId,
+              content: post.post.content,
+            }).catch((error) => {
+              console.error("Failed to post to LinkedIn", error);
+              isError = true;
+              if (error instanceof Error) {
+                ErrorMessage = error.message;
+              } else {
+                ErrorMessage = "An unknown error occurred";
+              }
+              throw Error("Failed to post to linkedin");
+            });
+          }
+        }
+
+        // if (post) {
+        //   const promises = content.map(async (item) => {
+        //     switch (item.socialType) {
+        //       case `${"DEFAULT" as SocialType}`:
+        //         return;
+        //       case `${"TWITTER" as SocialType}`:
+        //         return await postToTwitter({
+        //           tokenId: item.id,
+        //           tweets: item.content as BasePostContentType[],
+        //         })
+        //           .then(() => {
+        //             console.log("Posted to Twitter");
+        //           })
+        //           .catch((error) => {
+        //             console.error("Failed to post to Twitter", error);
+        //             throw Error("Failed to post to Twitter");
+        //           });
+
+        //       case `${"LINKEDIN" as SocialType}`:
+        //         console.log(item, "linkedin item");
+        //         return await postToLinkedin({
+        //           ...item,
+        //           content: item.content as string,
+        //         }).catch((error) => {
+        //           console.error("Failed to post to LinkedIn", error);
+        //           throw Error("Failed to post to linkedin");
+        //         });
+
+        //       default:
+        //         return Promise.resolve(); // resolves immediately for unsupported types
+        //     }
+        //   });
+        //   // Wait for all promises to resolve
+        //   await Promise.all(promises).catch((e) => {
+        //     throw new TRPCError({
+        //       code: "INTERNAL_SERVER_ERROR",
+        //       message: `something went wrong ${e.message}`,
+        //     });
+        //   });
+        // }
+        if (isError) {
+          await ctx.db
+            .update(schema.post)
+            .set({
+              postFailureReason: ErrorMessage,
+            })
+            .where(eq(schema.post.id, input.postId));
+        }
+        if (!post) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Post not found",
           });
         }
-        // await ctx.db
-        //   .update(schema.post)
-        //   .set({
-        //     status: "PUBLISHED",
-        //     updatedAt: new Date(),
-        //   })
-        //   .where(eq(schema.post.id, input.postId));
+
+        if (!isError) {
+          await ctx.db
+            .update(schema.post)
+            .set({
+              status: "PUBLISHED",
+            })
+            .where(eq(schema.post.id, input.postId));
+        }
 
         return {
           success: true,

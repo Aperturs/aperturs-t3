@@ -19,18 +19,18 @@ export default function Post({ params }: { params: { postid: string } }) {
   // );
   const [loading, setLoading] = useState(true);
   const {
-    setContent,
+    // setContent,
     setShouldReset,
     setYoutubeContent,
     setPostType,
-    content,
+    // content,
   } = useStore(
     (state) => ({
-      setContent: state.setContent,
       setShouldReset: state.setShouldReset,
       setYoutubeContent: state.setYoutubeContent,
       setPostType: state.setPostType,
-      content: state.content,
+      // content: state.content,
+      // setContent: state.setContent,
     }),
     shallow,
   );
@@ -42,22 +42,22 @@ export default function Post({ params }: { params: { postid: string } }) {
       try {
         const data = getData.data;
         if (!data) return;
-        setPostType(data.postType as PostType);
-        const localContent = data.content;
-        setContent(localContent);
-        console.log("localContent", localContent);
-        if (data.postType === "LONG_VIDEO") {
-          setContent(data.content);
-          setYoutubeContent({
-            thumbnail: data.thumbnail.url,
-            name: data.id,
-            youtubeId: data.YoutubeTokenId ?? "",
-            videoUrl: data.video.url,
-            videoTags: data.videoTags,
-            videoTitle: data.title,
-            videoDescription: data.description,
-          });
-        }
+        // setPostType(data.postType as PostType);
+        // const localContent = data.content;
+        // setContent(localContent);
+        // console.log("localContent", localContent);
+        // if (data.postType === "LONG_VIDEO") {
+        //   setContent(data.content);
+        //   setYoutubeContent({
+        //     thumbnail: data.thumbnail.url,
+        //     name: data.id,
+        //     youtubeId: data.YoutubeTokenId ?? "",
+        //     videoUrl: data.video.url,
+        //     videoTags: data.videoTags,
+        //     videoTitle: data.title,
+        //     videoDescription: data.description,
+        //   });
+        // }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -77,8 +77,6 @@ export default function Post({ params }: { params: { postid: string } }) {
       clearTimeout(timeout);
     };
   }, [fetchData, setShouldReset]);
-
-  console.log("content from post id", content);
 
   if (loading || getData.isLoading) return <LogoLoad size="24" />;
   if (getData.error) return <div>{getData.error.message}</div>;

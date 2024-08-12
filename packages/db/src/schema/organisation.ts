@@ -14,10 +14,8 @@ import { createUniqueIds } from "../utils";
 import { post } from "./post";
 import { project } from "./project";
 import {
-  githubToken,
-  linkedInToken,
-  twitterToken,
-  youtubeToken,
+  socialProvider,
+  // youtubeToken,
 } from "./tokens";
 import { user } from "./user";
 
@@ -80,10 +78,7 @@ export const organisationRelations = relations(
     members: many(organizationUser),
     orgCreatedProjects: many(project),
     orgCreatedPosts: many(post),
-    orgTwitterAccounts: many(twitterToken),
-    orgLinkedinAccounts: many(linkedInToken),
-    orgGithubAccounts: many(githubToken),
-    orgYoutubeAccounts: many(youtubeToken),
+    orgSocialAccounts: many(socialProvider),
   }),
 );
 

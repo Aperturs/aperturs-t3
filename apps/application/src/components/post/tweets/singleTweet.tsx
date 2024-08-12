@@ -1,23 +1,37 @@
 import type { ChangeEvent } from "react";
 import React, { useRef } from "react";
 
+import type { SocialType } from "@aperturs/validators/post";
+
+import usePostUpdate from "../content/use-post-update";
+
 interface SingleTweetProps {
-  id: number;
+  orderId: number;
   text: string;
-  onChange: (id: number, text: string) => void;
-  onRemove: (id: number) => void;
-  onAdd: (id: number) => void;
+  socialId?: string;
+  socialType: SocialType;
+  // onRemove: (id: number) => void;
+  // onAdd: (id: number) => void;
 }
 
 const SingleTweet: React.FC<SingleTweetProps> = ({
-  id,
+  orderId,
+  socialId,
   text,
-  onChange,
-  onRemove,
-  onAdd,
+  socialType,
+  // onRemove,
+  // onAdd,
 }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [count, setCount] = React.useState(280 - text.length);
+
+  console.log(socialId);
+
+  const { updateContent, onRemoveTweet, addTweet } = usePostUpdate(
+    orderId,
+    socialId,
+  );
+  console.log("text", text);
 
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value;
@@ -28,7 +42,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
       textarea.style.height = `${textarea.scrollHeight}px`; // Adjust the height based on the content
     }
     setCount(280 - event.target.value.length);
-    onChange(id, newText);
+    updateContent(newText);
   };
 
   return (
@@ -36,33 +50,34 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
       {/* <Avatar src="/user.png" size="md" className="border-2 border-white" /> */}
       <textarea
         ref={textareaRef}
-        className="block h-full max-h-[300px] min-h-[100px] w-full resize-none overflow-y-auto  bg-transparent focus:outline-none"
+        className="min-h-[300px] w-full resize-none border border-transparent bg-transparent px-3  py-2.5 font-normal outline-none focus:outline-none"
         value={text}
         onChange={handleChange}
         placeholder="What's happening?"
       />
-      {/* <button onClick={() => onRemove(id)}>Remove</button> */}
-      <div className="flex items-center  justify-end">
-        <span
-          className={`${
-            count > 0 ? "text-muted-foreground" : "text-red-600"
-          } mr-2 text-sm`}
-        >
-          {count}
-        </span>
-        <button
-          onClick={() => onRemove(id)}
-          className="grid h-8 w-8 place-content-center rounded-full bg-red-600 text-white"
-        >
-          -
-        </button>
-        <button
-          onClick={() => onAdd(id)}
-          className="important ml-2 grid h-8 w-8 place-content-center rounded-full bg-primary text-white"
-        >
-          +
-        </button>
-      </div>
+      {socialType === "TWITTER" && (
+        <div className="flex items-center  justify-end">
+          <span
+            className={`${
+              count > 0 ? "text-muted-foreground" : "text-red-600"
+            } mr-2 text-sm`}
+          >
+            {count}
+          </span>
+          <button
+            onClick={() => onRemoveTweet()}
+            className="grid h-8 w-8 place-content-center rounded-full bg-red-600 text-white"
+          >
+            -
+          </button>
+          <button
+            onClick={() => addTweet()}
+            className="important ml-2 grid h-8 w-8 place-content-center rounded-full bg-primary text-black"
+          >
+            +
+          </button>
+        </div>
+      )}
     </div>
   );
 };

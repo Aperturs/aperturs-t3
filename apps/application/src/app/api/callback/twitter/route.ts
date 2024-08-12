@@ -95,7 +95,7 @@ async function handler(req: NextRequest) {
                   expiresIn: new Date(
                     new Date().getTime() + response.expires_in * 1000,
                   ),
-                  fullname: userObject.name,
+                  fullName: userObject.name,
                   username: userObject.username,
                   profileImage: userObject.profile_image_url,
                   profileId: userObject.id,
@@ -103,6 +103,8 @@ async function handler(req: NextRequest) {
                   clientSecret: formattedClientSecret,
                   clerkUserId: isPersonal ? userId : undefined,
                   organizationId: isPersonal ? undefined : redisData.orgId,
+                  updatedAt: new Date(),
+                  socialType: "TWITTER",
                 });
               } else {
                 await api.twitter.refreshTwitterToken({
@@ -112,10 +114,11 @@ async function handler(req: NextRequest) {
                     expiresIn: new Date(
                       new Date().getTime() + response.expires_in * 1000,
                     ),
-                    fullname: userObject.name,
+                    fullName: userObject.name,
                     username: userObject.username,
                     profileImage: userObject.profile_image_url,
                     profileId: userObject.id,
+                    socialType: "TWITTER",
                     clientId: formattedClientId,
                     clientSecret: formattedClientSecret,
                     updatedAt: new Date(),

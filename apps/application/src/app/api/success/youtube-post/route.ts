@@ -15,10 +15,10 @@ const handler = async (request: NextRequest) => {
   const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
   try {
-    const email = await api.youtube.sendSuccessEmail({
-      postid,
-      youtubeurl: videoUrl,
-    });
+    // const email = await api.youtube.sendSuccessEmail({
+    //   postid,
+    //   youtubeurl: videoUrl,
+    // });
     return NextResponse.json(email);
   } catch (e) {
     console.error(e);

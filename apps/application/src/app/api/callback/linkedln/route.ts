@@ -75,7 +75,12 @@ export async function GET(req: NextRequest) {
       const domain = env.DOMAIN;
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       const redisData = (await redis.get(userId))! as SocialRedisKeyType;
-      console.log(redisData, "redisData");
+      if (!redisData) {
+        return NextResponse.json(
+          { error: "Too much time taken please try again from aperturs" },
+          { status: 400 },
+        );
+      }
       const isPersonal = redisData.orgId === "personal";
       const isNew = redisData.tokenId === "new";
       const isOnboarding = redisData.onboarding;
@@ -88,9 +93,10 @@ export async function GET(req: NextRequest) {
           refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
           clerkUserId: isPersonal ? userId : undefined,
           organizationId: isPersonal ? undefined : redisData.orgId,
-          profilePicture: profile_picture_url,
+          profileImage: profile_picture_url,
           fullName: fullName,
           updatedAt: new Date(),
+          socialType: "LINKEDIN",
         });
       } else {
         await api.linkedin.refreshLinkedinToken({
@@ -99,8 +105,10 @@ export async function GET(req: NextRequest) {
             refreshToken: data.refresh_token,
             expiresIn: new Date(new Date().getTime() + data.expires_in * 1000),
             refreshTokenExpiresIn: data.refresh_token_expires_in ?? undefined,
-            profilePicture: profile_picture_url,
+            profileImage: profile_picture_url,
             fullName: fullName,
+            profileId: user.id,
+            socialType: "LINKEDIN",
             updatedAt: new Date(),
           },
           tokenId: redisData.tokenId,

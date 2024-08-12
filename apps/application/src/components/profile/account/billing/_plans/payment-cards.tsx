@@ -46,7 +46,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
       <CardContent>
         <ul className="my-7 space-y-5">
           {plan.features.map((feature) => (
-            <li className={`flex space-x-3 items-center`} key={feature.name}>
+            <li className={`flex items-center space-x-3`} key={feature.name}>
               <svg
                 className={`h-5 w-5 shrink-0 text-primary dark:text-primary`}
                 fill="currentColor"

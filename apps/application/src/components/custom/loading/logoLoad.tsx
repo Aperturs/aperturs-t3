@@ -16,6 +16,7 @@ const LogoLoad = ({ size }: { size?: string }) => {
             alt="Logo"
             objectFit="contain"
             objectPosition="center"
+            unoptimized
             height={size ? parseInt(size) * 4 : 96}
             width={size ? parseInt(size) * 4 : 96}
           />

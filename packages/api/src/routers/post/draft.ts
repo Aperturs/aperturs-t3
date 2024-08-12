@@ -1,21 +1,17 @@
-import { deleteFileFromAws, getFileDetails } from "@api/handlers/posts/uploads";
 import {
-  saveYoutubeContent,
-  saveYoutubeContentSchema,
-  updateYoutubeContent,
-} from "@api/handlers/youtube/main";
+  makingPostsFrontendCompatible,
+  saveDraftToDatabase,
+  updateDraftToDatabase,
+} from "@api/handlers/posts/draft";
 import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { PostContentType } from "@aperturs/validators/post";
 import { and, desc, eq, schema } from "@aperturs/db";
 import {
   savePostInputSchema,
-  SocialTypes,
   updatePostInputSchema,
-  updateYoutubePostSchema,
 } from "@aperturs/validators/post";
 
 export const posting = createTRPCRouter({
@@ -23,86 +19,16 @@ export const posting = createTRPCRouter({
     .input(savePostInputSchema)
     .mutation(async ({ ctx, input }) => {
       try {
-        const savedPost = await limitWrapper(
+        const post = await limitWrapper(
           () => {
-            return ctx.db.transaction(async (tx) => {
-              const post = await tx
-                .insert(schema.post)
-                .values({
-                  organizationId: input.orgId ? input.orgId : undefined,
-                  clerkUserId: input.orgId ? undefined : ctx.currentUser,
-                  status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-                  scheduledAt: input.scheduledTime
-                    ? new Date(input.scheduledTime)
-                    : null,
-                  content: input.postContent,
-                  projectId: input.projectId,
-                  updatedAt: new Date(),
-                })
-                .returning();
-
-              if (!post || post.length === 0) {
-                throw new Error("Failed to save post");
-              }
-              if (post[0]?.id === undefined) {
-                throw new Error("Failed to save post");
-              }
-              console.log(post, "post");
-              for (const content of input.postContent) {
-                if (typeof content.content === "string") {
-                  console.log(content, "content");
-                  await tx.insert(schema.singlePost).values({
-                    content: content.content as string,
-                    postId: post[0].id,
-                    fileUrls: content.uploadedFiles,
-                    name: content.name,
-                    unique: content.unique,
-                    socialType: content.socialType,
-                    linkedInTokenId:
-                      content.socialType === "LINKEDIN"
-                        ? content.id
-                        : undefined,
-                    twitterTokenId:
-                      content.socialType === "TWITTER" ? content.id : undefined,
-                    updatedAt: new Date(),
-                  });
-                } else {
-                  for (const subContent of content.content) {
-                    await tx.insert(schema.singlePost).values({
-                      content: subContent.content,
-                      postId: post[0].id,
-                      fileUrls: subContent.uploadedFiles,
-                      name: subContent.name,
-                      unique: subContent.unique,
-                      socialType: subContent.socialType,
-                      linkedInTokenId:
-                        subContent.socialType === "LINKEDIN"
-                          ? subContent.id
-                          : undefined,
-                      twitterTokenId:
-                        subContent.socialType === "TWITTER"
-                          ? subContent.id
-                          : undefined,
-                      parentSinglePostId: content.id,
-                      updatedAt: new Date(),
-                    });
-                  }
-                }
-              }
-
-              return post;
+            return saveDraftToDatabase({
+              ...input,
+              userId: ctx.currentUser,
             });
           },
           ctx.currentUser,
           "drafts",
         );
-
-        const [post] = savedPost;
-
-        if (!post) {
-          throw new Error("Failed to save post");
-        }
-
         return {
           data: post.id,
           success: true,
@@ -145,17 +71,11 @@ export const posting = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       console.log(input, "input");
       try {
-        await ctx.db
-          .update(schema.post)
-          .set({
-            status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-            scheduledAt: input.scheduledTime
-              ? new Date(input.scheduledTime)
-              : null,
-            content: input.postContent,
-            updatedAt: new Date(),
-          })
-          .where(eq(schema.post.id, input.postId));
+        console.log("updating post", input);
+        await updateDraftToDatabase({
+          ...input,
+          userId: ctx.currentUser,
+        });
         return {
           success: true,
           message: "Saved to draft successfully",
@@ -184,7 +104,11 @@ export const posting = createTRPCRouter({
           ),
           orderBy: desc(schema.post.updatedAt),
           with: {
-            youtubeContent: true,
+            postToSocialProviders: {
+              with: {
+                socialProvider: true,
+              },
+            },
           },
         });
         return posts;
@@ -196,75 +120,36 @@ export const posting = createTRPCRouter({
           ),
           orderBy: desc(schema.post.updatedAt),
           with: {
-            youtubeContent: true,
+            postToSocialProviders: {
+              with: {
+                socialProvider: true,
+              },
+            },
           },
         });
+        // const returnedPosts = posts.map((post) => {
+        //   return {
+        //     ...post,
+        //     socials: post.postToSocialProviders.map((provider) => {
+        //       return {
+        //         name: provider.socialProvider.fullName,
+        //         socialType: provider.socialProvider.socialType,
+        //         socialId: provider.socialProvider.id,
+        //       };
+        //     }),
+        //   };
+        // });
         return posts;
       }
     }),
 
   getSavedPostById: protectedProcedure
     .input(z.string())
-    .query(async ({ ctx, input }) => {
-      const post = await ctx.db.query.post.findFirst({
-        where: eq(schema.post.id, input),
-        with: {
-          youtubeContent: true,
-          singlesPosts: {
-            with: {
-              thread: true,
-            },
-          },
-        },
+    .query(async ({ input }) => {
+      const post = makingPostsFrontendCompatible({
+        postId: input,
       });
-      if (!post) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Error fetching post",
-        });
-      }
-      const localPost = post.singlesPosts.map((post) => ({
-        content: post.thread.length > 0 ? post.thread : post.content,
-        id: post.twitterTokenId ?? post.linkedInTokenId ?? SocialTypes.DEFAULT,
-        name: post.name,
-        unique: post.unique,
-        socialType: post.socialType,
-        uploadedFiles: post.fileUrls,
-      })) as PostContentType[];
-      // const localPost = post.content as PostContentType[];
-      const contentWithEmptyFiles = localPost.map((post) => ({
-        ...post,
-        files: post.files ?? [],
-      }));
-      console.log(contentWithEmptyFiles, "post");
-      if (post.postType === "NORMAL") {
-        return {
-          postType: post?.postType,
-          scheduledAt: post?.scheduledAt,
-          organizationId: post?.organizationId,
-          content: contentWithEmptyFiles,
-        };
-      }
-      if (post.postType === "LONG_VIDEO") {
-        if (!post.youtubeContent) {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Error youtube post",
-          });
-        }
-        const video = await getFileDetails(post.youtubeContent.video);
-        const thumbnail = await getFileDetails(post.youtubeContent.thumbnail);
-
-        return {
-          postType: post?.postType,
-          ...post.youtubeContent,
-          video,
-          thumbnail,
-          scheduledAt: post?.scheduledAt,
-          organizationId: post?.organizationId,
-          content: contentWithEmptyFiles,
-        };
-      }
+      return post;
     }),
 
   getSavedPostsByProjectId: protectedProcedure
@@ -291,23 +176,23 @@ export const posting = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const res = await ctx.db.query.post.findFirst({
-        where: eq(schema.post.id, input.id),
-        with: {
-          youtubeContent: true,
-        },
-      });
       try {
         await limitDown({
           func: () =>
             ctx.db.transaction(async (db) => {
-              await db.delete(schema.post).where(eq(schema.post.id, input.id));
-              if (res?.postType === "LONG_VIDEO") {
-                await deleteFileFromAws([
-                  res.youtubeContent.video,
-                  res.youtubeContent.thumbnail,
-                ]);
-              }
+              await db
+                .update(schema.post)
+                .set({
+                  isDeleted: true,
+                  status: "DELETED",
+                })
+                .where(eq(schema.post.id, input.id));
+              // if (res?.postType === "LONG_VIDEO") {
+              //   await deleteFileFromAws([
+              //     res.youtubeContent.video,
+              //     res.youtubeContent.thumbnail,
+              //   ]);
+              // }
             }),
           clerkUserId: ctx.currentUser,
           limitType: "drafts",
@@ -319,35 +204,35 @@ export const posting = createTRPCRouter({
         });
       }
     }),
-  saveYoutubePost: protectedProcedure
-    .input(
-      saveYoutubeContentSchema.omit({
-        userId: true,
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      console.log(input, "input");
-      const post = await saveYoutubeContent({
-        ...input,
-        userId: ctx.currentUser,
-      });
+  // saveYoutubePost: protectedProcedure
+  //   .input(
+  //     saveYoutubeContentSchema.omit({
+  //       userId: true,
+  //     }),
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     console.log(input, "input");
+  //     const post = await saveYoutubeContent({
+  //       ...input,
+  //       userId: ctx.currentUser,
+  //     });
 
-      return {
-        data: post,
-        success: true,
-        message: "Saved to draft successfully",
-        state: 200,
-      };
-    }),
-  updateYoutubePost: protectedProcedure
-    .input(updateYoutubePostSchema)
-    .mutation(async ({ input }) => {
-      const post = await updateYoutubeContent(input);
-      return {
-        data: post,
-        success: true,
-        message: "Saved to draft successfully",
-        state: 200,
-      };
-    }),
+  //     return {
+  //       data: post,
+  //       success: true,
+  //       message: "Saved to draft successfully",
+  //       state: 200,
+  //     };
+  //   }),
+  // updateYoutubePost: protectedProcedure
+  //   .input(updateYoutubePostSchema)
+  //   .mutation(async ({ input }) => {
+  //     const post = await updateYoutubeContent(input);
+  //     return {
+  //       data: post,
+  //       success: true,
+  //       message: "Saved to draft successfully",
+  //       state: 200,
+  //     };
+  //   }),
 });

@@ -13,8 +13,8 @@ export async function removeLinkedinDataFromDatabase({
   await limitDown({
     func: async () =>
       await db
-        .delete(schema.linkedInToken)
-        .where(eq(schema.linkedInToken.id, tokenId)),
+        .delete(schema.socialProvider)
+        .where(eq(schema.socialProvider.id, tokenId)),
     clerkUserId: userId,
     limitType: "socialaccounts",
   });
@@ -24,11 +24,11 @@ export async function saveLinkedinDataToDatabase({
   linkedinData,
   userId,
 }: {
-  linkedinData: tokens.linkedInTokenInsert;
+  linkedinData: tokens.SocialProviderInsertType;
   userId: string;
 }) {
   await limitWrapper(
-    async () => await db.insert(schema.linkedInToken).values(linkedinData),
+    async () => await db.insert(schema.socialProvider).values(linkedinData),
     userId,
     "socialaccounts",
   );
@@ -39,10 +39,10 @@ export async function refreshLinkedinDataInDatabase({
   linkedinData,
 }: {
   tokenId: string;
-  linkedinData: tokens.linkedInTokenInsert;
+  linkedinData: tokens.SocialProviderInsertType;
 }) {
   await db
-    .update(schema.linkedInToken)
+    .update(schema.socialProvider)
     .set(linkedinData)
-    .where(eq(schema.linkedInToken.id, tokenId));
+    .where(eq(schema.socialProvider.id, tokenId));
 }

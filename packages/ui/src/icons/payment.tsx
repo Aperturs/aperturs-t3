@@ -1,5 +1,3 @@
-import React from "react";
-
 const Payment = () => {
   return (
     <svg
@@ -15,19 +13,19 @@ const Payment = () => {
         width="20"
         height="16"
         rx="3"
-        className={`  fill-[#70799A] text-xl transition-all dark:fill-[#C8CDD8]`}
+        className={`  fill-[#1C274C] text-xl transition-all dark:fill-gray-400`}
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M22 10H2V8H22V10Z"
-        className={`  fill-[#C8CDD8] text-xl transition-all dark:fill-[#70799A]`}
+        className={`  fill-[#8E93A5] text-xl transition-all dark:fill-gray-700`}
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M4 15C4 14.4477 4.44772 14 5 14H11C11.5523 14 12 14.4477 12 15C12 15.5523 11.5523 16 11 16H5C4.44772 16 4 15.5523 4 15Z"
-        className={`  fill-[#C8CDD8] text-xl transition-all dark:fill-[#70799A]`}
+        className={`  fill-[#8E93A5] text-xl transition-all dark:fill-gray-700`}
       />
     </svg>
   );

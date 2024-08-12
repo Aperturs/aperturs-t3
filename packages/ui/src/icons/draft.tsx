@@ -16,13 +16,13 @@ export default function Draft() {
             d="M464.05 115.826V504H91.601V8h264.622v107.826z"
             opacity="1"
             data-original="#e9eef2"
-            className="fill-[#70799A] dark:fill-[#C8CDD8]"
+            className="fill-[#8E93A5] dark:fill-gray-400"
           ></path>
           <path
             d="M356.223 115.826H464.05L356.223 8z"
             opacity="1"
             data-original="#d0d2d4"
-            className="fill-[#C8CDD8] dark:fill-[#70799A]"
+            className="fill-[#1C274C] dark:fill-gray-700"
           ></path>
         </g>
       </g>
