@@ -58,7 +58,7 @@ function ApiBox() {
   const connectHandler = async () => {
     setLocalLoading(true);
     if (!orgId) {
-      toast.error("Something went wrong, please try again");
+      toast.error("OrgId is required not found");
       setLocalLoading(false);
       return;
     }
@@ -78,6 +78,7 @@ function ApiBox() {
     <div className="my-8  flex w-full flex-col rounded-xl">
       <h1 className="text-2xl font-medium text-primary">API Keys</h1>
       <p className="mt-2 text-gray-500">Client ID</p>
+
       <Input
         // className="my-2 h-auto w-full resize-none rounded-xl border border-primary p-3"
         placeholder="UE05dTJ45jhjTvdEUYQ5aTBIcFo6MTpjaQ"

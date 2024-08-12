@@ -95,6 +95,13 @@ export const mediaSchema = z.object({
 
 export type MediaType = z.infer<typeof mediaSchema>;
 
+export const getValidMediaUrls = (media: MediaType[]) => {
+  return media
+    .filter((m) => typeof m.url === "string")
+    .map((m) => m.url)
+    .filter(Boolean) as string[];
+};
+
 export const contentSchema = z.object({
   id: z.string().optional(),
   order: z.number(),
@@ -214,17 +221,16 @@ export const updateYoutubePostSchema = YoutubeContentType.partial().extend({
 
 export type UpdateYoutubePostInput = z.infer<typeof updateYoutubePostSchema>;
 
-// export const postTweetInputSchema = z.object({
-//   tokenId: z.string(),
-//   tweets: z.array(basePostSchema),
-// });
+export const postTweetInputSchema = z.object({
+  tokenId: z.string(),
+  tweets: z.array(contentSchema),
+});
 
-// export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
+export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
 
 export const postToLinkedInInputSchema = z.object({
-  tokenId: z.string(),
-  content: z.string(),
-  imageurl: z.string().optional(),
+  socialId: z.string(),
+  content: z.array(contentSchema.extend({ media: z.array(mediaSchema) })),
 });
 
 export type PostToLinkedInInput = z.infer<typeof postToLinkedInInputSchema>;

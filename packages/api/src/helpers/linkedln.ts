@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { uploadMedia } from "@api/handlers/linkedin/upload-media";
+import { TRPCError } from "@trpc/server";
 import axios from "axios";
 
 import type { tokens } from "@aperturs/db";
-import type { BasePostContentType } from "@aperturs/validators/post";
+import type { PostToLinkedInInput } from "@aperturs/validators/post";
 import { db, eq, schema } from "@aperturs/db";
-import { getFileType } from "@aperturs/validators/post";
+import { getFileType, getValidMediaUrls } from "@aperturs/validators/post";
 
 interface LinkedInTokenDetails
   extends Pick<
-    tokens.linkedInTokenSelect,
+    tokens.SocialProviderSelectType,
     "accessToken" | "refreshToken" | "profileId"
   > {
   full_name: string;
@@ -19,7 +20,7 @@ interface LinkedInTokenDetails
   tokenId: string;
 }
 export const getLinkedinAccountDetails = async (
-  linkedinTokens: tokens.linkedInTokenSelect[],
+  linkedinTokens: tokens.SocialProviderSelectType[],
 ) => {
   const linkedinDetails: LinkedInTokenDetails[] = [];
   for (const linkedinToken of linkedinTokens) {
@@ -46,13 +47,20 @@ export const getLinkedinAccountDetails = async (
   return linkedinDetails;
 };
 
-export const postToLinkedin = async (
-  input: Omit<BasePostContentType, "files">,
-) => {
+export const postToLinkedin = async (input: PostToLinkedInInput) => {
   console.log(input, "postToLinkedin input");
-  const tokenData = await db.query.linkedInToken
+
+  const content = input.content[0];
+
+  if (!content) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "No content found",
+    });
+  }
+  const tokenData = await db.query.socialProvider
     .findFirst({
-      where: eq(schema.linkedInToken.id, input.id),
+      where: eq(schema.socialProvider.id, input.socialId),
     })
     .catch((error) => {
       console.log(error, "error");
@@ -67,12 +75,11 @@ export const postToLinkedin = async (
   let data = {};
   if (!profileId) throw new Error("No profileId found for linkedin account");
   try {
-    console.log(input.uploadedFiles, "input.uploadedFiles");
-    const hasImages = input.uploadedFiles.some(
-      (url) => getFileType(url) === "image",
-    );
-    if (input.uploadedFiles && input.uploadedFiles.length > 0) {
-      for (const url of input.uploadedFiles) {
+    const uploadedFiles = getValidMediaUrls(content.media);
+    console.log(uploadedFiles, "input.uploadedFiles");
+    const hasImages = uploadedFiles.some((url) => getFileType(url) === "image");
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      for (const url of uploadedFiles) {
         console.log("for url", url);
         const data = await uploadMedia({
           authToken: tokenData.accessToken,

@@ -14,10 +14,12 @@ const isPublicRoute = createRouteMatcher([
   // "/api/success/youtube-post",
 ]);
 
-const isOnboardingRoute = createRouteMatcher([
-  "/onboarding(.*)",
+const isOnboardingRoute = createRouteMatcher(["/onboarding(.*)"]);
+
+const supportOnboardingRoute = createRouteMatcher([
   "/socials(.*)",
   "/api/(.*)",
+  "/api/callback/(.*)",
 ]);
 
 export default clerkMiddleware((auth, req) => {
@@ -34,7 +36,7 @@ export default clerkMiddleware((auth, req) => {
     userId &&
     !sessionClaims?.metadata?.onboardingComplete &&
     !isOnboardingRoute(req) &&
-    !isPublicRoute(req)
+    !supportOnboardingRoute(req)
   ) {
     // console.log(req.url, "req.url");
     const onboardingUrl = new URL("/onboarding", req.url);

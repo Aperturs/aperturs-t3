@@ -4,6 +4,8 @@ import {
   GetPresignedUrl,
   scheduleLambdaEvent,
 } from "@api/handlers/posts/uploads";
+import { postToLinkedin } from "@api/helpers/linkedln";
+import { postToTwitter } from "@api/helpers/twitter";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -27,6 +29,70 @@ export const post = createTRPCRouter({
         const post = await makingPostsFrontendCompatible({
           postId: input.postId,
         });
+
+        const alternativeContent = post.post.alternativeContent.filter((item) =>
+          post.socialProviders.some(
+            (provider) => provider.socialId === item.socialProvider.socialId,
+          ),
+        );
+
+        const unavailableSocialProviders = post.socialProviders.filter(
+          (provider) =>
+            !post.post.alternativeContent.some(
+              (item) => item.socialProvider.socialId === provider.socialId,
+            ),
+        );
+
+        for (const alterContent of alternativeContent) {
+          if (alterContent.socialProvider.socialType === "TWITTER") {
+            return await postToTwitter({
+              tokenId: alterContent.socialProvider.socialId,
+              tweets: alterContent.content,
+            })
+              .then(() => {
+                console.log("Posted to Twitter");
+              })
+              .catch((error) => {
+                console.error("Failed to post to Twitter", error);
+                throw Error("Failed to post to Twitter");
+              });
+          }
+          if (alterContent.socialProvider.socialType === "LINKEDIN") {
+            return await postToLinkedin({
+              socialId: alterContent.socialProvider.socialId,
+              content: alterContent.content,
+            }).catch((error) => {
+              console.error("Failed to post to LinkedIn", error);
+              throw Error("Failed to post to linkedin");
+            });
+          }
+        }
+
+        for (const provider of unavailableSocialProviders) {
+          if (provider.socialType === "TWITTER") {
+            return await postToTwitter({
+              tokenId: provider.socialId,
+              tweets: post.post.content,
+            })
+              .then(() => {
+                console.log("Posted to Twitter");
+              })
+              .catch((error) => {
+                console.error("Failed to post to Twitter", error);
+                throw Error("Failed to post to Twitter");
+              });
+          }
+          if (provider.socialType === "LINKEDIN") {
+            return await postToLinkedin({
+              socialId: provider.socialId,
+              content: post.post.content,
+            }).catch((error) => {
+              console.error("Failed to post to LinkedIn", error);
+              throw Error("Failed to post to linkedin");
+            });
+          }
+        }
+
         // if (post) {
         //   const promises = content.map(async (item) => {
         //     switch (item.socialType) {

@@ -1,6 +1,3 @@
-import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
-
 const steps = [
   {
     id: 1,
@@ -19,9 +16,6 @@ export default function RootLayout({
 }) {
   // Check if a user has completed onboarding
   // If yes, redirect them to /dashboard
-  if (auth().sessionClaims?.metadata.onboardingComplete === true) {
-    redirect("/dashboard");
-  }
 
   return (
     <div className="relative h-[100dvh] w-full dark:bg-black">
