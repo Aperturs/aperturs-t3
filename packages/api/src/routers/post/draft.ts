@@ -3,11 +3,6 @@ import {
   saveDraftToDatabase,
   updateDraftToDatabase,
 } from "@api/handlers/posts/draft";
-import {
-  saveYoutubeContent,
-  saveYoutubeContentSchema,
-  updateYoutubeContent,
-} from "@api/handlers/youtube/main";
 import { limitDown, limitWrapper } from "@api/helpers/limitWrapper";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
 import { TRPCError } from "@trpc/server";
@@ -17,7 +12,6 @@ import { and, desc, eq, schema } from "@aperturs/db";
 import {
   savePostInputSchema,
   updatePostInputSchema,
-  updateYoutubePostSchema,
 } from "@aperturs/validators/post";
 
 export const posting = createTRPCRouter({
@@ -210,35 +204,35 @@ export const posting = createTRPCRouter({
         });
       }
     }),
-  saveYoutubePost: protectedProcedure
-    .input(
-      saveYoutubeContentSchema.omit({
-        userId: true,
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      console.log(input, "input");
-      const post = await saveYoutubeContent({
-        ...input,
-        userId: ctx.currentUser,
-      });
+  // saveYoutubePost: protectedProcedure
+  //   .input(
+  //     saveYoutubeContentSchema.omit({
+  //       userId: true,
+  //     }),
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     console.log(input, "input");
+  //     const post = await saveYoutubeContent({
+  //       ...input,
+  //       userId: ctx.currentUser,
+  //     });
 
-      return {
-        data: post,
-        success: true,
-        message: "Saved to draft successfully",
-        state: 200,
-      };
-    }),
-  updateYoutubePost: protectedProcedure
-    .input(updateYoutubePostSchema)
-    .mutation(async ({ input }) => {
-      const post = await updateYoutubeContent(input);
-      return {
-        data: post,
-        success: true,
-        message: "Saved to draft successfully",
-        state: 200,
-      };
-    }),
+  //     return {
+  //       data: post,
+  //       success: true,
+  //       message: "Saved to draft successfully",
+  //       state: 200,
+  //     };
+  //   }),
+  // updateYoutubePost: protectedProcedure
+  //   .input(updateYoutubePostSchema)
+  //   .mutation(async ({ input }) => {
+  //     const post = await updateYoutubeContent(input);
+  //     return {
+  //       data: post,
+  //       success: true,
+  //       message: "Saved to draft successfully",
+  //       state: 200,
+  //     };
+  //   }),
 });

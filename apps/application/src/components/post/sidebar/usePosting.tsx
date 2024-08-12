@@ -50,16 +50,17 @@ export default function usePublishing({ id }: { id: string }) {
   const { mutateAsync: updatePost, isPending: updating } =
     api.savepost.updatePost.useMutation();
 
-  const { mutateAsync: saveYoutubePost, isPending: savingYoutube } =
-    api.savepost.saveYoutubePost.useMutation();
+  // const { mutateAsync: saveYoutubePost, isPending: savingYoutube } =
+  //   api.savepost.saveYoutubePost.useMutation();
+
   const {
     mutateAsync: postByPostId,
     isPending: postByPostIdPending,
     data: postByPostIdData,
   } = api.post.postByPostId.useMutation();
 
-  const { mutateAsync: postToYoutube, isPending: postingToYoutube } =
-    api.youtube.postToYoutube.useMutation();
+  // const { mutateAsync: postToYoutube, isPending: postingToYoutube } =
+  //   api.youtube.postToYoutube.useMutation();
 
   const { mutateAsync: schedulePost, isPending: scheduling } =
     api.post.schedule.useMutation();
@@ -623,9 +624,7 @@ export default function usePublishing({ id }: { id: string }) {
       !post ||
       uploadingFiles ||
       saving ||
-      savingYoutube ||
       gettingPresignedUrl ||
-      postingToYoutube ||
       uploadProgress > 0,
     isUploaded,
     posting: postByPostIdPending || loading,

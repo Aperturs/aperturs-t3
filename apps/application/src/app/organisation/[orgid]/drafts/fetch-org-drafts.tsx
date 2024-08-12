@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
 
-import type { PostContentType } from "@aperturs/validators/post";
 import { Button } from "@aperturs/ui/button";
 
 import DraftCard from "~/components/drafts/darfCard";
@@ -24,12 +22,14 @@ export default async function FetchOrgDrafts({
             key={item.id}
             id={item.id}
             orgid={params.orgid}
-            content={
-              (item.content as any as PostContentType[])[0]?.content ??
-              item.youtubeContent.description ??
-              ""
-            }
-            contentT={item.content as any as PostContentType[]}
+            contentT={item.content}
+            socialProviders={item.postToSocialProviders.map((provider) => {
+              return {
+                name: provider.socialProvider.fullName ?? "",
+                socialType: provider.socialProvider.socialType,
+                socialId: provider.socialProvider.id,
+              };
+            })}
           />
         ))
       ) : (

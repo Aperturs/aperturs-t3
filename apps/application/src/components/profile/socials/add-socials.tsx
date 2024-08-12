@@ -14,7 +14,6 @@ import { SocialTypes } from "@aperturs/validators/post";
 import {
   handleInstagramRedirect,
   handleLinkedinRedirect,
-  handleYoutubeRedirect,
 } from "~/utils/actions/handle-socials";
 
 export const SocialIcon = ({ type }: { type: SocialType }) => {
@@ -104,11 +103,11 @@ const Socials = () => {
 
   const handleYoutube = async () => {
     setLocalLoading(true);
-    await handleYoutubeRedirect({
-      orgId: params?.orgid ?? "personal",
-      tokenId: "new",
-      onboarding: hasOnboarding,
-    });
+    // await handleYoutubeRedirect({
+    //   orgId: params?.orgid ?? "personal",
+    //   tokenId: "new",
+    //   onboarding: hasOnboarding,
+    // });
     setLocalLoading(false);
   };
 

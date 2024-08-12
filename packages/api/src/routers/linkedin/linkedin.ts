@@ -51,7 +51,7 @@ export const linkedin = createTRPCRouter({
     .input(
       z.object({
         tokenId: z.string(),
-        linkedinData: tokens.socialProviderUpdateSchema,
+        linkedinData: tokens.socialProviderInsertSchema,
       }),
     )
     .mutation(async ({ input }) => {

@@ -3,7 +3,7 @@ import type { GithubUser } from "@aperturs/validators/github";
 
 interface GithubTokenDetails
   extends Pick<
-    tokens.githubTokenSelect,
+    tokens.SocialProviderSelectType,
     "accessToken" | "refreshToken" | "profileId"
   > {
   full_name: string;
@@ -13,7 +13,7 @@ interface GithubTokenDetails
 }
 
 export const getGithubAccountDetails = async (
-  githubTokens: tokens.githubTokenSelect[],
+  githubTokens: tokens.SocialProviderSelectType[],
 ) => {
   const githubTokenDetails: GithubTokenDetails[] = [];
   for (const githubToken of githubTokens) {

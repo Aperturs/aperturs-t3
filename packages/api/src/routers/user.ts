@@ -1,6 +1,5 @@
 import { removeLinkedinDataFromDatabase } from "@api/handlers/linkedin/main";
 import { removeTwitterDataFromDatabase } from "@api/handlers/twitter/main";
-import { removeYoutubeDataFromDatabase } from "@api/handlers/youtube/main";
 import { getAccounts } from "@api/helpers/get-socials";
 import { z } from "zod";
 
@@ -75,10 +74,10 @@ export const userRouter = createTRPCRouter({
           userId: ctx.currentUser,
         });
       } else if (input.socialType === "YOUTUBE") {
-        await removeYoutubeDataFromDatabase({
-          tokenId: input.tokenId,
-          userId: ctx.currentUser,
-        });
+        // await removeYoutubeDataFromDatabase({
+        //   tokenId: input.tokenId,
+        //   userId: ctx.currentUser,
+        // });
       }
     }),
 });

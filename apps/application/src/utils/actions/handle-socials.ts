@@ -49,10 +49,10 @@ export async function handleInstagramRedirect({
   redirect(url);
 }
 
-export async function handleYoutubeRedirect({
-  orgId,
-  tokenId,
-}: SocialRedisKeyType) {
-  const url = await api.youtube.getYoutubeAuthURl({ orgId, tokenId });
-  redirect(url);
-}
+// export async function handleYoutubeRedirect({
+//   orgId,
+//   tokenId,
+// }: SocialRedisKeyType) {
+//   const url = await api.youtube.getYoutubeAuthURl({ orgId, tokenId });
+//   redirect(url);
+// }

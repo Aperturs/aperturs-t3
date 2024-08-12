@@ -95,9 +95,11 @@ export const SignupButton = forwardRef<ButtonElement, ButtonProps>(
             setLoading(false);
             toast("Something went wrong", { icon: "🚨" });
           } finally {
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             embed && setLoading(false);
           }
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           embed
             ? checkoutUrl && window.LemonSqueezy.Url.Open(checkoutUrl)
             : router.push(checkoutUrl ?? "/");

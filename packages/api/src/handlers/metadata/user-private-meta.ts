@@ -104,7 +104,6 @@ export async function removeUserPrivateMetadata(data: {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function getUserRole({ orgId }: { orgId: string }) {
   const { userId } = auth();
   const user = await currentUser();

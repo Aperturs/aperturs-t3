@@ -6,7 +6,6 @@ import type { SocialRedisKeyType } from "@aperturs/validators/socials";
 import { googleAuth2Client, redis, youtubeClient } from "@aperturs/api";
 
 import { env } from "~/env";
-import { api } from "~/trpc/server";
 
 async function handler(req: NextRequest) {
   const { userId } = getAuth(req);
@@ -73,30 +72,30 @@ async function handler(req: NextRequest) {
   const domain = env.DOMAIN;
 
   if (isNew) {
-    await api.youtube.addYoutubeToDatabase({
-      channelId: channelId,
-      accessToken: tokens.access_token,
-      refreshToken: tokens.refresh_token,
-      expiresIn: new Date(tokens.expiry_date),
-      clerkUserId: isPersonal ? userId : undefined,
-      organizationId: isPersonal ? undefined : redisData.orgId,
-      channelPicture: channelData?.snippet?.thumbnails?.medium?.url,
-      channelName: channelData?.snippet?.title,
-      updatedAt: new Date(),
-    });
+    // await api.youtube.addYoutubeToDatabase({
+    //   channelId: channelId,
+    //   accessToken: tokens.access_token,
+    //   refreshToken: tokens.refresh_token,
+    //   expiresIn: new Date(tokens.expiry_date),
+    //   clerkUserId: isPersonal ? userId : undefined,
+    //   organizationId: isPersonal ? undefined : redisData.orgId,
+    //   channelPicture: channelData?.snippet?.thumbnails?.medium?.url,
+    //   channelName: channelData?.snippet?.title,
+    //   updatedAt: new Date(),
+    // });
   } else {
-    await api.youtube.refreshYoutubeToken({
-      tokenId: redisData.tokenId,
-      youtubeData: {
-        channelId: channelId,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        expiresIn: new Date(tokens.expiry_date),
-        channelName: channelData?.snippet?.title,
-        channelPicture: channelData?.snippet?.thumbnails?.medium?.url,
-        updatedAt: new Date(),
-      },
-    });
+    // await api.youtube.refreshYoutubeToken({
+    //   tokenId: redisData.tokenId,
+    //   youtubeData: {
+    //     channelId: channelId,
+    //     accessToken: tokens.access_token,
+    //     refreshToken: tokens.refresh_token,
+    //     expiresIn: new Date(tokens.expiry_date),
+    //     channelName: channelData?.snippet?.title,
+    //     channelPicture: channelData?.snippet?.thumbnails?.medium?.url,
+    //     updatedAt: new Date(),
+    //   },
+    // });
   }
   if (isPersonal) {
     const url = `${domain}/socials`;

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { cn } from "@aperturs/ui/lib/utils";
@@ -51,7 +50,7 @@ export const PinContainer = ({
           style={{
             transform: transform,
           }}
-          className="absolute h-full left-1/2 top-1/2 flex w-full  items-start justify-start overflow-hidden  transition duration-700 group-hover/pin:border-white/[0.2]"
+          className="absolute left-1/2 top-1/2 flex h-full w-full  items-start justify-start overflow-hidden  transition duration-700 group-hover/pin:border-white/[0.2]"
         >
           <div className={cn(" relative z-50 ", className)}>{children}</div>
         </div>
