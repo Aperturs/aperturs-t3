@@ -1,11 +1,18 @@
 import { shallow } from "zustand/shallow";
 
+import type { SocialType } from "@aperturs/validators/post";
 import { Card, CardContent, CardHeader, CardTitle } from "@aperturs/ui/card";
 
 import { useStore } from "~/store/post-store";
 import SingleTweet from "./singleTweet";
 
-function TweetPost({ socialId }: { socialId?: string }) {
+function TweetPost({
+  socialId,
+  socialType,
+}: {
+  socialId?: string;
+  socialType: SocialType;
+}) {
   const { post } = useStore(
     (state) => ({
       post: state.post,
@@ -27,7 +34,7 @@ function TweetPost({ socialId }: { socialId?: string }) {
                 orderId={tweet.order}
                 text={tweet.text}
                 socialId={socialId}
-                socialType={tweet.socialType}
+                socialType={socialType}
               />
               {/* <FileUpload
                 socialId={socialId}

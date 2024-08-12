@@ -48,7 +48,7 @@ export default function ConnectedAccounts({
     return <p className="w-full text-center">No accounts found</p>;
 
   return (
-    <div className="grid grid-cols-3 place-items-start gap-3">
+    <div className="grid grid-cols-3 place-items-start gap-x-5 gap-y-3">
       {filteredAccounts.map((item) => (
         <ConnectedAccount
           key={item.socialId}

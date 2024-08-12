@@ -4,26 +4,37 @@ import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
+import usePost from "../content/use-post";
 import Youtube from "../content/youtube";
 import TweetPost from "../tweets/tweetsPost";
+import SocialsMenu from "./menu";
 
 export default function SocialTabs() {
-  const { post, postType } = useStore((state) => ({
+  const { post, postType, socialProviders } = useStore((state) => ({
     post: state.post,
     postType: state.postType,
-    setPost: state.setPost,
+    socialProviders: state.socialProviders,
   }));
 
-  // const { mutateAsync, isPending } = api.post.generate.useMutation();
+  const { getValidAlternativeContent, getSocialTypeOfContent } = usePost();
 
   return (
     <div className="w-full">
       {postType === "NORMAL" && (
         <>
-          {post.alternativeContent.length > 2 ? (
+          {socialProviders.length > 1 ? (
             <Tabs defaultValue={SocialTypes.DEFAULT}>
               <TabsList>
-                {post.alternativeContent.map((item) => (
+                <TabsTrigger value={SocialTypes.DEFAULT}>
+                  <div className="flex items-center gap-2 capitalize">
+                    <SocialIcon
+                      type={getSocialTypeOfContent.socialType}
+                      size="md"
+                    />
+                    <span>{getSocialTypeOfContent.name}</span>
+                  </div>
+                </TabsTrigger>
+                {getValidAlternativeContent.map((item) => (
                   <TabsTrigger
                     value={item.socialProvider.socialId}
                     key={item.socialProvider.socialId}
@@ -37,8 +48,11 @@ export default function SocialTabs() {
                     </div>
                   </TabsTrigger>
                 ))}
-                {/* <SocialsMenu /> */}
+                <SocialsMenu />
               </TabsList>
+              <TabsContent value={SocialTypes.DEFAULT}>
+                <TweetPost socialType={getSocialTypeOfContent.socialType} />
+              </TabsContent>
               {post.alternativeContent.map((item) => (
                 <TabsContent
                   key={item.socialProvider.socialId}
@@ -52,7 +66,7 @@ export default function SocialTabs() {
               ))}
             </Tabs>
           ) : (
-            <TweetPost socialType={"DEFAULT"} />
+            <TweetPost socialType={getSocialTypeOfContent.socialType} />
           )}
         </>
       )}

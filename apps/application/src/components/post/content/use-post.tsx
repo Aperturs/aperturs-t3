@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useS3Upload } from "next-s3-upload";
 import { shallow } from "zustand/shallow";
+
+import type { SocialProviderType } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 
 export default function usePost() {
-  const { setPost, post } = useStore(
+  const { setPost, post, socialProviders } = useStore(
     (state) => ({
       post: state.post,
       setPost: state.setPost,
+      socialProviders: state.socialProviders,
     }),
     shallow,
   );
@@ -101,9 +104,39 @@ export default function usePost() {
     return post;
   };
 
+  const getValidAlternativeContent = useMemo(() => {
+    return post.alternativeContent.filter((provider) =>
+      socialProviders.some(
+        (sp) => sp.socialId === provider.socialProvider.socialId,
+      ),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [post.alternativeContent.length, socialProviders.length]);
+
+  const getSocialTypeOfContent = useMemo(() => {
+    const usedSocialIds = new Set(
+      getValidAlternativeContent.map((ac) => ac.socialProvider.socialId),
+    );
+    const availableSocialProviders = socialProviders.filter(
+      (provider) => !usedSocialIds.has(provider.socialId),
+    );
+
+    if (availableSocialProviders.length === 1 && availableSocialProviders[0]) {
+      return availableSocialProviders[0];
+    } else {
+      return {
+        socialId: "DEFAULT",
+        name: "DEFAULT",
+        socialType: "DEFAULT",
+      } as SocialProviderType;
+    }
+  }, [getValidAlternativeContent, socialProviders]);
+
   return {
     uploadFilesAndModifyContent,
     loading,
     error,
+    getValidAlternativeContent,
+    getSocialTypeOfContent,
   };
 }

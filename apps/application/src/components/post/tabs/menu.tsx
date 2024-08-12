@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
 import type { SocialType } from "@aperturs/validators/post";
@@ -12,17 +12,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@aperturs/ui/dropdown-menu";
-import { SocialTypes } from "@aperturs/validators/post";
 
 import { useStore } from "~/store/post-store";
 import { SocialIcon } from "../common";
 
 function SocialsMenu() {
-  const { content } = useStore((state) => ({
-    content: state.content,
+  const { socials, post } = useStore((state) => ({
+    socials: state.socialProviders,
+    post: state.post,
   }));
 
-  if (!content.length) return null;
+  // Calculate the number of social providers without alternative content
+  const socialsWithoutAlternative = useMemo(() => {
+    return socials.filter(
+      (social) =>
+        !post.alternativeContent.some(
+          (altContent) =>
+            altContent.socialProvider.socialId === social.socialId,
+        ),
+    );
+  }, [socials, post.alternativeContent]);
+
+  if (!socials.length) return null;
 
   return (
     <DropdownMenu>
@@ -32,18 +43,29 @@ function SocialsMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {content.map((item) => {
-          if (item.socialType === SocialTypes.DEFAULT) return null;
-          return (
-            <DropdownMenuItem key={item.id}>
-              <MenuItems
-                type={item.socialType}
-                name={item.name}
-                id={item.id}
-                unique={item.unique}
-              />
-            </DropdownMenuItem>
+        {socials.map((item) => {
+          const isAlternative = post.alternativeContent.some(
+            (altContent) =>
+              altContent.socialProvider.socialId === item.socialId,
           );
+          const isSingleLeftover =
+            socialsWithoutAlternative.length === 1 &&
+            socialsWithoutAlternative[0] &&
+            socialsWithoutAlternative[0].socialId === item.socialId;
+          // Show item if it's an alternative or if it's not the single leftover socialProvider
+          if (isAlternative || !isSingleLeftover) {
+            return (
+              <DropdownMenuItem key={item.socialId}>
+                <MenuItems
+                  type={item.socialType}
+                  name={item.name}
+                  id={item.socialId}
+                />
+              </DropdownMenuItem>
+            );
+          }
+
+          return null;
         })}
       </DropdownMenuContent>
     </DropdownMenu>
@@ -56,48 +78,56 @@ const MenuItems = ({
   type,
   name,
   id,
-  unique,
 }: {
   type: SocialType;
   name: string;
   id: string;
-  unique: boolean;
 }) => {
-  const { setContent, content } = useStore((state) => ({
-    setContent: state.setContent,
-    content: state.content,
+  const { setPost, post } = useStore((state) => ({
+    setPost: state.setPost,
+    post: state.post,
   }));
 
+  const unique = post.alternativeContent.some(
+    (item) => item.socialProvider.socialId === id,
+  );
   const [checked, setChecked] = useState<boolean>(unique);
 
   const handleChange = () => {
-    let updatedContent = [...content];
+    let updatedPost = post.alternativeContent;
     if (unique) {
       setChecked(false);
-      updatedContent = content.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            unique: false,
-          };
-        }
-        return item;
+      updatedPost = updatedPost.filter(
+        (item) => item.socialProvider.socialId !== id,
+      );
+      setPost({
+        ...post,
+        alternativeContent: updatedPost,
       });
     } else {
       setChecked(true);
-      console.log(content, "content old");
-      updatedContent = content.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            unique: true,
-          };
-        }
-        return item;
-      });
-      console.log(updatedContent, "updatedContent from  tabs/menu");
+      updatedPost = [
+        ...updatedPost,
+        {
+          socialProvider: { socialType: type, name, socialId: id },
+          content: [
+            {
+              id: "",
+              order: 0,
+              name: name,
+              media: [],
+              text: post.content[0] ? post.content[0].text : "",
+              tags: [],
+              socialId: id,
+            },
+          ],
+        },
+      ];
     }
-    setContent(updatedContent);
+    setPost({
+      ...post,
+      alternativeContent: updatedPost,
+    });
   };
 
   return (
@@ -113,13 +143,6 @@ const MenuItems = ({
         </div>
         <span className={`text-sm`}>{name}</span>
       </div>
-      {/* <Switch
-        checked={checked}
-        // onChange={() => {
-        //   handleChange();
-        // }}
-        className="text-primary"
-      /> */}
     </DropdownMenuCheckboxItem>
   );
 };
