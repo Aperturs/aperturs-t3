@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
@@ -70,7 +70,7 @@ export default function usePublishing({ id }: { id: string }) {
   const router = useRouter();
   const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [uploadingFileName, setUploadingFileName] = useState("");
+  const uploadingFileName = useRef("");
 
   const uploadFiles = async (acceptedFile: File) => {
     let filekey = "";
@@ -200,7 +200,7 @@ export default function usePublishing({ id }: { id: string }) {
         }
         const thumbnailFile = youtubeContent.thumbnailFile;
 
-        setUploadingFileName("Uploading thumbnail");
+        uploadingFileName.current = "Uploading thumbnail";
         const k = await uploadFiles(thumbnailFile);
         thumbnailChanged = true;
         if (!k) {
@@ -216,7 +216,7 @@ export default function usePublishing({ id }: { id: string }) {
         }
         const videoFile = youtubeContent.videoFile;
         videoChanged = true;
-        setUploadingFileName("Uploading video");
+        uploadingFileName.current = "Uploading video";
         const k = await uploadFiles(videoFile);
         if (!k) {
           throw new Error("Failed to upload video");
@@ -260,12 +260,12 @@ export default function usePublishing({ id }: { id: string }) {
       }
       const thumbnailFile = youtubeContent.thumbnailFile;
       const videoFile = youtubeContent.videoFile;
-      setUploadingFileName("Uploading thumbnail");
+      uploadingFileName.current = "Uploading thumbnail";
       const thumbnail = await uploadFiles(thumbnailFile);
       if (!thumbnail) {
         throw new Error("Failed to upload thumbnail");
       }
-      setUploadingFileName("Uploading video");
+      uploadingFileName.current = "Uploading video";
       const video = await uploadFiles(videoFile);
       if (!video) {
         throw new Error("Failed to upload video");
@@ -317,10 +317,10 @@ export default function usePublishing({ id }: { id: string }) {
     await toast.promise(
       (async () => {
         // Upload files and modify content
-        setUploadingFileName("Uploading files");
+        uploadingFileName.current = "Uploading data";
         const newContent = await uploadFilesAndModifyContent();
         // Save to drafts
-        setUploadingFileName("Saving to drafts");
+        uploadingFileName.current = "Saving to drafts";
         const response = await saveToDrafts({
           ...newContent,
           socialProviders: socialProviders,
@@ -342,7 +342,7 @@ export default function usePublishing({ id }: { id: string }) {
         }
       })(),
       {
-        loading: uploadingFileName,
+        loading: uploadingFileName.current,
         success: "Saved to drafts",
         error: "Failed to save to drafts",
       },
@@ -374,13 +374,15 @@ export default function usePublishing({ id }: { id: string }) {
   //   let postId = "";
   //   await toast.promise(
   //     (async () => {
-  //       setUploadingFileName("Uploading thumbnail");
+  //        uploadingFileName.current =
+  ("Uploading thumbnail");
   //       const thumbnail = await uploadFiles(thumbnailFile);
   //       if (!thumbnail) {
   //         toast.error("Failed to upload thumbnail");
   //         return;
   //       }
-  //       setUploadingFileName("Uploading video");
+  //        uploadingFileName.current =
+  ("Uploading video");
   //       const video = await uploadFiles(videoFile);
   //       if (!video) {
   //         toast.error("Failed to upload video");
@@ -440,7 +442,8 @@ export default function usePublishing({ id }: { id: string }) {
   //           return;
   //         }
   //         const thumbnailFile = youtubeContent.thumbnailFile;
-  //         setUploadingFileName("Uploading thumbnail");
+  //          uploadingFileName.current =
+  ("Uploading thumbnail");
   //         const k = await uploadFiles(thumbnailFile);
   //         thumbnailChanged = true;
   //         if (!k) {
@@ -457,7 +460,8 @@ export default function usePublishing({ id }: { id: string }) {
   //         }
   //         const videoFile = youtubeContent.videoFile;
   //         videoChanged = true;
-  //         setUploadingFileName("Uploading video");
+  //          uploadingFileName.current =
+  ("Uploading video");
   //         const k = await uploadFiles(videoFile);
   //         if (!k) {
   //           toast.error("Failed to upload video");
@@ -519,7 +523,7 @@ export default function usePublishing({ id }: { id: string }) {
       await toast.promise(
         (async () => {
           // Update post
-          setUploadingFileName("Uploading files");
+          uploadingFileName.current = "Uploading data";
           const newContent = await uploadFilesAndModifyContent();
           const input = {
             ...newContent,
@@ -530,14 +534,12 @@ export default function usePublishing({ id }: { id: string }) {
                 ? new Date(scheduledTime)
                 : undefined,
           } as UpdatePostInput;
-          setUploadingFileName(
-            `${
-              isScheduling
-                ? "saving and is getting ready to schedule"
-                : "Updating post..."
-            }`,
-          );
-          console.log(input, "input");
+          (uploadingFileName.current = `${
+            isScheduling
+              ? "saving and is getting ready to schedule"
+              : "Updating post..."
+          }`),
+            console.log(input, "input");
           const response = await updatePost(input);
           if (response.success) {
             if (!isScheduling) {
@@ -548,7 +550,7 @@ export default function usePublishing({ id }: { id: string }) {
           }
         })(),
         {
-          loading: uploadingFileName,
+          loading: uploadingFileName.current,
           success: `${
             isScheduling ? "saved and is ready to schedule" : "Updated post"
           }`,

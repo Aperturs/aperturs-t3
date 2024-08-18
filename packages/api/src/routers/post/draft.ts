@@ -36,6 +36,12 @@ export const posting = createTRPCRouter({
           state: 200,
         };
       } catch (error) {
+        if (error instanceof Error) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: error.message,
+          });
+        }
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Error saving to draft",

@@ -11,42 +11,50 @@ interface SavePostInputBackend extends SavePostInputType {
 }
 
 export async function saveDraftToDatabase({ ...input }: SavePostInputBackend) {
-  const post = await db.transaction(async (trx) => {
-    const mainPost = await trx
-      .insert(schema.post)
-      .values({
-        status: input.scheduledTime ? "SCHEDULED" : "SAVED",
-        postType: input.postType,
-        clerkUserId: input.userId,
-        content: input.content,
-        updatedAt: new Date(),
-        scheduledAt: input.scheduledTime ? new Date(input.scheduledTime) : null,
-      })
-      .returning();
-    if (!mainPost[0]) {
-      throw new Error("Failed to create post");
-    }
-    const mainPostId = mainPost[0].id;
-    for (const socialProvider of input.socialProviders) {
-      await trx.insert(schema.postToSocialProvider).values({
-        postId: mainPostId,
-        socialProviderId: socialProvider.socialId,
-      });
-    }
-    for (const alterContent of input.alternativeContent) {
-      const alterContentId = await trx
-        .insert(schema.alternatePostContent)
+  const post = await db
+    .transaction(async (trx) => {
+      const mainPost = await trx
+        .insert(schema.post)
         .values({
-          postId: mainPostId,
-          socialProviderId: alterContent.socialProvider.socialId,
-          content: alterContent.content,
-        });
-      if (!alterContentId[0]) {
-        throw new Error("Failed to create alternative content");
+          status: input.scheduledTime ? "SCHEDULED" : "SAVED",
+          postType: input.postType,
+          clerkUserId: input.userId,
+          content: input.content,
+          updatedAt: new Date(),
+          scheduledAt: input.scheduledTime
+            ? new Date(input.scheduledTime)
+            : null,
+        })
+        .returning();
+      if (!mainPost[0]) {
+        throw new Error("Failed to create post");
       }
-    }
-    return mainPost[0];
-  });
+      const mainPostId = mainPost[0].id;
+      for (const socialProvider of input.socialProviders) {
+        await trx.insert(schema.postToSocialProvider).values({
+          postId: mainPostId,
+          socialProviderId: socialProvider.socialId,
+        });
+      }
+      for (const alterContent of input.alternativeContent) {
+        const alterContentId = await trx
+          .insert(schema.alternatePostContent)
+          .values({
+            postId: mainPostId,
+            socialProviderId: alterContent.socialProvider.socialId,
+            content: alterContent.content,
+          });
+        if (!alterContentId[0]) {
+          throw new Error("Failed to create alternative content");
+        }
+      }
+      return mainPost[0];
+    })
+    .catch((error) => {
+      console.error("Failed to save draft from saveDraftsToDatabase", error);
+      throw error;
+    });
+  console.log(post);
   return post;
 }
 

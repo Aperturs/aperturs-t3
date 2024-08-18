@@ -5,13 +5,6 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { DockerImageAsset } from "aws-cdk-lib/aws-ecr-assets";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import {
-  CfnEventBusPolicy,
-  EventBus,
-  EventField,
-  Rule,
-} from "aws-cdk-lib/aws-events";
-import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
-import {
   Effect,
   Policy,
   PolicyDocument,
@@ -22,7 +15,6 @@ import {
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as logs from "aws-cdk-lib/aws-logs";
 import * as s3 from "aws-cdk-lib/aws-s3";
-import * as scheduler from "aws-cdk-lib/aws-scheduler";
 
 export class CdkApertursStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
