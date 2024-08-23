@@ -3,7 +3,7 @@ import type { BadgeProps } from "@aperturs/ui/badge";
 import type { SubscriptionStatusType } from "@aperturs/validators/subscription";
 import { Plans } from "@aperturs/api";
 import { Badge } from "@aperturs/ui/badge";
-import { Card } from "@aperturs/ui/card";
+import { Card, CardContent } from "@aperturs/ui/card";
 import { cn } from "@aperturs/ui/lib/utils";
 import { isValidSubscription } from "@aperturs/validators/subscription";
 
@@ -22,7 +22,12 @@ export default async function SubscriptionCard({
         const status = subscription.status as SubscriptionStatusType;
 
         if (!plan) {
-          throw new Error("Plan not found");
+          // throw new Error("Plan not found");
+          return (
+            <div className="p-6" key={subscription.id}>
+              <p>Plan not found</p>
+            </div>
+          );
         }
         return (
           <div
@@ -143,7 +148,7 @@ export function SubscriptionStatus({
       )}
 
       <Badge
-        className={`rounded-sm  text-xs  dark:text-white ${statusColor[_status]}`}
+        className={`rounded-sm  text-xs  ${statusColor[_status]}`}
         color={statusColor[_status]}
       >
         {_statusFormatted}
