@@ -13,12 +13,7 @@ export default async function FetchDrafts({ orgid }: { orgid?: string }) {
       title="Recent Drafts"
       infoBlocks={
         recentDrafts?.map((draft) => ({
-          title: "test",
-          // title: `${
-          //   (
-          //     (draft.content as any as PostContentType[])[0]?.content as string
-          //   )?.slice(0, 60) ?? ""
-          // }...`,
+          title: draft.content[0]?.text.slice(0, 70) + "..." ?? "",
           link: `post/${draft.id}`,
         })) || []
       }

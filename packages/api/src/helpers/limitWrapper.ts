@@ -21,6 +21,8 @@ export async function limitWrapper<T>(
     where: eq(schema.userUsage.clerkUserId, clerkUserId),
   });
 
+  console.log("limiting up for user", clerkUserId, limitType);
+
   if (!userUsage) {
     await db.insert(schema.userUsage).values({
       clerkUserId: clerkUserId,
