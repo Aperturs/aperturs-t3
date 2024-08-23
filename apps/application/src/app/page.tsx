@@ -10,7 +10,7 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      router.replace("/dashboard");
+      router.push("/dashboard");
     } else {
       router.replace("/sign-in");
     }

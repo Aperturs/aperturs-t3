@@ -83,6 +83,16 @@ const config = {
     removeConsole:
       process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
   },
+  redirects: async () =>
+    process.env.NODE_ENV === "production"
+      ? [
+          {
+            source: "/",
+            destination: "/dashboard",
+            permanent: true,
+          },
+        ]
+      : [],
   transpilePackages: [
     "@aperturs/api",
     "@aperturs/db",
