@@ -86,9 +86,13 @@ export async function updateDraftToDatabase({
       .returning();
 
     if (!mainPost[0]) {
-      throw new Error("Failed to update post");
+      throw new Error(
+        "Failed to update post, didnt find the main post which is being updated",
+      );
     }
     const mainPostId = mainPost[0].id;
+
+    console.log(mainPostId, "mainPostId");
 
     for (const socialProvider of input.socialProviders) {
       await trx
@@ -108,7 +112,9 @@ export async function updateDraftToDatabase({
           },
         });
     }
+    console.log(input.alternativeContent, "input.alternativeContent");
     for (const alterContent of input.alternativeContent) {
+      console.log(alterContent, "single alter content");
       const alterContentId = await trx
         .insert(schema.alternatePostContent)
         .values({
@@ -124,8 +130,16 @@ export async function updateDraftToDatabase({
           set: {
             content: alterContent.content,
           },
+        })
+        .returning()
+        .catch((error) => {
+          console.error(
+            "Failed to save draft from updateDraftsToDatabase",
+            error,
+          );
         });
-      if (!alterContentId[0]) {
+      console.log(alterContentId, "alterContentId");
+      if (!alterContentId) {
         throw new Error("Failed to create alternative content");
       }
     }

@@ -6,6 +6,7 @@ import {
   pgTable,
   serial,
   text,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
@@ -34,6 +35,15 @@ export const subscriptions = pgTable("subscription", {
     .notNull()
     .references(() => user.clerkUserId, { onDelete: "cascade" }),
   planId: integer("planId").notNull(),
+  createdAt: timestamp("createdAt", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updatedAt", {
+    withTimezone: true,
+  })
+    .notNull()
+    .$onUpdateFn(() => new Date())
+    .defaultNow(),
 });
 
 export const subscriptionRelations = relations(subscriptions, ({ one }) => ({

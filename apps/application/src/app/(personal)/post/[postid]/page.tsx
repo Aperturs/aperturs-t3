@@ -14,15 +14,17 @@ export default function Post({ params }: { params: { postid: string } }) {
   const { postid } = params;
 
   const [loading, setLoading] = useState(true);
-  const { setContent, setShouldReset, setPostType } = useStore(
-    (state) => ({
-      setContent: state.setPost,
-      setShouldReset: state.setShouldReset,
-      setPostType: state.setPostType,
-      content: state.post,
-    }),
-    shallow,
-  );
+  const { setContent, setShouldReset, setPostType, setSocialProviders } =
+    useStore(
+      (state) => ({
+        setContent: state.setPost,
+        setShouldReset: state.setShouldReset,
+        setPostType: state.setPostType,
+        content: state.post,
+        setSocialProviders: state.setSocialProviders,
+      }),
+      shallow,
+    );
 
   const getData = api.savepost.getSavedPostById.useQuery(postid);
 
@@ -33,7 +35,9 @@ export default function Post({ params }: { params: { postid: string } }) {
         if (!data) return;
         setPostType(data.post.postType);
         const localContent = data.post;
+        const socials = data.socialProviders;
         setContent(localContent);
+        setSocialProviders(socials);
         console.log("localContent", localContent);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -46,12 +50,13 @@ export default function Post({ params }: { params: { postid: string } }) {
     setShouldReset(true);
     fetchData();
     console.log("fetchData done");
-    const timeout = setTimeout(() => {
-      setLoading(false);
-    }, 3000); // 2-second delay
+    // const timeout = setTimeout(() => {
+    //   setLoading(false);
+    // }, 3000); // 2-second delay
+    setLoading(false);
 
     return () => {
-      clearTimeout(timeout);
+      // clearTimeout(timeout);
     };
   }, [fetchData, setShouldReset]);
 

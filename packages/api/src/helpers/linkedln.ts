@@ -127,7 +127,7 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
         specificContent: {
           "com.linkedin.ugc.ShareContent": {
             shareCommentary: {
-              text: input.content,
+              text: input.content[0]?.text ?? "",
             },
             shareMediaCategory: "NONE",
           },
@@ -145,9 +145,20 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
           Authorization: `Bearer ${tokenData.accessToken}`,
         },
       })
-      .then((response) => {
-        console.log(response.data);
-        if (response.status === 200) {
+      .then(async (response) => {
+        console.log(response.data, "response");
+
+        if (response.status >= 200 && response.status < 300) {
+          const urn = response.data.id as string;
+          // Construct the LinkedIn post URL
+          const postUrl = `https://www.linkedin.com/feed/update/${urn}`;
+          console.log(postUrl, "postUrl");
+          await db.insert(schema.platFormPost).values({
+            platformPostUrl: postUrl,
+            postId: input.postId,
+            platformId: input.socialId,
+            platformPostId: urn,
+          });
           return {
             success: true,
             message: "posted to linkedin",
@@ -158,8 +169,22 @@ export const postToLinkedin = async (input: PostToLinkedInInput) => {
       .finally(() => {
         console.log("Posted to LinkedIn");
       })
-      .catch((error) => {
-        console.error(error);
+      .catch(async (error) => {
+        // console.error(error);
+        if (error instanceof Error) {
+          console.log(error.message, "error");
+          const resason = error.message ?? "Error posting to LinkedIn";
+          console.log(input.postId, "input.postId");
+          await db
+            .update(schema.post)
+            .set({
+              postFailureReason: resason,
+            })
+            .where(eq(schema.post.id, input.postId))
+            .catch((error) => {
+              console.log(error, "error upting post error message");
+            });
+        }
       });
   } catch (err) {
     console.log("error", err);

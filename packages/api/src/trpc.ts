@@ -42,7 +42,6 @@ import { db } from "@aperturs/db";
 const createInnerTRPCContext = (opts: { headers: Headers }) => {
   const user = auth();
   const clerkId = user.userId;
-  console.log(user, clerkId);
   return {
     ...opts,
     db,

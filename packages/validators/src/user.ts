@@ -55,6 +55,7 @@ export const UniqueIdsSchema = z.enum([
   "sp",
   "social",
   "media",
+  "platform",
 ]);
 
 export type UniqueIdsType = z.infer<typeof UniqueIdsSchema>;

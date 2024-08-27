@@ -71,6 +71,7 @@ export const post = createTRPCRouter({
             return await postToLinkedin({
               socialId: alterContent.socialProvider.socialId,
               content: alterContent.content,
+              postId: input.postId,
             }).catch((error) => {
               console.error("Failed to post to LinkedIn", error);
               isError = true;
@@ -79,7 +80,10 @@ export const post = createTRPCRouter({
               } else {
                 ErrorMessage = "An unknown error occurred";
               }
-              throw Error("Failed to post to linkedin");
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Failed to post to linkedin",
+              });
             });
           }
         }
@@ -108,6 +112,7 @@ export const post = createTRPCRouter({
             return await postToLinkedin({
               socialId: provider.socialId,
               content: post.post.content,
+              postId: input.postId,
             }).catch((error) => {
               console.error("Failed to post to LinkedIn", error);
               isError = true;
