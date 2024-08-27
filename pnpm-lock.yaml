@@ -299,9 +299,6 @@ importers:
       '@heroicons/react':
         specifier: ^2.0.18
         version: 2.1.1(react@18.2.0)
-      '@next/font':
-        specifier: ^14.1.4
-        version: 14.1.4(next@14.1.1(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))
       '@tsparticles/engine':
         specifier: ^3.4.0
         version: 3.4.0
@@ -2340,11 +2337,6 @@ packages:
 
   '@next/eslint-plugin-next@14.2.5':
     resolution: {integrity: sha512-LY3btOpPh+OTIpviNojDpUdIbHW9j0JBYBjsIp8IxtDFfYFyORvw3yNq6N231FVqQA7n7lwaf7xHbVJlA1ED7g==}
-
-  '@next/font@14.1.4':
-    resolution: {integrity: sha512-a7CnpjEA3zXsKpCB7JX92mNiDYvjDImLfRjK+szi/q64vwbNrrs54up2xgFE1T4K1OE8GaI/eQ3zrZFWIbOJ1Q==}
-    peerDependencies:
-      next: '*'
 
   '@next/swc-darwin-arm64@14.0.5-canary.46':
     resolution: {integrity: sha512-7Bq9rjWl4sq70Zkn6h6mn8/tgYTH2SQ8lIm8b/j1MAnTiJYyVBLapu//gT/cgtqx6y8SwSc2JNviBue35zeCNw==}
@@ -11871,10 +11863,6 @@ snapshots:
   '@next/eslint-plugin-next@14.2.5':
     dependencies:
       glob: 10.3.10
-
-  '@next/font@14.1.4(next@14.1.1(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))':
-    dependencies:
-      next: 14.1.1(@opentelemetry/api@1.9.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
 
   '@next/swc-darwin-arm64@14.0.5-canary.46':
     optional: true

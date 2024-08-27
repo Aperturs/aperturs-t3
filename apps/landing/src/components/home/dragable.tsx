@@ -31,6 +31,7 @@ import { Input } from "@aperturs/ui/input";
 
 import FadeIn from "../fade-in";
 import { Waitlist } from "./waitlist";
+import { WrapCover } from "./wrap-text-cover";
 
 const DraggableCard = ({
   children,
@@ -67,8 +68,9 @@ export default function HeroSection() {
   return (
     <div className="relative grid h-full w-full place-content-center overflow-hidden rounded-lg border bg-background p-4">
       <FadeIn className="flex flex-col items-center justify-center gap-1 px-5 py-10">
-        <h1 className="mt-8 text-balance bg-gradient-to-br from-slate-900 to-slate-600 bg-clip-text py-4 text-center text-2xl font-medium tracking-tight text-transparent sm:text-4xl md:text-5xl lg:text-7xl">
-          Save Time Writing Content, <br /> Focus on What Matters Most
+        <h1 className="mt-8  max-w-4xl text-balance bg-gradient-to-br from-slate-900 to-slate-600 bg-clip-text py-4 text-center text-2xl font-medium tracking-tight text-transparent sm:text-4xl md:text-4xl lg:text-5xl">
+          Grow your LinkedIn in <WrapCover>Weeks</WrapCover> with just{" "}
+          <WrapCover>Minutes</WrapCover> of work
         </h1>
         <p className="mt-2 translate-y-[-1rem] text-balance text-center  text-sm tracking-tight text-muted-foreground sm:text-lg md:max-w-[60rem]  md:text-xl">
           seamlessly integrate <b> posting, repurposing, and collaboration</b>,

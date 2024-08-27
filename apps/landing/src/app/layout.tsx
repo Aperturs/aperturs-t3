@@ -9,19 +9,12 @@ export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
   description:
     "social media management for the modern age, with a focus on privacy and security",
+  metadataBase: new URL("https://aperturs.com"),
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://aperturs.com",
     siteName: "Aperturs",
-    images: [
-      {
-        url: "https://aperturs.com/opengraph-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Aperturs | Social media management for the modern age",
-      },
-    ],
   },
   twitter: {
     creator: "@swarajbachu",
