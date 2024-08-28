@@ -93,6 +93,7 @@ export async function FetchPlans() {
         trialIntervalCount: trialIntervalCount ?? 0,
         sort: variant.sort,
         power: variant.sort,
+        features: [],
       });
     }
   }

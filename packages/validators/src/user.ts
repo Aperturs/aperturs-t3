@@ -59,3 +59,9 @@ export const UniqueIdsSchema = z.enum([
 ]);
 
 export type UniqueIdsType = z.infer<typeof UniqueIdsSchema>;
+
+export const userPersonalityDetailsSchema = z.object({
+  id: z.string(),
+  personalityType: z.string(),
+  personalityScore: z.number(),
+});
