@@ -1,17 +1,79 @@
-export interface Topic {
-  value: string;
-  label: string;
-  icon: string;
-  subtopics: Subtopic[];
-}
+import { z } from "zod";
 
-export interface Subtopic {
-  value: string;
-  label: string;
-  icon: string;
-}
+// Define the Subtopic schema
+export const SubtopicSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+  icon: z.string(),
+});
 
-export const topicsList = [
+export type SubTopicType = z.infer<typeof SubtopicSchema>;
+
+// Define the Topic schema that includes the Subtopic schema
+export const TopicSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+  icon: z.string(),
+  subtopics: z.array(SubtopicSchema),
+});
+
+export type TopicType = z.infer<typeof TopicSchema>;
+
+// Define the Preference enum
+export const PreferenceSchema = z.enum([
+  "No",
+  "Sometimes",
+  "Remove",
+  "Auto",
+  "Avoid",
+]);
+
+export type PreferenceType = z.infer<typeof PreferenceSchema>;
+
+// Define the PreferenceOption schema
+export const PreferenceOptionSchema = z.object({
+  key: z.string(),
+  title: z.string(),
+  description: z.string(),
+  options: z.array(PreferenceSchema),
+});
+
+export type PreferenceOptionType = z.infer<typeof PreferenceOptionSchema>;
+
+export const preferenceOptions: PreferenceOptionType[] = [
+  {
+    key: "emoji",
+    title: "Remove emoji",
+    description: "Choose how to handle emojis in the text",
+    options: ["No", "Sometimes", "Remove"],
+  },
+  {
+    key: "hashtags",
+    title: "Remove hashtags",
+    description: "Choose how to handle hashtags in the text",
+    options: ["No", "Sometimes", "Remove"],
+  },
+  {
+    key: "firstLetterCapital",
+    title: "Avoid first letter capital",
+    description: "Choose how to handle capitalization of the first letter",
+    options: ["Auto", "Sometimes", "Avoid"],
+  },
+  {
+    key: "punctuation",
+    title: "Avoid punctuation",
+    description: "Choose how to handle punctuation in the text",
+    options: ["Auto", "Sometimes", "Avoid"],
+  },
+  {
+    key: "authorName",
+    title: "Avoid using author name in replies",
+    description: "Choose how to handle author names in replies",
+    options: ["Auto", "Sometimes", "Avoid"],
+  },
+];
+
+export const topicsList: TopicType[] = [
   {
     value: "personalDevelopment",
     label: "Personal Development",

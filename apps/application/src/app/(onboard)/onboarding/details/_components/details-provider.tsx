@@ -2,10 +2,21 @@
 
 import React, { createContext, useContext, useState } from "react";
 
+import type {
+  PreferenceType,
+  SubTopicType,
+} from "@aperturs/validators/personalization";
+
 // Create the context
 interface DetailsContextType {
   selectedTopic: string[];
   setSelectedTopic: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedSubTopic: SubTopicType[];
+  setSelectedSubTopic: React.Dispatch<React.SetStateAction<SubTopicType[]>>;
+  preferences: Record<string, PreferenceType>;
+  setPreferences: React.Dispatch<
+    React.SetStateAction<Record<string, PreferenceType>>
+  >;
 }
 
 // Create the context with an undefined default value
@@ -26,9 +37,22 @@ export const DetailsProvider = ({
   children: React.ReactElement;
 }) => {
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
+  const [selectedSubTopic, setSelectedSubTopic] = useState<SubTopicType[]>([]);
+  const [preferences, setPreferences] = useState<
+    Record<string, PreferenceType>
+  >({});
 
   return (
-    <DetailsContext.Provider value={{ selectedTopic, setSelectedTopic }}>
+    <DetailsContext.Provider
+      value={{
+        selectedTopic,
+        setSelectedTopic,
+        selectedSubTopic,
+        setSelectedSubTopic,
+        preferences,
+        setPreferences,
+      }}
+    >
       {children}
     </DetailsContext.Provider>
   );

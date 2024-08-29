@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types */
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { useState } from "react";
 import {
   AnimatePresence,
@@ -12,63 +10,17 @@ import {
 import { IoCheckmarkCircle } from "react-icons/io5";
 import useMeasure from "react-use-measure";
 
+import type { SubTopicType } from "@aperturs/validators/personalization";
 import { Button } from "@aperturs/ui/button";
 import { cn } from "@aperturs/ui/lib/utils";
+import { topicsList } from "@aperturs/validators/personalization";
 
-import { Subtopic, topicsList } from "./content-types";
 import { useDetailsContext } from "./details-provider";
 
-type sportsTypes = Record<string, boolean>;
-
-const sportsObject: sportsTypes = {
-  Soccer: false,
-  Basketball: false,
-  Baseball: false,
-  Tennis: false,
-  Golf: false,
-  Cricket: false,
-  Rugby: false,
-  Hockey: false,
-  "Table Tennis": false,
-  Badminton: false,
-  Volleyball: false,
-  "American Football": false,
-  Boxing: false,
-  MMA: false,
-  Wrestling: false,
-  Swimming: false,
-  Athletics: false,
-  Cycling: false,
-  Gymnastics: false,
-  Skiing: false,
-  Snowboarding: false,
-  Skateboarding: false,
-  Surfing: false,
-  Rowing: false,
-  Sailing: false,
-  Fencing: false,
-  Judo: false,
-  Karate: false,
-  Taekwondo: false,
-  Archery: false,
-  Equestrian: false,
-  Lacrosse: false,
-  Handball: false,
-  Softball: false,
-  Squash: false,
-  Racquetball: false,
-  Bobsleigh: false,
-  Curling: false,
-  "Figure Skating": false,
-  Diving: false,
-};
-
 export default function Step2() {
-  const { selectedTopic } = useDetailsContext();
+  const { selectedTopic, selectedSubTopic, setSelectedSubTopic } =
+    useDetailsContext();
   const [filter, setFilter] = useState(false);
-
-  const [values, setValues] = useState(sportsObject);
-  const [selected, setSelected] = useState<Subtopic[]>([]);
 
   const onClickHandler = () => setFilter(!filter);
 
@@ -114,7 +66,7 @@ export default function Step2() {
                           .filter(
                             (subtopic) =>
                               !filter ||
-                              selected.some(
+                              selectedSubTopic.some(
                                 (item) => item.value === subtopic.value,
                               ),
                           )
@@ -122,10 +74,10 @@ export default function Step2() {
                             <SingleTopic
                               key={subtopic.value}
                               subTopic={subtopic}
-                              isSelected={selected.some(
+                              isSelected={selectedSubTopic.some(
                                 (item) => item.value === subtopic.value,
                               )}
-                              setValues={setSelected}
+                              setValues={setSelectedSubTopic}
                             />
                           ))}
                       </ul>
@@ -155,8 +107,8 @@ function SingleTopic({
   setValues,
   isSelected,
 }: {
-  subTopic: Subtopic;
-  setValues: React.Dispatch<React.SetStateAction<Subtopic[]>>;
+  subTopic: SubTopicType;
+  setValues: React.Dispatch<React.SetStateAction<SubTopicType[]>>;
   isSelected: boolean;
 }) {
   const onClickHandler = () => {

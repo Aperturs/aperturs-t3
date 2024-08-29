@@ -1,12 +1,10 @@
 "use client";
 
 import type { ComponentType } from "react";
-import { useState } from "react";
 
-import { Badge } from "@aperturs/ui/badge";
 import { MultiSelect } from "@aperturs/ui/multi-select";
+import { topicsList } from "@aperturs/validators/personalization";
 
-import { topicsList } from "./content-types";
 import { useDetailsContext } from "./details-provider";
 
 const options = topicsList.map((topic) => {
