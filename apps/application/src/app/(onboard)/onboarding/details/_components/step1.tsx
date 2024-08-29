@@ -25,7 +25,7 @@ export default function StepOne() {
     <div>
       <h2 className="text-lg font-semibold">Select your Niche </h2>
       <p className="mb-3 mt-0 text-sm text-muted-foreground">
-        Choose topic you create content
+        Choose topic you create content (would suggest to niche down to 1 or 2)
       </p>
       <MultiSelect
         options={options}

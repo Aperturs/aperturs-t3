@@ -40,7 +40,13 @@ export const DetailsProvider = ({
   const [selectedSubTopic, setSelectedSubTopic] = useState<SubTopicType[]>([]);
   const [preferences, setPreferences] = useState<
     Record<string, PreferenceType>
-  >({});
+  >({
+    emoji: "No",
+    hashtags: "Remove",
+    firstLetterCapital: "Auto",
+    punctuation: "Auto",
+    authorName: "Sometimes",
+  });
 
   return (
     <DetailsContext.Provider

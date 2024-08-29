@@ -4,6 +4,7 @@ import { getAccounts } from "@api/helpers/get-socials";
 import { z } from "zod";
 
 import { createUniqueIds, eq, schema } from "@aperturs/db";
+import { personalPreferenceSchema } from "@aperturs/validators/personalization";
 import { SocialTypeSchema } from "@aperturs/validators/post";
 import { UniqueIdsSchema } from "@aperturs/validators/user";
 
@@ -39,13 +40,25 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-  // getGithubAccounts: protectedProcedure.query(async ({ ctx }) => {
-  //   const github = await ctx.db.query.githubToken.findMany({
-  //     where: eq(schema.githubToken.clerkUserId, ctx.currentUser),
-  //   });
-  //   const githubDetails = await getGithubAccountDetails(github);
-  //   return githubDetails;
-  // }),
+  addPreferences: protectedProcedure
+    .input(personalPreferenceSchema)
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(schema.user)
+        .set({
+          personalization: input,
+        })
+        .where(eq(schema.user.clerkUserId, ctx.currentUser))
+        .catch((e) => {
+          console.error(e);
+          throw Error("Failed to add preferences");
+        });
+
+      return {
+        success: true,
+        status: "Preferences added successfully",
+      };
+    }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const socials = await ctx.db.query.socialProvider.findMany({

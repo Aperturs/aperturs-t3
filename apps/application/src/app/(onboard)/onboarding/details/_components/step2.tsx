@@ -91,7 +91,7 @@ export default function Step2() {
 
         <div className="flex justify-center py-8">
           <Button
-            className=" border-[#2d2845] bg-[#10111c] px-4 text-[#5f5aea] duration-200 active:scale-95"
+            className=" border-[#2d2845] bg-[#10111c] px-4 text-[#9d9af6] duration-200 active:scale-95"
             onClick={onClickHandler}
           >
             {filter ? "Show All" : "Show Selected"}

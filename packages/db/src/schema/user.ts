@@ -28,6 +28,7 @@ export const user = pgTable(
     clerkUserId: varchar("clerkUserId", { length: 256 }).primaryKey(),
     userDetails: json("userDetails"),
     currentPlan: currentPlanEnum("currentPlan").default("FREE").notNull(),
+    personalization: json("personalization"),
     createdAt: timestamp("createdAt", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

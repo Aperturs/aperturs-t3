@@ -65,13 +65,19 @@ export const preferenceOptions: PreferenceOptionType[] = [
     description: "Choose how to handle punctuation in the text",
     options: ["Auto", "Sometimes", "Avoid"],
   },
-  {
-    key: "authorName",
-    title: "Avoid using author name in replies",
-    description: "Choose how to handle author names in replies",
-    options: ["Auto", "Sometimes", "Avoid"],
-  },
+  // {
+  //   key: "authorName",
+  //   title: "Avoid using author name in replies",
+  //   description: "Choose how to handle author names in replies",
+  //   options: ["Auto", "Sometimes", "Avoid"],
+  // },
 ];
+
+export const personalPreferenceSchema = z.object({
+  subTopics: z.array(SubtopicSchema), // Array of Subtopic schema
+  preferences: z.record(z.string(), PreferenceSchema), // Record of Preference schema
+});
+export type PersonalPreferenceType = z.infer<typeof personalPreferenceSchema>;
 
 export const topicsList: TopicType[] = [
   {

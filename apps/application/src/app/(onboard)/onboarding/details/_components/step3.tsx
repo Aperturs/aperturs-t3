@@ -11,10 +11,12 @@ export default function StepThree() {
 
   const handlePreferenceChange = (key: string, value: PreferenceType) => {
     setPreferences((prev) => ({ ...prev, [key]: value }));
+    console.log(preferences, "pref");
   };
 
   return (
     <div className="space-y-2">
+      <h2 className="text-xl font-semibold">Select your preferences</h2>
       {preferenceOptions.map((pref) => (
         <div key={pref.key} className="py-3">
           <h3 className="text-lg  font-semibold">{pref.title}</h3>
@@ -35,11 +37,11 @@ export default function StepThree() {
                 key={option}
                 className="flex w-full items-center space-x-2"
               >
-                <div className="w-full place-content-center">
+                <div className="w-full place-content-start">
                   <RadioGroupItem value={option} id={`${pref.key}-${option}`} />
                   <Label
                     htmlFor={`${pref.key}-${option}`}
-                    className="w-full cursor-pointer"
+                    className="cursor-pointer"
                   >
                     {option}
                   </Label>
