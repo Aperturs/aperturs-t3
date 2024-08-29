@@ -16,7 +16,7 @@ export default function OnboardingLayout({
   return (
     <div className="relative h-fit min-h-screen w-full">
       {children}
-      <div className="absolute bottom-0 right-0">
+      <div className="absolute bottom-3 right-3">
         <ModeToggle />
       </div>
     </div>

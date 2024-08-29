@@ -1,16 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { Config } from "tailwindcss";
 
 import baseConfig from "@aperturs/tailwind-config/web";
-
-const colors = require("tailwindcss/colors");
-
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
 
 export default {
   // We need to append the path to the UI package to the content array so that
@@ -53,18 +43,5 @@ export default {
     },
   },
   content: [...baseConfig.content, "../../packages/ui/**/*.{ts,tsx}"],
-  plugins: [addVariablesForColors, colors],
   presets: [baseConfig],
 } satisfies Config;
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function addVariablesForColors({ addBase, theme }: any) {
-  const allColors = flattenColorPalette(theme("colors"));
-  const newVars = Object.fromEntries(
-    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
-  );
-
-  addBase({
-    ":root": newVars,
-  });
-}
