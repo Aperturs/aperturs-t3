@@ -9,7 +9,6 @@ import { api } from "~/trpc/server";
 export default async function PickPricingControls() {
   const subscription = await api.subscription.getCurrentSubscription();
 
-
   return (
     <div className="my-3 flex justify-between gap-2">
       <Button asChild className="w-full">
@@ -19,7 +18,7 @@ export default async function PickPricingControls() {
         <Button asChild className="w-full">
           <Link href="/onboarding/details">Next</Link>
         </Button>
-      )}  
+      )}
     </div>
   );
 }

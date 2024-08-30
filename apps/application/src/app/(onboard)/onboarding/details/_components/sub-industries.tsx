@@ -66,7 +66,6 @@ export default function Step2() {
                           topics={topic.subtopics}
                           showOnlySelected={filter}
                           allowAddOptions
-                          maxAllowed={4}
                         />
                       </ul>
                     </div>

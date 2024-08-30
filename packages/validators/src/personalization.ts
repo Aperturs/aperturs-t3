@@ -4,7 +4,7 @@ import { z } from "zod";
 export const SubtopicSchema = z.object({
   value: z.string(),
   label: z.string(),
-  icon: z.string(),
+  icon: z.string().optional(),
 });
 
 export type SubTopicType = z.infer<typeof SubtopicSchema>;
@@ -74,11 +74,10 @@ export const preferenceOptions: PreferenceOptionType[] = [
 ];
 
 export const personalPreferenceSchema = z.object({
-  subTopics: z.array(
-    SubtopicSchema.extend({
-      icon: z.string().optional(),
-    }),
-  ), // Array of Subtopic schema
+  subTopics: z.array(SubtopicSchema), // Array of Subtopic schema
+  linkedinContentOptions: z.array(
+    z.record(z.string(), z.array(SubtopicSchema)),
+  ), // Record of string array
   preferences: z.record(z.string(), PreferenceSchema), // Record of Preference schema
 });
 export type PersonalPreferenceType = z.infer<typeof personalPreferenceSchema>;

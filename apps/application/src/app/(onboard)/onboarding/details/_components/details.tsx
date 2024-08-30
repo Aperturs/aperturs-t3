@@ -8,6 +8,7 @@ import useMeasure from "react-use-measure";
 import { Button } from "@aperturs/ui/button";
 import {
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -42,27 +43,38 @@ export default function Details() {
     api.user.addPreferences.useMutation();
 
   const handleFinish = async () => {
-    await addPreferences({ preferences, subTopics: selectedSubTopic });
+    await addPreferences({
+      preferences,
+      subTopics: selectedSubTopic,
+      linkedinContentOptions: [
+        {
+          whatToPost: whatYouPost,
+          reasonsForPosting: reasonsForPosting,
+          toneOfVoice: toneOfVoice,
+          subTopics: selectedSubTopic,
+          industry: selectedTopic.map((topic) => {
+            {
+              return {
+                value: topic,
+                label: topic,
+              };
+            }
+          }),
+        },
+      ],
+    });
     await completeOnboarding();
   };
 
   const handleNext = async () => {
-    if (selectedTopic.length === 0) {
-      toast.error("Please select at least one topic");
-      return;
-    }
-    if (selectedSubTopic.length === 0 && step === 2) {
-      toast.error("Please select at least one subtopic");
-      return;
-    }
-    if (step === 3) {
+    if (step === 7) {
       await toast.promise(handleFinish(), {
         loading: "Saving preferences...",
         success: "Preferences saved",
         error: "Failed to save preferences",
       });
     }
-    if (step < 3) {
+    if (step < 7) {
       setStep(step + 1);
     }
   };
@@ -115,6 +127,10 @@ export default function Details() {
         <div ref={ref}>
           <CardHeader>
             <CardTitle>Details</CardTitle>
+            <CardDescription>
+              This will help us create a fine-tuned experience for you, so make
+              sure you give us all the details.
+            </CardDescription>
             <div className="flex justify-between pt-4">
               {Array.from({ length: 7 }).map((_, index) => (
                 <button key={index} onClick={() => handleSetStep(index + 1)}>
@@ -141,10 +157,10 @@ export default function Details() {
             <Button
               disabled={isPending}
               onClick={handleNext}
-              className={`inline-flex items-center gap-2 ${step > 4 ? "pointer-events-none opacity-50" : ""}`}
+              className={`inline-flex items-center gap-2 ${step > 7 ? "pointer-events-none opacity-50" : ""}`}
             >
               {isPending && <LoaderIcon className="h-4 w-4 animate-spin" />}
-              Continue
+              {step === 7 ? "Finish" : "Next"}
             </Button>
           </CardFooter>
         </div>

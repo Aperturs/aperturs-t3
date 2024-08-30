@@ -2,12 +2,14 @@ import type { PreferenceType } from "@aperturs/validators/personalization";
 import { Button } from "@aperturs/ui/button";
 import { Label } from "@aperturs/ui/label";
 import { RadioGroup, RadioGroupItem } from "@aperturs/ui/radio-group";
+import { Textarea } from "@aperturs/ui/textarea";
 import { preferenceOptions } from "@aperturs/validators/personalization";
 
 import { useDetailsContext } from "./details-provider";
 
 export default function StepThree() {
-  const { setPreferences, preferences } = useDetailsContext();
+  const { setPreferences, preferences, moreDetails, setMoreDetails } =
+    useDetailsContext();
 
   const handlePreferenceChange = (key: string, value: PreferenceType) => {
     setPreferences((prev) => ({ ...prev, [key]: value }));
@@ -16,6 +18,14 @@ export default function StepThree() {
 
   return (
     <div className="space-y-2">
+      <h2 className="text-xl font-semibold">
+        Do you want us tell us anything Extra to Fine-tune your model ?
+      </h2>
+      <Textarea
+        value={moreDetails}
+        onChange={(e) => setMoreDetails(e.target.value)}
+        placeholder="Write here"
+      />
       <h2 className="text-xl font-semibold">Select your preferences</h2>
       {preferenceOptions.map((pref) => (
         <div key={pref.key} className="py-3">

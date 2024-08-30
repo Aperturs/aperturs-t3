@@ -24,6 +24,8 @@ interface DetailsContextType {
   setToneOfVoice: React.Dispatch<React.SetStateAction<Topic[]>>;
   yourPosition: Topic[];
   setYourPosition: React.Dispatch<React.SetStateAction<Topic[]>>;
+  moreDetails: string;
+  setMoreDetails: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Create the context with an undefined default value
@@ -59,6 +61,7 @@ export const DetailsProvider = ({
   const [reasonsForPosting, setReasonsForPosting] = useState<Topic[]>([]);
   const [toneOfVoice, setToneOfVoice] = useState<Topic[]>([]);
   const [yourPosition, setYourPosition] = useState<Topic[]>([]);
+  const [moreDetails, setMoreDetails] = useState<string>("");
 
   return (
     <DetailsContext.Provider
@@ -77,6 +80,8 @@ export const DetailsProvider = ({
         setToneOfVoice,
         yourPosition,
         setYourPosition,
+        moreDetails,
+        setMoreDetails,
       }}
     >
       {children}
