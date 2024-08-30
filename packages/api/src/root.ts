@@ -1,3 +1,4 @@
+import { linkedinAiRouter } from "./routers/ai/linkedin";
 import { github } from "./routers/github/github";
 import { linkedin } from "./routers/linkedin/linkedin";
 import { instagramRouter } from "./routers/meta/instagram";
@@ -26,6 +27,7 @@ export const appRouter = createTRPCRouter({
   metadata: metaDataRouter,
   instagram: instagramRouter,
   subscription: subscriptionRouter,
+  linkedinAi: linkedinAiRouter,
   // youtube: youtubeRouter,
 });
 

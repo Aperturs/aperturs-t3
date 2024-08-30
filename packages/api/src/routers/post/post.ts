@@ -1,4 +1,4 @@
-import { generateSocialMediaPost } from "@api/handlers/ai/repurpose";
+import { generateSocialMediaPost } from "@api/handlers/ai/linkedin";
 import { makingPostsFrontendCompatible } from "@api/handlers/posts/draft";
 import {
   GetPresignedUrl,

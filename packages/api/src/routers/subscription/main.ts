@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/prefer-optional-chain */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { updateUserPrivateMetadata } from "@api/handlers/metadata/user-private-meta";
 import { FetchPlans, UpgradeLimits } from "@api/handlers/subscription/main";
 import { Plans } from "@api/handlers/subscription/plans";
@@ -12,7 +12,7 @@ import {
   publicProcedure,
 } from "@api/trpc";
 import { configureLemonSqueezy } from "@api/utils/lemon-squeezy";
-import { clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import {
   cancelSubscription,
   createCheckout,
@@ -380,6 +380,14 @@ export const subscriptionRouter = createTRPCRouter({
       const userDetails = fetchUser?.userDetails as UserDetails;
       console.log(userDetails, "userDetails from backend");
 
+      let redirect = "/onboarding/pick-plan";
+      if (
+        // @ts-ignore
+        (auth().sessionClaims?.metadata.onboardingComplete as boolean) === true
+      ) {
+        redirect = "/billing";
+      }
+
       const checkout = await createCheckout(
         env.LEMONSQUEEZY_STORE_ID,
         input.variantId,
@@ -397,7 +405,7 @@ export const subscriptionRouter = createTRPCRouter({
           },
           productOptions: {
             enabledVariants: [input.variantId],
-            // redirectUrl: `${env.DOMAIN}/billing/`,
+            redirectUrl: `${env.DOMAIN}${redirect}`,
             receiptButtonText: "Go to Dashboard",
             receiptThankYouNote: "Thank you for signing up to Lemon Stand!",
           },

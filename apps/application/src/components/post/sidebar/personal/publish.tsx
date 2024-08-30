@@ -2,7 +2,9 @@ import { Card } from "@aperturs/ui/card";
 
 import { DateTimePicker } from "~/components/custom/datepicker/date-time";
 import { useStore } from "~/store/post-store";
+import { api } from "~/trpc/react";
 import { SimpleButton } from "../../common";
+import usePostUpdate from "../../content/use-post-update";
 import usePublishing from "../usePosting";
 
 function Publish({ params }: { params: { postid: string } }) {
@@ -27,14 +29,23 @@ function Publish({ params }: { params: { postid: string } }) {
     uploadingFileName,
   } = usePublishing({ id: postid });
 
-  console.log(saving, "saving");
+  const { updateContent } = usePostUpdate(0);
+
+  const { mutateAsync: generatePost, isPending } =
+    api.linkedinAi.generateLinkedinPostWithoutIdeas.useMutation();
+
+  const handlePostGeneration = async () => {
+    const res = await generatePost();
+    console.log(res, "res");
+    updateContent(res.text);
+  };
 
   return (
     <div className="my-4 flex w-full flex-col justify-end gap-1">
       {/* <Picker /> */}
       {uploadProgress > 0 && (
         <Card className="p-3">
-          {uploadingFileName} {uploadProgress}%
+          {uploadingFileName.current} {uploadProgress}%
         </Card>
       )}
       <DateTimePicker
@@ -82,6 +93,12 @@ function Publish({ params }: { params: { postid: string } }) {
           }}
         />
       )}
+      <SimpleButton
+        text="Generate Post"
+        disabled={isPending}
+        onClick={handlePostGeneration}
+        isLoading={isPending}
+      />
     </div>
   );
 }
