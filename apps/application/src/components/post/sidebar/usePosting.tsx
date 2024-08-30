@@ -168,12 +168,23 @@ export default function usePublishing({ id }: { id: string }) {
       setLoading(false);
       return;
     }
-
-    const postId = await handleSavePost({ isScheduling: false });
+    let postId = "";
+    if (isUploaded) {
+      await handleUpdate({ isScheduling: false });
+      postId = id;
+    } else {
+      const savingId = await handleSavePost({ isScheduling: false });
+      if (!savingId) {
+        toast.error("post id is not available");
+        return;
+      }
+      postId = savingId;
+    }
     if (!postId) {
       toast.error("post id is not available");
       return;
     }
+
     await toast
       .promise(postByPostId({ postId }), {
         loading: "Posting to your socials...",

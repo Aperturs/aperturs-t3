@@ -1,6 +1,9 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+
+import { env } from "~/env";
 
 export const completeOnboarding = async () => {
   const { userId } = auth();
@@ -15,7 +18,8 @@ export const completeOnboarding = async () => {
         onboardingComplete: true,
       },
     });
-    return { message: "User metadata Updated" };
+    const url = env.DOMAIN + "/dashboard";
+    redirect(url);
   } catch (e) {
     console.log("error", e);
     return { message: "Error Updating User Metadata" };

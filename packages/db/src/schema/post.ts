@@ -125,6 +125,7 @@ export const postRelations = relations(post, ({ one, many }) => ({
   }),
   alternatePostContent: many(alternatePostContent),
   postToSocialProviders: many(postToSocialProvider),
+  platFormPosts: many(platFormPost),
 }));
 
 export const postToSocialProvider = pgTable(
@@ -211,6 +212,40 @@ export const alternatePostContentRelations = relations(
     }),
   }),
 );
+
+export const platFormPost = pgTable("PlatformPost", {
+  id: varchar("id", { length: 191 })
+    .primaryKey()
+    .$defaultFn(() => createUniqueIds("platform")),
+  postId: varchar("postId", { length: 191 }).references(() => post.id, {
+    onDelete: "cascade",
+  }),
+  platformId: varchar("platformId", { length: 191 }).references(
+    () => socialProvider.id,
+    {
+      onDelete: "cascade",
+    },
+  ),
+  platformPostId: varchar("platformPostId", { length: 191 }).notNull(),
+  platformPostUrl: text("platformPostUrl").notNull(),
+});
+
+export const platformPostInsertSchema = createInsertSchema(platFormPost);
+export type PlatformPostInsert = z.infer<typeof platformPostInsertSchema>;
+
+export const platformPostSelectSchema = createSelectSchema(platFormPost);
+export type PlatformPostSelect = z.infer<typeof platformPostSelectSchema>;
+
+export const platformPostRelations = relations(platFormPost, ({ one }) => ({
+  post: one(post, {
+    fields: [platFormPost.postId],
+    references: [post.id],
+  }),
+  socialProvider: one(socialProvider, {
+    fields: [platFormPost.platformId],
+    references: [socialProvider.id],
+  }),
+}));
 
 // export const postContent = pgTable(
 //   "PostContent",

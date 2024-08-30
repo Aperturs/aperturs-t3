@@ -161,7 +161,8 @@ export const subscriptionRouter = createTRPCRouter({
               });
               await clerkClient().users.updateUser(updateData.userId, {
                 publicMetadata: {
-                  onboardingComplete: true,
+                  subscribed: true,
+                  // onboardingComplete: true,
                 },
               });
             } catch (error) {
@@ -396,7 +397,7 @@ export const subscriptionRouter = createTRPCRouter({
           },
           productOptions: {
             enabledVariants: [input.variantId],
-            redirectUrl: `${env.DOMAIN}/billing/`,
+            // redirectUrl: `${env.DOMAIN}/billing/`,
             receiptButtonText: "Go to Dashboard",
             receiptThankYouNote: "Thank you for signing up to Lemon Stand!",
           },

@@ -7,7 +7,6 @@ const isPublicRoute = createRouteMatcher([
   "/api/webhooks/(.*)",
   "/sign-in(.*)",
   "/sign-up(.*)",
-
   // "/api/webhooks/user",
   // "/api/webhooks/subscription",
   // "/api/webhooks/invite",
@@ -25,8 +24,11 @@ const supportOnboardingRoute = createRouteMatcher([
 export default clerkMiddleware((auth, req) => {
   const { userId, sessionClaims, redirectToSignIn } = auth();
 
+  console.log(req.url, isPublicRoute(req), "outside");
+
   // If the user isn't signed in and the route is private, redirect to sign-in
   if (!userId && !isPublicRoute(req)) {
+    console.log(req.url, "not signed in");
     return redirectToSignIn({ returnBackUrl: req.url });
   }
 
@@ -36,9 +38,10 @@ export default clerkMiddleware((auth, req) => {
     userId &&
     !sessionClaims?.metadata?.onboardingComplete &&
     !isOnboardingRoute(req) &&
-    !supportOnboardingRoute(req)
+    !supportOnboardingRoute(req) &&
+    !isPublicRoute(req)
   ) {
-    // console.log(req.url, "req.url");
+    console.log(req.url, "req.url");
     const onboardingUrl = new URL("/onboarding", req.url);
     return NextResponse.redirect(onboardingUrl);
   }

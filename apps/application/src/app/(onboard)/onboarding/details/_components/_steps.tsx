@@ -28,7 +28,7 @@ export default function Step({
             },
           },
           complete: {
-            scale: 1.25,
+            scale: 1.2,
           },
         }}
         transition={{
@@ -37,34 +37,35 @@ export default function Step({
           type: "tween",
           ease: "circOut",
         }}
-        className="absolute inset-0 rounded-full bg-blue-200"
+        className="absolute inset-0 rounded-full bg-muted-foreground"
       ></motion.div>
 
       <motion.div
         initial={false}
         variants={{
           inactive: {
-            backgroundColor: "var(--white)",
-            borderColor: "var(--slate-200)",
-            color: "var(--slate-400)",
+            backgroundColor: "hsl(var(--muted))",
+            borderColor: "hsl(var(--muted-foreground))",
+            color: "hsl(var(--muted-foreground))",
           },
           active: {
-            backgroundColor: "var(--white)",
-            borderColor: "var(--blue-500)",
-            color: "var(--blue-500)",
+            backgroundColor: "hsl(var(--primary))",
+            borderColor: "hsl(var(--primary))",
+            color: "hsl(var(--background))",
           },
           complete: {
-            backgroundColor: "var(--blue-500)",
-            borderColor: "var(--blue-500)",
-            color: "var(--blue-500)",
+            backgroundColor: "hsl(var(--primary))",
+            borderColor: "hsl(var(--muted-foreground))",
+            color: "hsl(var(--background))",
+            borderWidth: 0,
           },
         }}
         transition={{ duration: 0.2 }}
-        className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold`}
+        className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2  font-semibold`}
       >
         <div className="flex items-center justify-center">
           {status === "complete" ? (
-            <CheckIcon className="h-6 w-6 text-white" />
+            <CheckIcon className="h-6 w-6 text-background" />
           ) : (
             <span>{step}</span>
           )}

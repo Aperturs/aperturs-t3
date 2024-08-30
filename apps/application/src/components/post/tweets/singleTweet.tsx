@@ -72,7 +72,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
           </button>
           <button
             onClick={() => addTweet()}
-            className="important ml-2 grid h-8 w-8 place-content-center rounded-full bg-primary text-black"
+            className="important ml-2 grid h-8 w-8 place-content-center rounded-full bg-primary text-white dark:text-black"
           >
             +
           </button>

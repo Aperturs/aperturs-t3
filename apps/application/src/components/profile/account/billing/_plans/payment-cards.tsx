@@ -25,7 +25,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
 
   return (
     <Card
-      className={` ${isCurrentPlan ? "border-2 border-green-600 dark:border-2 " : ""} ${plan.important ? "bg-zinc-800" : ""}`}
+      className={` ${isCurrentPlan ? "border-2 border-green-600 dark:border-2 " : ""} ${plan.important ? "bg-zinc-800 text-white" : ""}`}
     >
       <CardHeader>
         <h5 className={`mb-4 text-xl font-medium ${colorImportant}`}>
@@ -48,7 +48,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
           {plan.features.map((feature) => (
             <li className={`flex items-center space-x-3`} key={feature.name}>
               <svg
-                className={`h-5 w-5 shrink-0 text-primary dark:text-primary`}
+                className={`h-5 w-5 shrink-0 text-primary dark:text-primary ${plan.important ? "text-white dark:text-white" : ""}`}
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
@@ -61,11 +61,8 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
-                {feature.baseValue}
-              </span>
-              <span className="text-base font-normal leading-tight text-gray-500 dark:text-gray-400">
-                {feature.name}
+              <span className="w-full text-base font-normal leading-tight ">
+                {feature.baseValue} {feature.name}
               </span>
               <ToolTipSimple content={feature.description}>
                 <InfoIcon className="size-4" />
@@ -76,7 +73,7 @@ export default function BillingCard({ plan, currentPlan }: iFeatureList) {
       </CardContent>
       <CardFooter>
         <SignupButton
-          className={`w-full ${plan.important ? "bg-black text-primary hover:bg-zinc-900/90 dark:text-primary" : ""}`}
+          className={`w-full ${plan.important ? "bg-black text-white hover:bg-zinc-900/90 dark:text-primary" : ""}`}
           plan={plan}
           isChangingPlans={isChangingPlans}
           currentPlan={currentPlan}

@@ -241,6 +241,7 @@ export type PostTweetInput = z.infer<typeof postTweetInputSchema>;
 export const postToLinkedInInputSchema = z.object({
   socialId: z.string(),
   content: z.array(contentSchema.extend({ media: z.array(mediaSchema) })),
+  postId: z.string(),
 });
 
 export type PostToLinkedInInput = z.infer<typeof postToLinkedInInputSchema>;

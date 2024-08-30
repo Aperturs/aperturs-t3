@@ -52,6 +52,7 @@
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.9.0",
     "react-select": "^5.7.4",
+    "react-use-measure": "^2.1.1",
     "superjson": "2.2.1",
     "svix": "^1.4.12",
     "twitter-api-sdk": "^1.2.1",

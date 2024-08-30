@@ -4,17 +4,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aperturs/ui/tabs";
 
 import FetchPlans from "~/components/profile/account/billing/_plans/plans";
 import PlansSkeleton from "~/components/profile/account/billing/_plans/skeleton";
+import PickPricingControls from "./controller";
 
 export default function Pricing() {
   return (
     <div className="flex h-full w-full flex-col items-center  px-8 py-36">
-      <h1 className="my-3 text-center text-6xl font-bold">
+      <h1 className="my-3 text-center text-3xl font-bold lg:text-6xl">
         Start your free trial
       </h1>
       <p className="mb-8 text-center text-lg">
         You&apos;ll get 7 days for free - you can cancel anytime!
       </p>
-      <Tabs defaultValue="monthly" className="w-full">
+      <Tabs defaultValue="monthly" className="w-full ">
         <div className="flex w-full items-center justify-center">
           <TabsList>
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
@@ -37,6 +38,7 @@ export default function Pricing() {
           </Suspense>
         </TabsContent>
       </Tabs>
+      <PickPricingControls />
     </div>
   );
 }
