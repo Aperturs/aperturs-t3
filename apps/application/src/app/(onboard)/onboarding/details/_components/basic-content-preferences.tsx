@@ -33,7 +33,7 @@ export default function StepThree() {
             {pref.options.map((option) => (
               <Button
                 asChild
-                variant="secondary"
+                variant="muted"
                 key={option}
                 className="flex w-full items-center space-x-2"
               >

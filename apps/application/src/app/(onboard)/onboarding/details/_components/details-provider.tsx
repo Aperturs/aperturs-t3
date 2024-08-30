@@ -2,21 +2,28 @@
 
 import React, { createContext, useContext, useState } from "react";
 
-import type {
-  PreferenceType,
-  SubTopicType,
-} from "@aperturs/validators/personalization";
+import type { PreferenceType } from "@aperturs/validators/personalization";
+
+import type { Topic } from "./topic-selector";
 
 // Create the context
 interface DetailsContextType {
   selectedTopic: string[];
   setSelectedTopic: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedSubTopic: SubTopicType[];
-  setSelectedSubTopic: React.Dispatch<React.SetStateAction<SubTopicType[]>>;
+  selectedSubTopic: Topic[];
+  setSelectedSubTopic: React.Dispatch<React.SetStateAction<Topic[]>>;
+  whatYouPost: Topic[];
+  setWhatYouPost: React.Dispatch<React.SetStateAction<Topic[]>>;
   preferences: Record<string, PreferenceType>;
   setPreferences: React.Dispatch<
     React.SetStateAction<Record<string, PreferenceType>>
   >;
+  reasonsForPosting: Topic[];
+  setReasonsForPosting: React.Dispatch<React.SetStateAction<Topic[]>>;
+  toneOfVoice: Topic[];
+  setToneOfVoice: React.Dispatch<React.SetStateAction<Topic[]>>;
+  yourPosition: Topic[];
+  setYourPosition: React.Dispatch<React.SetStateAction<Topic[]>>;
 }
 
 // Create the context with an undefined default value
@@ -37,7 +44,7 @@ export const DetailsProvider = ({
   children: React.ReactElement;
 }) => {
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
-  const [selectedSubTopic, setSelectedSubTopic] = useState<SubTopicType[]>([]);
+  const [selectedSubTopic, setSelectedSubTopic] = useState<Topic[]>([]);
   const [preferences, setPreferences] = useState<
     Record<string, PreferenceType>
   >({
@@ -48,6 +55,11 @@ export const DetailsProvider = ({
     authorName: "Sometimes",
   });
 
+  const [whatYouPost, setWhatYouPost] = useState<Topic[]>([]);
+  const [reasonsForPosting, setReasonsForPosting] = useState<Topic[]>([]);
+  const [toneOfVoice, setToneOfVoice] = useState<Topic[]>([]);
+  const [yourPosition, setYourPosition] = useState<Topic[]>([]);
+
   return (
     <DetailsContext.Provider
       value={{
@@ -57,6 +69,14 @@ export const DetailsProvider = ({
         setSelectedSubTopic,
         preferences,
         setPreferences,
+        whatYouPost,
+        setWhatYouPost,
+        reasonsForPosting,
+        setReasonsForPosting,
+        toneOfVoice,
+        setToneOfVoice,
+        yourPosition,
+        setYourPosition,
       }}
     >
       {children}

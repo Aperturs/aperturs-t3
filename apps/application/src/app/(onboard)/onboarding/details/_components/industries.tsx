@@ -11,7 +11,6 @@ const options = topicsList.map((topic) => {
   const IconComponent: ComponentType<{ className?: string }> = () => (
     <span className="px-2">{topic.icon}</span>
   );
-
   return {
     value: topic.value,
     label: topic.label,

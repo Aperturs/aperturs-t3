@@ -57,7 +57,6 @@ export default function Step({
             backgroundColor: "hsl(var(--primary))",
             borderColor: "hsl(var(--muted-foreground))",
             color: "hsl(var(--background))",
-            borderWidth: 0,
           },
         }}
         transition={{ duration: 0.2 }}
