@@ -32,7 +32,7 @@ export default function PostContent({
   useEffect(() => {
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 2-second delay
+    }, 100);
 
     return () => {
       clearTimeout(timeout);
