@@ -83,11 +83,16 @@ const AccordanceMenuList = [
 ];
 
 const bottomMenu = [
+  // {
+  //   text: "Notifications",
+  //   icon: <Notification />,
+  //   // suffix: <Badge>14</Badge>,
+  //   url: "/notifications",
+  // },
   {
-    text: "Notifications",
-    icon: <Notification />,
-    // suffix: <Badge>14</Badge>,
-    url: "/notifications",
+    text: "Details",
+    icon: <Person />,
+    url: "/details",
   },
   {
     text: "Profile",

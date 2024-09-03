@@ -4,7 +4,10 @@ import { getAccounts } from "@api/helpers/get-socials";
 import { z } from "zod";
 
 import { createUniqueIds, eq, schema } from "@aperturs/db";
-import { personalPreferenceSchema } from "@aperturs/validators/personalization";
+import {
+  personalPreferenceSchema,
+  PersonalPreferenceType,
+} from "@aperturs/validators/personalization";
 import { SocialTypeSchema } from "@aperturs/validators/post";
 import { UniqueIdsSchema } from "@aperturs/validators/user";
 
@@ -59,6 +62,13 @@ export const userRouter = createTRPCRouter({
         status: "Preferences added successfully",
       };
     }),
+
+  fetchUserPreferences: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.query.user.findFirst({
+      where: eq(schema.user.clerkUserId, ctx.currentUser),
+    });
+    return user?.personalization as PersonalPreferenceType | null;
+  }),
 
   fetchConnectedAccounts: protectedProcedure.query(async ({ ctx }) => {
     const socials = await ctx.db.query.socialProvider.findMany({

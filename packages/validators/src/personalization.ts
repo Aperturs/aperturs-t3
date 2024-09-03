@@ -75,9 +75,7 @@ export const preferenceOptions: PreferenceOptionType[] = [
 
 export const personalPreferenceSchema = z.object({
   subTopics: z.array(SubtopicSchema), // Array of Subtopic schema
-  linkedinContentOptions: z.array(
-    z.record(z.string(), z.array(SubtopicSchema)),
-  ), // Record of string array
+  linkedinContentOptions: z.record(z.string(), z.array(SubtopicSchema)),
   preferences: z.record(z.string(), PreferenceSchema), // Record of Preference schema
 });
 export type PersonalPreferenceType = z.infer<typeof personalPreferenceSchema>;

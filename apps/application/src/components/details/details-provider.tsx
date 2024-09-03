@@ -1,10 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 import type { PreferenceType } from "@aperturs/validators/personalization";
 
 import type { Topic } from "./topic-selector";
+import { api } from "~/trpc/react";
 
 // Create the context
 interface DetailsContextType {
@@ -45,6 +46,7 @@ export const DetailsProvider = ({
 }: {
   children: React.ReactElement;
 }) => {
+  const { data, isLoading } = api.user.fetchUserPreferences.useQuery();
   const [selectedTopic, setSelectedTopic] = useState<string[]>([]);
   const [selectedSubTopic, setSelectedSubTopic] = useState<Topic[]>([]);
   const [preferences, setPreferences] = useState<
@@ -62,6 +64,24 @@ export const DetailsProvider = ({
   const [toneOfVoice, setToneOfVoice] = useState<Topic[]>([]);
   const [yourPosition, setYourPosition] = useState<Topic[]>([]);
   const [moreDetails, setMoreDetails] = useState<string>("");
+
+  useEffect(() => {
+    if (data) {
+      console.log(data, data.linkedinContentOptions.whatToPost, "test");
+      setWhatYouPost(data.linkedinContentOptions.whatToPost ?? []);
+      setReasonsForPosting(data.linkedinContentOptions.reasonsForPosting ?? []);
+      setToneOfVoice(data.linkedinContentOptions.toneOfVoice ?? []);
+      setYourPosition(data.linkedinContentOptions.yourPosition ?? []);
+      setSelectedSubTopic(data.subTopics ?? []);
+      setSelectedTopic(
+        data.linkedinContentOptions.industry?.map((topic) => topic.value) ?? [],
+      );
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <DetailsContext.Provider

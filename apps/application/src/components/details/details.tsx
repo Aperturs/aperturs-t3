@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { LoaderIcon } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { FaCircleCheck } from "react-icons/fa6";
 import useMeasure from "react-use-measure";
 
 import { Button } from "@aperturs/ui/button";
@@ -38,8 +39,12 @@ export default function Details() {
     selectedSubTopic,
     selectedTopic,
     preferences,
+    yourPosition,
   } = useDetailsContext();
   const router = useRouter();
+  const path = usePathname();
+
+  const [saved, setSaved] = React.useState(false);
 
   const { mutateAsync: addPreferences, isPending } =
     api.user.addPreferences.useMutation();
@@ -48,24 +53,30 @@ export default function Details() {
     await addPreferences({
       preferences,
       subTopics: selectedSubTopic,
-      linkedinContentOptions: [
-        {
-          whatToPost: whatYouPost,
-          reasonsForPosting: reasonsForPosting,
-          toneOfVoice: toneOfVoice,
-          subTopics: selectedSubTopic,
-          industry: selectedTopic.map((topic) => {
-            {
-              return {
-                value: topic,
-                label: topic,
-              };
-            }
-          }),
-        },
-      ],
+      linkedinContentOptions: {
+        whatToPost: whatYouPost,
+        reasonsForPosting: reasonsForPosting,
+        toneOfVoice: toneOfVoice,
+        subTopics: selectedSubTopic,
+        yourPosition: yourPosition,
+        industry: selectedTopic.map((topic) => {
+          {
+            return {
+              value: topic,
+              label: topic,
+            };
+          }
+        }),
+      },
+    }).then(() => {
+      setSaved(true);
     });
-    await completeOnboarding();
+    if (path.includes("onboarding")) {
+      await completeOnboarding();
+      toast.loading("Redirecting...");
+      router.push("/onboarding/finish");
+      toast.dismiss();
+    }
   };
 
   const handleNext = async () => {
@@ -113,60 +124,62 @@ export default function Details() {
   };
 
   return (
-    <div className="flex min-h-screen w-screen items-center justify-center  py-7 ">
-      <motion.div
-        className="w-[95%] rounded-xl bg-card text-card-foreground shadow dark:border sm:w-[90%] lg:w-[80%] xl:w-[50%]"
-        initial={{
-          height: "auto",
-        }}
-        animate={{
-          height: height > 0 ? height : undefined,
-        }}
-        transition={{
-          duration: 0.7,
-        }}
-      >
-        <div ref={ref}>
-          <CardHeader>
-            <CardTitle>Details</CardTitle>
-            <CardDescription>
-              This will help us create a fine-tuned experience for you, so make
-              sure you give us all the details.
-            </CardDescription>
-            <div className="flex justify-between pt-4">
-              {Array.from({ length: 7 }).map((_, index) => (
-                <button key={index} onClick={() => handleSetStep(index + 1)}>
-                  <Step step={index + 1} currentStep={step} />
-                </button>
-              ))}
-            </div>
-          </CardHeader>
+    <motion.div
+      className="w-full rounded-xl bg-card text-card-foreground shadow dark:border"
+      initial={{
+        height: "auto",
+      }}
+      animate={{
+        height: height > 0 ? height : undefined,
+      }}
+      transition={{
+        duration: 0.7,
+      }}
+    >
+      <div ref={ref}>
+        <CardHeader>
+          <CardTitle>Details</CardTitle>
+          <CardDescription>
+            This will help us create a fine-tuned experience for you, so make
+            sure you give us all the details.
+          </CardDescription>
+          <div className="flex justify-between pt-4">
+            {Array.from({ length: 7 }).map((_, index) => (
+              <button key={index} onClick={() => handleSetStep(index + 1)}>
+                <Step step={index + 1} currentStep={step} />
+              </button>
+            ))}
+          </div>
+        </CardHeader>
 
-          <CardContent>
-            {step === 1 && <WhatToPost />}
-            {step === 2 && <ReasonForPosting />}
-            {step === 3 && <StepOne />}
-            {step === 4 && <Step2 />}
-            {step === 5 && <ToneOfPosting />}
-            {step === 6 && <AboutYourself />}
-            {step === 7 && <StepThree />}
-          </CardContent>
+        <CardContent>
+          {step === 1 && <WhatToPost />}
+          {step === 2 && <ReasonForPosting />}
+          {step === 3 && <StepOne />}
+          {step === 4 && <Step2 />}
+          {step === 5 && <ToneOfPosting />}
+          {step === 6 && <AboutYourself />}
+          {step === 7 && <StepThree />}
+        </CardContent>
 
-          <CardFooter className="mt-10 flex justify-between">
-            <Button variant="secondary" onClick={handleBack}>
-              Back
-            </Button>
-            <Button
-              disabled={isPending}
-              onClick={handleNext}
-              className={`inline-flex items-center gap-2 ${step > 7 ? "pointer-events-none opacity-50" : ""}`}
-            >
-              {isPending && <LoaderIcon className="h-4 w-4 animate-spin" />}
-              {step === 7 ? "Finish" : "Next"}
-            </Button>
-          </CardFooter>
-        </div>
-      </motion.div>
-    </div>
+        <CardFooter className="mt-10 flex justify-between">
+          <Button variant="secondary" onClick={handleBack}>
+            Back
+          </Button>
+          <Button
+            disabled={isPending || saved}
+            onClick={handleNext}
+            className={`inline-flex items-center gap-2 ${step > 7 ? "pointer-events-none opacity-50" : ""}`}
+          >
+            {isPending ? (
+              <LoaderIcon className="h-4 w-4 animate-spin" />
+            ) : (
+              saved && <FaCircleCheck />
+            )}
+            {step === 7 ? (saved ? "Saved" : "Finish") : "Next"}
+          </Button>
+        </CardFooter>
+      </div>
+    </motion.div>
   );
 }

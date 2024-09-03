@@ -105,11 +105,9 @@ export function convertPersonalPreferencesToText(
 
   // Convert LinkedIn content options to text
   let linkedinContentText = "Your preferences include:";
-  linkedinContentOptions.forEach((contentOption) => {
-    for (const [key, subtopics] of Object.entries(contentOption)) {
-      linkedinContentText += `\n- ${key}: ${subtopics.map((subTopic) => subTopic.label).join(", ")}`;
-    }
-  });
+  for (const [key, subtopics] of Object.entries(linkedinContentOptions)) {
+    linkedinContentText += `\n- ${key}: ${subtopics.map((subTopic) => subTopic.label).join(", ")}`;
+  }
 
   // Convert preferences to text
   const preferencesText = "Here are more details about your preferences:";

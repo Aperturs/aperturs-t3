@@ -3,8 +3,10 @@ import { DetailsProvider } from "~/components/details/details-provider";
 
 export default function DetailsPage() {
   return (
-    <DetailsProvider>
-      <Details />
-    </DetailsProvider>
+    <div className="flex min-h-screen w-screen items-center justify-center  py-7 ">
+      <DetailsProvider>
+        <Details />
+      </DetailsProvider>
+    </div>
   );
 }
