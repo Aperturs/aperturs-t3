@@ -35,14 +35,14 @@ export const generateLinkedinPost = async ({
 }) => {
   let prompt = "";
   if (typeof idea === "string") {
-    prompt = `create social media post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part: ${idea}`;
+    prompt = `generate linkedin post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part: ${idea}`;
   } else {
-    prompt = `create social media post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part
+    prompt = `generate linkedin post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part
       create post picking the best idea from the list: ${idea.map((i) => i).join(" ")}
       `;
   }
   const { text, usage } = await generateText({
-    model: openai("gpt-4o-mini"),
+    model: openai("ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW"),
     system: `You are a Professional linkedin content writer here are some user details that you can use to create the post: ${convertPersonalPreferencesToText(
       userDetails,
     )} remember hashtag and emoji preferences`,

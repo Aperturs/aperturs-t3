@@ -1,4 +1,5 @@
 import { UserProfile } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const UserProfilePage = () => (
   <div className="mx-10 justify-center">
