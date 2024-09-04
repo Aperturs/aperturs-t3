@@ -1,12 +1,11 @@
 import "@aperturs/ui/globals.css";
 import "~/styles/calendar.css";
 
-import { Inter, Lato } from "next/font/google";
+import { Lato } from "next/font/google";
 import Script from "next/script";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 
-import ModalProvider from "~/components/custom/modals/modal-provider";
 import { TRPCReactProvider } from "~/trpc/react";
 import AuthProvider from "./_provider/auth-provider";
 import { ThemeProvider } from "./_provider/theme-provider";
@@ -54,7 +53,7 @@ export default function RootLayout({
           <AuthProvider>
             <Toaster position="top-left" reverseOrder={false} />
             <TRPCReactProvider>
-              <ModalProvider>{children}</ModalProvider>
+              <>{children}</>
             </TRPCReactProvider>
           </AuthProvider>
         </ThemeProvider>

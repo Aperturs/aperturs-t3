@@ -1,15 +1,11 @@
-import SideBar from "../sidebar/sidebar";
+import { SidebarComponent } from "../sidebar/sidebar-comp";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <section>
-      <div className="relative gap-8 lg:flex">
-        <div className="w-full lg:max-w-[18rem]">
-          <SideBar />
-        </div>
-        <div className="relative mt-8 grid w-full items-center px-2 lg:block  lg:p-12">
-          {children}
-        </div>
+    <section className="relative h-full gap-8 md:flex">
+      <SidebarComponent />
+      <div className="relative mt-8 grid w-full items-center px-2 md:block  md:p-12">
+        {children}
       </div>
     </section>
   );
