@@ -17,6 +17,7 @@ import {
   Payment,
   Pencil,
   Person,
+  PluraCategory,
 } from "@aperturs/ui/icons";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
@@ -91,7 +92,7 @@ const bottomMenu = [
   // },
   {
     text: "Details",
-    icon: <Person />,
+    icon: <PluraCategory />,
     url: "/details",
   },
   {

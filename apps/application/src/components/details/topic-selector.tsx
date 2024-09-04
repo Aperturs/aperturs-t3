@@ -77,7 +77,7 @@ export default function TopicsSelector({
 
   return (
     <div className="flex w-full items-center justify-center px-4">
-      <div className="w-full max-w-4xl">
+      <div className="w-full ">
         <MotionConfig
           transition={{
             duration: 0.4,

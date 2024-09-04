@@ -67,7 +67,6 @@ export const DetailsProvider = ({
 
   useEffect(() => {
     if (data) {
-      console.log(data, data.linkedinContentOptions.whatToPost, "test");
       setWhatYouPost(data.linkedinContentOptions.whatToPost ?? []);
       setReasonsForPosting(data.linkedinContentOptions.reasonsForPosting ?? []);
       setToneOfVoice(data.linkedinContentOptions.toneOfVoice ?? []);

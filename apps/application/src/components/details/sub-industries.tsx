@@ -36,7 +36,7 @@ export default function Step2() {
 
   return (
     <div className="flex  w-full items-center justify-center px-4">
-      <div className="w-full max-w-4xl">
+      <div className="w-full">
         <h1 className="text-xl font-bold tracking-tight">
           Pick All the Topics You Create Content On
         </h1>
@@ -52,26 +52,22 @@ export default function Step2() {
             animate={{ height: height > 0 ? height : undefined }}
           >
             <motion.ul ref={ref} className="mt-4 flex w-full flex-wrap gap-2">
-              <LayoutGroup>
-                <AnimatePresence initial={false} mode="popLayout">
-                  {initialTopics.map((topic) => (
-                    <div key={topic.value} className=" py-1">
-                      <h2 className="mb-3 text-lg font-semibold">
-                        {topic.label} {topic.icon}
-                      </h2>
-                      <ul className="flex w-full flex-wrap gap-2">
-                        <TopicsSelector
-                          selectedTopics={selectedSubTopic}
-                          setSelectedTopics={setSelectedSubTopic}
-                          topics={topic.subtopics}
-                          showOnlySelected={filter}
-                          allowAddOptions
-                        />
-                      </ul>
-                    </div>
-                  ))}
-                </AnimatePresence>
-              </LayoutGroup>
+              {initialTopics.map((topic) => (
+                <div key={topic.value} className=" py-1">
+                  <h2 className="mb-3 text-lg font-semibold">
+                    {topic.label} {topic.icon}
+                  </h2>
+                  <ul className="flex w-full flex-wrap gap-2">
+                    <TopicsSelector
+                      selectedTopics={selectedSubTopic}
+                      setSelectedTopics={setSelectedSubTopic}
+                      topics={topic.subtopics}
+                      showOnlySelected={filter}
+                      allowAddOptions
+                    />
+                  </ul>
+                </div>
+              ))}
             </motion.ul>
           </motion.div>
         </MotionConfig>
