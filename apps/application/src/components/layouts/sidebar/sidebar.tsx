@@ -13,19 +13,18 @@ import {
   Draft,
   Home,
   Network,
-  Notification,
   Payment,
   Pencil,
   Person,
+  PluraCategory,
 } from "@aperturs/ui/icons";
 import { cn } from "@aperturs/ui/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 
 import { ModeToggle } from "../theme-toggle";
 import BottomMenu from "./bottomMenu";
-import AccordianMenu from "./command-group";
-import { CommandMenu } from "./command-menu";
 import ProfileButton from "./org/profile-button";
+import { default as AccordianMenu } from "./sidebar-menu";
 
 const AccordanceMenuList = [
   {
@@ -83,11 +82,16 @@ const AccordanceMenuList = [
 ];
 
 const bottomMenu = [
+  // {
+  //   text: "Notifications",
+  //   icon: <Notification />,
+  //   // suffix: <Badge>14</Badge>,
+  //   url: "/notifications",
+  // },
   {
-    text: "Notifications",
-    icon: <Notification />,
-    // suffix: <Badge>14</Badge>,
-    url: "/notifications",
+    text: "Details",
+    icon: <PluraCategory />,
+    url: "/details",
   },
   {
     text: "Profile",
@@ -126,19 +130,9 @@ export default function SideBar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
-  // const { data: metadata,error } = useQuery({
-  //   queryKey: ["userPrivateMetadata"],
-  //   queryFn: () => getUserPrivateMetadata(),
-  //   // refetchInterval:1000,
-  // });
-
-  // const { data: metadata } = api.metadata.getUserPrivateMetaData.useQuery();
-
-  // console.log(metadata,error,'meta');
-
   return (
     <Sheet>
-      <Card className="mt-2 flex w-full flex-col overflow-scroll p-4 shadow-md lg:fixed lg:left-4  lg:h-[calc(100vh-2rem)] lg:max-w-[18rem]">
+      <Card className="mt-2 flex w-full flex-col overflow-scroll p-4 shadow-md md:h-[calc(100vh-2rem)] lg:fixed  lg:left-4 lg:max-w-[18rem]">
         <div className="mb-2 flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
             <Image
@@ -151,13 +145,6 @@ export default function SideBar() {
             <h5>Aperturs</h5>
           </div>
           <div className="flex items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              {/* Press{" "} */}
-              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
-                <span className="text-xs">⌘</span>K
-              </kbd>
-            </p>
-            <CommandMenu accordanceMenuList={AccordanceMenuList} />
             <ModeToggle />
             <SheetTrigger asChild>
               <Button
@@ -181,24 +168,25 @@ export default function SideBar() {
             <ProfileButton />
           </div> */}
         </div>
-        <SheetContent
-          className={cn(
-            "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
-          )}
-        >
-          <div>
-            {/* {metadata?.currentPlan !== "FREE" && ( */}
-            <div className="flex w-full justify-center">
-              <ProfileButton />
-            </div>
-            {/* )} */}
-            <AccordianMenu accordanceMenuList={AccordanceMenuList} />
-            <hr className="border-blue-gray-50 my-2" />
-            <BottomMenu bottomMenu={bottomMenu} />
-          </div>
-        </SheetContent>
+
         {/* <UpgradeAlert /> */}
       </Card>
+      <SheetContent
+        className={cn(
+          "fixed top-0 w-[100vw] border-r-[1px] bg-background/80 p-6 backdrop-blur-xl xs:w-[440px]",
+        )}
+      >
+        <div>
+          {/* {metadata?.currentPlan !== "FREE" && ( */}
+          <div className="flex w-full justify-center">
+            <ProfileButton />
+          </div>
+          {/* )} */}
+          <AccordianMenu accordanceMenuList={AccordanceMenuList} />
+          <hr className="border-blue-gray-50 my-2" />
+          <BottomMenu bottomMenu={bottomMenu} />
+        </div>
+      </SheetContent>
     </Sheet>
   );
 }

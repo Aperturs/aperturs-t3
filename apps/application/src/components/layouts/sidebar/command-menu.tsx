@@ -3,7 +3,7 @@ import React from "react";
 import { CommandDialog } from "@aperturs/ui/command";
 
 import type { MenuItem } from "./accordian-menu-type";
-import AccordanceMenu from "./command-group";
+import AccordanceMenu from "./sidebar-menu";
 
 export function CommandMenu({
   accordanceMenuList,
@@ -23,9 +23,5 @@ export function CommandMenu({
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <AccordanceMenu accordanceMenuList={accordanceMenuList} />
-    </CommandDialog>
-  );
+  return <CommandDialog open={open} onOpenChange={setOpen}></CommandDialog>;
 }

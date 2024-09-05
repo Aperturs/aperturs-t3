@@ -24,8 +24,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@aperturs/ui/sheet";
 import { api } from "~/trpc/react";
 import { ModeToggle } from "../../theme-toggle";
 import BottomMenu from "../bottomMenu";
-import AccordanceMenu from "../command-group";
 import { CommandMenu } from "../command-menu";
+import AccordanceMenu from "../sidebar-menu";
 import ProfileButton from "./profile-button";
 
 function AccordanceMenuList(id: string) {

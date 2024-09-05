@@ -61,15 +61,17 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   // const user =  session.user;
   // Get the session from the server using the getServerSession wrapper function
   // const session = await getServerAuthSession({ req, res });
-  const source = opts.headers.get("x-trpc-source") ?? "unknown";
+  // const source = opts.headers.get("x-trpc-source") ?? "unknown";
 
-  console.log(">>> tRPC Request from", source);
+  // console.log(">>> tRPC Request from", source);
 
   return createInnerTRPCContext({
     ...opts,
     // session,
   });
 };
+
+export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,

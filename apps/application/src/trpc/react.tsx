@@ -10,6 +10,39 @@ import type { AppRouter } from "@aperturs/api";
 
 export const api = createTRPCReact<AppRouter>();
 
+// export const trpc = createTRPCReact<AppRouter>({
+//   config({ ctx }) {
+
+//     return {
+
+//       links: [
+//         loggerLink({
+//           enabled: (opts) =>
+//             process.env.NODE_ENV === 'development' ||
+//             (opts.direction === 'down' && opts.result instanceof Error),
+//         }),
+//         unstable_httpBatchStreamLink({
+//           url: `${getBaseUrl()}/api/trpc`,
+//           headers() {
+//             if (!ctx?.req?.headers) {
+//               return {};
+//             }
+
+//             const {
+//               ...headers
+//             } = ctx.req.headers;
+//             return headers;
+//           },
+//           /**
+//            * @link https://trpc.io/docs/v11/data-transformers
+//            */
+//           transformer:SuperJSON,
+//         }),
+//       ],
+//     };
+//   },
+// });
+
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 

@@ -50,7 +50,7 @@ const SingleTweet: React.FC<SingleTweetProps> = ({
       {/* <Avatar src="/user.png" size="md" className="border-2 border-white" /> */}
       <textarea
         ref={textareaRef}
-        className="min-h-[300px] w-full resize-none border border-transparent bg-transparent px-3  py-2.5 font-normal outline-none focus:outline-none"
+        className="max-h-[400px] min-h-[300px] w-full resize-none border border-transparent bg-transparent px-3 py-2.5  font-normal outline-none  focus:outline-none"
         value={text}
         onChange={handleChange}
         placeholder="What's happening?"

@@ -1,9 +1,16 @@
 import { openai } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
+import OpenAI from "openai";
 import { z } from "zod";
 
 import type { PersonalPreferenceType } from "@aperturs/validators/personalization";
-import { preferenceOptions } from "@aperturs/validators/personalization";
+import { db, eq, schema } from "@aperturs/db";
+
+// import { preferenceOptions } from "@aperturs/validators/personalization";
+
+const openAi = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export const generateSocialMediaPost = async (idea: string) => {
   const result = await generateObject({
@@ -17,7 +24,7 @@ export const generateSocialMediaPost = async (idea: string) => {
         ),
       twitter: z.array(z.string()).describe(
         `create a twitter thread post make sure to generate multiple tweets if needed, make sure each
-           tweet has content of decent length, and is not too long nor too short, min of 
+           tweet has content of decent length, and is not too long nor too short, min of
            100 characters and max of 250 characters. keep the tweets engaging, detailed (more important) and fun.`,
       ),
     }),
@@ -28,28 +35,44 @@ export const generateSocialMediaPost = async (idea: string) => {
 
 export const generateLinkedinPost = async ({
   userDetails,
-  idea,
 }: {
-  idea: string | string[];
   userDetails: PersonalPreferenceType;
 }) => {
-  let prompt = "";
-  if (typeof idea === "string") {
-    prompt = `create social media post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part: ${idea}`;
-  } else {
-    prompt = `create social media post based on this idea make sure its funny and detailed make sure you put some line breaks as well and most important part
-      create post picking the best idea from the list: ${idea.map((i) => i).join(" ")}
-      `;
-  }
-  const { text, usage } = await generateText({
-    model: openai("gpt-4o-mini"),
-    system: `You are a Professional linkedin content writer here are some user details that you can use to create the post: ${convertPersonalPreferencesToText(
-      userDetails,
-    )} remember hashtag and emoji preferences`,
-    prompt: `${prompt} 
-      `,
+  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
+
+  here are few points to remember for posting
+  1. make sure the hook is cool and clickbaity so it leads users to click on the post
+  2. add some pointer emojis when needed and dont add hashtags
+  `;
+
+  console.log(prompt, "prompt");
+
+  const { text } = await generateText({
+    model: openai("ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW"),
+    prompt: prompt,
   });
-  return { text, usage };
+  console.log(text, "text");
+  try {
+    const response = await openAi.chat.completions.create({
+      model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
+      messages: [
+        { role: "system", content: "You are a helpful assistant." },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+
+    const text = response.choices[0]?.message.content ?? "";
+    const usage = response.usage;
+
+    console.log(text, "text");
+    return { text, usage };
+  } catch (error) {
+    console.error("Error generating LinkedIn post:", error);
+    throw error;
+  }
 };
 
 export const generateIdeas = async ({
@@ -58,17 +81,15 @@ export const generateIdeas = async ({
   userDetails: PersonalPreferenceType;
 }) => {
   const { object, usage } = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: openai("ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW"),
     system: `you are ${convertPersonalPreferencesToText(userDetails)}
-    remember emoji and hastag preferences,
-    `,
-    prompt: `
-    generate idea based on user details, make sure they are funny and engaging, make sure they are detailed and comprehensive
-    
-    `,
-    schema: z.object({
-      idea: z.string(),
-    }),
+  `,
+    prompt: `generate idea based on user details to post content on linkedin`,
+    schema: z
+      .object({
+        idea: z.array(z.string()),
+      })
+      .describe("generate ideas based on user details"),
   }).catch((e) => {
     console.error(e);
     throw new Error("Failed to generate ideas");
@@ -81,51 +102,98 @@ export const generatePostDirectly = async ({
 }: {
   userDetails: PersonalPreferenceType;
 }) => {
-  const ideas = await generateIdeas({ userDetails });
   const { text } = await generateLinkedinPost({
-    idea: ideas.object.idea,
     userDetails,
   });
-  console.log(ideas, "ideas");
-  console.log(text, "text");
-  return { text, ideas };
+  return { text };
 };
 
 export function convertPersonalPreferencesToText(
   input: PersonalPreferenceType,
 ): string {
   // Destructure the input
-  const { subTopics, linkedinContentOptions, preferences } = input;
+  const { subTopics, linkedinContentOptions } = input;
 
   // Convert subtopics to text
   const subTopicsText =
     subTopics.length > 0
-      ? `You are an expert in the following subtopics: ${subTopics.map((subTopic) => subTopic.label).join(", ")}.`
+      ? `An expert in the following ${subTopics.map((subTopic) => subTopic.label).join(", ")}. the post should keep that in mind and generate it from that perspective`
       : "You haven't specified any subtopics.";
 
   // Convert LinkedIn content options to text
-  let linkedinContentText = "Your preferences include:";
-  linkedinContentOptions.forEach((contentOption) => {
-    for (const [key, subtopics] of Object.entries(contentOption)) {
-      linkedinContentText += `\n- ${key}: ${subtopics.map((subTopic) => subTopic.label).join(", ")}`;
-    }
-  });
+
+  const whatToPostText =
+    linkedinContentOptions.whatToPost &&
+    linkedinContentOptions.whatToPost?.length > 0
+      ? `share about ${linkedinContentOptions.whatToPost?.map((topic) => topic.label).join(", ")}. so make sure you generate content that actually meet his goals`
+      : "You haven't specified what you like to post about.";
+
+  const reasonsForPostingText = `share content on LinkedIn because wants to ${linkedinContentOptions.reasonsForPosting?.map((topic) => topic.label).join(", ")}. as make sure the output is taking care his goals`;
+
+  const toneOfVoiceText = `tone of voice is ${linkedinContentOptions.toneOfVoice?.map((topic) => topic.label).join(", ")}.`;
+
+  const yourPositionText = `person's position is ${linkedinContentOptions.yourPosition?.map((topic) => topic.label).join(", ")}.`;
 
   // Convert preferences to text
   const preferencesText = "Here are more details about your preferences:";
-  const preferenceDetails = Object.entries(preferences)
-    .map(([key, preference]) => {
-      const preferenceOption = preferenceOptions.find(
-        (option) => option.key === key,
-      );
-      return preferenceOption
-        ? `${preferenceOption.title}: ${preference}`
-        : `${key}: ${preference}`;
-    })
-    .join(", ");
 
-  // Combine all the text parts into a single output
-  const fullText = `${subTopicsText}\n\n${linkedinContentText}\n\n${preferencesText}\n${preferenceDetails}`;
+  const fullText = `${subTopicsText},${whatToPostText},${reasonsForPostingText},${toneOfVoiceText},${yourPositionText},${preferencesText}\n`;
 
   return fullText;
 }
+
+export const generateLinkedinPostBasedOnTopic = async function* (
+  topic: string,
+  currentUser: string,
+) {
+  const user = await db.query.user.findFirst({
+    where: eq(schema.user.clerkUserId, currentUser),
+  });
+  const userDetails = user?.personalization as PersonalPreferenceType;
+  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
+    on the topic of ${topic}
+here are few points to remember for posting
+  1. make sure the hook is cool and clickbaity so it leads users to click on the post
+  2. add some pointer emojis when needed 
+  make sure the whole post actually makes sense and is meaningful, instead of generating random content
+  3. dont giveout any links, or talk about video or image or articles
+  4. when talking about userful dont halusinate or talk about any fake things, your basic details are given above
+  5. dont use "*" these kind of symbols
+  6. dont use any hashtags
+
+  remember all the points
+  `;
+
+  console.log(prompt, "prompt");
+
+  const stream = await openAi.chat.completions.create({
+    model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    stream: true,
+    // temperature: 0.4,
+    frequency_penalty: 0.5,
+    stream_options: {
+      include_usage: true,
+    },
+    max_tokens: 3000,
+  });
+
+  let fullContent = "";
+  let fullUsage = 0;
+  for await (const chunk of stream) {
+    const targetIndex = 0;
+    const target = chunk.choices[targetIndex];
+    const content = target?.delta?.content ?? "";
+    const usage = chunk.usage?.total_tokens ?? 0;
+    yield content;
+    fullUsage += usage;
+    fullContent += content;
+  }
+
+  console.log({ fullContent, fullUsage });
+};

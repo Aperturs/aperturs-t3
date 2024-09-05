@@ -77,7 +77,7 @@ export default function TopicsSelector({
 
   return (
     <div className="flex w-full items-center justify-center px-4">
-      <div className="w-full max-w-4xl">
+      <div className="w-full ">
         <MotionConfig
           transition={{
             duration: 0.4,
@@ -184,8 +184,9 @@ function SingleTopic({
       <motion.button
         layout
         className={cn(
-          " rounded-full border border-[#363538]  bg-accent-foreground/90 px-4 py-2 text-[#e8e4ed]",
-          isSelected && " border-[#2c2845] bg-accent-foreground text-accent",
+          " rounded-full bg-lime-300/60 px-4 py-2 font-medium text-lime-800 dark:bg-lime-400/10 dark:text-lime-300",
+          isSelected &&
+            " border-[#2c2845] bg-lime-950 text-lime-200 dark:bg-lime-950/60 dark:text-lime-300",
           topicClassName,
         )}
         onClick={onClickHandler}

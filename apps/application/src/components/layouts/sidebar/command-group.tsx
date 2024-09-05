@@ -1,33 +1,14 @@
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Command } from "lucide-react";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@aperturs/ui/command";
+import { CommandEmpty, CommandInput, CommandList } from "@aperturs/ui/command";
 
-import type { MenuItem } from "./accordian-menu-type";
-
-export default function AccordanceMenu({
-  accordanceMenuList,
-}: {
-  accordanceMenuList: MenuItem[];
-}) {
-  const pathName = usePathname();
-  const currentPath = (url: string) => {
-    return url.includes(pathName ?? "");
-  };
-
+export default function CommandGroup() {
   return (
     <Command>
       <CommandInput placeholder="Type a command or search..." />
       <CommandList className="h-[500px] max-h-[400px]">
         <CommandEmpty>No results found.</CommandEmpty>
-        {accordanceMenuList.map((item, index) => {
+        {/* {accordanceMenuList.map((item, index) => {
           return (
             <CommandGroup key={index} heading={item.text} className="py-3">
               {item.items.map((subItem) => (
@@ -39,7 +20,7 @@ export default function AccordanceMenu({
                 >
                   <Link
                     href={subItem.url}
-                    className="flex 
+                    className="flex
                     w-[320px]
                     items-center gap-2 rounded-md transition-all  group-hover:font-semibold  md:w-full"
                   >
@@ -50,7 +31,7 @@ export default function AccordanceMenu({
               ))}
             </CommandGroup>
           );
-        })}
+        })} */}
       </CommandList>
     </Command>
   );
