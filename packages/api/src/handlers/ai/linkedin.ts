@@ -62,7 +62,6 @@ export const generateLinkedinPost = async ({
           content: prompt,
         },
       ],
-      max_tokens: 500, // Adjust as needed
     });
 
     const text = response.choices[0]?.message.content ?? "";
@@ -153,33 +152,36 @@ export const generateLinkedinPostBasedOnTopic = async function* (
   const userDetails = user?.personalization as PersonalPreferenceType;
   const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
     on the topic of ${topic}
-    make sure the hook is cool and clickbaity so it leads users to click on the post, and use simple language and no hashtags
-    `;
+here are few points to remember for posting
+  1. make sure the hook is cool and clickbaity so it leads users to click on the post
+  2. add some pointer emojis when needed and dont add hashtags  
+  make sure the whole post actually makes sense and is meaningful, instead of generating random content
+  `;
 
   console.log(prompt, "prompt");
 
   const stream = await openAi.chat.completions.create({
     model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
     messages: [
+      { role: "system", content: "You are a helpful assistant." },
       {
         role: "user",
         content: prompt,
       },
     ],
     stream: true,
+    temperature: 0.4,
+    max_tokens: 3000,
   });
 
   let fullContent = "";
   let fullUsage = 0;
   for await (const chunk of stream) {
-    console.log(chunk, "chunk");
     const targetIndex = 0;
     const target = chunk.choices[targetIndex];
     const content = target?.delta?.content ?? "";
-    const usage = chunk.usage?.completion_tokens ?? 0;
+    const usage = chunk.usage?.total_tokens ?? 0;
     yield content;
-    console.log(content, usage, "backend");
-
     fullUsage += usage;
     fullContent += content;
   }

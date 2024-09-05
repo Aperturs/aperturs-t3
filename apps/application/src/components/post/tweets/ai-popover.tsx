@@ -54,7 +54,7 @@ export function AiCombobox() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          disabled={generateContent.isPending}
+          disabled={!generateContent.isSuccess}
           size="icon"
           role="combobox"
           aria-expanded={open}
