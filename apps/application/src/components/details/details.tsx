@@ -51,7 +51,6 @@ export default function Details() {
 
   const handleFinish = async () => {
     await addPreferences({
-      preferences,
       subTopics: selectedSubTopic,
       linkedinContentOptions: {
         whatToPost: whatYouPost,
@@ -80,14 +79,14 @@ export default function Details() {
   };
 
   const handleNext = async () => {
-    if (step === 7) {
+    if (step === 6) {
       await toast.promise(handleFinish(), {
         loading: "Saving preferences...",
         success: "Preferences saved",
         error: "Failed to save preferences",
       });
     }
-    if (step < 7) {
+    if (step < 6) {
       setStep(step + 1);
     }
   };
@@ -144,7 +143,7 @@ export default function Details() {
             sure you give us all the details.
           </CardDescription>
           <div className="flex justify-between pt-4">
-            {Array.from({ length: 7 }).map((_, index) => (
+            {Array.from({ length: 6 }).map((_, index) => (
               <button key={index} onClick={() => handleSetStep(index + 1)}>
                 <Step step={index + 1} currentStep={step} />
               </button>
@@ -159,7 +158,6 @@ export default function Details() {
           {step === 4 && <Step2 />}
           {step === 5 && <ToneOfPosting />}
           {step === 6 && <AboutYourself />}
-          {step === 7 && <StepThree />}
         </CardContent>
 
         <CardFooter className="mt-10 flex justify-between">
@@ -169,14 +167,14 @@ export default function Details() {
           <Button
             disabled={isPending || saved}
             onClick={handleNext}
-            className={`inline-flex items-center gap-2 ${step > 7 ? "pointer-events-none opacity-50" : ""}`}
+            className={`inline-flex items-center gap-2 ${step > 6 ? "pointer-events-none opacity-50" : ""}`}
           >
             {isPending ? (
               <LoaderIcon className="h-4 w-4 animate-spin" />
             ) : (
               saved && <FaCircleCheck />
             )}
-            {step === 7 ? (saved ? "Saved" : "Finish") : "Next"}
+            {step === 6 ? (saved ? "Saved" : "Finish") : "Next"}
           </Button>
         </CardFooter>
       </div>

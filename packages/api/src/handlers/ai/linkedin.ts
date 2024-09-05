@@ -154,8 +154,14 @@ export const generateLinkedinPostBasedOnTopic = async function* (
     on the topic of ${topic}
 here are few points to remember for posting
   1. make sure the hook is cool and clickbaity so it leads users to click on the post
-  2. add some pointer emojis when needed and dont add hashtags  
+  2. add some pointer emojis when needed 
   make sure the whole post actually makes sense and is meaningful, instead of generating random content
+  3. dont giveout any links, or talk about video or image or articles
+  4. when talking about userful dont halusinate or talk about any fake things, your basic details are given above
+  5. dont use "*" these kind of symbols
+  6. dont use any hashtags
+
+  remember all the points
   `;
 
   console.log(prompt, "prompt");
@@ -163,14 +169,17 @@ here are few points to remember for posting
   const stream = await openAi.chat.completions.create({
     model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
     messages: [
-      { role: "system", content: "You are a helpful assistant." },
       {
         role: "user",
         content: prompt,
       },
     ],
     stream: true,
-    temperature: 0.4,
+    // temperature: 0.4,
+    frequency_penalty: 0.5,
+    stream_options: {
+      include_usage: true,
+    },
     max_tokens: 3000,
   });
 

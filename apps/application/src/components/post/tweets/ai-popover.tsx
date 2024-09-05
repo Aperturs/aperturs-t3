@@ -23,6 +23,7 @@ export function AiCombobox() {
     api.user.fetchUserPreferences.useQuery();
   const generateContent =
     api.linkedinAi.generateLinkedinPostBasedOnIdea.useMutation();
+  const [loading, setLoading] = React.useState(false);
 
   const { updateContent } = usePostUpdate(0);
   const [text, setText] = React.useState("");
@@ -30,6 +31,7 @@ export function AiCombobox() {
   const handleGenerate = async (idea: string) => {
     // const res = await generateContent({ idea });
     // updateContent(res.text);
+    setLoading(true);
     generateContent.mutate(
       { idea },
       {
@@ -42,6 +44,7 @@ export function AiCombobox() {
         },
       },
     );
+    setLoading(false);
   };
 
   React.useEffect(() => {
@@ -54,7 +57,7 @@ export function AiCombobox() {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          disabled={!generateContent.isSuccess}
+          disabled={loading}
           size="icon"
           role="combobox"
           aria-expanded={open}
