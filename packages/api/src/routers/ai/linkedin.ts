@@ -1,5 +1,5 @@
 import {
-  generateLinkedinPost,
+  generateLinkedinPostBasedOnTopic,
   generatePostDirectly,
 } from "@api/handlers/ai/linkedin";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
@@ -15,22 +15,19 @@ export const linkedinAiRouter = createTRPCRouter({
         idea: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const user = await ctx.db.query.user.findFirst({
-        where: eq(schema.user.clerkUserId, ctx.currentUser),
-      });
-      const userDetails = user?.userDetails as PersonalPreferenceType;
-      const res = await generateLinkedinPost({
-        idea: input.idea,
-        userDetails,
-      });
-      return res;
+    .mutation(async function* ({ input, ctx }) {
+      console.log(input, "input");
+
+      yield* generateLinkedinPostBasedOnTopic(input.idea, ctx.currentUser);
     }),
   generateLinkedinPostWithoutIdeas: protectedProcedure.mutation(
     async ({ ctx }) => {
       const user = await ctx.db.query.user.findFirst({
         where: eq(schema.user.clerkUserId, ctx.currentUser),
       });
+      if (!user?.personalization) {
+        throw new Error("User details not found");
+      }
       const userDetails = user?.personalization as PersonalPreferenceType;
       console.log(userDetails, "userDetails");
       const res = await generatePostDirectly({

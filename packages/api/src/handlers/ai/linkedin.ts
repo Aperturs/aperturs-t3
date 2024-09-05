@@ -4,8 +4,13 @@ import OpenAI from "openai";
 import { z } from "zod";
 
 import type { PersonalPreferenceType } from "@aperturs/validators/personalization";
+import { db, eq, schema } from "@aperturs/db";
 
 // import { preferenceOptions } from "@aperturs/validators/personalization";
+
+const openAi = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export const generateSocialMediaPost = async (idea: string) => {
   const result = await generateObject({
@@ -19,7 +24,7 @@ export const generateSocialMediaPost = async (idea: string) => {
         ),
       twitter: z.array(z.string()).describe(
         `create a twitter thread post make sure to generate multiple tweets if needed, make sure each
-           tweet has content of decent length, and is not too long nor too short, min of 
+           tweet has content of decent length, and is not too long nor too short, min of
            100 characters and max of 250 characters. keep the tweets engaging, detailed (more important) and fun.`,
       ),
     }),
@@ -33,12 +38,8 @@ export const generateLinkedinPost = async ({
 }: {
   userDetails: PersonalPreferenceType;
 }) => {
-  const openAi = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
 
-  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)} 
-    
   here are few points to remember for posting
   1. make sure the hook is cool and clickbaity so it leads users to click on the post
   2. add some pointer emojis when needed and dont add hashtags
@@ -122,9 +123,11 @@ export function convertPersonalPreferencesToText(
 
   // Convert LinkedIn content options to text
 
-  const whatToPostText = linkedinContentOptions.whatToPost
-    ? `share about ${linkedinContentOptions.whatToPost?.map((topic) => topic.label).join(", ")}. so make sure you generate content that actually meet his goals`
-    : "You haven't specified what you like to post about.";
+  const whatToPostText =
+    linkedinContentOptions.whatToPost &&
+    linkedinContentOptions.whatToPost?.length > 0
+      ? `share about ${linkedinContentOptions.whatToPost?.map((topic) => topic.label).join(", ")}. so make sure you generate content that actually meet his goals`
+      : "You haven't specified what you like to post about.";
 
   const reasonsForPostingText = `share content on LinkedIn because wants to ${linkedinContentOptions.reasonsForPosting?.map((topic) => topic.label).join(", ")}. as make sure the output is taking care his goals`;
 
@@ -139,3 +142,47 @@ export function convertPersonalPreferencesToText(
 
   return fullText;
 }
+
+export const generateLinkedinPostBasedOnTopic = async function* (
+  topic: string,
+  currentUser: string,
+) {
+  const user = await db.query.user.findFirst({
+    where: eq(schema.user.clerkUserId, currentUser),
+  });
+  const userDetails = user?.personalization as PersonalPreferenceType;
+  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
+    on the topic of ${topic}
+    make sure the hook is cool and clickbaity so it leads users to click on the post, and use simple language and no hashtags
+    `;
+
+  console.log(prompt, "prompt");
+
+  const stream = await openAi.chat.completions.create({
+    model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    stream: true,
+  });
+
+  let fullContent = "";
+  let fullUsage = 0;
+  for await (const chunk of stream) {
+    console.log(chunk, "chunk");
+    const targetIndex = 0;
+    const target = chunk.choices[targetIndex];
+    const content = target?.delta?.content ?? "";
+    const usage = chunk.usage?.completion_tokens ?? 0;
+    yield content;
+    console.log(content, usage, "backend");
+
+    fullUsage += usage;
+    fullContent += content;
+  }
+
+  console.log({ fullContent, fullUsage });
+};

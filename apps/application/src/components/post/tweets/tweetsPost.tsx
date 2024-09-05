@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@aperturs/ui/card";
 
 import { useStore } from "~/store/post-store";
 import FileUpload from "../content/fileUpload";
+import { AiCombobox } from "./ai-popover";
 import SingleTweet from "./singleTweet";
 
 function TweetPost({
@@ -49,6 +50,7 @@ function TweetPost({
                 key={tweet.order + "file" + socialId}
                 orderId={tweet.order}
               />
+              <AiCombobox />
             </>
           );
         })}
