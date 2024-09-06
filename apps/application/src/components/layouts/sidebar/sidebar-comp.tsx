@@ -10,6 +10,7 @@ import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdSpaceDashboard } from "react-icons/md";
 
 import {
+  Compass,
   Draft,
   Home,
   Network,
@@ -17,6 +18,9 @@ import {
   Pencil,
   Person,
   PluraCategory,
+  Power,
+  Star,
+  Tune,
 } from "@aperturs/ui/icons";
 
 import { ModeToggle } from "../theme-toggle";
@@ -33,11 +37,7 @@ const AccordanceMenuList = [
         subIcon: <Home />,
         url: "/dashboard",
       },
-      {
-        subText: "New Post",
-        subIcon: <Pencil />,
-        url: "/post",
-      },
+
       // {
       //   subText: "Queue",
       //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
@@ -50,6 +50,16 @@ const AccordanceMenuList = [
     text: "Content",
     icon: <BsFillClipboardDataFill className="h-5 w-5" />,
     items: [
+      {
+        subText: "New Post",
+        subIcon: <Pencil />,
+        url: "/post",
+      },
+      {
+        subText: "Repurpose",
+        subIcon: <Compass />,
+        url: "/repurpose",
+      },
       {
         subText: "Drafts",
         subIcon: <Draft />,

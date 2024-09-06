@@ -37,11 +37,6 @@ const AccordanceMenuList = [
         subIcon: <Home />,
         url: "/dashboard",
       },
-      {
-        subText: "New Post",
-        subIcon: <Pencil />,
-        url: "/post",
-      },
       // {
       //   subText: "Queue",
       //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
@@ -54,6 +49,16 @@ const AccordanceMenuList = [
     text: "Content",
     icon: <BsFillClipboardDataFill className="h-5 w-5" />,
     items: [
+      {
+        subText: "New Post",
+        subIcon: <Pencil />,
+        url: "/post",
+      },
+      {
+        subText: "Published",
+        subIcon: <Draft />,
+        url: "/published",
+      },
       {
         subText: "Drafts",
         subIcon: <Draft />,

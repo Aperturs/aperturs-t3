@@ -1,6 +1,8 @@
 import { openai } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
+import axios from "axios";
 import OpenAI from "openai";
+import { YoutubeTranscript } from "youtube-transcript";
 import { z } from "zod";
 
 import type { PersonalPreferenceType } from "@aperturs/validators/personalization";
@@ -175,8 +177,6 @@ here are few points to remember for posting
       },
     ],
     stream: true,
-    // temperature: 0.4,
-    frequency_penalty: 0.5,
     stream_options: {
       include_usage: true,
     },
@@ -196,4 +196,59 @@ here are few points to remember for posting
   }
 
   console.log({ fullContent, fullUsage });
+};
+
+export const extractYoutubeFromUrl = async (url: string) => {
+  const transcript = await YoutubeTranscript.fetchTranscript(url);
+  console.log(transcript, "transcript");
+  const text = transcript.map((item) => item.text).join(" ");
+  return text;
+};
+
+export const getMarkdownFromArticle = async (url: string) => {
+  const res = await axios.get(`https://md.dhr.wtf/?url=${url}`, {
+    headers: {
+      "Content-Type": "text/plain",
+    },
+  });
+  return res.data as string;
+};
+
+export const summarizeText = async (content: string) => {
+  const { text, usage } = await generateText({
+    model: openai("gpt-4o-mini"),
+    prompt: `summerize the text below\n${content} dont loose any details, just make sure the text is concise and to the point`,
+  });
+  return { text, usage };
+};
+
+export const generateLinkedinPostBasedOnLongText = async (
+  content: string,
+  userDetails: PersonalPreferenceType,
+) => {
+  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
+    on the topic of ${content}
+here are few points to remember for posting
+1. make sure the hook is cool and clickbaity so it leads users to click on the post
+2. add some pointer emojis when needed 
+make sure the whole post actually makes sense and is meaningful, instead of generating random content
+3. dont giveout any links, or talk about video or image or articles
+4. when talking about userful dont halusinate or talk about any fake things, your basic details are given above
+5. dont use "*" these kind of symbols
+6. dont use any hashtags
+`;
+
+  const res = await openAi.chat.completions.create({
+    model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+  });
+  const text = res.choices[0]?.message.content ?? "";
+  console.log(text, "text");
+  const usage = res.usage?.total_tokens;
+  return { text, usage };
 };
