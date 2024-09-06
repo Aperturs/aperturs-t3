@@ -234,7 +234,7 @@ here are few points to remember for posting
 make sure the whole post actually makes sense and is meaningful, instead of generating random content
 3. dont giveout any links, or talk about video or image or articles
 4. when talking about userful dont halusinate or talk about any fake things, your basic details are given above
-5. dont use "*" these kind of symbols
+5. dont even use any markdown or html tags
 6. dont use any hashtags
 `;
 

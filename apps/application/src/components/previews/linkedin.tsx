@@ -13,6 +13,8 @@ interface LinkedInPreviewProps {
   content?: string;
   likes?: number;
   comments?: number;
+  children?: React.ReactNode;
+  showReactions?: boolean;
 }
 
 export default function LinkedInPreview({
@@ -21,6 +23,8 @@ export default function LinkedInPreview({
   content = "This is a sample LinkedIn post content. It can be quite long, so we'll need to implement a'see more' fsdafsd feature to display it properly. This extra text is to ensure we have enough content to trigger the 'see more' functionality and demonstrate the exact 210-character limit.",
   likes = 42,
   comments = 7,
+  children,
+  showReactions = true,
 }: LinkedInPreviewProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -87,47 +91,52 @@ export default function LinkedInPreview({
             </button>
           )}
         </div>
-        <div className="flex items-center justify-between">
-          <div className="mb-2 flex items-center text-sm text-gray-500">
-            <span className="flex items-center">
-              <span className="mr-1 flex -space-x-1">
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 p-1 text-xs">
-                  <AiFillLike className="-scale-x-100 stroke-blue-800 text-blue-300" />
+        {showReactions && (
+          <>
+            <div className="flex items-center justify-between">
+              <div className="mb-2 flex items-center text-sm text-gray-500">
+                <span className="flex items-center">
+                  <span className="mr-1 flex -space-x-1">
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 p-1 text-xs">
+                      <AiFillLike className="-scale-x-100 stroke-blue-800 text-blue-300" />
+                    </span>
+                    <span className="flex h-4 w-4  items-center justify-center rounded-full bg-red-500 p-1 ">
+                      <FaHeart className="stroke-red-800 text-red-300" />
+                    </span>
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs text-white">
+                      <PiHandsClappingDuotone />
+                    </span>
+                  </span>
+                  {likes}
                 </span>
-                <span className="flex h-4 w-4  items-center justify-center rounded-full bg-red-500 p-1 ">
-                  <FaHeart className="stroke-red-800 text-red-300" />
-                </span>
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-green-600 text-xs text-white">
-                  <PiHandsClappingDuotone />
-                </span>
-              </span>
-              {likes}
-            </span>
-          </div>
-          <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
-            <span>{comments} comments</span>
-          </div>
-        </div>
-        <div className="border-t border-gray-200 pt-2">
-          <div className="flex justify-between">
-            <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
-              <ThumbsUp className="mr-1 h-5 w-5" />
-              Like
-            </button>
-            <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
-              <MessageSquare className="mr-1 h-5 w-5" />
-              Comment
-            </button>
-            <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
-              <Repeat2 className="mr-1 h-5 w-5" />
-              Repost
-            </button>
-            <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
-              <Send className="mr-1 h-5 w-5" />
-              Send
-            </button>
-          </div>
-        </div>
+              </div>
+              <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
+                <span>{comments} comments</span>
+              </div>
+            </div>
+            <div className="border-t border-gray-200 pt-2">
+              <div className="flex justify-between">
+                <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
+                  <ThumbsUp className="mr-1 h-5 w-5" />
+                  Like
+                </button>
+                <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
+                  <MessageSquare className="mr-1 h-5 w-5" />
+                  Comment
+                </button>
+                <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
+                  <Repeat2 className="mr-1 h-5 w-5" />
+                  Repost
+                </button>
+                <button className="flex items-center rounded px-2 py-1 text-gray-700 hover:bg-gray-100">
+                  <Send className="mr-1 h-5 w-5" />
+                  Send
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+        {children}
       </div>
     </div>
   );

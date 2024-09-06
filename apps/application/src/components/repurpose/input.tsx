@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "lucide-react";
+import { LoaderIcon } from "react-hot-toast";
 import { BsYoutube } from "react-icons/bs";
 
 import { Button } from "@aperturs/ui/button";
@@ -17,9 +18,13 @@ import {
 
 interface RepurposeInputProps {
   onSubmit: (data: { url: string; urlType: "url" | "youtube" }) => void;
+  loading?: boolean;
 }
 
-export default function RepurposeInput({ onSubmit }: RepurposeInputProps) {
+export default function RepurposeInput({
+  onSubmit,
+  loading,
+}: RepurposeInputProps) {
   const [url, setUrl] = useState("");
   const [urlType, setUrlType] = useState<"url" | "youtube">("url");
   const [isValid, setIsValid] = useState(false);
@@ -90,6 +95,7 @@ export default function RepurposeInput({ onSubmit }: RepurposeInputProps) {
           onChange={(e) => setUrl(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          disabled={loading}
           className="w-full py-6 pl-10 pr-28"
         />
         <div className="absolute inset-y-0 right-2 flex items-center">
@@ -119,6 +125,8 @@ export default function RepurposeInput({ onSubmit }: RepurposeInputProps) {
             transition={{ duration: 0.3, delay: 0.1 }}
           >
             <Button
+              isLoading={loading}
+              disabled={!isValid || loading}
               type="submit"
               className="w-full bg-lime-950 py-6 text-lg font-medium  text-lime-300 shadow-none dark:bg-lime-400/10 dark:text-lime-400"
             >
