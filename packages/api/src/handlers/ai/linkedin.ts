@@ -206,12 +206,17 @@ export const extractYoutubeFromUrl = async (url: string) => {
 };
 
 export const getMarkdownFromArticle = async (url: string) => {
-  const res = await axios.get(`https://md.dhr.wtf/?url=${url}`, {
-    headers: {
-      "Content-Type": "text/plain",
-    },
-  });
-  return res.data as string;
+  console.log(url, "url");
+  try {
+    const res = await axios.get(`https://md.dhr.wtf/?url=${url}`, {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    });
+    return res.data as string;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 export const summarizeText = async (content: string) => {
