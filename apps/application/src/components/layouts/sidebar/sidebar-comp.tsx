@@ -6,10 +6,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdSpaceDashboard } from "react-icons/md";
 
 import {
+  Compass,
   Draft,
   Home,
   Network,
@@ -17,6 +19,7 @@ import {
   Pencil,
   Person,
   PluraCategory,
+  Power,
 } from "@aperturs/ui/icons";
 
 import { ModeToggle } from "../theme-toggle";
@@ -33,11 +36,7 @@ const AccordanceMenuList = [
         subIcon: <Home />,
         url: "/dashboard",
       },
-      {
-        subText: "New Post",
-        subIcon: <Pencil />,
-        url: "/post",
-      },
+
       // {
       //   subText: "Queue",
       //   subIcon: <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />,
@@ -50,6 +49,16 @@ const AccordanceMenuList = [
     text: "Content",
     icon: <BsFillClipboardDataFill className="h-5 w-5" />,
     items: [
+      {
+        subText: "New Post",
+        subIcon: <Pencil />,
+        url: "/post",
+      },
+      {
+        subText: "Repurpose",
+        subIcon: <Compass />,
+        url: "/repurpose",
+      },
       {
         subText: "Drafts",
         subIcon: <Draft />,
@@ -147,6 +156,20 @@ export function SidebarComponent() {
               }}
             />
           ))}
+          <SidebarLink
+            link={{
+              label: "Logout",
+              href: "#",
+              icon: <Power />,
+              onClick: () => {
+                void toast.promise(signOut(), {
+                  loading: "Logging out",
+                  success: "Logged out",
+                  error: "Error logging out",
+                });
+              },
+            }}
+          />
         </div>
 
         {/* <div>

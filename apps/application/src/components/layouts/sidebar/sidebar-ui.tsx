@@ -21,6 +21,7 @@ interface Links {
   label: string;
   href: string;
   icon: React.JSX.Element | React.ReactNode;
+  onClick?: () => void;
 }
 
 interface SidebarContextProps {
@@ -205,6 +206,7 @@ export const SidebarLink = ({
   const { open, animate } = useSidebar();
   return (
     <Link
+      onClick={link.onClick}
       href={link.href}
       className={cn(
         "group/sidebar flex items-center justify-center gap-3 rounded-md p-2 hover:bg-accent",
