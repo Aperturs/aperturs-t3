@@ -210,12 +210,14 @@ export const getMarkdownFromArticle = async (url: string) => {
   try {
     const res = await axios.get(`https://md.dhr.wtf/?url=${url}`, {
       headers: {
-        "Content-Type": "text/plain",
+        "Content-Type": "application/json",
       },
     });
-    return res.data as string;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return res.data[0].md as string;
   } catch (e) {
     console.error(e);
+    throw new Error("Failed to fetch markdown from article");
   }
 };
 
