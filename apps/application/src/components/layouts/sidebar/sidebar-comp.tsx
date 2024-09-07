@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 import { BsFillClipboardDataFill } from "react-icons/bs";
 import { MdSpaceDashboard } from "react-icons/md";
 
@@ -19,8 +20,6 @@ import {
   Person,
   PluraCategory,
   Power,
-  Star,
-  Tune,
 } from "@aperturs/ui/icons";
 
 import { ModeToggle } from "../theme-toggle";
@@ -157,6 +156,20 @@ export function SidebarComponent() {
               }}
             />
           ))}
+          <SidebarLink
+            link={{
+              label: "Logout",
+              href: "#",
+              icon: <Power />,
+              onClick: () => {
+                void toast.promise(signOut(), {
+                  loading: "Logging out",
+                  success: "Logged out",
+                  error: "Error logging out",
+                });
+              },
+            }}
+          />
         </div>
 
         {/* <div>

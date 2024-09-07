@@ -21,7 +21,6 @@ import { completeOnboarding } from "~/app/(onboard)/_action";
 import { api } from "~/trpc/react";
 import Step from "./_steps";
 import AboutYourself from "./about-yourself";
-import StepThree from "./basic-content-preferences";
 import { useDetailsContext } from "./details-provider";
 import StepOne from "./industries";
 import ReasonForPosting from "./reason-for-posting";

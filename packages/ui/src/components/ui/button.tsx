@@ -55,8 +55,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {isLoading && <LoaderIcon className="mr-2 h-5 w-5 animate-spin" />}
-        {props.children}
+        {asChild ? (
+          // When asChild is true, pass only props.children to avoid multiple children issue
+          props.children
+        ) : (
+          // Otherwise, render loader and children inside a fragment to ensure a single child element
+          <>
+            {isLoading && <LoaderIcon className="mr-2 h-5 w-5 animate-spin" />}
+            {props.children}
+          </>
+        )}
       </Comp>
     );
   },
