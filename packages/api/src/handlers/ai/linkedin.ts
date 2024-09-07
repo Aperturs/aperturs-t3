@@ -216,7 +216,7 @@ export const getMarkdownFromArticle = async (url: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return res.data[0].md as string;
   } catch (e) {
-    console.error(e);
+    // console.error(e.message);
     throw new Error("Failed to fetch markdown from article");
   }
 };
