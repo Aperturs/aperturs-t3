@@ -17,30 +17,57 @@ interface LinkedInPreviewProps {
   showReactions?: boolean;
 }
 
+const truncateContentByLines = (
+  text: string,
+  maxLines: number,
+  maxCharsPerLine: number,
+) => {
+  const words = text.split(/\s+/); // Split by any whitespace (space or newline)
+  let truncated = "";
+  let line = "";
+  let lines = 0;
+
+  for (const word of words) {
+    // Check if adding the next word exceeds the line length
+    if (line.length + word.length + 1 <= maxCharsPerLine) {
+      line += (line ? " " : "") + word; // add word with a space if needed
+    } else {
+      truncated += line + "\n"; // add the line and go to the next one
+      line = word; // start new line with the current word
+      lines++;
+
+      // Stop if we reached the max number of lines
+      if (lines === maxLines - 1) {
+        truncated += line; // Add the last line
+        return truncated;
+      }
+    }
+  }
+
+  // Add the remaining text if it's under the max lines limit
+  if (line) {
+    truncated += line;
+  }
+
+  return truncated;
+};
 export default function LinkedInPreview({
   name = "John Doe",
   avatar = "/profile.jpeg",
-  content = "This is a sample LinkedIn post content. It can be quite long, so we'll need to implement a'see more' fsdafsd feature to display it properly. This extra text is to ensure we have enough content to trigger the 'see more' functionality and demonstrate the exact 210-character limit.",
+  content = `Leveling up 
+`,
   likes = 42,
   comments = 7,
   children,
   showReactions = true,
 }: LinkedInPreviewProps) {
+  console.log(content, "conte");
   const [expanded, setExpanded] = useState(false);
 
   const toggleExpanded = () => setExpanded(!expanded);
 
-  const truncateContent = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
-    let truncated = text.slice(0, maxLength);
-    const lastSpaceIndex = truncated.lastIndexOf(" ");
-    if (lastSpaceIndex > maxLength - 20) {
-      truncated = truncated.slice(0, lastSpaceIndex);
-    }
-    return truncated;
-  };
-
-  const displayContent = truncateContent(content, 210);
+  // Use the new truncateContentByLines function
+  const displayContent = truncateContentByLines(content, 3, 40);
 
   const renderContent = (text: string) => {
     return text.split("\n").map((line, index) => (
@@ -52,7 +79,7 @@ export default function LinkedInPreview({
   };
 
   return (
-    <div className="mx-auto max-w-xl overflow-hidden rounded-lg border  bg-white">
+    <div className=" max-w-xl overflow-hidden rounded-lg border  bg-white">
       <div className="p-4">
         <div className="mb-4 flex items-center">
           <Image
@@ -68,28 +95,7 @@ export default function LinkedInPreview({
           </div>
         </div>
         <div className="mb-4">
-          <p className="text-gray-700">
-            {renderContent(displayContent)}
-            {content.length > 210 && !expanded && (
-              <span className="text-gray-400">...</span>
-            )}
-          </p>
-          {expanded && content.length > 210 && (
-            <>
-              <div className="my-2 border-t border-gray-200"></div>
-              <p className="text-gray-700">
-                {renderContent(content.slice(displayContent.length))}
-              </p>
-            </>
-          )}
-          {content.length > 210 && (
-            <button
-              onClick={toggleExpanded}
-              className="font-medium text-gray-500 hover:underline focus:outline-none"
-            >
-              {expanded ? "" : "...see more"}
-            </button>
-          )}
+          <p className="whitespace-pre-line">{content}</p>
         </div>
         {showReactions && (
           <>
