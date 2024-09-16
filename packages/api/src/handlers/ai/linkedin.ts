@@ -259,18 +259,22 @@ make sure the whole post actually makes sense and is meaningful, instead of gene
 `;
 
   console.log(prompt, "prompt");
-
-  const res = await openAi.chat.completions.create({
-    model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
-    messages: [
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-  });
-  const text = res.choices[0]?.message.content ?? "";
-  console.log(text, "text");
-  const usage = res.usage?.total_tokens;
-  return { text, usage };
+  try {
+    const res = await openAi.chat.completions.create({
+      model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+    });
+    const text = res.choices[0]?.message.content ?? "";
+    console.log(text, "text");
+    const usage = res.usage?.total_tokens;
+    return { text, usage };
+  } catch (e) {
+    console.error(e);
+    throw new Error("failed to run ai and generate post");
+  }
 };
