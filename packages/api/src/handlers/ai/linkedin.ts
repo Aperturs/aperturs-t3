@@ -208,15 +208,27 @@ export const extractYoutubeFromUrl = async (url: string) => {
 export const getMarkdownFromArticle = async (url: string) => {
   console.log(url, "url");
   try {
-    const res = await axios.get(`https://md.dhr.wtf/?url=${url}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
+    // const res = await axios.get(`https://md.dhr.wtf/?url=${url}`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // const response = await axios.get(`http://localhost:3000/api/scrape`, {
+    //   params: {
+    //     url,
+    //   },
+    // });
+    const response = await axios.post("https://scrape.aperturs.com/scrape", {
+      url,
     });
+
+    console.log("Markdown Content:");
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return res.data[0].md as string;
+    console.log(response.data.markdown);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return response.data.markdown as string;
   } catch (e) {
-    // console.error(e.message);
+    console.error(e);
     throw new Error("Failed to fetch markdown from article");
   }
 };
@@ -226,6 +238,7 @@ export const summarizeText = async (content: string) => {
     model: openai("gpt-4o-mini"),
     prompt: `summerize the text below\n${content} dont loose any details, just make sure the text is concise and to the point`,
   });
+  console.log(text, "summerized text");
   return { text, usage };
 };
 
@@ -236,14 +249,16 @@ export const generateLinkedinPostBasedOnLongText = async (
   const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
     on the topic of ${content}
 here are few points to remember for posting
-1. make sure the hook is cool and clickbaity so it leads users to click on the post
-2. add some pointer emojis when needed 
+1. make sure the hook is cool and clickbait so it leads users to click on the post
+2. add some pointer emojis when needed  and dont atall use '*','#' these kind of symbols
 make sure the whole post actually makes sense and is meaningful, instead of generating random content
 3. dont giveout any links, or talk about video or image or articles
 4. when talking about userful dont halusinate or talk about any fake things, your basic details are given above
 5. dont even use any markdown or html tags
 6. dont use any hashtags
 `;
+
+  console.log(prompt, "prompt");
 
   const res = await openAi.chat.completions.create({
     model: "ft:gpt-4o-mini-2024-07-18:aperturs:linked-exp-1:A2tb5FuW",

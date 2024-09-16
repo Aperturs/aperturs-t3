@@ -18,7 +18,7 @@ export default function RootLayout({
   // If yes, redirect them to /dashboard
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col overflow-hidden dark:bg-black">
+    <div className="relative flex min-h-screen w-full flex-col  dark:bg-black">
       <section className="relative z-10 h-full  w-full flex-1">
         {children}
       </section>
