@@ -199,11 +199,23 @@ here are few points to remember for posting
   console.log({ fullContent, fullUsage });
 };
 
+function extractVideoId(url: string) {
+  const youtubeRegex =
+    // eslint-disable-next-line no-useless-escape
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(youtubeRegex);
+  return match ? match[1] : null;
+}
+
 export const extractYoutubeFromUrl = async (url: string) => {
   // const transcript = await YoutubeTranscript.fetchTranscript(url);
   // console.log(transcript, "transcript");
   // const text = transcript.map((item) => item.text).join(" ");
   // return text;
+  const videoId = extractVideoId(url);
+  if (!videoId) {
+    throw new Error("Invalid YouTube URL");
+  }
   const youtube = await Innertube.create({
     lang: "en",
     location: "US",
@@ -212,7 +224,7 @@ export const extractYoutubeFromUrl = async (url: string) => {
 
   let transcript = "";
   try {
-    const info = await youtube.getInfo(url);
+    const info = await youtube.getInfo(videoId);
     const transcriptData = await info.getTranscript();
     transcriptData.transcript.content?.body?.initial_segments.map((segment) => {
       transcript += segment.snippet.text;
