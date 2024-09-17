@@ -9,24 +9,50 @@ import RepurposeInput from "~/components/repurpose/input";
 import { api } from "~/trpc/react";
 
 export default function RepurposePage() {
-  const { mutateAsync: generateLinkedin, isPending: generating } =
-    api.linkedinAi.generateLinkedinPostBasedOnUrl.useMutation();
+  const extractText = api.linkedinAi.extractTextFromUrl.useMutation();
+  const summarizeText = api.linkedinAi.summarizeExtractedText.useMutation();
+  const generatePost = api.linkedinAi.generatePostFromSummary.useMutation();
+
   const [posts, setPosts] = useState<string[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleSubmit = async (data: {
     url: string;
     urlType: "url" | "youtube";
   }) => {
-    await toast.promise(
-      generateLinkedin(data).then((res) => {
-        setPosts((prev) => [...prev, res.text]);
-      }),
-      {
-        loading: "Generating...",
-        success: "Generated",
-        error: "Failed to generate",
-      },
-    );
+    setIsGenerating(true);
+    try {
+      await toast.promise(
+        (async () => {
+          const { extractedText } = await extractText.mutateAsync(data);
+          toast.success("Text extracted");
+
+          const { summary } = await summarizeText.mutateAsync({
+            extractedText,
+          });
+          toast.success("Text summarized");
+
+          const { text } = await generatePost.mutateAsync({ summary });
+          setPosts((prev) => [...prev, text]);
+          toast.success("Post generated");
+        })(),
+        {
+          loading: extractText.isPending
+            ? "Extracting content from URL..."
+            : summarizeText.isPending
+              ? "Summarizing extracted text..."
+              : generatePost.isPending
+                ? "Generating LinkedIn post..."
+                : "Processing...",
+          success: "LinkedIn post generated successfully!",
+          error: "Failed to generate post",
+        },
+      );
+    } catch (error) {
+      console.error("Error generating post:", error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -38,16 +64,16 @@ export default function RepurposePage() {
         Generate Linkedin Posts from Articles or Youtube Videos. Just paste the
         URL and we&apos;ll do the rest.
       </p>
-      <RepurposeInput onSubmit={handleSubmit} loading={generating} />
+      <RepurposeInput onSubmit={handleSubmit} loading={isGenerating} />
       <hr className="my-4" />
-      {generating && (
+      {isGenerating && (
         <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 ">
           <LinkedInPreviewSkeleton />
           <LinkedInPreviewSkeleton />
           <LinkedInPreviewSkeleton />
         </div>
       )}
-      {!generating && posts.length > 0 && <GeneratedPosts posts={posts} />}
+      {!isGenerating && posts.length > 0 && <GeneratedPosts posts={posts} />}
     </section>
   );
 }

@@ -38,6 +38,7 @@
     "@trpc/server": "11.0.0-rc.498",
     "@types/turndown": "^5.0.5",
     "@uiball/loaders": "^1.3.0",
+    "@upstash/qstash": "^2.7.8",
     "@vercel/speed-insights": "^1.0.10",
     "axios": "1.6.7",
     "date-fns": "^2.30.0",

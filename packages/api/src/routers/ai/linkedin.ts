@@ -7,6 +7,7 @@ import {
   summarizeText,
 } from "@api/handlers/ai/linkedin";
 import { createTRPCRouter, protectedProcedure } from "@api/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { PersonalPreferenceType } from "@aperturs/validators/personalization";
@@ -51,6 +52,7 @@ export const linkedinAiRouter = createTRPCRouter({
       const user = await ctx.db.query.user.findFirst({
         where: eq(schema.user.clerkUserId, ctx.currentUser),
       });
+
       if (!user?.personalization) {
         throw new Error("User details not found");
       }
@@ -72,4 +74,51 @@ export const linkedinAiRouter = createTRPCRouter({
       );
       return generatedPost;
     }),
+  extractTextFromUrl: protectedProcedure
+    .input(
+      z.object({
+        url: z.string(),
+        urlType: z.enum(["url", "youtube"]),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      let extractedText = "";
+      if (input.urlType === "youtube") {
+        extractedText = await extractYoutubeFromUrl(input.url);
+      } else {
+        extractedText = await getMarkdownFromArticle(input.url);
+      }
+      return { extractedText };
+    }),
+
+  summarizeExtractedText: protectedProcedure
+    .input(z.object({ extractedText: z.string() }))
+    .mutation(async ({ input }) => {
+      const summary = await summarizeText(input.extractedText);
+      return { summary: summary.text };
+    }),
+
+  generatePostFromSummary: protectedProcedure
+    .input(z.object({ summary: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const user = await ctx.db.query.user.findFirst({
+        where: eq(schema.user.clerkUserId, ctx.currentUser),
+      });
+
+      if (!user?.personalization) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User details not found",
+        });
+      }
+      const userDetails = user.personalization as PersonalPreferenceType;
+
+      const generatedPost = await generateLinkedinPostBasedOnLongText(
+        input.summary,
+        userDetails,
+      );
+      return generatedPost;
+    }),
+
+  // ... other routes ...
 });
