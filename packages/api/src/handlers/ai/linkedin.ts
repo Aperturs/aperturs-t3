@@ -2,7 +2,8 @@ import { openai } from "@ai-sdk/openai";
 import { generateObject, generateText } from "ai";
 import axios from "axios";
 import OpenAI from "openai";
-import { YoutubeTranscript } from "youtube-transcript";
+// import { YoutubeTranscript } from "youtube-transcript";
+import { Innertube } from "youtubei.js/web";
 import { z } from "zod";
 
 import type { PersonalPreferenceType } from "@aperturs/validators/personalization";
@@ -199,10 +200,28 @@ here are few points to remember for posting
 };
 
 export const extractYoutubeFromUrl = async (url: string) => {
-  const transcript = await YoutubeTranscript.fetchTranscript(url);
-  console.log(transcript, "transcript");
-  const text = transcript.map((item) => item.text).join(" ");
-  return text;
+  // const transcript = await YoutubeTranscript.fetchTranscript(url);
+  // console.log(transcript, "transcript");
+  // const text = transcript.map((item) => item.text).join(" ");
+  // return text;
+  const youtube = await Innertube.create({
+    lang: "en",
+    location: "US",
+    retrieve_player: false,
+  });
+
+  let transcript = "";
+  try {
+    const info = await youtube.getInfo(url);
+    const transcriptData = await info.getTranscript();
+    transcriptData.transcript.content?.body?.initial_segments.map((segment) => {
+      transcript += segment.snippet.text;
+    });
+    return transcript;
+  } catch (error) {
+    console.error("Error fetching transcript:", error);
+    throw error;
+  }
 };
 
 export const getMarkdownFromArticle = async (url: string) => {
