@@ -15,6 +15,7 @@ const {
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
 export default {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   content: base.content,
   presets: [base],
   theme: {

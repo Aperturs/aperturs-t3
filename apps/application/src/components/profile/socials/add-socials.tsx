@@ -75,16 +75,8 @@ const Socials = () => {
 
   const handleLinkedln = async () => {
     setLocalLoading(true);
-    if (!params?.orgid) {
-      await handleLinkedinRedirect({
-        orgId: "personal",
-        tokenId: "new",
-        onboarding: hasOnboarding,
-      });
-      return;
-    }
     await handleLinkedinRedirect({
-      orgId: params.orgid,
+      orgId: params.orgid ?? "personal",
       tokenId: "new",
       onboarding: hasOnboarding,
     });

@@ -3,11 +3,9 @@ import { removeTwitterDataFromDatabase } from "@api/handlers/twitter/main";
 import { getAccounts } from "@api/helpers/get-socials";
 import { z } from "zod";
 
+import type { PersonalPreferenceType } from "@aperturs/validators/personalization";
 import { createUniqueIds, eq, schema } from "@aperturs/db";
-import {
-  personalPreferenceSchema,
-  PersonalPreferenceType,
-} from "@aperturs/validators/personalization";
+import { personalPreferenceSchema } from "@aperturs/validators/personalization";
 import { SocialTypeSchema } from "@aperturs/validators/post";
 import { UniqueIdsSchema } from "@aperturs/validators/user";
 

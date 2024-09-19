@@ -53,7 +53,7 @@ export default function RootLayout({
         <Script src="https://lmsqueezy.com/affiliate.js" defer></Script>
       </head>
       <body className="">
-        <div className="flex flex-col items-center bg-slate-50">
+        <div className="flex flex-col items-center bg-background">
           {/* <div className="fixed flex w-full  justify-center border-b bg-opacity-20 p-3 backdrop-blur-lg backdrop-filter">
             <NavBar />
           </div> */}
