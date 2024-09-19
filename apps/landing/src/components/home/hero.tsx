@@ -9,7 +9,7 @@ import { Waitlist } from "./waitlist";
 
 export default function HeroSection() {
   return (
-    <section className="flex w-full flex-col items-center justify-center pt-24 md:pt-48">
+    <section className="flex w-full flex-col items-center justify-center pt-24 md:pt-48 ">
       <FadeIn className="flex flex-col items-center justify-center gap-1 px-5 py-10">
         <h1 className="mt-8 text-balance bg-gradient-to-br from-slate-300 to-slate-500 bg-clip-text py-4 text-center text-2xl font-medium tracking-tight text-transparent sm:text-4xl md:text-5xl lg:text-7xl">
           Save Time Writing Content, <br /> Focus on What Matters Most
