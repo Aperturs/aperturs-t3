@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Toaster } from "sonner";
 
+import NavBar from "~/components/navbar";
+
 export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
   description:
@@ -57,7 +59,10 @@ export default function RootLayout({
           {/* <div className="fixed flex w-full  justify-center border-b bg-opacity-20 p-3 backdrop-blur-lg backdrop-filter">
             <NavBar />
           </div> */}
-          <div className="max-w-screen-2xl w-full px-5">{children}</div>
+          <main className="container">
+            <NavBar />
+            {children}
+          </main>
         </div>
       </body>
     </html>
