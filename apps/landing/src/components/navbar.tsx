@@ -28,7 +28,7 @@ export default function NavBar() {
 
   return (
     <motion.nav
-      className={`sticky top-3 z-[90]  max-w-screen-2xl   rounded-md border bg-background/60 py-3 backdrop-blur `}
+      className={`sticky top-3 z-[90]  max-w-screen-2xl   rounded-md border bg-background/90 py-3 backdrop-blur-[10px] `}
       animate={{
         width: isScrolled ? "70%" : "100%",
         transition: {
@@ -58,10 +58,13 @@ export default function NavBar() {
             >
               Solutions
             </Link>
-            <Link href="#features" className="text-gray-600 hover:text-primary">
-              Features
+            <Link
+              href="#how-it-works"
+              className="text-gray-600 hover:text-primary"
+            >
+              How it works
             </Link>
-            <Link href="/pricing" className="text-gray-600 hover:text-primary">
+            <Link href="" className="text-gray-600 hover:text-primary">
               Pricing
             </Link>
           </div>
@@ -103,19 +106,19 @@ export default function NavBar() {
         {isMobileMenuOpen && (
           <div className="mt-4 space-y-4 md:hidden">
             <Link
-              href="#features"
-              className="block text-gray-600 hover:text-primary"
-            >
-              Features
-            </Link>
-            <Link
               href="#solutions"
               className="block text-gray-600 hover:text-primary"
             >
               Solutions
             </Link>
             <Link
-              href="/pricing"
+              href="#how-it-works"
+              className="block text-gray-600 hover:text-primary"
+            >
+              How it works
+            </Link>
+            <Link
+              href="#pricing"
               className="block text-gray-600 hover:text-primary"
             >
               Pricing

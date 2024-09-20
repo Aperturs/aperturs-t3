@@ -49,7 +49,7 @@ export default function CardParalax() {
   }, []);
 
   return (
-    <section ref={gallery} className="relative  py-24">
+    <section id="solutions" ref={gallery} className="relative  py-24">
       {/* <div className="hover:dark:bg-[#020202] hover:bg-slate-50 border mx-2 rounded-lg "> */}
       <div className="sticky top-10 z-50 flex  h-screen justify-center">
         <h1 className="p-3 mt-10 text-center h-fit text-2xl text-balance font-medium md:text-4xl">

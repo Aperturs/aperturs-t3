@@ -58,7 +58,7 @@ export default function Component() {
   };
 
   return (
-    <section className="relative  pb-24">
+    <section id="how-it-works" className="relative  pb-24">
       <div className="mx-auto max-w-4xl mb-10">
         <h3 className="text-balance text-center text-sm font-medium text-lime-700">
           How it works

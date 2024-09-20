@@ -1,6 +1,7 @@
 import HeroSection from "~/components/home/dragable";
 import FadeInFeatures from "~/components/home/fadein-features";
 import HowItWorks from "~/components/home/steps";
+import PricingComponent from "~/components/pricing/cards";
 
 export default function page() {
   return (
@@ -12,6 +13,7 @@ export default function page() {
       {/* <HeroSection /> */}
       {/* <Problem /> */}
       <HowItWorks />
+      <PricingComponent />
       {/* <Step /> */}
       {/* <CallToAction /> */}
     </section>
