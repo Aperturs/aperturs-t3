@@ -5,7 +5,6 @@ import { Button } from "@aperturs/ui/button";
 import FadeIn from "../fade-in";
 import { BorderBeam } from "../ui/border-beam";
 import { SparklesCore } from "../ui/sparkles";
-import { Waitlist } from "./waitlist";
 
 export default function HeroSection() {
   return (
@@ -20,7 +19,11 @@ export default function HeroSection() {
           process.
         </p>
         {/* <Button>Start Free Trial</Button> */}
-        <Waitlist />
+        {/* <Waitlist /> */}
+        <div className="flex items-center justify-center">
+          <Button>Start Free Trial</Button>
+          <Button>Schedule a Demo</Button>
+        </div>
       </FadeIn>
       <FadeIn>
         <div className="relative h-40 md:w-[20rem] lg:w-[40rem]">

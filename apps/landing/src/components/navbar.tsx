@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -27,10 +28,9 @@ export default function NavBar() {
 
   return (
     <motion.nav
-      className={`sticky left-1/2 top-3 z-[90]  max-w-screen-2xl   rounded-md border bg-background/60 py-3 backdrop-blur `}
+      className={`sticky top-3 z-[90]  max-w-screen-2xl   rounded-md border bg-background/60 py-3 backdrop-blur `}
       animate={{
-        width: isScrolled ? "50%" : "100%",
-        translateX: isScrolled ? "-50%" : "0%",
+        width: isScrolled ? "70%" : "100%",
         transition: {
           duration: 0.3,
           type: "spring",
@@ -42,26 +42,51 @@ export default function NavBar() {
       <div className="container">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-primary">
-            Logo
+            <Image
+              src="/logo.svg"
+              alt="Aperturs"
+              className="invert"
+              width={40}
+              height={40}
+            />
           </Link>
 
           <div className="hidden space-x-8 md:flex">
-            <Link href="/features" className="text-gray-600 hover:text-primary">
-              Features
-            </Link>
             <Link
-              href="/solutions"
+              href="#solutions"
               className="text-gray-600 hover:text-primary"
             >
               Solutions
+            </Link>
+            <Link href="#features" className="text-gray-600 hover:text-primary">
+              Features
             </Link>
             <Link href="/pricing" className="text-gray-600 hover:text-primary">
               Pricing
             </Link>
           </div>
 
-          <div className="hidden md:block">
-            <Button>Login</Button>
+          <div className="hidden md:block ">
+            {/* <Button>Login</Button> */}
+            <button
+              style={{
+                overflow: "hidden",
+              }}
+              className="group relative  rounded-md bg-primary px-6 py-3  text-sm font-semibold text-white"
+            >
+              <Link
+                href="https://app.aperturs.com/sign-up"
+                className="h-full w-full px-6 py-3"
+              >
+                <span className="relative z-10 transition-opacity duration-300 group-hover:opacity-0">
+                  Want to grow on LinkedIn?
+                </span>
+                <span className="absolute inset-0 z-10 flex items-center justify-center text-lime-300 opacity-0 transition-opacity duration-500  group-hover:opacity-100">
+                  Start 7-day free trial
+                </span>
+                <div className="absolute inset-0 -translate-y-full transform bg-lime-700/30 transition-transform duration-500 ease-in-out group-hover:h-[150%] group-hover:translate-y-0 group-hover:rounded-b-[100%]" />
+              </Link>
+            </button>
           </div>
 
           <div className="md:hidden">
@@ -78,13 +103,13 @@ export default function NavBar() {
         {isMobileMenuOpen && (
           <div className="mt-4 space-y-4 md:hidden">
             <Link
-              href="/features"
+              href="#features"
               className="block text-gray-600 hover:text-primary"
             >
               Features
             </Link>
             <Link
-              href="/solutions"
+              href="#solutions"
               className="block text-gray-600 hover:text-primary"
             >
               Solutions

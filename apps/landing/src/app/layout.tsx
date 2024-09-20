@@ -59,7 +59,7 @@ export default function RootLayout({
           {/* <div className="fixed flex w-full  justify-center border-b bg-opacity-20 p-3 backdrop-blur-lg backdrop-filter">
             <NavBar />
           </div> */}
-          <main className="container">
+          <main className="container flex flex-col items-center w-full">
             <NavBar />
             {children}
           </main>

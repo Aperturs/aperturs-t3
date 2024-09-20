@@ -51,11 +51,11 @@ export default function CardParalax() {
   return (
     <section ref={gallery} className="relative  py-24">
       {/* <div className="hover:dark:bg-[#020202] hover:bg-slate-50 border mx-2 rounded-lg "> */}
-      <div className="sticky top-0 z-50 flex  h-screen justify-center">
-        <h1 className="p-3 mt-10 text-center text-2xl text-balance font-medium md:text-4xl">
+      <div className="sticky top-10 z-50 flex  h-screen justify-center">
+        <h1 className="p-3 mt-10 text-center h-fit text-2xl text-balance font-medium md:text-4xl">
           Your Problems, Our Solutions
         </h1>
-        <div className="absolute inset-x-0 bottom-0 z-50 h-1/3 md:h-[60vh] bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 z-50 h-1/3 md:h-[50vh] bg-gradient-to-t from-background to-transparent" />
       </div>
 
       {painPoints.map((item, index) => {
