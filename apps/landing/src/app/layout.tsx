@@ -2,6 +2,7 @@ import "@aperturs/ui/globals.css";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { Caveat } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "sonner";
 
@@ -35,31 +36,28 @@ export const metadata: Metadata = {
   },
 };
 
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <link
-        rel="preload"
-        href="Mona-Sans.woff2"
-        as="font"
-        type="font/woff2"
-        crossOrigin="anonymous"
-      ></link>
+    <html lang="en" className={caveat.variable}>
       <Toaster />
       <head>
         <Script id="lemonSqueezyAffiliateConfig">{`window.lemonSqueezyAffiliateConfig = { store: "aperturs" };`}</Script>
         <Script src="https://lmsqueezy.com/affiliate.js" defer></Script>
       </head>
-      <body className="">
+      <body>
         <div className="flex flex-col items-center bg-background">
-          {/* <div className="fixed flex w-full  justify-center border-b bg-opacity-20 p-3 backdrop-blur-lg backdrop-filter">
-            <NavBar />
-          </div> */}
-          <main className="container flex flex-col items-center w-full">
+          <main className="container flex w-full flex-col items-center">
             <NavBar />
             {children}
           </main>

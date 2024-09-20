@@ -17,6 +17,9 @@ export default {
         "mid": "var(--shadow-elevation-medium)",
         "high": "var(--shadow-elevation-high)",
       },
+      fontFamily: {
+        caveat: ["var(--font-caveat)"],
+      },
       keyframes: {
         "border-beam": {
           "100%": {
@@ -45,7 +48,6 @@ export default {
       },
     },
   },
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   content: [...baseConfig.content, "../../packages/ui/**/*.{ts,tsx}"],
   presets: [baseConfig],
 } satisfies Config;

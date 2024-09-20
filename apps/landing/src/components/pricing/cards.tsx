@@ -1,6 +1,7 @@
-'use client'
+"use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 import { Badge } from "@aperturs/ui/badge";
@@ -127,8 +128,10 @@ export default function PricingComponent() {
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">
-                  {plan.featured ? "Start free trial" : "Subscribe"}
+                <Button className="w-full" asChild>
+                  <Link href="https://app.aperturs.com/sign-up">
+                    {plan.featured ? "Start free trial" : "Subscribe"}
+                  </Link>
                 </Button>
               </CardFooter>
             </Card>

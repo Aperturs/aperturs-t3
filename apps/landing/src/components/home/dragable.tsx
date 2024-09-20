@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@aperturs/ui/avatar";
 import { Button } from "@aperturs/ui/button";
 import { Card } from "@aperturs/ui/card";
 import { Input } from "@aperturs/ui/input";
+import { cn } from "@aperturs/ui/lib/utils";
 
 import { AnimatedGroup } from "../ui/animated-group";
 import { WrapCover } from "./wrap-text-cover";
@@ -37,8 +38,10 @@ const DraggableCard = ({
   children,
   initial,
   animate,
+  className,
 }: {
   children: React.ReactNode;
+  className?: string;
   initial?: boolean | Target | VariantLabels;
   animate?: AnimationControls | TargetAndTransition;
 }) => (
@@ -58,7 +61,7 @@ const DraggableCard = ({
     transition={{ duration: 0.5, type: "spring", stiffness: 260, damping: 20 }}
     whileDrag={{ scale: 0.9 }}
     whileHover={{ rotate: 2 }}
-    className="absolute"
+    className={cn("absolute", className)}
   >
     <Card className="w-80 cursor-move p-4 shadow-lg">{children}</Card>
   </motion.div>
@@ -80,24 +83,20 @@ export default function HeroSection() {
           turning your chaotic workflow into an efficient and streamlined
           process.
         </p>
-        {/* <Button>Start Free Trial</Button> */}
-        {/* <Waitlist /> */}
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex md:flex-row flex-col items-center justify-center gap-2">
           <Button asChild>
             <Link href="/sign-up">Start Free Trial</Link>
           </Button>
           <Button asChild>
-            <Link href="https://cal.com/swaraj/15min">
-              Schedule a Demo
-            </Link>
+            <Link href="https://cal.com/swaraj/15min">Schedule a Demo</Link>
           </Button>
         </div>
       </AnimatedGroup>
       <AnimatedGroup preset="fade">
         <DraggableCard
-          initial={{ top: -70, left: -230, rotate: 10 }}
+          initial={{ top: -100, left: -230, rotate: 10 }}
           animate={{
-            top: 30,
+            top: -30,
             left: -200,
           }}
         >
@@ -159,6 +158,8 @@ export default function HeroSection() {
             bottom: 40,
             left: -160,
           }}
+          className="hidden md:block"
+
         >
           <h3 className="mb-2 font-semibold">Messages</h3>
           <div className="space-y-2">
@@ -199,6 +200,8 @@ export default function HeroSection() {
             bottom: -80,
             right: "25%",
           }}
+          className="hidden md:block"
+
         >
           <h3 className="mb-2 font-semibold">Trending Posts</h3>
           <div className="space-y-2">
@@ -239,6 +242,7 @@ export default function HeroSection() {
             top: -60,
             left: "20%",
           }}
+          className="hidden md:block"
         >
           <h3 className="mb-2 font-semibold">Friend Suggestions</h3>
           <div className="space-y-2">
@@ -271,6 +275,8 @@ export default function HeroSection() {
             top: -30,
             right: -150,
           }}
+          className="hidden md:block"
+
         >
           <h3 className="mb-2 font-semibold">AI-Generated Content Ideas</h3>
           <ul className="list-inside list-disc space-y-1">
@@ -287,7 +293,7 @@ export default function HeroSection() {
         <DraggableCard
           initial={{ bottom: -70, left: "20%", rotate: 10 }}
           animate={{
-            bottom: -60,
+            bottom: -100,
             left: "25%",
           }}
         >
@@ -317,6 +323,8 @@ export default function HeroSection() {
             bottom: -40,
             right: -160,
           }}
+          className="hidden md:block"
+
         >
           <h3 className="mb-2 font-semibold">Content Calendar</h3>
           <div className="space-y-2">

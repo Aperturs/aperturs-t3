@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -11,6 +11,7 @@ import { Button } from "@aperturs/ui/button";
 export default function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +23,16 @@ export default function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuRef.current) {
+      if (isMobileMenuOpen) {
+        mobileMenuRef.current.style.maxHeight = `${mobileMenuRef.current.scrollHeight}px`;
+      } else {
+        mobileMenuRef.current.style.maxHeight = "0";
+      }
+    }
+  }, [isMobileMenuOpen]);
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -30,7 +41,7 @@ export default function NavBar() {
     <motion.nav
       className={`sticky top-3 z-[90]  max-w-screen-2xl   rounded-md border bg-background/90 py-3 backdrop-blur-[10px] `}
       animate={{
-        width: isScrolled ? "70%" : "100%",
+        width: isScrolled && !isMobileMenuOpen ? "70%" : "100%",
         transition: {
           duration: 0.3,
           type: "spring",
@@ -39,7 +50,18 @@ export default function NavBar() {
         },
       }}
     >
-      <div className="container">
+      <div
+        // animate={{
+        //   height: isMobileMenuOpen ? "230px" : "100%",
+        //   transition: {
+        //     duration: 0.3,
+        //     type: "spring",
+        //     stiffness: 100,
+        //     damping: 20,
+        //   },
+        // }}
+        className="container"
+      >
         <div className="flex items-center justify-between">
           <Link href="/" className="text-2xl font-bold text-primary">
             <Image
@@ -103,29 +125,35 @@ export default function NavBar() {
           </div>
         </div>
 
-        {isMobileMenuOpen && (
-          <div className="mt-4 space-y-4 md:hidden">
+        <div
+          ref={mobileMenuRef}
+          className="overflow-hidden transition-all duration-500 ease-in-out md:hidden"
+          style={{ maxHeight: 0 }}
+        >
+          <div className="space-y-4 py-4">
             <Link
-              href="#solutions"
+              href="/features"
+              className="block text-gray-600 hover:text-primary"
+            >
+              Features
+            </Link>
+            <Link
+              href="/solutions"
               className="block text-gray-600 hover:text-primary"
             >
               Solutions
             </Link>
             <Link
-              href="#how-it-works"
-              className="block text-gray-600 hover:text-primary"
-            >
-              How it works
-            </Link>
-            <Link
-              href="#pricing"
+              href="/pricing"
               className="block text-gray-600 hover:text-primary"
             >
               Pricing
             </Link>
-            <Button className="w-full">Login</Button>
+            <Button variant="outline" className="w-full">
+              Login
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </motion.nav>
   );
