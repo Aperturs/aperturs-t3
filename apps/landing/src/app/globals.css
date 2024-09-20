@@ -11,11 +11,37 @@ html {
   font-family: "Mona Sans";
 }
 
+:root {
+  --shadow-color: 48deg 6% 60%;
+  --shadow-elevation-low: -0.1px -0.4px 0.3px hsl(var(--shadow-color) / 0.66),
+    -0.1px -0.6px 0.5px -2.5px hsl(var(--shadow-color) / 0.44),
+    -0.3px -1.6px 1.2px -5px hsl(var(--shadow-color) / 0.22);
+  --shadow-elevation-medium: -0.1px -0.4px 0.3px hsl(var(--shadow-color) / 0.55),
+    -0.1px -0.5px 0.4px -1.2px hsl(var(--shadow-color) / 0.44),
+    -0.3px -1.4px 1.1px -2.5px hsl(var(--shadow-color) / 0.33),
+    -0.8px -3.7px 2.8px -3.7px hsl(var(--shadow-color) / 0.22),
+    -1.7px -8.1px 6.2px -5px hsl(var(--shadow-color) / 0.11);
+  --shadow-elevation-high: -0.1px -0.4px 0.3px hsl(var(--shadow-color) / 0.29),
+    -0.1px -0.4px 0.3px -0.6px hsl(var(--shadow-color) / 0.26),
+    -0.1px -0.7px 0.5px -1.1px hsl(var(--shadow-color) / 0.23),
+    -0.3px -1.3px 1px -1.7px hsl(var(--shadow-color) / 0.21),
+    -0.5px -2.4px 1.8px -2.2px hsl(var(--shadow-color) / 0.18),
+    -0.9px -4.3px 3.3px -2.8px hsl(var(--shadow-color) / 0.15),
+    -1.5px -7.2px 5.5px -3.3px hsl(var(--shadow-color) / 0.12),
+    -2.4px -11.2px 8.6px -3.9px hsl(var(--shadow-color) / 0.09),
+    -3.5px -16.5px 12.7px -4.4px hsl(var(--shadow-color) / 0.06),
+    -5px -23.3px 17.9px -5px hsl(var(--shadow-color) / 0.03);
+}
+
 .gradient {
   transform: translate(-50%, 0%);
-	border-radius: 50% 22% 40% 80%;  
-	filter: blur(100px);
-  background: radial-gradient(circle at 50% 50%,rgba(76, 0, 255, 1), rgba(76, 0, 255, 0));
+  border-radius: 50% 22% 40% 80%;
+  filter: blur(100px);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(76, 0, 255, 1),
+    rgba(76, 0, 255, 0)
+  );
   opacity: 0.2;
 }
 
@@ -23,11 +49,11 @@ html {
   from {
     rotate: 0deg;
   }
-  
+
   50% {
     scale: 1 1.5;
   }
-  
+
   to {
     rotate: 360deg;
   }

@@ -117,7 +117,7 @@ function CardContainer({
           top: `calc(-5% + ${index * (width < 640 ? 15 : 30)}px)`,
         }}
       >
-        <Card className="relative flex h-[400px] w-full ">
+        <Card className="relative flex h-[400px] shadow-high w-full ">
           <div className="absolute md:relative md:bg-transparent md:text-card-foreground md:rounded-none right-0 top-0 grid size-16 place-content-center rounded-es-lg rounded-se-lg border-r  bg-lime-700/20 text-lime-800 sm:h-full sm:w-[30%]">
             <h3 className="text-2xl font-medium md:text-3xl">{index + 1}</h3>
           </div>
