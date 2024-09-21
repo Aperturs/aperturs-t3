@@ -15,8 +15,13 @@ import { api } from "~/trpc/server";
 export async function handleLinkedinRedirect({
   orgId,
   tokenId,
+  onboarding,
 }: SocialRedisKeyType) {
-  const url = await api.linkedin.getLinkedinAuthUrl({ orgId, tokenId });
+  const url = await api.linkedin.getLinkedinAuthUrl({
+    orgId,
+    tokenId,
+    onboarding,
+  });
   console.log(url, "url");
   redirect(url);
 }

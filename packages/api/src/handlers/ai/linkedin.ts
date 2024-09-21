@@ -275,10 +275,11 @@ export const summarizeText = async (content: string) => {
 
 export const generateLinkedinPostBasedOnLongText = async (
   content: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   userDetails: PersonalPreferenceType,
 ) => {
-  const prompt = `generate linkedin post based on user details to post content on linkedin ${convertPersonalPreferencesToText(userDetails)}
-    on the topic of ${content}
+  const prompt = `generate linkedin post based on user details to post content on linkedin
+    this is an long text so generate a post that is concise and to the point and make sure you dont loose any details  <content>${content}</content>
 here are few points to remember for posting
 1. make sure the hook is cool and clickbait so it leads users to click on the post
 2. add some pointer emojis when needed  and dont atall use '*','#' these kind of symbols

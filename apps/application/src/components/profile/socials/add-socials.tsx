@@ -57,8 +57,6 @@ const Socials = () => {
 
   const hasOnboarding = path.includes("onboarding");
 
-  console.log(path, hasOnboarding, "hasOnboarding");
-
   // const handleGithub = async () => {
   //   setLocalLoading(true);
   //   if (!params?.orgid) {

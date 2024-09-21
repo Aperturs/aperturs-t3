@@ -7,6 +7,7 @@ import Script from "next/script";
 import { Toaster } from "sonner";
 
 import NavBar from "~/components/navbar";
+import { CSPostHogProvider } from "~/components/providers/posthogs";
 
 export const metadata: Metadata = {
   title: "Aperturs | Social media management for the modern age",
@@ -56,12 +57,14 @@ export default function RootLayout({
         <Script src="https://lmsqueezy.com/affiliate.js" defer></Script>
       </head>
       <body>
-        <div className="flex flex-col items-center bg-background">
-          <main className="container flex w-full flex-col items-center">
-            <NavBar />
-            {children}
-          </main>
-        </div>
+        <CSPostHogProvider>
+          <div className="flex flex-col items-center bg-background">
+            <main className="container flex w-full flex-col items-center">
+              <NavBar />
+              {children}
+            </main>
+          </div>
+        </CSPostHogProvider>
       </body>
     </html>
   );

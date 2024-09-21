@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 import { Button } from "@aperturs/ui/button";
+import { posthog } from "posthog-js";
 
 export default function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -101,6 +102,9 @@ export default function NavBar() {
             >
               <Link
                 href="https://app.aperturs.com/sign-up"
+                onClick={() => {
+                  posthog.capture('sign_up_button_clicked', { property: 'from navbar desktop' })
+                }}
                 className="h-full w-full px-6 py-3"
               >
                 <span className="relative z-10 transition-opacity duration-300 group-hover:opacity-0">
@@ -132,25 +136,31 @@ export default function NavBar() {
         >
           <div className="space-y-4 py-4">
             <Link
-              href="/features"
+              href="#how-it-works"
               className="block text-gray-600 hover:text-primary"
             >
-              Features
+              How it works
             </Link>
             <Link
-              href="/solutions"
+              href="#solutions"
               className="block text-gray-600 hover:text-primary"
             >
               Solutions
             </Link>
             <Link
-              href="/pricing"
+              href="#pricing"
               className="block text-gray-600 hover:text-primary"
             >
               Pricing
             </Link>
-            <Button variant="outline" className="w-full">
-              Login
+            <Button asChild className="w-full">
+              <Link href="https://app.aperturs.com/sign-up"
+                onClick={() => {
+                  posthog.capture('sign_up_button_clicked', { property: 'from navbar mobile' })
+                }}
+              >
+                Start 7-day free trial
+              </Link>
             </Button>
           </div>
         </div>

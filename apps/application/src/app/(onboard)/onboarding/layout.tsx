@@ -13,12 +13,5 @@ export default function OnboardingLayout({
     redirect("/dashboard");
   }
 
-  return (
-    <div className="relative h-fit min-h-screen w-full">
-      {children}
-      <div className="absolute bottom-3 right-3">
-        <ModeToggle />
-      </div>
-    </div>
-  );
+  return <div className="relative h-fit min-h-screen w-full">{children}</div>;
 }

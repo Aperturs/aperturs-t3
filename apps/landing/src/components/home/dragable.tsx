@@ -33,6 +33,7 @@ import { cn } from "@aperturs/ui/lib/utils";
 
 import { AnimatedGroup } from "../ui/animated-group";
 import { WrapCover } from "./wrap-text-cover";
+import posthog from "posthog-js";
 
 const DraggableCard = ({
   children,
@@ -85,7 +86,11 @@ export default function HeroSection() {
         </p>
         <div className="flex md:flex-row flex-col items-center justify-center gap-2">
           <Button asChild>
-            <Link href="/sign-up">Start Free Trial</Link>
+            <Link
+            onClick={() => {
+              posthog.capture('sign_up_button_clicked', { property: 'from hero section' })
+            }}
+            href="https://app.aperturs.com/sign-up">Start Free Trial</Link>
           </Button>
           <Button asChild>
             <Link href="https://cal.com/swaraj/15min">Schedule a Demo</Link>

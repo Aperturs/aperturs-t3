@@ -72,7 +72,7 @@ export default function Details() {
     if (path.includes("onboarding")) {
       await completeOnboarding();
       toast.loading("Redirecting...");
-      router.push("/onboarding/finish");
+      router.push("/dashboard");
       toast.dismiss();
     }
   };

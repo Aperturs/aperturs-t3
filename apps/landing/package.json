@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "pnpm with-env next build",
+    "build:prod": "next build",
+    "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
+    "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.5",
@@ -17,9 +17,11 @@
     "@tsparticles/slim": "^3.4.0",
     "@types/canvas-confetti": "^1.6.4",
     "canvas-confetti": "^1.9.3",
+    "dotenv": "^16.4.5",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.323.0",
     "next": "14.1.1",
+    "posthog-js": "^1.163.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
