@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import LinkedInPreviewSkeleton from "~/components/previews/linkedin-preview-skeleton";
@@ -12,9 +12,43 @@ export default function RepurposePage() {
   const extractText = api.linkedinAi.extractTextFromUrl.useMutation();
   const summarizeText = api.linkedinAi.summarizeExtractedText.useMutation();
   const generatePost = api.linkedinAi.generatePostFromSummary.useMutation();
+  const loadingText = useRef<string>("");
 
   const [posts, setPosts] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleExtractText = async (data: {
+    url: string;
+    urlType: "url" | "youtube";
+  }) => {
+    const { extractedText } = await toast.promise(
+      extractText.mutateAsync(data),
+      {
+        loading: "Extracting text from URL...",
+        success: "Text extracted",
+        error: "Failed to extract text",
+      },
+    );
+    return extractedText;
+  };
+
+  const handleSummarizeText = async (data: { extractedText: string }) => {
+    const { summary } = await toast.promise(summarizeText.mutateAsync(data), {
+      loading: "Summarizing extracted text...",
+      success: "Text summarized",
+      error: "Failed to summarize text",
+    });
+    return summary;
+  };
+
+  const handleGeneratePost = async (data: { summary: string }) => {
+    const { text } = await toast.promise(generatePost.mutateAsync(data), {
+      loading: "Generating LinkedIn post...",
+      success: "Post generated",
+      error: "Failed to generate post",
+    });
+    return text;
+  };
 
   const handleSubmit = async (data: {
     url: string;
@@ -22,32 +56,10 @@ export default function RepurposePage() {
   }) => {
     setIsGenerating(true);
     try {
-      await toast.promise(
-        (async () => {
-          const { extractedText } = await extractText.mutateAsync(data);
-          toast.success("Text extracted");
-
-          const { summary } = await summarizeText.mutateAsync({
-            extractedText,
-          });
-          toast.success("Text summarized");
-
-          const { text } = await generatePost.mutateAsync({ summary });
-          setPosts((prev) => [...prev, text]);
-          toast.success("Post generated");
-        })(),
-        {
-          loading: extractText.isPending
-            ? "Extracting content from URL..."
-            : summarizeText.isPending
-              ? "Summarizing extracted text..."
-              : generatePost.isPending
-                ? "Generating LinkedIn post..."
-                : "Processing...",
-          success: "LinkedIn post generated successfully!",
-          error: "Failed to generate post",
-        },
-      );
+      const extractedText = await handleExtractText(data);
+      const summary = await handleSummarizeText({ extractedText });
+      const post = await handleGeneratePost({ summary });
+      setPosts((prev) => [...prev, post]);
     } catch (error) {
       console.error("Error generating post:", error);
     } finally {

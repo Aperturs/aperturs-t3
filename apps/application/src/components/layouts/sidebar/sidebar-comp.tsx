@@ -116,7 +116,7 @@ const bottomMenu = [
 ];
 
 export function SidebarComponent() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const { signOut } = useClerk();
   const currentPath = usePathname();
 

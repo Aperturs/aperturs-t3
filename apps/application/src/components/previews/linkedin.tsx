@@ -79,7 +79,7 @@ export default function LinkedInPreview({
   };
 
   return (
-    <div className=" max-w-xl overflow-hidden rounded-lg border  bg-white">
+    <div className=" max-w-xl overflow-hidden rounded-lg border  bg-card">
       <div className="p-4">
         <div className="mb-4 flex items-center">
           <Image
@@ -90,8 +90,8 @@ export default function LinkedInPreview({
             alt={`${name}'s avatar`}
           />
           <div>
-            <h3 className="font-semibold text-gray-900">{name}</h3>
-            <p className="text-sm text-gray-500">3rd+</p>
+            <h3 className="font-semibold text-foreground">{name}</h3>
+            <p className="text-sm text-muted-foreground">3rd+</p>
           </div>
         </div>
         <div className="mb-4">

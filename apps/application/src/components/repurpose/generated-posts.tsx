@@ -41,7 +41,7 @@ export default function GeneratedPosts({ posts }: LinkedInPreviewProps) {
         success: (e) => (
           <div className="flex items-center gap-2">
             <span>Saved to drafts</span>
-            <Button>
+            <Button size="sm">
               <a href={`/post/${e.data}`}>view</a>
             </Button>
           </div>
