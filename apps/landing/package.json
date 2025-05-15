@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "dev": "next dev",
     "build": "pnpm with-env next build",
     "build:prod": "next build",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",

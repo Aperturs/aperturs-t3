@@ -52,15 +52,6 @@ export default function NavBar() {
       }}
     >
       <div
-        // animate={{
-        //   height: isMobileMenuOpen ? "230px" : "100%",
-        //   transition: {
-        //     duration: 0.3,
-        //     type: "spring",
-        //     stiffness: 100,
-        //     damping: 20,
-        //   },
-        // }}
         className="container"
       >
         <div className="flex items-center justify-between">

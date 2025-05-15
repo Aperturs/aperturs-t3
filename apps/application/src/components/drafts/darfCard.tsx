@@ -25,13 +25,11 @@ interface IDarfCard {
   id: string;
   contentT: ContentType[];
   socialProviders: SocialProviderType[];
-  refetch?: () => void;
   orgid?: string;
 }
 
 export default function DraftCard({
   id,
-  refetch,
   contentT,
   socialProviders,
   orgid,
@@ -52,7 +50,6 @@ export default function DraftCard({
       error: "Failed to delete",
     });
     router.refresh();
-    refetch?.();
   };
 
   const handlePost = async () => {
@@ -62,7 +59,6 @@ export default function DraftCard({
       error: "Failed to post",
     });
     router.refresh();
-    refetch?.();
   };
 
   return (

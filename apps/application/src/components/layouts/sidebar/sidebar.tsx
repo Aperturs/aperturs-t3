@@ -118,6 +118,7 @@ const bottomMenu = [
 export default function SideBar() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
+  const pathName = usePathname();
 
   useEffect(() => {
     window.addEventListener(
@@ -126,12 +127,11 @@ export default function SideBar() {
     );
   }, []);
 
-  const pathName = usePathname();
-
   useEffect(() => {
     if (isNavOpen) {
       setIsNavOpen(false);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName]);
 
