@@ -80,6 +80,7 @@
     "./lib/*": "./src/lib/*.ts",
     "./*": "./src/components/ui/*.tsx",
     "./ts/*": "./src/components/ui/*.ts",
-    "./icons": "./src/icons/index.ts"
+    "./icons": "./src/icons/index.ts",
+    "./hooks/*": "./src/hooks/*.ts"
   }
 }

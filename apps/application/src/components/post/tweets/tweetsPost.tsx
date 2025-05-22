@@ -23,9 +23,9 @@ function TweetPost({
   );
 
   const postContentHere = socialId
-    ? post.alternativeContent.find(
+    ? (post.alternativeContent.find(
         (item) => item.socialProvider.socialId === socialId,
-      ) ?? post
+      ) ?? post)
     : post;
 
   return (

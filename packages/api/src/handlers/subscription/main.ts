@@ -69,7 +69,7 @@ export async function FetchPlans() {
         ? currentPriceObj?.attributes.unit_price_decimal
         : currentPriceObj.attributes.unit_price;
 
-      const priceString = price !== null ? price?.toString() ?? "" : "";
+      const priceString = price !== null ? (price?.toString() ?? "") : "";
 
       const isSubscription =
         currentPriceObj?.attributes.category === "subscription";
