@@ -1,4 +1,5 @@
 import { fileURLToPath } from "url";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import _jiti from "jiti";
 
 // const __dirname = dirname(__filename);
@@ -21,7 +22,7 @@ const config = {
     turbo: {
       rules: {
         "*.svg": {
-          loaders: ["@svgr/webpack"],
+          loaders: ["@svgr/webpxack"],
           as: "*.js",
         },
       },
@@ -126,3 +127,5 @@ const config = {
 // })(config);
 
 export default config;
+
+void initOpenNextCloudflareForDev();

@@ -62,3 +62,6 @@ node_modules
 .cdk.staging
 cdk.out
 .env
+
+.open-next
+.next

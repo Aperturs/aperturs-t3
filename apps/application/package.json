@@ -7,7 +7,7 @@
     "build": "pnpm with-env next build",
     "build:prod": "next build",
     "dev": "pnpm with-env next dev",
-    "with-env": "dotenv -e ../../.env --",
+    "with-env": "dotenv -e .dev.vars",
     "start": "with-env next start",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "format:fix": "prettier --write . --ignore-path ../../.gitignore",
@@ -52,6 +52,7 @@
     "lucide-react": "^0.323.0",
     "luxon": "^3.4.4",
     "next": "14.2.5",
+    "vercel": "39.1.1",
     "next-nprogress-bar": "^2.3.13",
     "next-s3-upload": "^0.3.4",
     "next-themes": "^0.2.1",
@@ -111,5 +112,8 @@
       "@aperturs/eslint-config/react"
     ]
   },
-  "prettier": "@aperturs/prettier-config"
+  "prettier": "@aperturs/prettier-config",
+  "overrides": {
+    "vercel": "$vercel"
+  }
 }

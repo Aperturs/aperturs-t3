@@ -6,3 +6,7 @@
 
 .open-next
 .dev.vars
+.env.local
+.env.prod
+
+.wrangler
